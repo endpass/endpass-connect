@@ -2,23 +2,32 @@
   <form class="auth-form" @submit.prevent="emitSubmit">
     <header class="auth-form__header">
       <img class="auth-form__logo" src="../assets/logo.png" alt="Endpass">
-      Auth
+      Connect
     </header>
     <div class="auth-form__body">
       <section class="auth-form__message">
-        <Message>Log in to your Endpass account to access site actions</Message>
+        <message>{{ message }}</message>
       </section>
-      <section class="auth-form__field">
-        <VInput
+      <section v-if="error" class="auth-form__message">
+        <message :error="true">{{ error }}</message>
+      </section>
+      <section v-if="showEmail" class="auth-form__field">
+        <v-input
           v-model="email"
           :invalid="email.length > 0 && !isEmailValid"
           :autofocus="true"
+          name="email"
           placeholder="Enter your email..."
-        ></VInput>
+        />
       </section>
       <section class="auth-form__controls">
-        <VButton type="primary" :disabled="!isEmailValid" :submit="true">Log in</VButton>
-        <VButton>Cancel</VButton>
+        <v-button
+          v-if="showEmail"
+          :disabled="!isEmailValid || loading"
+          :submit="true"
+          type="primary"
+        >{{ primaryButtonLabel }}</v-button>
+        <v-button @click="emitCancel">Close</v-button>
       </section>
     </div>
   </form>
@@ -32,11 +41,37 @@ import Message from '@/components/Message';
 export default {
   name: 'AuthForm',
 
+  props: {
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+
+    showEmail: {
+      type: Boolean,
+      default: true,
+    },
+
+    message: {
+      type: String,
+      required: true,
+    },
+
+    error: {
+      type: String,
+      default: null,
+    },
+  },
+
   data: () => ({
     email: '',
   }),
 
   computed: {
+    primaryButtonLabel() {
+      return !this.loading ? 'Log in' : 'Loading...';
+    },
+
     isEmailValid() {
       return (
         this.email && /[a-zA-Z._\-0-9]+@[a-z0-9]+\.[a-z]{2,}/g.test(this.email)
@@ -46,7 +81,11 @@ export default {
 
   methods: {
     emitSubmit() {
-      this.$emit('submit');
+      this.$emit('submit', this.email);
+    },
+
+    emitCancel() {
+      this.$emit('cancel');
     },
   },
 
@@ -59,6 +98,13 @@ export default {
 </script>
 
 <style lang="postcss">
+@keyframes slideIn {
+  from {
+    transform: translateY(15px);
+    opacity: 0;
+  }
+}
+
 .auth-form {
   overflow: hidden;
   max-width: 360px;
@@ -66,6 +112,7 @@ export default {
   border-radius: 4px;
   box-shadow: 0 5px 10px 1px rgba(0, 0, 0, 0.15);
   background-color: #fff;
+  animation: slideIn 0.75s;
 }
 
 .auth-form__header {
@@ -85,7 +132,7 @@ export default {
 }
 
 .auth-form__body {
-  padding: 15px;
+  padding: 30px 15px 15px;
   font-size: 1em;
 }
 
@@ -94,17 +141,20 @@ export default {
 }
 
 .auth-form__message {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .auth-form__controls {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   margin-top: 30px;
 
   & > button {
     flex: 0 0 auto;
+
+    &:last-child {
+      margin-left: auto;
+    }
   }
 }
 </style>
