@@ -1,0 +1,77 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
+  "globals": {
+    "Cypress": true,
+    "cy": true,
+    "ENV": true
+  },
+  "parserOptions": {
+    "parser": "babel-eslint"
+  },
+  "extends": [
+    "airbnb-base",
+    "plugin:prettier/recommended",
+    "plugin:vue/recommended"
+  ],
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "trailingComma": "all"
+      }
+    ],
+    "func-names": 0,
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true,
+        "ignorePropertyModificationsFor": ["state"]
+      }
+    ],
+    "import/no-unresolved": [
+      "error",
+      {
+        "ignore": ["@", "fixtures", "mocks"]
+      }
+    ],
+    "vue/order-in-components": [
+      "error",
+      {
+        "order": [
+          "el",
+          "name",
+          "inheritAttrs",
+          "inject",
+          "provide",
+          ["props", "propsData"],
+          "data",
+          "computed",
+          "watch",
+          "methods",
+          "LIFECYCLE_HOOKS",
+          "mixins",
+          "components",
+          [
+            "functional",
+            "delimiters",
+            "comments",
+            "directives",
+            "filters",
+            "parent",
+            "extends",
+            "model",
+            "template",
+            "render",
+            "renderError"
+          ]
+        ]
+      }
+    ]
+  }
+}
