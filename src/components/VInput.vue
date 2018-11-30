@@ -1,11 +1,12 @@
 <template>
   <input
     :class="{ input: true, invalid: invalid, disabled: disabled }"
-    type="text"
     :placeholder="placeholder"
     :value="value"
     :disabled="disabled"
     :autofocus="autofocus"
+    :name="name"
+    type="text"
     @keypress="emitKeypress"
     @input="emitInput"
   >
@@ -17,7 +18,11 @@ export default {
   props: {
     placeholder: {
       type: String,
-      required: false,
+      default: '',
+    },
+    name: {
+      type: String,
+      default: '',
     },
     value: {
       type: String,

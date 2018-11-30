@@ -5,7 +5,7 @@
     :type="buttonType"
     @click="emitClick"
   >
-    <slot></slot>
+    <slot/>
   </button>
 </template>
 
