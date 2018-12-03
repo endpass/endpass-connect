@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import identityService from '@/service/identity';
+import AuthForm from './components/AuthForm';
 
-import AuthForm from '@/components/AuthForm';
+import identityService from '../../service/identity';
 
 export default {
   name: 'App',
@@ -42,7 +42,7 @@ export default {
 
   methods: {
     handleAuthCancel() {
-      if (parent.window && parent.window !== window) {        
+      if (parent.window && parent.window !== window) {
         console.log('cancel');
         parent.window.focus();
         window.close();
@@ -76,7 +76,7 @@ export default {
 
     async handleServiceRequest(res) {
       if (res) {
-        identityService.stopPolling()
+        identityService.stopPolling();
       }
     },
   },
@@ -104,7 +104,7 @@ export default {
 </script>
 
 <style lang="postcss">
-@import '../node_modules/reset.css/reset.css';
+@import '../../../node_modules/reset.css/reset.css';
 </style>
 
 <style lang="postcss">

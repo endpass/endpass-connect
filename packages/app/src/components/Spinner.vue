@@ -1,23 +1,23 @@
 <template>
-	<div class="spinner"></div>		
+  <div class="spinner"></div>
 </template>
 
 <script>
-	export default {
-		name: 'Spinner'		
-	};
+export default {
+  name: 'Spinner',
+};
 </script>
 
 <style lang="postcss">
 @keyframes rotate {
   to {
     transform: rotate(360deg);
-  }  
+  }
 }
 
 .spinner {
-	width: 32px;
-	height: 32px;	
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: 3px solid #6d1f966e;
   border-top: 3px solid #6d1f96;

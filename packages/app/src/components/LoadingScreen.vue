@@ -1,26 +1,26 @@
 <template>
   <div class="loading-screen">
     <div class="loading-screen__spinner">
-      <Spinner />
+      <Spinner/>
     </div>
-  </div>  
+  </div>
 </template>
 
 <script>
-  import Spinner from '@/components/Spinner'
+import Spinner from './Spinner.vue';
 
-  export default {
-    name: 'LoadingScreen',
+export default {
+  name: 'LoadingScreen',
 
-    components: {
-      Spinner,
-    },
-  };
+  components: {
+    Spinner,
+  },
+};
 </script>
 
 <style lang="postcss">
 .loading-screen {
-  position: absolute; 
+  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
