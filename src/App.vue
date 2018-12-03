@@ -1,5 +1,6 @@
 <template>
   <AuthForm
+    :inited="inited"
     :loading="loading"
     :show-email="!authorized && !sent"
     :message="formMessage"
@@ -18,6 +19,7 @@ export default {
   name: 'App',
 
   data: () => ({
+    inited: false,
     loading: false,
     sent: false,
     authorized: false,
@@ -40,7 +42,11 @@ export default {
 
   methods: {
     handleAuthCancel() {
-      console.log('cancel');
+      if (parent.window && parent.window !== window) {        
+        console.log('cancel');
+        parent.window.focus();
+        window.close();
+      }
     },
 
     handleAuthError(err) {
@@ -70,7 +76,7 @@ export default {
 
     async handleServiceRequest(res) {
       if (res) {
-        identityService.stopPolling();
+        identityService.stopPolling()
       }
     },
   },
@@ -82,9 +88,11 @@ export default {
       this.authorized = true;
     } catch (err) {
       this.authorized = false;
+    } finally {
+      this.inited = true;
     }
 
-    if (this.authorized) {
+    if (this.authorized && parent.window !== window) {
       console.log('switch to parent here', window.parent);
     }
   },
