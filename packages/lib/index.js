@@ -1,13 +1,24 @@
+import identityService from '../service/identity';
+
 class Connect {
-  constructor(url) {
-    this.url = url;
+  /**
+   * Check auth status on endpass identity service
+   * @returns {Promise<Boolean>} Auth status
+   */
+  static async status() {
+    try {
+      const res = await identityService.getAccounts();
+
+      return !!res;
+    } catch (err) {
+      return false;
+    }
   }
 
-  status() {
-    console.log(1);
-  }
-
-  auth() {
+  /**
+   * Boo Boo Boo
+   */
+  static async auth() {
     console.log(2);
   }
 }
