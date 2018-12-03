@@ -1,34 +1,50 @@
 <template>
-  <form class="auth-form" @submit.prevent="emitSubmit">
+  <form 
+    class="auth-form" 
+    @submit.prevent="emitSubmit"
+  >
     <header class="auth-form__header">
-      <img class="auth-form__logo" src="../assets/logo.png" alt="Endpass">
+      <img 
+        class="auth-form__logo" 
+        src="../assets/logo.png" 
+        alt="Endpass"
+      >
       Connect
     </header>
     <div class="auth-form__body">
-      <section class="auth-form__message">
-        <message>{{ message }}</message>
-      </section>
-      <section v-if="error" class="auth-form__message">
-        <message :error="true">{{ error }}</message>
-      </section>
-      <section v-if="showEmail" class="auth-form__field">
-        <v-input
-          v-model="email"
-          :invalid="email.length > 0 && !isEmailValid"
-          :autofocus="true"
-          name="email"
-          placeholder="Enter your email..."
-        />
-      </section>
-      <section class="auth-form__controls">
-        <v-button
-          v-if="showEmail"
-          :disabled="!isEmailValid || loading"
-          :submit="true"
-          type="primary"
-        >{{ primaryButtonLabel }}</v-button>
-        <v-button @click="emitCancel">Close</v-button>
-      </section>
+      <LoadingScreen v-if="!inited" />
+      <template v-else>        
+        <section class="auth-form__message">
+          <message>{{ message }}</message>
+        </section>
+        <section 
+          v-if="error" 
+          class="auth-form__message"
+        >
+          <message :error="true">{{ error }}</message>
+        </section>
+        <section 
+          v-if="showEmail" 
+          class="auth-form__field"
+        >
+          <v-input
+            v-model="email"
+            :invalid="email.length > 0 && !isEmailValid"
+            :autofocus="true"
+            name="email"
+            placeholder="Enter your email..."
+          />
+        </section>
+        <section class="auth-form__controls">
+          <v-button
+            v-if="showEmail"
+            :disabled="!isEmailValid || loading"
+            :submit="true"
+            type="primary"
+          >{{ primaryButtonLabel }}</v-button>
+          <v-button @click="emitCancel">Close</v-button>
+        </section>
+      </template>
     </div>
   </form>
 </template>
@@ -37,11 +53,17 @@
 import VInput from '@/components/VInput';
 import VButton from '@/components/VButton';
 import Message from '@/components/Message';
+import LoadingScreen from '@/components/LoadingScreen';
 
 export default {
   name: 'AuthForm',
 
   props: {
+    inited: {
+      type: Boolean,
+      default: false,
+    },
+
     loading: {
       type: Boolean,
       default: false,
@@ -93,6 +115,7 @@ export default {
     VButton,
     VInput,
     Message,
+    LoadingScreen,
   },
 };
 </script>
@@ -132,7 +155,9 @@ export default {
 }
 
 .auth-form__body {
+  position: relative;
   padding: 30px 15px 15px;
+  min-height: 100px;
   font-size: 1em;
 }
 
