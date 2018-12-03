@@ -40,6 +40,7 @@ const normalizeDir = async dir => {
     }
     /* eslint-enable */
   } catch (err) {
+    /* eslint-disable-next-line */
     console.error(`Dist folder is not exist, build lib first!\n${err}`);
     process.exit(1);
   }
