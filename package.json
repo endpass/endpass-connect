@@ -2,10 +2,22 @@
   "name": "endpass-connect",
   "version": "0.1.0",
   "private": true,
+  "main": "./dist/endpass-connect.umd.min.js",
   "scripts": {
-    "dev": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "dev": "vue-cli-service serve ./packages/app/src/main.js",
+    "build:app": "vue-cli-service --no-clean build ./packages/app/src/main.js",
+    "build:lib": "vue-cli-service --no-clean build --target lib --name endpass-connect ./packages/lib/index.js",
     "test:unit": "vue-cli-service test:unit"
+  },
+  "lint-staged": {
+    "lint-staged": {
+      "./dist/endpass-connect.umd.min.js": [
+        "git add"
+      ]
+    }
+  },
+  "husky": {
+    "pre-commit": "npm run build:lib && lint-staged"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -26,6 +38,8 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-prettier": "^3.0.0",
     "eslint-plugin-vue": "^4.7.1",
+    "husky": "^1.2.0",
+    "lint-staged": "^8.1.0",
     "postcss-nested": "^4.1.0",
     "vue-template-compiler": "^2.5.17"
   }
