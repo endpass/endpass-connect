@@ -2,24 +2,28 @@
   "name": "endpass-connect",
   "version": "0.1.0",
   "private": true,
-  "main": "./dist/lib/endpass-connect.common.js",
-  "module": "./dist/lib/endpass-connect.umd.min.js",
+  "main": "./dist/lib/endpass-connect.js",
+  "module": "./dist/lib/endpass-connect.umd.js",
   "scripts": {
-    "dev": "vue-cli-service serve ./packages/app/src/main.js",
-    "build": "rimraf ./dist && npm run build:app && npm run build:lib && npm run dist",
+    "build": "rimraf ./dist && npm run build:app && npm run build:lib",
+    "dev:app": "vue-cli-service serve ./packages/app/src/main.js",
     "build:app": "vue-cli-service --no-clean build ./packages/app/src/main.js",
-    "build:lib": "vue-cli-service --no-clean build --target lib --name endpass-connect ./packages/lib/index.js",
-    "test:unit": "vue-cli-service test:unit",
-    "dist": "node ./scripts/dist.js",
-    "postinstall": "node ./scripts/build.js"
+    "dev:lib": "./node_modules/rollup/bin/rollup -c -w",
+    "build:lib": "./node_modules/rollup/bin/rollup -c --silent",
+    "test:unit": "vue-cli-service test:unit"
   },
   "lint-staged": {
-    "./packages/**/*.js": [
+    "./dist/lib/**/*.js": [
       "git add"
     ]
   },
   "husky": {
-    "pre-commit": "lint-staged"
+    "hooks": {
+      "pre-commit": "npm run build:lib && lint-staged"
+    }
+  },
+  "resolutions": {
+    "babel-core": "7.0.0-bridge.0"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -27,6 +31,8 @@
     "vue": "^2.5.17"
   },
   "devDependencies": {
+    "@babel/core": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
     "@vue/cli-plugin-babel": "^3.2.0",
     "@vue/cli-plugin-unit-jest": "^3.2.0",
     "@vue/cli-service": "^3.2.0",
@@ -44,6 +50,11 @@
     "lint-staged": "^8.1.0",
     "postcss-nested": "^4.1.0",
     "rimraf": "^2.6.2",
+    "rollup": "^0.67.4",
+    "rollup-plugin-babel": "^4.0.3",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-json": "^3.1.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
     "vue-template-compiler": "^2.5.17"
   }
 }

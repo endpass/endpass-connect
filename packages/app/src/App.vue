@@ -11,8 +11,9 @@
 </template>
 
 <script>
-import AuthForm from './components/AuthForm';
-
+import AuthForm from './components/AuthForm.vue';
+import { Messenger } from './class';
+import Connect from '../../lib';
 import identityService from '../../service/identity';
 
 export default {
@@ -33,7 +34,7 @@ export default {
       }
 
       if (!this.authorized && this.sent) {
-        return 'An email with authorization link was sent on your address. Check it and return to application.';
+        return 'An email with authorization link was sent on your address. Open it in the same browser to sign in.';
       }
 
       return 'Log in to your Endpass account to access site actions';
@@ -41,12 +42,12 @@ export default {
   },
 
   methods: {
+    switchToParentWindowWithClose() {
+      Connect.switchBack();
+    },
+
     handleAuthCancel() {
-      if (parent.window && parent.window !== window) {
-        console.log('cancel');
-        parent.window.focus();
-        window.close();
-      }
+      Connect.switchBack();
     },
 
     handleAuthError(err) {
@@ -76,7 +77,12 @@ export default {
 
     async handleServiceRequest(res) {
       if (res) {
+        this.authorized = true;
         identityService.stopPolling();
+
+        setTimeout(() => {
+          Connect.switchBack();
+        }, 2500);
       }
     },
   },
@@ -92,8 +98,8 @@ export default {
       this.inited = true;
     }
 
-    if (this.authorized && parent.window !== window) {
-      console.log('switch to parent here', window.parent);
+    if (this.authorized) {
+      Messenger.postMessage('foo', { bar: 'baz' });
     }
   },
 
@@ -112,8 +118,14 @@ export default {
   box-sizing: border-box;
 }
 
+html {
+  min-height: 100%;
+}
+
 body {
-  background-color: #6d1f96;
+  background: linear-gradient(to bottom, #6d2198 0%, #4b0873 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 html,

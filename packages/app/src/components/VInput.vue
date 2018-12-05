@@ -63,6 +63,7 @@ export default {
   font-size: 16px;
   line-height: 1.5;
   transition: 0.25s;
+  background: transparent;
 
   &.invalid {
     border-bottom: 1px solid #f00;

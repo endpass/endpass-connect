@@ -49,6 +49,7 @@ export default {
   height: 45px;
   padding: 6.5px 15px;
   border: none;
+  background: transparent;
   line-height: 1.5;
   font-size: 20px;
   font-weight: 600;
