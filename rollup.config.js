@@ -27,8 +27,7 @@ module.exports = {
     },
     {
       file: pkg.main,
-      name: 'endpass-connect',
-      format: 'umd',
+      format: 'cjs',
     },
   ],
 };

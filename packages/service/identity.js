@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 const IDENTITY_SERVER_URL = 'https://identity-dev.endpass.com/api/v1.1';
 
 class IdentityService {
@@ -9,20 +7,26 @@ class IdentityService {
 
   /* eslint-disable-next-line */
   getAccounts() {
-    return axios.get(`${IDENTITY_SERVER_URL}/accounts`, {
-      withCredentials: true,
-    });
+    return fetch(`${IDENTITY_SERVER_URL}/accounts`, {
+      method: 'GET',
+      credentials: 'include',
+    }).then(res => res.json());
   }
 
   /* eslint-disable-next-line */
-  async auth(email) {
-    const { data } = await axios.post(`${IDENTITY_SERVER_URL}/auth`, {
-      email,
-    });
+  auth(email) {
+    return fetch(`${IDENTITY_SERVER_URL}/auth`, {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+      }),
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (!res.success) throw new Error(res.message);
 
-    if (!data.success) throw new Error(data.message);
-
-    return data.success;
+        return res.success;
+      });
   }
 
   startPolling(handler) {
