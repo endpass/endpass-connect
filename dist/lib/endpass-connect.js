@@ -939,30 +939,24 @@ function () {
     }()
   }, {
     key: "auth",
-
-    /**
-     * Boo Boo Boo
-     */
     value: function auth() {
       var pos = {
         x: window.innerWidth / 2 - 200,
         y: 200
       };
-      var windowFeatures = ['chrome=yes', 'centerscreen=yes', 'resizable=no', 'width=400', 'heigth=600', "top=".concat(pos.y), "left=".concat(pos.x)];
+      var windowFeatures = ['chrome=yes', 'centerscreen=yes', 'resizable=no', 'width=400', 'height=600', "top=".concat(pos.y), "left=".concat(pos.x)];
       window.name = HOST_WINDOW_NAME;
       window.open(this.authUrl, DIALOG_WINDOW_NAME, windowFeatures.join(','));
-      return new Promise(function (resolve, reject) {
+      return new Promise(function (resolve) {
+        /* eslint-disable-next-line */
         window.addEventListener('message', function (message) {
-          console.log('handle message', message);
-          return resolve(message);
+          var data = JSON.parse(message.data);
+
+          if (data.source === 'endpass-connect-dialog') {
+            return resolve(data);
+          }
         });
       });
-    }
-  }], [{
-    key: "switchBack",
-    value: function switchBack() {
-      window.open('', HOST_WINDOW_NAME);
-      window.close();
     }
   }]);
 
