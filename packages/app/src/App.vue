@@ -12,8 +12,7 @@
 
 <script>
 import AuthForm from './components/AuthForm.vue';
-// import { Messenger } from './class';
-import Connect from '../../lib';
+import { sendMessage } from './util/message';
 import identityService from '../../service/identity';
 
 export default {
@@ -43,11 +42,14 @@ export default {
 
   methods: {
     switchToParentWindowWithClose() {
-      Connect.switchBack();
+      window.close();
     },
 
     handleAuthCancel() {
-      Connect.switchBack();
+      sendMessage({
+        status: false,
+      });
+      window.close();
     },
 
     handleAuthError(err) {
@@ -80,18 +82,17 @@ export default {
         this.authorized = true;
         identityService.stopPolling();
 
-        setTimeout(() => {
-          Connect.switchBack();
-        }, 2500);
+        sendMessage({
+          status: true,
+        });
+        window.close();
       }
     },
   },
 
   async created() {
     try {
-      const res = await identityService.getAccounts();
-
-      console.log(res);
+      await identityService.getAccounts();
 
       this.authorized = true;
     } catch (err) {
@@ -100,9 +101,11 @@ export default {
       this.inited = true;
     }
 
-    // if (this.authorized) {
-    //   Messenger.postMessage('foo', { bar: 'baz' });
-    // }
+    if (this.authorized) {
+      sendMessage({
+        status: true,
+      });
+    }
   },
 
   components: {

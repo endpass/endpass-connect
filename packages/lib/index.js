@@ -24,14 +24,6 @@ class Connect {
     }
   }
 
-  static switchBack() {
-    window.open('', HOST_WINDOW_NAME);
-    window.close();
-  }
-
-  /**
-   * Boo Boo Boo
-   */
   auth() {
     const pos = {
       x: window.innerWidth / 2 - 200,
@@ -42,7 +34,7 @@ class Connect {
       'centerscreen=yes',
       'resizable=no',
       'width=400',
-      'heigth=600',
+      'height=600',
       `top=${pos.y}`,
       `left=${pos.x}`,
     ];
@@ -50,10 +42,14 @@ class Connect {
     window.name = HOST_WINDOW_NAME;
     window.open(this.authUrl, DIALOG_WINDOW_NAME, windowFeatures.join(','));
 
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
+      /* eslint-disable-next-line */
       window.addEventListener('message', message => {
-        console.log('handle message', message);
-        return resolve(message);
+        const data = JSON.parse(message.data);
+
+        if (data.source === 'endpass-connect-dialog') {
+          return resolve(data);
+        }
       });
     });
   }
