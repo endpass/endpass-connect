@@ -12,7 +12,7 @@
 
 <script>
 import AuthForm from './components/AuthForm.vue';
-import { Messenger } from './class';
+// import { Messenger } from './class';
 import Connect from '../../lib';
 import identityService from '../../service/identity';
 
@@ -89,7 +89,9 @@ export default {
 
   async created() {
     try {
-      await identityService.getAccounts();
+      const res = await identityService.getAccounts();
+
+      console.log(res);
 
       this.authorized = true;
     } catch (err) {
@@ -98,9 +100,9 @@ export default {
       this.inited = true;
     }
 
-    if (this.authorized) {
-      Messenger.postMessage('foo', { bar: 'baz' });
-    }
+    // if (this.authorized) {
+    //   Messenger.postMessage('foo', { bar: 'baz' });
+    // }
   },
 
   components: {
