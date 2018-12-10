@@ -3,31 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "main": "./dist/lib/endpass-connect.js",
-  "module": "./packages/lib/index.js",
   "scripts": {
     "build": "rimraf ./dist && npm run build:app && npm run build:lib",
     "dev:app": "vue-cli-service serve ./packages/app/src/main.js",
     "build:app": "vue-cli-service --no-clean build ./packages/app/src/main.js",
-    "dev:lib": "NODE_ENV=development webpack --watch",
-    "build:lib": "webpack",
+    "dev:lib": "webpack --watch --mode=development",
+    "build:lib": "webpack --mode=production",
     "test:unit": "vue-cli-service test:unit"
   },
   "lint-staged": {
-    "./dist/lib/**/*.js": ["git add"]
+    "./dist/lib/*.js": ["git add"]
   },
   "husky": {
     "hooks": {
       "pre-commit": "npm run build:lib && lint-staged"
     }
   },
-  "resolutions": {
-    "babel-core": "7.0.0-bridge.0"
-  },
   "dependencies": {
     "lodash": "^4.17.11",
     "reset.css": "^2.0.2",
     "vue": "^2.5.17",
-    "web3": "0.19.0"
+    "vue-router": "^3.0.2",
+    "vuex": "^3.0.1",
+    "web3": "1.0.0-beta.33",
+    "web3-dapp": "npm:web3@0.19"
   },
   "devDependencies": {
     "@babel/core": "^7.2.0",
@@ -36,7 +35,6 @@
     "@vue/cli-plugin-unit-jest": "^3.2.0",
     "@vue/cli-service": "^3.2.0",
     "@vue/test-utils": "^1.0.0-beta.20",
-    "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.4",

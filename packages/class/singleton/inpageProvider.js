@@ -1,4 +1,4 @@
-import { Emmiter, InpageProvider } from '..';
+import { Emmiter, InpageProvider } from '@@/class';
 
 const emmiter = new Emmiter();
 

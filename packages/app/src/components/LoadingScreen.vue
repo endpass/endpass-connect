@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Spinner from './Spinner.vue';
+import Spinner from '@/components/Spinner.vue';
 
 export default {
   name: 'LoadingScreen',

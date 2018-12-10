@@ -1,10 +1,6 @@
 const IDENTITY_SERVER_URL = 'https://identity-dev.endpass.com/api/v1.1';
 
 class IdentityService {
-  constructor() {
-    this.interval = null;
-  }
-
   /* eslint-disable-next-line */
   getAccounts() {
     return fetch(`${IDENTITY_SERVER_URL}/accounts`, {
@@ -29,22 +25,18 @@ class IdentityService {
       });
   }
 
-  startPolling(handler) {
-    this.interval = setInterval(async () => {
-      try {
-        await this.getAccounts();
+  awaitAuthConfirm() {
+    return new Promise(resolve => {
+      const interval = setInterval(async () => {
+        try {
+          await this.getAccounts();
 
-        handler(true);
-      } catch (err) {
-        handler(false);
-      }
-    }, 1500);
-  }
+          clearInterval(interval);
 
-  stopPolling() {
-    clearInterval(this.interval);
-
-    this.interval = null;
+          return resolve();
+        } catch (err) {}
+      }, 1500);
+    });
   }
 }
 
