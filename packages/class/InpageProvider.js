@@ -1,5 +1,6 @@
 import { get } from 'lodash';
 import Emmiter from './Emmiter';
+import { INPAGE_EVENTS, INPAGE_ID_PREFIX } from '../constants';
 
 export default class InpageProvider {
   constructor(eventEmitter) {
@@ -9,36 +10,32 @@ export default class InpageProvider {
 
     this.eventEmitter = eventEmitter;
     this.pendingRequestsHandlers = {};
-    this.settings = {};
+    this.settings = {
+      selectedAddress: null,
+      networkVersion: null,
+    };
     this.isMetaMask = true;
     this.isConnected = () => true;
     this.enable = this.enable.bind(this);
+
     this.setupEventsHandlers();
   }
 
-  static INPAGE_EVENT = {
-    SETTINGS: 'INPAGE_PROVIDER_SETTINGS_EVENT',
-    RESPONSE: 'INPAGE_PROVIDER_RESPONSE_EVENT',
-    REQUEST: 'INPAGE_PROVIDER_REQUEST_EVENT',
-  };
-
-  static INPAGE_ID_PREFIX = 'ep_';
-
   static createInpageIdFromRequestId(id) {
-    return `${this.INPAGE_ID_PREFIX}${id}`;
+    return `${INPAGE_ID_PREFIX}${id}`;
   }
 
   static restoreRequestIdFromInpageId(id) {
-    return parseInt(id.replace(this.INPAGE_ID_PREFIX, ''), 10);
+    return parseInt(id.replace(INPAGE_ID_PREFIX, ''), 10);
   }
 
   setupEventsHandlers() {
     this.eventEmitter.on(
-      this.INPAGE_EVENT.SETTINGS,
+      INPAGE_EVENTS.SETTINGS,
       this.handleSettings.bind(this),
     );
     this.eventEmitter.on(
-      this.INPAGE_EVENT.RESPONSE,
+      INPAGE_EVENTS.RESPONSE,
       this.handleResponse.bind(this),
     );
   }
@@ -107,7 +104,7 @@ export default class InpageProvider {
       callback(null, processedPayload);
     } else {
       this.pendingRequestsHandlers[payload.id] = callback;
-      this.eventEmitter.emit(this.INPAGE_EVENT.REQUEST, {
+      this.eventEmitter.emit(INPAGE_EVENTS.REQUEST, {
         ...payload,
         id: InpageProvider.createInpageIdFromRequestId(payload.id),
       });

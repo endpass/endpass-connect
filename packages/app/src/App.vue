@@ -1,32 +1,20 @@
 <template>
-  <AuthForm
-    :inited="inited"
-    :loading="loading"
-    :show-email="!authorized && !sent"
-    :message="formMessage"
-    :error="error"
-    @cancel="handleAuthCancel"
-    @submit="handleAuthSubmit"
-  />
+  <router-view />
 </template>
 
 <script>
-import AuthForm from './components/AuthForm.vue';
-import { sendMessage } from './util/message';
-import identityService from '../../service/identity';
+import { mapActions, mapState } from 'vuex'
+import { sendMessageToOpener } from '@@/util/message';
+import identityService from '@@/service/identity';
 
 export default {
   name: 'App',
 
-  data: () => ({
-    inited: false,
-    loading: false,
-    sent: false,
-    authorized: false,
-    error: null,
-  }),
-
   computed: {
+    ...mapState({
+      authorized: state => state.accounts.authorized
+    }),
+
     formMessage() {
       if (this.authorized) {
         return 'You are currently logged in.';
@@ -41,13 +29,26 @@ export default {
   },
 
   methods: {
-    switchToParentWindowWithClose() {
-      window.close();
-    },
+    ...mapActions(['checkAuthStatus']),
+
+//     handleWindowMessage(message) {
+//       // Handler messages here, can be me moved to vuex store plugin or middleware
+//       if (!message.data) return;
+// 
+//       const {data} = message;
+//       const isMessageFromOpener = data.source === 'endpass-connect-opener';
+// 
+//       if (isMessageFromOpener) {
+//         console.log('message from opener', data)
+//       }
+//     },
 
     handleAuthCancel() {
-      sendMessage({
-        status: false,
+      sendMessageToOpener({
+        data: {
+          message: 'User cancel auth',
+          status: false,
+        }
       });
       window.close();
     },
@@ -56,34 +57,25 @@ export default {
       this.error = err || 'Unhandled error occured';
     },
 
-    async handleAuthSubmit(email) {
-      this.loading = true;
-
-      try {
-        const res = await identityService.auth(email);
-
-        if (res) {
-          identityService.startPolling(this.handleServiceRequest);
-
-          this.error = null;
-          this.sent = true;
-        } else {
-          this.handleAuthError();
-        }
-      } catch (err) {
-        this.handleAuthError(err.message);
-      } finally {
-        this.loading = false;
-      }
-    },
+    // Return it to handle window closing by user
+    // handleWindowClose() {
+    //   sendMessageToOpener({
+    //     data: {
+    //       message: 'User close auth dialog',
+    //       status: false,
+    //     }
+    //   });
+    // },
 
     async handleServiceRequest(res) {
       if (res) {
         this.authorized = true;
         identityService.stopPolling();
 
-        sendMessage({
-          status: true,
+        sendMessageToOpener({
+          data: {
+            status: true,
+          }
         });
         window.close();
       }
@@ -91,26 +83,29 @@ export default {
   },
 
   async created() {
-    try {
-      await identityService.getAccounts();
+    // await this.checkAuthStatus()
+    
+    // window.addEventListener('beforeunload', this.handleWindowClose)
+    // window.addEventListener('message', this.handleWindowMessage)
 
-      this.authorized = true;
-    } catch (err) {
-      this.authorized = false;
-    } finally {
-      this.inited = true;
-    }
-
-    if (this.authorized) {
-      sendMessage({
-        status: true,
-      });
-    }
-  },
-
-  components: {
-    AuthForm,
-  },
+//     try {
+//       await identityService.getAccounts();
+// 
+//       this.authorized = true;
+//     } catch (err) {
+//       this.authorized = false;
+//     } finally {
+//       this.inited = true;
+//     }
+// 
+//     if (this.authorized) {
+//       sendMessageToOpener({
+//         data: {
+//           status: true,
+//         }
+//       });
+//     }
+  },  
 };
 </script>
 
