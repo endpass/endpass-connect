@@ -3,11 +3,13 @@ import bs58check from 'bs58check';
 import EthWallet from 'ethereumjs-wallet';
 import HDKey from 'ethereumjs-wallet/hdkey';
 
-// Monkey patch keythereum to skip generating address for private keys
-// This allows us to encrypt private keys of arbitrary length, and
-// conforms better to the Ethereum keystore V3 spec, which does not include
-// the address for privacy reasons.
-// See https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition#alterations-from-version-1
+/**
+ * Monkey patch keythereum to skip generating address for private keys
+ * This allows us to encrypt private keys of arbitrary length, and
+ * conforms better to the Ethereum keystore V3 spec, which does not include
+ * the address for privacy reasons.
+ * See https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition#alterations-from-version-1
+ */
 keythereum.privateKeyToAddress = function(pk) {
   return '';
 };

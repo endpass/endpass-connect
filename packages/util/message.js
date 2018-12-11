@@ -21,22 +21,29 @@ export const sendMessage = ({ target, source, data }) => {
 };
 
 export const sendMessageToDialog = ({ target, data }) =>
-  sendMessage({ target, data, source: 'opener' });
+  sendMessage({
+    source: 'opener',
+    target,
+    data,
+  });
 
 export const sendMessageToOpener = ({ data }) =>
-  sendMessage({ data, target: window.opener, source: 'dialog' });
+  sendMessage({
+    source: 'dialog',
+    target: window.opener,
+    data,
+  });
 
 export const awaitMessageFromOpener = () =>
   new Promise(resolve => {
-    const handler = message => {
-      if (!message.data) return;
-
-      window.removeEventListener('message', handler);
-
-      const { source, ...data } = message.data;
+    /* eslint-disable-next-line */
+    const handler = ({ data: messageData = {} }) => {
+      const { source, ...data } = messageData;
       const isMessageFromOpener = source === 'endpass-connect-opener';
 
-      if (isMessageFromOpener) {
+      if (isMessageFromOpener && data) {
+        window.removeEventListener('message', handler);
+
         return resolve(data);
       }
     };
@@ -46,20 +53,23 @@ export const awaitMessageFromOpener = () =>
 
 export const awaitDialogMessage = () =>
   new Promise((resolve, reject) => {
-    const handler = message => {
-      if (!message.data) return;
+    /* eslint-disable-next-line */
+    const handler = ({ data: messageData = {} }) => {
+      const isMessageFromDialog =
+        messageData.source === 'endpass-connect-dialog';
 
-      window.removeEventListener('message', handler);
+      if (isMessageFromDialog && messageData) {
+        const { status, message = null, ...data } = messageData;
 
-      const { source, ...data } = message.data;
-      const isMessageFromDialog = source === 'endpass-connect-dialog';
+        window.removeEventListener('message', handler);
 
-      if (isMessageFromDialog && data.status) {
-        return resolve(data);
-      }
-
-      if (isMessageFromDialog && !data.status) {
-        return reject(data.message);
+        return status
+          ? resolve({
+              status,
+              message,
+              data,
+            })
+          : reject(message);
       }
     };
 
