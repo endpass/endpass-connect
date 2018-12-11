@@ -3109,6 +3109,17 @@ eval("/* WEBPACK VAR INJECTION */(function(process, __dirname, module) {// https
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_DataView.js":
+/*!******************************************!*\
+  !*** ./node_modules/lodash/_DataView.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var getNative = __webpack_require__(/*! ./_getNative */ \"./node_modules/lodash/_getNative.js\"),\n    root = __webpack_require__(/*! ./_root */ \"./node_modules/lodash/_root.js\");\n\n/* Built-in method references that are verified to be native. */\nvar DataView = getNative(root, 'DataView');\n\nmodule.exports = DataView;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_DataView.js?");
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_Hash.js":
 /*!**************************************!*\
   !*** ./node_modules/lodash/_Hash.js ***!
@@ -3153,6 +3164,39 @@ eval("var mapCacheClear = __webpack_require__(/*! ./_mapCacheClear */ \"./node_m
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_Promise.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/_Promise.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var getNative = __webpack_require__(/*! ./_getNative */ \"./node_modules/lodash/_getNative.js\"),\n    root = __webpack_require__(/*! ./_root */ \"./node_modules/lodash/_root.js\");\n\n/* Built-in method references that are verified to be native. */\nvar Promise = getNative(root, 'Promise');\n\nmodule.exports = Promise;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_Promise.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_Set.js":
+/*!*************************************!*\
+  !*** ./node_modules/lodash/_Set.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var getNative = __webpack_require__(/*! ./_getNative */ \"./node_modules/lodash/_getNative.js\"),\n    root = __webpack_require__(/*! ./_root */ \"./node_modules/lodash/_root.js\");\n\n/* Built-in method references that are verified to be native. */\nvar Set = getNative(root, 'Set');\n\nmodule.exports = Set;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_Set.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_Stack.js":
+/*!***************************************!*\
+  !*** ./node_modules/lodash/_Stack.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var ListCache = __webpack_require__(/*! ./_ListCache */ \"./node_modules/lodash/_ListCache.js\"),\n    stackClear = __webpack_require__(/*! ./_stackClear */ \"./node_modules/lodash/_stackClear.js\"),\n    stackDelete = __webpack_require__(/*! ./_stackDelete */ \"./node_modules/lodash/_stackDelete.js\"),\n    stackGet = __webpack_require__(/*! ./_stackGet */ \"./node_modules/lodash/_stackGet.js\"),\n    stackHas = __webpack_require__(/*! ./_stackHas */ \"./node_modules/lodash/_stackHas.js\"),\n    stackSet = __webpack_require__(/*! ./_stackSet */ \"./node_modules/lodash/_stackSet.js\");\n\n/**\n * Creates a stack cache object to store key-value pairs.\n *\n * @private\n * @constructor\n * @param {Array} [entries] The key-value pairs to cache.\n */\nfunction Stack(entries) {\n  var data = this.__data__ = new ListCache(entries);\n  this.size = data.size;\n}\n\n// Add methods to `Stack`.\nStack.prototype.clear = stackClear;\nStack.prototype['delete'] = stackDelete;\nStack.prototype.get = stackGet;\nStack.prototype.has = stackHas;\nStack.prototype.set = stackSet;\n\nmodule.exports = Stack;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_Stack.js?");
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_Symbol.js":
 /*!****************************************!*\
   !*** ./node_modules/lodash/_Symbol.js ***!
@@ -3161,6 +3205,72 @@ eval("var mapCacheClear = __webpack_require__(/*! ./_mapCacheClear */ \"./node_m
 /***/ (function(module, exports, __webpack_require__) {
 
 eval("var root = __webpack_require__(/*! ./_root */ \"./node_modules/lodash/_root.js\");\n\n/** Built-in value references. */\nvar Symbol = root.Symbol;\n\nmodule.exports = Symbol;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_Symbol.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_Uint8Array.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_Uint8Array.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var root = __webpack_require__(/*! ./_root */ \"./node_modules/lodash/_root.js\");\n\n/** Built-in value references. */\nvar Uint8Array = root.Uint8Array;\n\nmodule.exports = Uint8Array;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_Uint8Array.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_WeakMap.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/_WeakMap.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var getNative = __webpack_require__(/*! ./_getNative */ \"./node_modules/lodash/_getNative.js\"),\n    root = __webpack_require__(/*! ./_root */ \"./node_modules/lodash/_root.js\");\n\n/* Built-in method references that are verified to be native. */\nvar WeakMap = getNative(root, 'WeakMap');\n\nmodule.exports = WeakMap;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_WeakMap.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_apply.js":
+/*!***************************************!*\
+  !*** ./node_modules/lodash/_apply.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * A faster alternative to `Function#apply`, this function invokes `func`\n * with the `this` binding of `thisArg` and the arguments of `args`.\n *\n * @private\n * @param {Function} func The function to invoke.\n * @param {*} thisArg The `this` binding of `func`.\n * @param {Array} args The arguments to invoke `func` with.\n * @returns {*} Returns the result of `func`.\n */\nfunction apply(func, thisArg, args) {\n  switch (args.length) {\n    case 0: return func.call(thisArg);\n    case 1: return func.call(thisArg, args[0]);\n    case 2: return func.call(thisArg, args[0], args[1]);\n    case 3: return func.call(thisArg, args[0], args[1], args[2]);\n  }\n  return func.apply(thisArg, args);\n}\n\nmodule.exports = apply;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_apply.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_arrayEach.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_arrayEach.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * A specialized version of `_.forEach` for arrays without support for\n * iteratee shorthands.\n *\n * @private\n * @param {Array} [array] The array to iterate over.\n * @param {Function} iteratee The function invoked per iteration.\n * @returns {Array} Returns `array`.\n */\nfunction arrayEach(array, iteratee) {\n  var index = -1,\n      length = array == null ? 0 : array.length;\n\n  while (++index < length) {\n    if (iteratee(array[index], index, array) === false) {\n      break;\n    }\n  }\n  return array;\n}\n\nmodule.exports = arrayEach;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_arrayEach.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_arrayFilter.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/_arrayFilter.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * A specialized version of `_.filter` for arrays without support for\n * iteratee shorthands.\n *\n * @private\n * @param {Array} [array] The array to iterate over.\n * @param {Function} predicate The function invoked per iteration.\n * @returns {Array} Returns the new filtered array.\n */\nfunction arrayFilter(array, predicate) {\n  var index = -1,\n      length = array == null ? 0 : array.length,\n      resIndex = 0,\n      result = [];\n\n  while (++index < length) {\n    var value = array[index];\n    if (predicate(value, index, array)) {\n      result[resIndex++] = value;\n    }\n  }\n  return result;\n}\n\nmodule.exports = arrayFilter;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_arrayFilter.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_arrayLikeKeys.js":
+/*!***********************************************!*\
+  !*** ./node_modules/lodash/_arrayLikeKeys.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseTimes = __webpack_require__(/*! ./_baseTimes */ \"./node_modules/lodash/_baseTimes.js\"),\n    isArguments = __webpack_require__(/*! ./isArguments */ \"./node_modules/lodash/isArguments.js\"),\n    isArray = __webpack_require__(/*! ./isArray */ \"./node_modules/lodash/isArray.js\"),\n    isBuffer = __webpack_require__(/*! ./isBuffer */ \"./node_modules/lodash/isBuffer.js\"),\n    isIndex = __webpack_require__(/*! ./_isIndex */ \"./node_modules/lodash/_isIndex.js\"),\n    isTypedArray = __webpack_require__(/*! ./isTypedArray */ \"./node_modules/lodash/isTypedArray.js\");\n\n/** Used for built-in method references. */\nvar objectProto = Object.prototype;\n\n/** Used to check objects for own properties. */\nvar hasOwnProperty = objectProto.hasOwnProperty;\n\n/**\n * Creates an array of the enumerable property names of the array-like `value`.\n *\n * @private\n * @param {*} value The value to query.\n * @param {boolean} inherited Specify returning inherited property names.\n * @returns {Array} Returns the array of property names.\n */\nfunction arrayLikeKeys(value, inherited) {\n  var isArr = isArray(value),\n      isArg = !isArr && isArguments(value),\n      isBuff = !isArr && !isArg && isBuffer(value),\n      isType = !isArr && !isArg && !isBuff && isTypedArray(value),\n      skipIndexes = isArr || isArg || isBuff || isType,\n      result = skipIndexes ? baseTimes(value.length, String) : [],\n      length = result.length;\n\n  for (var key in value) {\n    if ((inherited || hasOwnProperty.call(value, key)) &&\n        !(skipIndexes && (\n           // Safari 9 has enumerable `arguments.length` in strict mode.\n           key == 'length' ||\n           // Node.js 0.10 has enumerable non-index properties on buffers.\n           (isBuff && (key == 'offset' || key == 'parent')) ||\n           // PhantomJS 2 has enumerable non-index properties on typed arrays.\n           (isType && (key == 'buffer' || key == 'byteLength' || key == 'byteOffset')) ||\n           // Skip index properties.\n           isIndex(key, length)\n        ))) {\n      result.push(key);\n    }\n  }\n  return result;\n}\n\nmodule.exports = arrayLikeKeys;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_arrayLikeKeys.js?");
 
 /***/ }),
 
@@ -3175,6 +3285,28 @@ eval("/**\n * A specialized version of `_.map` for arrays without support for it
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_arrayPush.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_arrayPush.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * Appends the elements of `values` to `array`.\n *\n * @private\n * @param {Array} array The array to modify.\n * @param {Array} values The values to append.\n * @returns {Array} Returns `array`.\n */\nfunction arrayPush(array, values) {\n  var index = -1,\n      length = values.length,\n      offset = array.length;\n\n  while (++index < length) {\n    array[offset + index] = values[index];\n  }\n  return array;\n}\n\nmodule.exports = arrayPush;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_arrayPush.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_assignValue.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/_assignValue.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseAssignValue = __webpack_require__(/*! ./_baseAssignValue */ \"./node_modules/lodash/_baseAssignValue.js\"),\n    eq = __webpack_require__(/*! ./eq */ \"./node_modules/lodash/eq.js\");\n\n/** Used for built-in method references. */\nvar objectProto = Object.prototype;\n\n/** Used to check objects for own properties. */\nvar hasOwnProperty = objectProto.hasOwnProperty;\n\n/**\n * Assigns `value` to `key` of `object` if the existing value is not equivalent\n * using [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)\n * for equality comparisons.\n *\n * @private\n * @param {Object} object The object to modify.\n * @param {string} key The key of the property to assign.\n * @param {*} value The value to assign.\n */\nfunction assignValue(object, key, value) {\n  var objValue = object[key];\n  if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) ||\n      (value === undefined && !(key in object))) {\n    baseAssignValue(object, key, value);\n  }\n}\n\nmodule.exports = assignValue;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_assignValue.js?");
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_assocIndexOf.js":
 /*!**********************************************!*\
   !*** ./node_modules/lodash/_assocIndexOf.js ***!
@@ -3183,6 +3315,72 @@ eval("/**\n * A specialized version of `_.map` for arrays without support for it
 /***/ (function(module, exports, __webpack_require__) {
 
 eval("var eq = __webpack_require__(/*! ./eq */ \"./node_modules/lodash/eq.js\");\n\n/**\n * Gets the index at which the `key` is found in `array` of key-value pairs.\n *\n * @private\n * @param {Array} array The array to inspect.\n * @param {*} key The key to search for.\n * @returns {number} Returns the index of the matched value, else `-1`.\n */\nfunction assocIndexOf(array, key) {\n  var length = array.length;\n  while (length--) {\n    if (eq(array[length][0], key)) {\n      return length;\n    }\n  }\n  return -1;\n}\n\nmodule.exports = assocIndexOf;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_assocIndexOf.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseAssign.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_baseAssign.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var copyObject = __webpack_require__(/*! ./_copyObject */ \"./node_modules/lodash/_copyObject.js\"),\n    keys = __webpack_require__(/*! ./keys */ \"./node_modules/lodash/keys.js\");\n\n/**\n * The base implementation of `_.assign` without support for multiple sources\n * or `customizer` functions.\n *\n * @private\n * @param {Object} object The destination object.\n * @param {Object} source The source object.\n * @returns {Object} Returns `object`.\n */\nfunction baseAssign(object, source) {\n  return object && copyObject(source, keys(source), object);\n}\n\nmodule.exports = baseAssign;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseAssign.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseAssignIn.js":
+/*!**********************************************!*\
+  !*** ./node_modules/lodash/_baseAssignIn.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var copyObject = __webpack_require__(/*! ./_copyObject */ \"./node_modules/lodash/_copyObject.js\"),\n    keysIn = __webpack_require__(/*! ./keysIn */ \"./node_modules/lodash/keysIn.js\");\n\n/**\n * The base implementation of `_.assignIn` without support for multiple sources\n * or `customizer` functions.\n *\n * @private\n * @param {Object} object The destination object.\n * @param {Object} source The source object.\n * @returns {Object} Returns `object`.\n */\nfunction baseAssignIn(object, source) {\n  return object && copyObject(source, keysIn(source), object);\n}\n\nmodule.exports = baseAssignIn;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseAssignIn.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseAssignValue.js":
+/*!*************************************************!*\
+  !*** ./node_modules/lodash/_baseAssignValue.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var defineProperty = __webpack_require__(/*! ./_defineProperty */ \"./node_modules/lodash/_defineProperty.js\");\n\n/**\n * The base implementation of `assignValue` and `assignMergeValue` without\n * value checks.\n *\n * @private\n * @param {Object} object The object to modify.\n * @param {string} key The key of the property to assign.\n * @param {*} value The value to assign.\n */\nfunction baseAssignValue(object, key, value) {\n  if (key == '__proto__' && defineProperty) {\n    defineProperty(object, key, {\n      'configurable': true,\n      'enumerable': true,\n      'value': value,\n      'writable': true\n    });\n  } else {\n    object[key] = value;\n  }\n}\n\nmodule.exports = baseAssignValue;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseAssignValue.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseClone.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_baseClone.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var Stack = __webpack_require__(/*! ./_Stack */ \"./node_modules/lodash/_Stack.js\"),\n    arrayEach = __webpack_require__(/*! ./_arrayEach */ \"./node_modules/lodash/_arrayEach.js\"),\n    assignValue = __webpack_require__(/*! ./_assignValue */ \"./node_modules/lodash/_assignValue.js\"),\n    baseAssign = __webpack_require__(/*! ./_baseAssign */ \"./node_modules/lodash/_baseAssign.js\"),\n    baseAssignIn = __webpack_require__(/*! ./_baseAssignIn */ \"./node_modules/lodash/_baseAssignIn.js\"),\n    cloneBuffer = __webpack_require__(/*! ./_cloneBuffer */ \"./node_modules/lodash/_cloneBuffer.js\"),\n    copyArray = __webpack_require__(/*! ./_copyArray */ \"./node_modules/lodash/_copyArray.js\"),\n    copySymbols = __webpack_require__(/*! ./_copySymbols */ \"./node_modules/lodash/_copySymbols.js\"),\n    copySymbolsIn = __webpack_require__(/*! ./_copySymbolsIn */ \"./node_modules/lodash/_copySymbolsIn.js\"),\n    getAllKeys = __webpack_require__(/*! ./_getAllKeys */ \"./node_modules/lodash/_getAllKeys.js\"),\n    getAllKeysIn = __webpack_require__(/*! ./_getAllKeysIn */ \"./node_modules/lodash/_getAllKeysIn.js\"),\n    getTag = __webpack_require__(/*! ./_getTag */ \"./node_modules/lodash/_getTag.js\"),\n    initCloneArray = __webpack_require__(/*! ./_initCloneArray */ \"./node_modules/lodash/_initCloneArray.js\"),\n    initCloneByTag = __webpack_require__(/*! ./_initCloneByTag */ \"./node_modules/lodash/_initCloneByTag.js\"),\n    initCloneObject = __webpack_require__(/*! ./_initCloneObject */ \"./node_modules/lodash/_initCloneObject.js\"),\n    isArray = __webpack_require__(/*! ./isArray */ \"./node_modules/lodash/isArray.js\"),\n    isBuffer = __webpack_require__(/*! ./isBuffer */ \"./node_modules/lodash/isBuffer.js\"),\n    isMap = __webpack_require__(/*! ./isMap */ \"./node_modules/lodash/isMap.js\"),\n    isObject = __webpack_require__(/*! ./isObject */ \"./node_modules/lodash/isObject.js\"),\n    isSet = __webpack_require__(/*! ./isSet */ \"./node_modules/lodash/isSet.js\"),\n    keys = __webpack_require__(/*! ./keys */ \"./node_modules/lodash/keys.js\");\n\n/** Used to compose bitmasks for cloning. */\nvar CLONE_DEEP_FLAG = 1,\n    CLONE_FLAT_FLAG = 2,\n    CLONE_SYMBOLS_FLAG = 4;\n\n/** `Object#toString` result references. */\nvar argsTag = '[object Arguments]',\n    arrayTag = '[object Array]',\n    boolTag = '[object Boolean]',\n    dateTag = '[object Date]',\n    errorTag = '[object Error]',\n    funcTag = '[object Function]',\n    genTag = '[object GeneratorFunction]',\n    mapTag = '[object Map]',\n    numberTag = '[object Number]',\n    objectTag = '[object Object]',\n    regexpTag = '[object RegExp]',\n    setTag = '[object Set]',\n    stringTag = '[object String]',\n    symbolTag = '[object Symbol]',\n    weakMapTag = '[object WeakMap]';\n\nvar arrayBufferTag = '[object ArrayBuffer]',\n    dataViewTag = '[object DataView]',\n    float32Tag = '[object Float32Array]',\n    float64Tag = '[object Float64Array]',\n    int8Tag = '[object Int8Array]',\n    int16Tag = '[object Int16Array]',\n    int32Tag = '[object Int32Array]',\n    uint8Tag = '[object Uint8Array]',\n    uint8ClampedTag = '[object Uint8ClampedArray]',\n    uint16Tag = '[object Uint16Array]',\n    uint32Tag = '[object Uint32Array]';\n\n/** Used to identify `toStringTag` values supported by `_.clone`. */\nvar cloneableTags = {};\ncloneableTags[argsTag] = cloneableTags[arrayTag] =\ncloneableTags[arrayBufferTag] = cloneableTags[dataViewTag] =\ncloneableTags[boolTag] = cloneableTags[dateTag] =\ncloneableTags[float32Tag] = cloneableTags[float64Tag] =\ncloneableTags[int8Tag] = cloneableTags[int16Tag] =\ncloneableTags[int32Tag] = cloneableTags[mapTag] =\ncloneableTags[numberTag] = cloneableTags[objectTag] =\ncloneableTags[regexpTag] = cloneableTags[setTag] =\ncloneableTags[stringTag] = cloneableTags[symbolTag] =\ncloneableTags[uint8Tag] = cloneableTags[uint8ClampedTag] =\ncloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;\ncloneableTags[errorTag] = cloneableTags[funcTag] =\ncloneableTags[weakMapTag] = false;\n\n/**\n * The base implementation of `_.clone` and `_.cloneDeep` which tracks\n * traversed objects.\n *\n * @private\n * @param {*} value The value to clone.\n * @param {boolean} bitmask The bitmask flags.\n *  1 - Deep clone\n *  2 - Flatten inherited properties\n *  4 - Clone symbols\n * @param {Function} [customizer] The function to customize cloning.\n * @param {string} [key] The key of `value`.\n * @param {Object} [object] The parent object of `value`.\n * @param {Object} [stack] Tracks traversed objects and their clone counterparts.\n * @returns {*} Returns the cloned value.\n */\nfunction baseClone(value, bitmask, customizer, key, object, stack) {\n  var result,\n      isDeep = bitmask & CLONE_DEEP_FLAG,\n      isFlat = bitmask & CLONE_FLAT_FLAG,\n      isFull = bitmask & CLONE_SYMBOLS_FLAG;\n\n  if (customizer) {\n    result = object ? customizer(value, key, object, stack) : customizer(value);\n  }\n  if (result !== undefined) {\n    return result;\n  }\n  if (!isObject(value)) {\n    return value;\n  }\n  var isArr = isArray(value);\n  if (isArr) {\n    result = initCloneArray(value);\n    if (!isDeep) {\n      return copyArray(value, result);\n    }\n  } else {\n    var tag = getTag(value),\n        isFunc = tag == funcTag || tag == genTag;\n\n    if (isBuffer(value)) {\n      return cloneBuffer(value, isDeep);\n    }\n    if (tag == objectTag || tag == argsTag || (isFunc && !object)) {\n      result = (isFlat || isFunc) ? {} : initCloneObject(value);\n      if (!isDeep) {\n        return isFlat\n          ? copySymbolsIn(value, baseAssignIn(result, value))\n          : copySymbols(value, baseAssign(result, value));\n      }\n    } else {\n      if (!cloneableTags[tag]) {\n        return object ? value : {};\n      }\n      result = initCloneByTag(value, tag, isDeep);\n    }\n  }\n  // Check for circular references and return its corresponding clone.\n  stack || (stack = new Stack);\n  var stacked = stack.get(value);\n  if (stacked) {\n    return stacked;\n  }\n  stack.set(value, result);\n\n  if (isSet(value)) {\n    value.forEach(function(subValue) {\n      result.add(baseClone(subValue, bitmask, customizer, subValue, value, stack));\n    });\n\n    return result;\n  }\n\n  if (isMap(value)) {\n    value.forEach(function(subValue, key) {\n      result.set(key, baseClone(subValue, bitmask, customizer, key, value, stack));\n    });\n\n    return result;\n  }\n\n  var keysFunc = isFull\n    ? (isFlat ? getAllKeysIn : getAllKeys)\n    : (isFlat ? keysIn : keys);\n\n  var props = isArr ? undefined : keysFunc(value);\n  arrayEach(props || value, function(subValue, key) {\n    if (props) {\n      key = subValue;\n      subValue = value[key];\n    }\n    // Recursively populate clone (susceptible to call stack limits).\n    assignValue(result, key, baseClone(subValue, bitmask, customizer, key, value, stack));\n  });\n  return result;\n}\n\nmodule.exports = baseClone;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseClone.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseCreate.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_baseCreate.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var isObject = __webpack_require__(/*! ./isObject */ \"./node_modules/lodash/isObject.js\");\n\n/** Built-in value references. */\nvar objectCreate = Object.create;\n\n/**\n * The base implementation of `_.create` without support for assigning\n * properties to the created object.\n *\n * @private\n * @param {Object} proto The object to inherit from.\n * @returns {Object} Returns the new object.\n */\nvar baseCreate = (function() {\n  function object() {}\n  return function(proto) {\n    if (!isObject(proto)) {\n      return {};\n    }\n    if (objectCreate) {\n      return objectCreate(proto);\n    }\n    object.prototype = proto;\n    var result = new object;\n    object.prototype = undefined;\n    return result;\n  };\n}());\n\nmodule.exports = baseCreate;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseCreate.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseFlatten.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/_baseFlatten.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var arrayPush = __webpack_require__(/*! ./_arrayPush */ \"./node_modules/lodash/_arrayPush.js\"),\n    isFlattenable = __webpack_require__(/*! ./_isFlattenable */ \"./node_modules/lodash/_isFlattenable.js\");\n\n/**\n * The base implementation of `_.flatten` with support for restricting flattening.\n *\n * @private\n * @param {Array} array The array to flatten.\n * @param {number} depth The maximum recursion depth.\n * @param {boolean} [predicate=isFlattenable] The function invoked per iteration.\n * @param {boolean} [isStrict] Restrict to values that pass `predicate` checks.\n * @param {Array} [result=[]] The initial result value.\n * @returns {Array} Returns the new flattened array.\n */\nfunction baseFlatten(array, depth, predicate, isStrict, result) {\n  var index = -1,\n      length = array.length;\n\n  predicate || (predicate = isFlattenable);\n  result || (result = []);\n\n  while (++index < length) {\n    var value = array[index];\n    if (depth > 0 && predicate(value)) {\n      if (depth > 1) {\n        // Recursively flatten arrays (susceptible to call stack limits).\n        baseFlatten(value, depth - 1, predicate, isStrict, result);\n      } else {\n        arrayPush(result, value);\n      }\n    } else if (!isStrict) {\n      result[result.length] = value;\n    }\n  }\n  return result;\n}\n\nmodule.exports = baseFlatten;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseFlatten.js?");
 
 /***/ }),
 
@@ -3197,6 +3395,17 @@ eval("var castPath = __webpack_require__(/*! ./_castPath */ \"./node_modules/lod
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_baseGetAllKeys.js":
+/*!************************************************!*\
+  !*** ./node_modules/lodash/_baseGetAllKeys.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var arrayPush = __webpack_require__(/*! ./_arrayPush */ \"./node_modules/lodash/_arrayPush.js\"),\n    isArray = __webpack_require__(/*! ./isArray */ \"./node_modules/lodash/isArray.js\");\n\n/**\n * The base implementation of `getAllKeys` and `getAllKeysIn` which uses\n * `keysFunc` and `symbolsFunc` to get the enumerable property names and\n * symbols of `object`.\n *\n * @private\n * @param {Object} object The object to query.\n * @param {Function} keysFunc The function to get the keys of `object`.\n * @param {Function} symbolsFunc The function to get the symbols of `object`.\n * @returns {Array} Returns the array of property names and symbols.\n */\nfunction baseGetAllKeys(object, keysFunc, symbolsFunc) {\n  var result = keysFunc(object);\n  return isArray(object) ? result : arrayPush(result, symbolsFunc(object));\n}\n\nmodule.exports = baseGetAllKeys;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseGetAllKeys.js?");
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_baseGetTag.js":
 /*!********************************************!*\
   !*** ./node_modules/lodash/_baseGetTag.js ***!
@@ -3205,6 +3414,28 @@ eval("var castPath = __webpack_require__(/*! ./_castPath */ \"./node_modules/lod
 /***/ (function(module, exports, __webpack_require__) {
 
 eval("var Symbol = __webpack_require__(/*! ./_Symbol */ \"./node_modules/lodash/_Symbol.js\"),\n    getRawTag = __webpack_require__(/*! ./_getRawTag */ \"./node_modules/lodash/_getRawTag.js\"),\n    objectToString = __webpack_require__(/*! ./_objectToString */ \"./node_modules/lodash/_objectToString.js\");\n\n/** `Object#toString` result references. */\nvar nullTag = '[object Null]',\n    undefinedTag = '[object Undefined]';\n\n/** Built-in value references. */\nvar symToStringTag = Symbol ? Symbol.toStringTag : undefined;\n\n/**\n * The base implementation of `getTag` without fallbacks for buggy environments.\n *\n * @private\n * @param {*} value The value to query.\n * @returns {string} Returns the `toStringTag`.\n */\nfunction baseGetTag(value) {\n  if (value == null) {\n    return value === undefined ? undefinedTag : nullTag;\n  }\n  return (symToStringTag && symToStringTag in Object(value))\n    ? getRawTag(value)\n    : objectToString(value);\n}\n\nmodule.exports = baseGetTag;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseGetTag.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseIsArguments.js":
+/*!*************************************************!*\
+  !*** ./node_modules/lodash/_baseIsArguments.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ \"./node_modules/lodash/_baseGetTag.js\"),\n    isObjectLike = __webpack_require__(/*! ./isObjectLike */ \"./node_modules/lodash/isObjectLike.js\");\n\n/** `Object#toString` result references. */\nvar argsTag = '[object Arguments]';\n\n/**\n * The base implementation of `_.isArguments`.\n *\n * @private\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is an `arguments` object,\n */\nfunction baseIsArguments(value) {\n  return isObjectLike(value) && baseGetTag(value) == argsTag;\n}\n\nmodule.exports = baseIsArguments;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseIsArguments.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseIsMap.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_baseIsMap.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var getTag = __webpack_require__(/*! ./_getTag */ \"./node_modules/lodash/_getTag.js\"),\n    isObjectLike = __webpack_require__(/*! ./isObjectLike */ \"./node_modules/lodash/isObjectLike.js\");\n\n/** `Object#toString` result references. */\nvar mapTag = '[object Map]';\n\n/**\n * The base implementation of `_.isMap` without Node.js optimizations.\n *\n * @private\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is a map, else `false`.\n */\nfunction baseIsMap(value) {\n  return isObjectLike(value) && getTag(value) == mapTag;\n}\n\nmodule.exports = baseIsMap;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseIsMap.js?");
 
 /***/ }),
 
@@ -3219,6 +3450,83 @@ eval("var isFunction = __webpack_require__(/*! ./isFunction */ \"./node_modules/
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_baseIsSet.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_baseIsSet.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var getTag = __webpack_require__(/*! ./_getTag */ \"./node_modules/lodash/_getTag.js\"),\n    isObjectLike = __webpack_require__(/*! ./isObjectLike */ \"./node_modules/lodash/isObjectLike.js\");\n\n/** `Object#toString` result references. */\nvar setTag = '[object Set]';\n\n/**\n * The base implementation of `_.isSet` without Node.js optimizations.\n *\n * @private\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is a set, else `false`.\n */\nfunction baseIsSet(value) {\n  return isObjectLike(value) && getTag(value) == setTag;\n}\n\nmodule.exports = baseIsSet;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseIsSet.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseIsTypedArray.js":
+/*!**************************************************!*\
+  !*** ./node_modules/lodash/_baseIsTypedArray.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ \"./node_modules/lodash/_baseGetTag.js\"),\n    isLength = __webpack_require__(/*! ./isLength */ \"./node_modules/lodash/isLength.js\"),\n    isObjectLike = __webpack_require__(/*! ./isObjectLike */ \"./node_modules/lodash/isObjectLike.js\");\n\n/** `Object#toString` result references. */\nvar argsTag = '[object Arguments]',\n    arrayTag = '[object Array]',\n    boolTag = '[object Boolean]',\n    dateTag = '[object Date]',\n    errorTag = '[object Error]',\n    funcTag = '[object Function]',\n    mapTag = '[object Map]',\n    numberTag = '[object Number]',\n    objectTag = '[object Object]',\n    regexpTag = '[object RegExp]',\n    setTag = '[object Set]',\n    stringTag = '[object String]',\n    weakMapTag = '[object WeakMap]';\n\nvar arrayBufferTag = '[object ArrayBuffer]',\n    dataViewTag = '[object DataView]',\n    float32Tag = '[object Float32Array]',\n    float64Tag = '[object Float64Array]',\n    int8Tag = '[object Int8Array]',\n    int16Tag = '[object Int16Array]',\n    int32Tag = '[object Int32Array]',\n    uint8Tag = '[object Uint8Array]',\n    uint8ClampedTag = '[object Uint8ClampedArray]',\n    uint16Tag = '[object Uint16Array]',\n    uint32Tag = '[object Uint32Array]';\n\n/** Used to identify `toStringTag` values of typed arrays. */\nvar typedArrayTags = {};\ntypedArrayTags[float32Tag] = typedArrayTags[float64Tag] =\ntypedArrayTags[int8Tag] = typedArrayTags[int16Tag] =\ntypedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =\ntypedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =\ntypedArrayTags[uint32Tag] = true;\ntypedArrayTags[argsTag] = typedArrayTags[arrayTag] =\ntypedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =\ntypedArrayTags[dataViewTag] = typedArrayTags[dateTag] =\ntypedArrayTags[errorTag] = typedArrayTags[funcTag] =\ntypedArrayTags[mapTag] = typedArrayTags[numberTag] =\ntypedArrayTags[objectTag] = typedArrayTags[regexpTag] =\ntypedArrayTags[setTag] = typedArrayTags[stringTag] =\ntypedArrayTags[weakMapTag] = false;\n\n/**\n * The base implementation of `_.isTypedArray` without Node.js optimizations.\n *\n * @private\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.\n */\nfunction baseIsTypedArray(value) {\n  return isObjectLike(value) &&\n    isLength(value.length) && !!typedArrayTags[baseGetTag(value)];\n}\n\nmodule.exports = baseIsTypedArray;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseIsTypedArray.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseKeys.js":
+/*!******************************************!*\
+  !*** ./node_modules/lodash/_baseKeys.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var isPrototype = __webpack_require__(/*! ./_isPrototype */ \"./node_modules/lodash/_isPrototype.js\"),\n    nativeKeys = __webpack_require__(/*! ./_nativeKeys */ \"./node_modules/lodash/_nativeKeys.js\");\n\n/** Used for built-in method references. */\nvar objectProto = Object.prototype;\n\n/** Used to check objects for own properties. */\nvar hasOwnProperty = objectProto.hasOwnProperty;\n\n/**\n * The base implementation of `_.keys` which doesn't treat sparse arrays as dense.\n *\n * @private\n * @param {Object} object The object to query.\n * @returns {Array} Returns the array of property names.\n */\nfunction baseKeys(object) {\n  if (!isPrototype(object)) {\n    return nativeKeys(object);\n  }\n  var result = [];\n  for (var key in Object(object)) {\n    if (hasOwnProperty.call(object, key) && key != 'constructor') {\n      result.push(key);\n    }\n  }\n  return result;\n}\n\nmodule.exports = baseKeys;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseKeys.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseKeysIn.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_baseKeysIn.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var isObject = __webpack_require__(/*! ./isObject */ \"./node_modules/lodash/isObject.js\"),\n    isPrototype = __webpack_require__(/*! ./_isPrototype */ \"./node_modules/lodash/_isPrototype.js\"),\n    nativeKeysIn = __webpack_require__(/*! ./_nativeKeysIn */ \"./node_modules/lodash/_nativeKeysIn.js\");\n\n/** Used for built-in method references. */\nvar objectProto = Object.prototype;\n\n/** Used to check objects for own properties. */\nvar hasOwnProperty = objectProto.hasOwnProperty;\n\n/**\n * The base implementation of `_.keysIn` which doesn't treat sparse arrays as dense.\n *\n * @private\n * @param {Object} object The object to query.\n * @returns {Array} Returns the array of property names.\n */\nfunction baseKeysIn(object) {\n  if (!isObject(object)) {\n    return nativeKeysIn(object);\n  }\n  var isProto = isPrototype(object),\n      result = [];\n\n  for (var key in object) {\n    if (!(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {\n      result.push(key);\n    }\n  }\n  return result;\n}\n\nmodule.exports = baseKeysIn;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseKeysIn.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseSetToString.js":
+/*!*************************************************!*\
+  !*** ./node_modules/lodash/_baseSetToString.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var constant = __webpack_require__(/*! ./constant */ \"./node_modules/lodash/constant.js\"),\n    defineProperty = __webpack_require__(/*! ./_defineProperty */ \"./node_modules/lodash/_defineProperty.js\"),\n    identity = __webpack_require__(/*! ./identity */ \"./node_modules/lodash/identity.js\");\n\n/**\n * The base implementation of `setToString` without support for hot loop shorting.\n *\n * @private\n * @param {Function} func The function to modify.\n * @param {Function} string The `toString` result.\n * @returns {Function} Returns `func`.\n */\nvar baseSetToString = !defineProperty ? identity : function(func, string) {\n  return defineProperty(func, 'toString', {\n    'configurable': true,\n    'enumerable': false,\n    'value': constant(string),\n    'writable': true\n  });\n};\n\nmodule.exports = baseSetToString;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseSetToString.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseSlice.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_baseSlice.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * The base implementation of `_.slice` without an iteratee call guard.\n *\n * @private\n * @param {Array} array The array to slice.\n * @param {number} [start=0] The start position.\n * @param {number} [end=array.length] The end position.\n * @returns {Array} Returns the slice of `array`.\n */\nfunction baseSlice(array, start, end) {\n  var index = -1,\n      length = array.length;\n\n  if (start < 0) {\n    start = -start > length ? 0 : (length + start);\n  }\n  end = end > length ? length : end;\n  if (end < 0) {\n    end += length;\n  }\n  length = start > end ? 0 : ((end - start) >>> 0);\n  start >>>= 0;\n\n  var result = Array(length);\n  while (++index < length) {\n    result[index] = array[index + start];\n  }\n  return result;\n}\n\nmodule.exports = baseSlice;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseSlice.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseTimes.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_baseTimes.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * The base implementation of `_.times` without support for iteratee shorthands\n * or max array length checks.\n *\n * @private\n * @param {number} n The number of times to invoke `iteratee`.\n * @param {Function} iteratee The function invoked per iteration.\n * @returns {Array} Returns the array of results.\n */\nfunction baseTimes(n, iteratee) {\n  var index = -1,\n      result = Array(n);\n\n  while (++index < n) {\n    result[index] = iteratee(index);\n  }\n  return result;\n}\n\nmodule.exports = baseTimes;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseTimes.js?");
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_baseToString.js":
 /*!**********************************************!*\
   !*** ./node_modules/lodash/_baseToString.js ***!
@@ -3227,6 +3535,28 @@ eval("var isFunction = __webpack_require__(/*! ./isFunction */ \"./node_modules/
 /***/ (function(module, exports, __webpack_require__) {
 
 eval("var Symbol = __webpack_require__(/*! ./_Symbol */ \"./node_modules/lodash/_Symbol.js\"),\n    arrayMap = __webpack_require__(/*! ./_arrayMap */ \"./node_modules/lodash/_arrayMap.js\"),\n    isArray = __webpack_require__(/*! ./isArray */ \"./node_modules/lodash/isArray.js\"),\n    isSymbol = __webpack_require__(/*! ./isSymbol */ \"./node_modules/lodash/isSymbol.js\");\n\n/** Used as references for various `Number` constants. */\nvar INFINITY = 1 / 0;\n\n/** Used to convert symbols to primitives and strings. */\nvar symbolProto = Symbol ? Symbol.prototype : undefined,\n    symbolToString = symbolProto ? symbolProto.toString : undefined;\n\n/**\n * The base implementation of `_.toString` which doesn't convert nullish\n * values to empty strings.\n *\n * @private\n * @param {*} value The value to process.\n * @returns {string} Returns the string.\n */\nfunction baseToString(value) {\n  // Exit early for strings to avoid a performance hit in some environments.\n  if (typeof value == 'string') {\n    return value;\n  }\n  if (isArray(value)) {\n    // Recursively convert values (susceptible to call stack limits).\n    return arrayMap(value, baseToString) + '';\n  }\n  if (isSymbol(value)) {\n    return symbolToString ? symbolToString.call(value) : '';\n  }\n  var result = (value + '');\n  return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;\n}\n\nmodule.exports = baseToString;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseToString.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseUnary.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_baseUnary.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * The base implementation of `_.unary` without support for storing metadata.\n *\n * @private\n * @param {Function} func The function to cap arguments for.\n * @returns {Function} Returns the new capped function.\n */\nfunction baseUnary(func) {\n  return function(value) {\n    return func(value);\n  };\n}\n\nmodule.exports = baseUnary;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseUnary.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseUnset.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_baseUnset.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var castPath = __webpack_require__(/*! ./_castPath */ \"./node_modules/lodash/_castPath.js\"),\n    last = __webpack_require__(/*! ./last */ \"./node_modules/lodash/last.js\"),\n    parent = __webpack_require__(/*! ./_parent */ \"./node_modules/lodash/_parent.js\"),\n    toKey = __webpack_require__(/*! ./_toKey */ \"./node_modules/lodash/_toKey.js\");\n\n/**\n * The base implementation of `_.unset`.\n *\n * @private\n * @param {Object} object The object to modify.\n * @param {Array|string} path The property path to unset.\n * @returns {boolean} Returns `true` if the property is deleted, else `false`.\n */\nfunction baseUnset(object, path) {\n  path = castPath(path, object);\n  object = parent(object, path);\n  return object == null || delete object[toKey(last(path))];\n}\n\nmodule.exports = baseUnset;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_baseUnset.js?");
 
 /***/ }),
 
@@ -3241,6 +3571,116 @@ eval("var isArray = __webpack_require__(/*! ./isArray */ \"./node_modules/lodash
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_cloneArrayBuffer.js":
+/*!**************************************************!*\
+  !*** ./node_modules/lodash/_cloneArrayBuffer.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var Uint8Array = __webpack_require__(/*! ./_Uint8Array */ \"./node_modules/lodash/_Uint8Array.js\");\n\n/**\n * Creates a clone of `arrayBuffer`.\n *\n * @private\n * @param {ArrayBuffer} arrayBuffer The array buffer to clone.\n * @returns {ArrayBuffer} Returns the cloned array buffer.\n */\nfunction cloneArrayBuffer(arrayBuffer) {\n  var result = new arrayBuffer.constructor(arrayBuffer.byteLength);\n  new Uint8Array(result).set(new Uint8Array(arrayBuffer));\n  return result;\n}\n\nmodule.exports = cloneArrayBuffer;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_cloneArrayBuffer.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_cloneBuffer.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/_cloneBuffer.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("/* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(/*! ./_root */ \"./node_modules/lodash/_root.js\");\n\n/** Detect free variable `exports`. */\nvar freeExports =  true && exports && !exports.nodeType && exports;\n\n/** Detect free variable `module`. */\nvar freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;\n\n/** Detect the popular CommonJS extension `module.exports`. */\nvar moduleExports = freeModule && freeModule.exports === freeExports;\n\n/** Built-in value references. */\nvar Buffer = moduleExports ? root.Buffer : undefined,\n    allocUnsafe = Buffer ? Buffer.allocUnsafe : undefined;\n\n/**\n * Creates a clone of  `buffer`.\n *\n * @private\n * @param {Buffer} buffer The buffer to clone.\n * @param {boolean} [isDeep] Specify a deep clone.\n * @returns {Buffer} Returns the cloned buffer.\n */\nfunction cloneBuffer(buffer, isDeep) {\n  if (isDeep) {\n    return buffer.slice();\n  }\n  var length = buffer.length,\n      result = allocUnsafe ? allocUnsafe(length) : new buffer.constructor(length);\n\n  buffer.copy(result);\n  return result;\n}\n\nmodule.exports = cloneBuffer;\n\n/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/module.js */ \"./node_modules/webpack/buildin/module.js\")(module)))\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_cloneBuffer.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_cloneDataView.js":
+/*!***********************************************!*\
+  !*** ./node_modules/lodash/_cloneDataView.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var cloneArrayBuffer = __webpack_require__(/*! ./_cloneArrayBuffer */ \"./node_modules/lodash/_cloneArrayBuffer.js\");\n\n/**\n * Creates a clone of `dataView`.\n *\n * @private\n * @param {Object} dataView The data view to clone.\n * @param {boolean} [isDeep] Specify a deep clone.\n * @returns {Object} Returns the cloned data view.\n */\nfunction cloneDataView(dataView, isDeep) {\n  var buffer = isDeep ? cloneArrayBuffer(dataView.buffer) : dataView.buffer;\n  return new dataView.constructor(buffer, dataView.byteOffset, dataView.byteLength);\n}\n\nmodule.exports = cloneDataView;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_cloneDataView.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_cloneRegExp.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/_cloneRegExp.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/** Used to match `RegExp` flags from their coerced string values. */\nvar reFlags = /\\w*$/;\n\n/**\n * Creates a clone of `regexp`.\n *\n * @private\n * @param {Object} regexp The regexp to clone.\n * @returns {Object} Returns the cloned regexp.\n */\nfunction cloneRegExp(regexp) {\n  var result = new regexp.constructor(regexp.source, reFlags.exec(regexp));\n  result.lastIndex = regexp.lastIndex;\n  return result;\n}\n\nmodule.exports = cloneRegExp;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_cloneRegExp.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_cloneSymbol.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/_cloneSymbol.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var Symbol = __webpack_require__(/*! ./_Symbol */ \"./node_modules/lodash/_Symbol.js\");\n\n/** Used to convert symbols to primitives and strings. */\nvar symbolProto = Symbol ? Symbol.prototype : undefined,\n    symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;\n\n/**\n * Creates a clone of the `symbol` object.\n *\n * @private\n * @param {Object} symbol The symbol object to clone.\n * @returns {Object} Returns the cloned symbol object.\n */\nfunction cloneSymbol(symbol) {\n  return symbolValueOf ? Object(symbolValueOf.call(symbol)) : {};\n}\n\nmodule.exports = cloneSymbol;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_cloneSymbol.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_cloneTypedArray.js":
+/*!*************************************************!*\
+  !*** ./node_modules/lodash/_cloneTypedArray.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var cloneArrayBuffer = __webpack_require__(/*! ./_cloneArrayBuffer */ \"./node_modules/lodash/_cloneArrayBuffer.js\");\n\n/**\n * Creates a clone of `typedArray`.\n *\n * @private\n * @param {Object} typedArray The typed array to clone.\n * @param {boolean} [isDeep] Specify a deep clone.\n * @returns {Object} Returns the cloned typed array.\n */\nfunction cloneTypedArray(typedArray, isDeep) {\n  var buffer = isDeep ? cloneArrayBuffer(typedArray.buffer) : typedArray.buffer;\n  return new typedArray.constructor(buffer, typedArray.byteOffset, typedArray.length);\n}\n\nmodule.exports = cloneTypedArray;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_cloneTypedArray.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_copyArray.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_copyArray.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * Copies the values of `source` to `array`.\n *\n * @private\n * @param {Array} source The array to copy values from.\n * @param {Array} [array=[]] The array to copy values to.\n * @returns {Array} Returns `array`.\n */\nfunction copyArray(source, array) {\n  var index = -1,\n      length = source.length;\n\n  array || (array = Array(length));\n  while (++index < length) {\n    array[index] = source[index];\n  }\n  return array;\n}\n\nmodule.exports = copyArray;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_copyArray.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_copyObject.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_copyObject.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var assignValue = __webpack_require__(/*! ./_assignValue */ \"./node_modules/lodash/_assignValue.js\"),\n    baseAssignValue = __webpack_require__(/*! ./_baseAssignValue */ \"./node_modules/lodash/_baseAssignValue.js\");\n\n/**\n * Copies properties of `source` to `object`.\n *\n * @private\n * @param {Object} source The object to copy properties from.\n * @param {Array} props The property identifiers to copy.\n * @param {Object} [object={}] The object to copy properties to.\n * @param {Function} [customizer] The function to customize copied values.\n * @returns {Object} Returns `object`.\n */\nfunction copyObject(source, props, object, customizer) {\n  var isNew = !object;\n  object || (object = {});\n\n  var index = -1,\n      length = props.length;\n\n  while (++index < length) {\n    var key = props[index];\n\n    var newValue = customizer\n      ? customizer(object[key], source[key], key, object, source)\n      : undefined;\n\n    if (newValue === undefined) {\n      newValue = source[key];\n    }\n    if (isNew) {\n      baseAssignValue(object, key, newValue);\n    } else {\n      assignValue(object, key, newValue);\n    }\n  }\n  return object;\n}\n\nmodule.exports = copyObject;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_copyObject.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_copySymbols.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/_copySymbols.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var copyObject = __webpack_require__(/*! ./_copyObject */ \"./node_modules/lodash/_copyObject.js\"),\n    getSymbols = __webpack_require__(/*! ./_getSymbols */ \"./node_modules/lodash/_getSymbols.js\");\n\n/**\n * Copies own symbols of `source` to `object`.\n *\n * @private\n * @param {Object} source The object to copy symbols from.\n * @param {Object} [object={}] The object to copy symbols to.\n * @returns {Object} Returns `object`.\n */\nfunction copySymbols(source, object) {\n  return copyObject(source, getSymbols(source), object);\n}\n\nmodule.exports = copySymbols;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_copySymbols.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_copySymbolsIn.js":
+/*!***********************************************!*\
+  !*** ./node_modules/lodash/_copySymbolsIn.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var copyObject = __webpack_require__(/*! ./_copyObject */ \"./node_modules/lodash/_copyObject.js\"),\n    getSymbolsIn = __webpack_require__(/*! ./_getSymbolsIn */ \"./node_modules/lodash/_getSymbolsIn.js\");\n\n/**\n * Copies own and inherited symbols of `source` to `object`.\n *\n * @private\n * @param {Object} source The object to copy symbols from.\n * @param {Object} [object={}] The object to copy symbols to.\n * @returns {Object} Returns `object`.\n */\nfunction copySymbolsIn(source, object) {\n  return copyObject(source, getSymbolsIn(source), object);\n}\n\nmodule.exports = copySymbolsIn;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_copySymbolsIn.js?");
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_coreJsData.js":
 /*!********************************************!*\
   !*** ./node_modules/lodash/_coreJsData.js ***!
@@ -3252,6 +3692,39 @@ eval("var root = __webpack_require__(/*! ./_root */ \"./node_modules/lodash/_roo
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_customOmitClone.js":
+/*!*************************************************!*\
+  !*** ./node_modules/lodash/_customOmitClone.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var isPlainObject = __webpack_require__(/*! ./isPlainObject */ \"./node_modules/lodash/isPlainObject.js\");\n\n/**\n * Used by `_.omit` to customize its `_.cloneDeep` use to only clone plain\n * objects.\n *\n * @private\n * @param {*} value The value to inspect.\n * @param {string} key The key of the property to inspect.\n * @returns {*} Returns the uncloned value or `undefined` to defer cloning to `_.cloneDeep`.\n */\nfunction customOmitClone(value) {\n  return isPlainObject(value) ? undefined : value;\n}\n\nmodule.exports = customOmitClone;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_customOmitClone.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_defineProperty.js":
+/*!************************************************!*\
+  !*** ./node_modules/lodash/_defineProperty.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var getNative = __webpack_require__(/*! ./_getNative */ \"./node_modules/lodash/_getNative.js\");\n\nvar defineProperty = (function() {\n  try {\n    var func = getNative(Object, 'defineProperty');\n    func({}, '', {});\n    return func;\n  } catch (e) {}\n}());\n\nmodule.exports = defineProperty;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_defineProperty.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_flatRest.js":
+/*!******************************************!*\
+  !*** ./node_modules/lodash/_flatRest.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var flatten = __webpack_require__(/*! ./flatten */ \"./node_modules/lodash/flatten.js\"),\n    overRest = __webpack_require__(/*! ./_overRest */ \"./node_modules/lodash/_overRest.js\"),\n    setToString = __webpack_require__(/*! ./_setToString */ \"./node_modules/lodash/_setToString.js\");\n\n/**\n * A specialized version of `baseRest` which flattens the rest array.\n *\n * @private\n * @param {Function} func The function to apply a rest parameter to.\n * @returns {Function} Returns the new function.\n */\nfunction flatRest(func) {\n  return setToString(overRest(func, undefined, flatten), func + '');\n}\n\nmodule.exports = flatRest;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_flatRest.js?");
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_freeGlobal.js":
 /*!********************************************!*\
   !*** ./node_modules/lodash/_freeGlobal.js ***!
@@ -3260,6 +3733,28 @@ eval("var root = __webpack_require__(/*! ./_root */ \"./node_modules/lodash/_roo
 /***/ (function(module, exports, __webpack_require__) {
 
 eval("/* WEBPACK VAR INJECTION */(function(global) {/** Detect free variable `global` from Node.js. */\nvar freeGlobal = typeof global == 'object' && global && global.Object === Object && global;\n\nmodule.exports = freeGlobal;\n\n/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ \"./node_modules/webpack/buildin/global.js\")))\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_freeGlobal.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_getAllKeys.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_getAllKeys.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseGetAllKeys = __webpack_require__(/*! ./_baseGetAllKeys */ \"./node_modules/lodash/_baseGetAllKeys.js\"),\n    getSymbols = __webpack_require__(/*! ./_getSymbols */ \"./node_modules/lodash/_getSymbols.js\"),\n    keys = __webpack_require__(/*! ./keys */ \"./node_modules/lodash/keys.js\");\n\n/**\n * Creates an array of own enumerable property names and symbols of `object`.\n *\n * @private\n * @param {Object} object The object to query.\n * @returns {Array} Returns the array of property names and symbols.\n */\nfunction getAllKeys(object) {\n  return baseGetAllKeys(object, keys, getSymbols);\n}\n\nmodule.exports = getAllKeys;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_getAllKeys.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_getAllKeysIn.js":
+/*!**********************************************!*\
+  !*** ./node_modules/lodash/_getAllKeysIn.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseGetAllKeys = __webpack_require__(/*! ./_baseGetAllKeys */ \"./node_modules/lodash/_baseGetAllKeys.js\"),\n    getSymbolsIn = __webpack_require__(/*! ./_getSymbolsIn */ \"./node_modules/lodash/_getSymbolsIn.js\"),\n    keysIn = __webpack_require__(/*! ./keysIn */ \"./node_modules/lodash/keysIn.js\");\n\n/**\n * Creates an array of own and inherited enumerable property names and\n * symbols of `object`.\n *\n * @private\n * @param {Object} object The object to query.\n * @returns {Array} Returns the array of property names and symbols.\n */\nfunction getAllKeysIn(object) {\n  return baseGetAllKeys(object, keysIn, getSymbolsIn);\n}\n\nmodule.exports = getAllKeysIn;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_getAllKeysIn.js?");
 
 /***/ }),
 
@@ -3285,6 +3780,17 @@ eval("var baseIsNative = __webpack_require__(/*! ./_baseIsNative */ \"./node_mod
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_getPrototype.js":
+/*!**********************************************!*\
+  !*** ./node_modules/lodash/_getPrototype.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var overArg = __webpack_require__(/*! ./_overArg */ \"./node_modules/lodash/_overArg.js\");\n\n/** Built-in value references. */\nvar getPrototype = overArg(Object.getPrototypeOf, Object);\n\nmodule.exports = getPrototype;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_getPrototype.js?");
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_getRawTag.js":
 /*!*******************************************!*\
   !*** ./node_modules/lodash/_getRawTag.js ***!
@@ -3293,6 +3799,39 @@ eval("var baseIsNative = __webpack_require__(/*! ./_baseIsNative */ \"./node_mod
 /***/ (function(module, exports, __webpack_require__) {
 
 eval("var Symbol = __webpack_require__(/*! ./_Symbol */ \"./node_modules/lodash/_Symbol.js\");\n\n/** Used for built-in method references. */\nvar objectProto = Object.prototype;\n\n/** Used to check objects for own properties. */\nvar hasOwnProperty = objectProto.hasOwnProperty;\n\n/**\n * Used to resolve the\n * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)\n * of values.\n */\nvar nativeObjectToString = objectProto.toString;\n\n/** Built-in value references. */\nvar symToStringTag = Symbol ? Symbol.toStringTag : undefined;\n\n/**\n * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.\n *\n * @private\n * @param {*} value The value to query.\n * @returns {string} Returns the raw `toStringTag`.\n */\nfunction getRawTag(value) {\n  var isOwn = hasOwnProperty.call(value, symToStringTag),\n      tag = value[symToStringTag];\n\n  try {\n    value[symToStringTag] = undefined;\n    var unmasked = true;\n  } catch (e) {}\n\n  var result = nativeObjectToString.call(value);\n  if (unmasked) {\n    if (isOwn) {\n      value[symToStringTag] = tag;\n    } else {\n      delete value[symToStringTag];\n    }\n  }\n  return result;\n}\n\nmodule.exports = getRawTag;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_getRawTag.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_getSymbols.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_getSymbols.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var arrayFilter = __webpack_require__(/*! ./_arrayFilter */ \"./node_modules/lodash/_arrayFilter.js\"),\n    stubArray = __webpack_require__(/*! ./stubArray */ \"./node_modules/lodash/stubArray.js\");\n\n/** Used for built-in method references. */\nvar objectProto = Object.prototype;\n\n/** Built-in value references. */\nvar propertyIsEnumerable = objectProto.propertyIsEnumerable;\n\n/* Built-in method references for those with the same name as other `lodash` methods. */\nvar nativeGetSymbols = Object.getOwnPropertySymbols;\n\n/**\n * Creates an array of the own enumerable symbols of `object`.\n *\n * @private\n * @param {Object} object The object to query.\n * @returns {Array} Returns the array of symbols.\n */\nvar getSymbols = !nativeGetSymbols ? stubArray : function(object) {\n  if (object == null) {\n    return [];\n  }\n  object = Object(object);\n  return arrayFilter(nativeGetSymbols(object), function(symbol) {\n    return propertyIsEnumerable.call(object, symbol);\n  });\n};\n\nmodule.exports = getSymbols;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_getSymbols.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_getSymbolsIn.js":
+/*!**********************************************!*\
+  !*** ./node_modules/lodash/_getSymbolsIn.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var arrayPush = __webpack_require__(/*! ./_arrayPush */ \"./node_modules/lodash/_arrayPush.js\"),\n    getPrototype = __webpack_require__(/*! ./_getPrototype */ \"./node_modules/lodash/_getPrototype.js\"),\n    getSymbols = __webpack_require__(/*! ./_getSymbols */ \"./node_modules/lodash/_getSymbols.js\"),\n    stubArray = __webpack_require__(/*! ./stubArray */ \"./node_modules/lodash/stubArray.js\");\n\n/* Built-in method references for those with the same name as other `lodash` methods. */\nvar nativeGetSymbols = Object.getOwnPropertySymbols;\n\n/**\n * Creates an array of the own and inherited enumerable symbols of `object`.\n *\n * @private\n * @param {Object} object The object to query.\n * @returns {Array} Returns the array of symbols.\n */\nvar getSymbolsIn = !nativeGetSymbols ? stubArray : function(object) {\n  var result = [];\n  while (object) {\n    arrayPush(result, getSymbols(object));\n    object = getPrototype(object);\n  }\n  return result;\n};\n\nmodule.exports = getSymbolsIn;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_getSymbolsIn.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_getTag.js":
+/*!****************************************!*\
+  !*** ./node_modules/lodash/_getTag.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var DataView = __webpack_require__(/*! ./_DataView */ \"./node_modules/lodash/_DataView.js\"),\n    Map = __webpack_require__(/*! ./_Map */ \"./node_modules/lodash/_Map.js\"),\n    Promise = __webpack_require__(/*! ./_Promise */ \"./node_modules/lodash/_Promise.js\"),\n    Set = __webpack_require__(/*! ./_Set */ \"./node_modules/lodash/_Set.js\"),\n    WeakMap = __webpack_require__(/*! ./_WeakMap */ \"./node_modules/lodash/_WeakMap.js\"),\n    baseGetTag = __webpack_require__(/*! ./_baseGetTag */ \"./node_modules/lodash/_baseGetTag.js\"),\n    toSource = __webpack_require__(/*! ./_toSource */ \"./node_modules/lodash/_toSource.js\");\n\n/** `Object#toString` result references. */\nvar mapTag = '[object Map]',\n    objectTag = '[object Object]',\n    promiseTag = '[object Promise]',\n    setTag = '[object Set]',\n    weakMapTag = '[object WeakMap]';\n\nvar dataViewTag = '[object DataView]';\n\n/** Used to detect maps, sets, and weakmaps. */\nvar dataViewCtorString = toSource(DataView),\n    mapCtorString = toSource(Map),\n    promiseCtorString = toSource(Promise),\n    setCtorString = toSource(Set),\n    weakMapCtorString = toSource(WeakMap);\n\n/**\n * Gets the `toStringTag` of `value`.\n *\n * @private\n * @param {*} value The value to query.\n * @returns {string} Returns the `toStringTag`.\n */\nvar getTag = baseGetTag;\n\n// Fallback for data views, maps, sets, and weak maps in IE 11 and promises in Node.js < 6.\nif ((DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag) ||\n    (Map && getTag(new Map) != mapTag) ||\n    (Promise && getTag(Promise.resolve()) != promiseTag) ||\n    (Set && getTag(new Set) != setTag) ||\n    (WeakMap && getTag(new WeakMap) != weakMapTag)) {\n  getTag = function(value) {\n    var result = baseGetTag(value),\n        Ctor = result == objectTag ? value.constructor : undefined,\n        ctorString = Ctor ? toSource(Ctor) : '';\n\n    if (ctorString) {\n      switch (ctorString) {\n        case dataViewCtorString: return dataViewTag;\n        case mapCtorString: return mapTag;\n        case promiseCtorString: return promiseTag;\n        case setCtorString: return setTag;\n        case weakMapCtorString: return weakMapTag;\n      }\n    }\n    return result;\n  };\n}\n\nmodule.exports = getTag;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_getTag.js?");
 
 /***/ }),
 
@@ -3362,6 +3901,61 @@ eval("var nativeCreate = __webpack_require__(/*! ./_nativeCreate */ \"./node_mod
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_initCloneArray.js":
+/*!************************************************!*\
+  !*** ./node_modules/lodash/_initCloneArray.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/** Used for built-in method references. */\nvar objectProto = Object.prototype;\n\n/** Used to check objects for own properties. */\nvar hasOwnProperty = objectProto.hasOwnProperty;\n\n/**\n * Initializes an array clone.\n *\n * @private\n * @param {Array} array The array to clone.\n * @returns {Array} Returns the initialized clone.\n */\nfunction initCloneArray(array) {\n  var length = array.length,\n      result = new array.constructor(length);\n\n  // Add properties assigned by `RegExp#exec`.\n  if (length && typeof array[0] == 'string' && hasOwnProperty.call(array, 'index')) {\n    result.index = array.index;\n    result.input = array.input;\n  }\n  return result;\n}\n\nmodule.exports = initCloneArray;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_initCloneArray.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_initCloneByTag.js":
+/*!************************************************!*\
+  !*** ./node_modules/lodash/_initCloneByTag.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var cloneArrayBuffer = __webpack_require__(/*! ./_cloneArrayBuffer */ \"./node_modules/lodash/_cloneArrayBuffer.js\"),\n    cloneDataView = __webpack_require__(/*! ./_cloneDataView */ \"./node_modules/lodash/_cloneDataView.js\"),\n    cloneRegExp = __webpack_require__(/*! ./_cloneRegExp */ \"./node_modules/lodash/_cloneRegExp.js\"),\n    cloneSymbol = __webpack_require__(/*! ./_cloneSymbol */ \"./node_modules/lodash/_cloneSymbol.js\"),\n    cloneTypedArray = __webpack_require__(/*! ./_cloneTypedArray */ \"./node_modules/lodash/_cloneTypedArray.js\");\n\n/** `Object#toString` result references. */\nvar boolTag = '[object Boolean]',\n    dateTag = '[object Date]',\n    mapTag = '[object Map]',\n    numberTag = '[object Number]',\n    regexpTag = '[object RegExp]',\n    setTag = '[object Set]',\n    stringTag = '[object String]',\n    symbolTag = '[object Symbol]';\n\nvar arrayBufferTag = '[object ArrayBuffer]',\n    dataViewTag = '[object DataView]',\n    float32Tag = '[object Float32Array]',\n    float64Tag = '[object Float64Array]',\n    int8Tag = '[object Int8Array]',\n    int16Tag = '[object Int16Array]',\n    int32Tag = '[object Int32Array]',\n    uint8Tag = '[object Uint8Array]',\n    uint8ClampedTag = '[object Uint8ClampedArray]',\n    uint16Tag = '[object Uint16Array]',\n    uint32Tag = '[object Uint32Array]';\n\n/**\n * Initializes an object clone based on its `toStringTag`.\n *\n * **Note:** This function only supports cloning values with tags of\n * `Boolean`, `Date`, `Error`, `Map`, `Number`, `RegExp`, `Set`, or `String`.\n *\n * @private\n * @param {Object} object The object to clone.\n * @param {string} tag The `toStringTag` of the object to clone.\n * @param {boolean} [isDeep] Specify a deep clone.\n * @returns {Object} Returns the initialized clone.\n */\nfunction initCloneByTag(object, tag, isDeep) {\n  var Ctor = object.constructor;\n  switch (tag) {\n    case arrayBufferTag:\n      return cloneArrayBuffer(object);\n\n    case boolTag:\n    case dateTag:\n      return new Ctor(+object);\n\n    case dataViewTag:\n      return cloneDataView(object, isDeep);\n\n    case float32Tag: case float64Tag:\n    case int8Tag: case int16Tag: case int32Tag:\n    case uint8Tag: case uint8ClampedTag: case uint16Tag: case uint32Tag:\n      return cloneTypedArray(object, isDeep);\n\n    case mapTag:\n      return new Ctor;\n\n    case numberTag:\n    case stringTag:\n      return new Ctor(object);\n\n    case regexpTag:\n      return cloneRegExp(object);\n\n    case setTag:\n      return new Ctor;\n\n    case symbolTag:\n      return cloneSymbol(object);\n  }\n}\n\nmodule.exports = initCloneByTag;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_initCloneByTag.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_initCloneObject.js":
+/*!*************************************************!*\
+  !*** ./node_modules/lodash/_initCloneObject.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseCreate = __webpack_require__(/*! ./_baseCreate */ \"./node_modules/lodash/_baseCreate.js\"),\n    getPrototype = __webpack_require__(/*! ./_getPrototype */ \"./node_modules/lodash/_getPrototype.js\"),\n    isPrototype = __webpack_require__(/*! ./_isPrototype */ \"./node_modules/lodash/_isPrototype.js\");\n\n/**\n * Initializes an object clone.\n *\n * @private\n * @param {Object} object The object to clone.\n * @returns {Object} Returns the initialized clone.\n */\nfunction initCloneObject(object) {\n  return (typeof object.constructor == 'function' && !isPrototype(object))\n    ? baseCreate(getPrototype(object))\n    : {};\n}\n\nmodule.exports = initCloneObject;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_initCloneObject.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_isFlattenable.js":
+/*!***********************************************!*\
+  !*** ./node_modules/lodash/_isFlattenable.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var Symbol = __webpack_require__(/*! ./_Symbol */ \"./node_modules/lodash/_Symbol.js\"),\n    isArguments = __webpack_require__(/*! ./isArguments */ \"./node_modules/lodash/isArguments.js\"),\n    isArray = __webpack_require__(/*! ./isArray */ \"./node_modules/lodash/isArray.js\");\n\n/** Built-in value references. */\nvar spreadableSymbol = Symbol ? Symbol.isConcatSpreadable : undefined;\n\n/**\n * Checks if `value` is a flattenable `arguments` object or array.\n *\n * @private\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is flattenable, else `false`.\n */\nfunction isFlattenable(value) {\n  return isArray(value) || isArguments(value) ||\n    !!(spreadableSymbol && value && value[spreadableSymbol]);\n}\n\nmodule.exports = isFlattenable;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_isFlattenable.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_isIndex.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/_isIndex.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/** Used as references for various `Number` constants. */\nvar MAX_SAFE_INTEGER = 9007199254740991;\n\n/** Used to detect unsigned integer values. */\nvar reIsUint = /^(?:0|[1-9]\\d*)$/;\n\n/**\n * Checks if `value` is a valid array-like index.\n *\n * @private\n * @param {*} value The value to check.\n * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.\n * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.\n */\nfunction isIndex(value, length) {\n  var type = typeof value;\n  length = length == null ? MAX_SAFE_INTEGER : length;\n\n  return !!length &&\n    (type == 'number' ||\n      (type != 'symbol' && reIsUint.test(value))) &&\n        (value > -1 && value % 1 == 0 && value < length);\n}\n\nmodule.exports = isIndex;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_isIndex.js?");
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_isKey.js":
 /*!***************************************!*\
   !*** ./node_modules/lodash/_isKey.js ***!
@@ -3392,6 +3986,17 @@ eval("/**\n * Checks if `value` is suitable for use as unique object key.\n *\n 
 /***/ (function(module, exports, __webpack_require__) {
 
 eval("var coreJsData = __webpack_require__(/*! ./_coreJsData */ \"./node_modules/lodash/_coreJsData.js\");\n\n/** Used to detect methods masquerading as native. */\nvar maskSrcKey = (function() {\n  var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');\n  return uid ? ('Symbol(src)_1.' + uid) : '';\n}());\n\n/**\n * Checks if `func` has its source masked.\n *\n * @private\n * @param {Function} func The function to check.\n * @returns {boolean} Returns `true` if `func` is masked, else `false`.\n */\nfunction isMasked(func) {\n  return !!maskSrcKey && (maskSrcKey in func);\n}\n\nmodule.exports = isMasked;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_isMasked.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_isPrototype.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/_isPrototype.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/** Used for built-in method references. */\nvar objectProto = Object.prototype;\n\n/**\n * Checks if `value` is likely a prototype object.\n *\n * @private\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is a prototype, else `false`.\n */\nfunction isPrototype(value) {\n  var Ctor = value && value.constructor,\n      proto = (typeof Ctor == 'function' && Ctor.prototype) || objectProto;\n\n  return value === proto;\n}\n\nmodule.exports = isPrototype;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_isPrototype.js?");
 
 /***/ }),
 
@@ -3527,6 +4132,39 @@ eval("var getNative = __webpack_require__(/*! ./_getNative */ \"./node_modules/l
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_nativeKeys.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_nativeKeys.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var overArg = __webpack_require__(/*! ./_overArg */ \"./node_modules/lodash/_overArg.js\");\n\n/* Built-in method references for those with the same name as other `lodash` methods. */\nvar nativeKeys = overArg(Object.keys, Object);\n\nmodule.exports = nativeKeys;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_nativeKeys.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_nativeKeysIn.js":
+/*!**********************************************!*\
+  !*** ./node_modules/lodash/_nativeKeysIn.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * This function is like\n * [`Object.keys`](http://ecma-international.org/ecma-262/7.0/#sec-object.keys)\n * except that it includes inherited enumerable properties.\n *\n * @private\n * @param {Object} object The object to query.\n * @returns {Array} Returns the array of property names.\n */\nfunction nativeKeysIn(object) {\n  var result = [];\n  if (object != null) {\n    for (var key in Object(object)) {\n      result.push(key);\n    }\n  }\n  return result;\n}\n\nmodule.exports = nativeKeysIn;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_nativeKeysIn.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_nodeUtil.js":
+/*!******************************************!*\
+  !*** ./node_modules/lodash/_nodeUtil.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(/*! ./_freeGlobal */ \"./node_modules/lodash/_freeGlobal.js\");\n\n/** Detect free variable `exports`. */\nvar freeExports =  true && exports && !exports.nodeType && exports;\n\n/** Detect free variable `module`. */\nvar freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;\n\n/** Detect the popular CommonJS extension `module.exports`. */\nvar moduleExports = freeModule && freeModule.exports === freeExports;\n\n/** Detect free variable `process` from Node.js. */\nvar freeProcess = moduleExports && freeGlobal.process;\n\n/** Used to access faster Node.js helpers. */\nvar nodeUtil = (function() {\n  try {\n    // Use `util.types` for Node.js 10+.\n    var types = freeModule && freeModule.require && freeModule.require('util').types;\n\n    if (types) {\n      return types;\n    }\n\n    // Legacy `process.binding('util')` for Node.js < 10.\n    return freeProcess && freeProcess.binding && freeProcess.binding('util');\n  } catch (e) {}\n}());\n\nmodule.exports = nodeUtil;\n\n/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/module.js */ \"./node_modules/webpack/buildin/module.js\")(module)))\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_nodeUtil.js?");
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_objectToString.js":
 /*!************************************************!*\
   !*** ./node_modules/lodash/_objectToString.js ***!
@@ -3538,6 +4176,39 @@ eval("/** Used for built-in method references. */\nvar objectProto = Object.prot
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_overArg.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/_overArg.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * Creates a unary function that invokes `func` with its argument transformed.\n *\n * @private\n * @param {Function} func The function to wrap.\n * @param {Function} transform The argument transform.\n * @returns {Function} Returns the new function.\n */\nfunction overArg(func, transform) {\n  return function(arg) {\n    return func(transform(arg));\n  };\n}\n\nmodule.exports = overArg;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_overArg.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_overRest.js":
+/*!******************************************!*\
+  !*** ./node_modules/lodash/_overRest.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var apply = __webpack_require__(/*! ./_apply */ \"./node_modules/lodash/_apply.js\");\n\n/* Built-in method references for those with the same name as other `lodash` methods. */\nvar nativeMax = Math.max;\n\n/**\n * A specialized version of `baseRest` which transforms the rest array.\n *\n * @private\n * @param {Function} func The function to apply a rest parameter to.\n * @param {number} [start=func.length-1] The start position of the rest parameter.\n * @param {Function} transform The rest array transform.\n * @returns {Function} Returns the new function.\n */\nfunction overRest(func, start, transform) {\n  start = nativeMax(start === undefined ? (func.length - 1) : start, 0);\n  return function() {\n    var args = arguments,\n        index = -1,\n        length = nativeMax(args.length - start, 0),\n        array = Array(length);\n\n    while (++index < length) {\n      array[index] = args[start + index];\n    }\n    index = -1;\n    var otherArgs = Array(start + 1);\n    while (++index < start) {\n      otherArgs[index] = args[index];\n    }\n    otherArgs[start] = transform(array);\n    return apply(func, this, otherArgs);\n  };\n}\n\nmodule.exports = overRest;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_overRest.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_parent.js":
+/*!****************************************!*\
+  !*** ./node_modules/lodash/_parent.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseGet = __webpack_require__(/*! ./_baseGet */ \"./node_modules/lodash/_baseGet.js\"),\n    baseSlice = __webpack_require__(/*! ./_baseSlice */ \"./node_modules/lodash/_baseSlice.js\");\n\n/**\n * Gets the parent value at `path` of `object`.\n *\n * @private\n * @param {Object} object The object to query.\n * @param {Array} path The path to get the parent value of.\n * @returns {*} Returns the parent value.\n */\nfunction parent(object, path) {\n  return path.length < 2 ? object : baseGet(object, baseSlice(path, 0, -1));\n}\n\nmodule.exports = parent;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_parent.js?");
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_root.js":
 /*!**************************************!*\
   !*** ./node_modules/lodash/_root.js ***!
@@ -3546,6 +4217,83 @@ eval("/** Used for built-in method references. */\nvar objectProto = Object.prot
 /***/ (function(module, exports, __webpack_require__) {
 
 eval("var freeGlobal = __webpack_require__(/*! ./_freeGlobal */ \"./node_modules/lodash/_freeGlobal.js\");\n\n/** Detect free variable `self`. */\nvar freeSelf = typeof self == 'object' && self && self.Object === Object && self;\n\n/** Used as a reference to the global object. */\nvar root = freeGlobal || freeSelf || Function('return this')();\n\nmodule.exports = root;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_root.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_setToString.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/_setToString.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseSetToString = __webpack_require__(/*! ./_baseSetToString */ \"./node_modules/lodash/_baseSetToString.js\"),\n    shortOut = __webpack_require__(/*! ./_shortOut */ \"./node_modules/lodash/_shortOut.js\");\n\n/**\n * Sets the `toString` method of `func` to return `string`.\n *\n * @private\n * @param {Function} func The function to modify.\n * @param {Function} string The `toString` result.\n * @returns {Function} Returns `func`.\n */\nvar setToString = shortOut(baseSetToString);\n\nmodule.exports = setToString;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_setToString.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_shortOut.js":
+/*!******************************************!*\
+  !*** ./node_modules/lodash/_shortOut.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/** Used to detect hot functions by number of calls within a span of milliseconds. */\nvar HOT_COUNT = 800,\n    HOT_SPAN = 16;\n\n/* Built-in method references for those with the same name as other `lodash` methods. */\nvar nativeNow = Date.now;\n\n/**\n * Creates a function that'll short out and invoke `identity` instead\n * of `func` when it's called `HOT_COUNT` or more times in `HOT_SPAN`\n * milliseconds.\n *\n * @private\n * @param {Function} func The function to restrict.\n * @returns {Function} Returns the new shortable function.\n */\nfunction shortOut(func) {\n  var count = 0,\n      lastCalled = 0;\n\n  return function() {\n    var stamp = nativeNow(),\n        remaining = HOT_SPAN - (stamp - lastCalled);\n\n    lastCalled = stamp;\n    if (remaining > 0) {\n      if (++count >= HOT_COUNT) {\n        return arguments[0];\n      }\n    } else {\n      count = 0;\n    }\n    return func.apply(undefined, arguments);\n  };\n}\n\nmodule.exports = shortOut;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_shortOut.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_stackClear.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_stackClear.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var ListCache = __webpack_require__(/*! ./_ListCache */ \"./node_modules/lodash/_ListCache.js\");\n\n/**\n * Removes all key-value entries from the stack.\n *\n * @private\n * @name clear\n * @memberOf Stack\n */\nfunction stackClear() {\n  this.__data__ = new ListCache;\n  this.size = 0;\n}\n\nmodule.exports = stackClear;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_stackClear.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_stackDelete.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/_stackDelete.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * Removes `key` and its value from the stack.\n *\n * @private\n * @name delete\n * @memberOf Stack\n * @param {string} key The key of the value to remove.\n * @returns {boolean} Returns `true` if the entry was removed, else `false`.\n */\nfunction stackDelete(key) {\n  var data = this.__data__,\n      result = data['delete'](key);\n\n  this.size = data.size;\n  return result;\n}\n\nmodule.exports = stackDelete;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_stackDelete.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_stackGet.js":
+/*!******************************************!*\
+  !*** ./node_modules/lodash/_stackGet.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * Gets the stack value for `key`.\n *\n * @private\n * @name get\n * @memberOf Stack\n * @param {string} key The key of the value to get.\n * @returns {*} Returns the entry value.\n */\nfunction stackGet(key) {\n  return this.__data__.get(key);\n}\n\nmodule.exports = stackGet;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_stackGet.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_stackHas.js":
+/*!******************************************!*\
+  !*** ./node_modules/lodash/_stackHas.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * Checks if a stack value for `key` exists.\n *\n * @private\n * @name has\n * @memberOf Stack\n * @param {string} key The key of the entry to check.\n * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.\n */\nfunction stackHas(key) {\n  return this.__data__.has(key);\n}\n\nmodule.exports = stackHas;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_stackHas.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_stackSet.js":
+/*!******************************************!*\
+  !*** ./node_modules/lodash/_stackSet.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var ListCache = __webpack_require__(/*! ./_ListCache */ \"./node_modules/lodash/_ListCache.js\"),\n    Map = __webpack_require__(/*! ./_Map */ \"./node_modules/lodash/_Map.js\"),\n    MapCache = __webpack_require__(/*! ./_MapCache */ \"./node_modules/lodash/_MapCache.js\");\n\n/** Used as the size to enable large array optimizations. */\nvar LARGE_ARRAY_SIZE = 200;\n\n/**\n * Sets the stack `key` to `value`.\n *\n * @private\n * @name set\n * @memberOf Stack\n * @param {string} key The key of the value to set.\n * @param {*} value The value to set.\n * @returns {Object} Returns the stack cache instance.\n */\nfunction stackSet(key, value) {\n  var data = this.__data__;\n  if (data instanceof ListCache) {\n    var pairs = data.__data__;\n    if (!Map || (pairs.length < LARGE_ARRAY_SIZE - 1)) {\n      pairs.push([key, value]);\n      this.size = ++data.size;\n      return this;\n    }\n    data = this.__data__ = new MapCache(pairs);\n  }\n  data.set(key, value);\n  this.size = data.size;\n  return this;\n}\n\nmodule.exports = stackSet;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/_stackSet.js?");
 
 /***/ }),
 
@@ -3582,6 +4330,17 @@ eval("/** Used for built-in method references. */\nvar funcProto = Function.prot
 
 /***/ }),
 
+/***/ "./node_modules/lodash/constant.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/constant.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * Creates a function that returns `value`.\n *\n * @static\n * @memberOf _\n * @since 2.4.0\n * @category Util\n * @param {*} value The value to return from the new function.\n * @returns {Function} Returns the new constant function.\n * @example\n *\n * var objects = _.times(2, _.constant({ 'a': 1 }));\n *\n * console.log(objects);\n * // => [{ 'a': 1 }, { 'a': 1 }]\n *\n * console.log(objects[0] === objects[1]);\n * // => true\n */\nfunction constant(value) {\n  return function() {\n    return value;\n  };\n}\n\nmodule.exports = constant;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/constant.js?");
+
+/***/ }),
+
 /***/ "./node_modules/lodash/eq.js":
 /*!***********************************!*\
   !*** ./node_modules/lodash/eq.js ***!
@@ -3590,6 +4349,17 @@ eval("/** Used for built-in method references. */\nvar funcProto = Function.prot
 /***/ (function(module, exports) {
 
 eval("/**\n * Performs a\n * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)\n * comparison between two values to determine if they are equivalent.\n *\n * @static\n * @memberOf _\n * @since 4.0.0\n * @category Lang\n * @param {*} value The value to compare.\n * @param {*} other The other value to compare.\n * @returns {boolean} Returns `true` if the values are equivalent, else `false`.\n * @example\n *\n * var object = { 'a': 1 };\n * var other = { 'a': 1 };\n *\n * _.eq(object, object);\n * // => true\n *\n * _.eq(object, other);\n * // => false\n *\n * _.eq('a', 'a');\n * // => true\n *\n * _.eq('a', Object('a'));\n * // => false\n *\n * _.eq(NaN, NaN);\n * // => true\n */\nfunction eq(value, other) {\n  return value === other || (value !== value && other !== other);\n}\n\nmodule.exports = eq;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/eq.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/flatten.js":
+/*!****************************************!*\
+  !*** ./node_modules/lodash/flatten.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseFlatten = __webpack_require__(/*! ./_baseFlatten */ \"./node_modules/lodash/_baseFlatten.js\");\n\n/**\n * Flattens `array` a single level deep.\n *\n * @static\n * @memberOf _\n * @since 0.1.0\n * @category Array\n * @param {Array} array The array to flatten.\n * @returns {Array} Returns the new flattened array.\n * @example\n *\n * _.flatten([1, [2, [3, [4]], 5]]);\n * // => [1, 2, [3, [4]], 5]\n */\nfunction flatten(array) {\n  var length = array == null ? 0 : array.length;\n  return length ? baseFlatten(array, 1) : [];\n}\n\nmodule.exports = flatten;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/flatten.js?");
 
 /***/ }),
 
@@ -3604,6 +4374,28 @@ eval("var baseGet = __webpack_require__(/*! ./_baseGet */ \"./node_modules/lodas
 
 /***/ }),
 
+/***/ "./node_modules/lodash/identity.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/identity.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * This method returns the first argument it receives.\n *\n * @static\n * @since 0.1.0\n * @memberOf _\n * @category Util\n * @param {*} value Any value.\n * @returns {*} Returns `value`.\n * @example\n *\n * var object = { 'a': 1 };\n *\n * console.log(_.identity(object) === object);\n * // => true\n */\nfunction identity(value) {\n  return value;\n}\n\nmodule.exports = identity;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/identity.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isArguments.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/isArguments.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseIsArguments = __webpack_require__(/*! ./_baseIsArguments */ \"./node_modules/lodash/_baseIsArguments.js\"),\n    isObjectLike = __webpack_require__(/*! ./isObjectLike */ \"./node_modules/lodash/isObjectLike.js\");\n\n/** Used for built-in method references. */\nvar objectProto = Object.prototype;\n\n/** Used to check objects for own properties. */\nvar hasOwnProperty = objectProto.hasOwnProperty;\n\n/** Built-in value references. */\nvar propertyIsEnumerable = objectProto.propertyIsEnumerable;\n\n/**\n * Checks if `value` is likely an `arguments` object.\n *\n * @static\n * @memberOf _\n * @since 0.1.0\n * @category Lang\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is an `arguments` object,\n *  else `false`.\n * @example\n *\n * _.isArguments(function() { return arguments; }());\n * // => true\n *\n * _.isArguments([1, 2, 3]);\n * // => false\n */\nvar isArguments = baseIsArguments(function() { return arguments; }()) ? baseIsArguments : function(value) {\n  return isObjectLike(value) && hasOwnProperty.call(value, 'callee') &&\n    !propertyIsEnumerable.call(value, 'callee');\n};\n\nmodule.exports = isArguments;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/isArguments.js?");
+
+/***/ }),
+
 /***/ "./node_modules/lodash/isArray.js":
 /*!****************************************!*\
   !*** ./node_modules/lodash/isArray.js ***!
@@ -3615,6 +4407,28 @@ eval("/**\n * Checks if `value` is classified as an `Array` object.\n *\n * @sta
 
 /***/ }),
 
+/***/ "./node_modules/lodash/isArrayLike.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/isArrayLike.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var isFunction = __webpack_require__(/*! ./isFunction */ \"./node_modules/lodash/isFunction.js\"),\n    isLength = __webpack_require__(/*! ./isLength */ \"./node_modules/lodash/isLength.js\");\n\n/**\n * Checks if `value` is array-like. A value is considered array-like if it's\n * not a function and has a `value.length` that's an integer greater than or\n * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.\n *\n * @static\n * @memberOf _\n * @since 4.0.0\n * @category Lang\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is array-like, else `false`.\n * @example\n *\n * _.isArrayLike([1, 2, 3]);\n * // => true\n *\n * _.isArrayLike(document.body.children);\n * // => true\n *\n * _.isArrayLike('abc');\n * // => true\n *\n * _.isArrayLike(_.noop);\n * // => false\n */\nfunction isArrayLike(value) {\n  return value != null && isLength(value.length) && !isFunction(value);\n}\n\nmodule.exports = isArrayLike;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/isArrayLike.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isBuffer.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/isBuffer.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("/* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(/*! ./_root */ \"./node_modules/lodash/_root.js\"),\n    stubFalse = __webpack_require__(/*! ./stubFalse */ \"./node_modules/lodash/stubFalse.js\");\n\n/** Detect free variable `exports`. */\nvar freeExports =  true && exports && !exports.nodeType && exports;\n\n/** Detect free variable `module`. */\nvar freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;\n\n/** Detect the popular CommonJS extension `module.exports`. */\nvar moduleExports = freeModule && freeModule.exports === freeExports;\n\n/** Built-in value references. */\nvar Buffer = moduleExports ? root.Buffer : undefined;\n\n/* Built-in method references for those with the same name as other `lodash` methods. */\nvar nativeIsBuffer = Buffer ? Buffer.isBuffer : undefined;\n\n/**\n * Checks if `value` is a buffer.\n *\n * @static\n * @memberOf _\n * @since 4.3.0\n * @category Lang\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is a buffer, else `false`.\n * @example\n *\n * _.isBuffer(new Buffer(2));\n * // => true\n *\n * _.isBuffer(new Uint8Array(2));\n * // => false\n */\nvar isBuffer = nativeIsBuffer || stubFalse;\n\nmodule.exports = isBuffer;\n\n/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/module.js */ \"./node_modules/webpack/buildin/module.js\")(module)))\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/isBuffer.js?");
+
+/***/ }),
+
 /***/ "./node_modules/lodash/isFunction.js":
 /*!*******************************************!*\
   !*** ./node_modules/lodash/isFunction.js ***!
@@ -3623,6 +4437,28 @@ eval("/**\n * Checks if `value` is classified as an `Array` object.\n *\n * @sta
 /***/ (function(module, exports, __webpack_require__) {
 
 eval("var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ \"./node_modules/lodash/_baseGetTag.js\"),\n    isObject = __webpack_require__(/*! ./isObject */ \"./node_modules/lodash/isObject.js\");\n\n/** `Object#toString` result references. */\nvar asyncTag = '[object AsyncFunction]',\n    funcTag = '[object Function]',\n    genTag = '[object GeneratorFunction]',\n    proxyTag = '[object Proxy]';\n\n/**\n * Checks if `value` is classified as a `Function` object.\n *\n * @static\n * @memberOf _\n * @since 0.1.0\n * @category Lang\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is a function, else `false`.\n * @example\n *\n * _.isFunction(_);\n * // => true\n *\n * _.isFunction(/abc/);\n * // => false\n */\nfunction isFunction(value) {\n  if (!isObject(value)) {\n    return false;\n  }\n  // The use of `Object#toString` avoids issues with the `typeof` operator\n  // in Safari 9 which returns 'object' for typed arrays and other constructors.\n  var tag = baseGetTag(value);\n  return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;\n}\n\nmodule.exports = isFunction;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/isFunction.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isLength.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/isLength.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/** Used as references for various `Number` constants. */\nvar MAX_SAFE_INTEGER = 9007199254740991;\n\n/**\n * Checks if `value` is a valid array-like length.\n *\n * **Note:** This method is loosely based on\n * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).\n *\n * @static\n * @memberOf _\n * @since 4.0.0\n * @category Lang\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.\n * @example\n *\n * _.isLength(3);\n * // => true\n *\n * _.isLength(Number.MIN_VALUE);\n * // => false\n *\n * _.isLength(Infinity);\n * // => false\n *\n * _.isLength('3');\n * // => false\n */\nfunction isLength(value) {\n  return typeof value == 'number' &&\n    value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;\n}\n\nmodule.exports = isLength;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/isLength.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isMap.js":
+/*!**************************************!*\
+  !*** ./node_modules/lodash/isMap.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseIsMap = __webpack_require__(/*! ./_baseIsMap */ \"./node_modules/lodash/_baseIsMap.js\"),\n    baseUnary = __webpack_require__(/*! ./_baseUnary */ \"./node_modules/lodash/_baseUnary.js\"),\n    nodeUtil = __webpack_require__(/*! ./_nodeUtil */ \"./node_modules/lodash/_nodeUtil.js\");\n\n/* Node.js helper references. */\nvar nodeIsMap = nodeUtil && nodeUtil.isMap;\n\n/**\n * Checks if `value` is classified as a `Map` object.\n *\n * @static\n * @memberOf _\n * @since 4.3.0\n * @category Lang\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is a map, else `false`.\n * @example\n *\n * _.isMap(new Map);\n * // => true\n *\n * _.isMap(new WeakMap);\n * // => false\n */\nvar isMap = nodeIsMap ? baseUnary(nodeIsMap) : baseIsMap;\n\nmodule.exports = isMap;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/isMap.js?");
 
 /***/ }),
 
@@ -3648,6 +4484,28 @@ eval("/**\n * Checks if `value` is object-like. A value is object-like if it's n
 
 /***/ }),
 
+/***/ "./node_modules/lodash/isPlainObject.js":
+/*!**********************************************!*\
+  !*** ./node_modules/lodash/isPlainObject.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ \"./node_modules/lodash/_baseGetTag.js\"),\n    getPrototype = __webpack_require__(/*! ./_getPrototype */ \"./node_modules/lodash/_getPrototype.js\"),\n    isObjectLike = __webpack_require__(/*! ./isObjectLike */ \"./node_modules/lodash/isObjectLike.js\");\n\n/** `Object#toString` result references. */\nvar objectTag = '[object Object]';\n\n/** Used for built-in method references. */\nvar funcProto = Function.prototype,\n    objectProto = Object.prototype;\n\n/** Used to resolve the decompiled source of functions. */\nvar funcToString = funcProto.toString;\n\n/** Used to check objects for own properties. */\nvar hasOwnProperty = objectProto.hasOwnProperty;\n\n/** Used to infer the `Object` constructor. */\nvar objectCtorString = funcToString.call(Object);\n\n/**\n * Checks if `value` is a plain object, that is, an object created by the\n * `Object` constructor or one with a `[[Prototype]]` of `null`.\n *\n * @static\n * @memberOf _\n * @since 0.8.0\n * @category Lang\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is a plain object, else `false`.\n * @example\n *\n * function Foo() {\n *   this.a = 1;\n * }\n *\n * _.isPlainObject(new Foo);\n * // => false\n *\n * _.isPlainObject([1, 2, 3]);\n * // => false\n *\n * _.isPlainObject({ 'x': 0, 'y': 0 });\n * // => true\n *\n * _.isPlainObject(Object.create(null));\n * // => true\n */\nfunction isPlainObject(value) {\n  if (!isObjectLike(value) || baseGetTag(value) != objectTag) {\n    return false;\n  }\n  var proto = getPrototype(value);\n  if (proto === null) {\n    return true;\n  }\n  var Ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;\n  return typeof Ctor == 'function' && Ctor instanceof Ctor &&\n    funcToString.call(Ctor) == objectCtorString;\n}\n\nmodule.exports = isPlainObject;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/isPlainObject.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isSet.js":
+/*!**************************************!*\
+  !*** ./node_modules/lodash/isSet.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseIsSet = __webpack_require__(/*! ./_baseIsSet */ \"./node_modules/lodash/_baseIsSet.js\"),\n    baseUnary = __webpack_require__(/*! ./_baseUnary */ \"./node_modules/lodash/_baseUnary.js\"),\n    nodeUtil = __webpack_require__(/*! ./_nodeUtil */ \"./node_modules/lodash/_nodeUtil.js\");\n\n/* Node.js helper references. */\nvar nodeIsSet = nodeUtil && nodeUtil.isSet;\n\n/**\n * Checks if `value` is classified as a `Set` object.\n *\n * @static\n * @memberOf _\n * @since 4.3.0\n * @category Lang\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is a set, else `false`.\n * @example\n *\n * _.isSet(new Set);\n * // => true\n *\n * _.isSet(new WeakSet);\n * // => false\n */\nvar isSet = nodeIsSet ? baseUnary(nodeIsSet) : baseIsSet;\n\nmodule.exports = isSet;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/isSet.js?");
+
+/***/ }),
+
 /***/ "./node_modules/lodash/isSymbol.js":
 /*!*****************************************!*\
   !*** ./node_modules/lodash/isSymbol.js ***!
@@ -3659,6 +4517,50 @@ eval("var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ \"./node_modules
 
 /***/ }),
 
+/***/ "./node_modules/lodash/isTypedArray.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/isTypedArray.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var baseIsTypedArray = __webpack_require__(/*! ./_baseIsTypedArray */ \"./node_modules/lodash/_baseIsTypedArray.js\"),\n    baseUnary = __webpack_require__(/*! ./_baseUnary */ \"./node_modules/lodash/_baseUnary.js\"),\n    nodeUtil = __webpack_require__(/*! ./_nodeUtil */ \"./node_modules/lodash/_nodeUtil.js\");\n\n/* Node.js helper references. */\nvar nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;\n\n/**\n * Checks if `value` is classified as a typed array.\n *\n * @static\n * @memberOf _\n * @since 3.0.0\n * @category Lang\n * @param {*} value The value to check.\n * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.\n * @example\n *\n * _.isTypedArray(new Uint8Array);\n * // => true\n *\n * _.isTypedArray([]);\n * // => false\n */\nvar isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;\n\nmodule.exports = isTypedArray;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/isTypedArray.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/keys.js":
+/*!*************************************!*\
+  !*** ./node_modules/lodash/keys.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var arrayLikeKeys = __webpack_require__(/*! ./_arrayLikeKeys */ \"./node_modules/lodash/_arrayLikeKeys.js\"),\n    baseKeys = __webpack_require__(/*! ./_baseKeys */ \"./node_modules/lodash/_baseKeys.js\"),\n    isArrayLike = __webpack_require__(/*! ./isArrayLike */ \"./node_modules/lodash/isArrayLike.js\");\n\n/**\n * Creates an array of the own enumerable property names of `object`.\n *\n * **Note:** Non-object values are coerced to objects. See the\n * [ES spec](http://ecma-international.org/ecma-262/7.0/#sec-object.keys)\n * for more details.\n *\n * @static\n * @since 0.1.0\n * @memberOf _\n * @category Object\n * @param {Object} object The object to query.\n * @returns {Array} Returns the array of property names.\n * @example\n *\n * function Foo() {\n *   this.a = 1;\n *   this.b = 2;\n * }\n *\n * Foo.prototype.c = 3;\n *\n * _.keys(new Foo);\n * // => ['a', 'b'] (iteration order is not guaranteed)\n *\n * _.keys('hi');\n * // => ['0', '1']\n */\nfunction keys(object) {\n  return isArrayLike(object) ? arrayLikeKeys(object) : baseKeys(object);\n}\n\nmodule.exports = keys;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/keys.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/keysIn.js":
+/*!***************************************!*\
+  !*** ./node_modules/lodash/keysIn.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var arrayLikeKeys = __webpack_require__(/*! ./_arrayLikeKeys */ \"./node_modules/lodash/_arrayLikeKeys.js\"),\n    baseKeysIn = __webpack_require__(/*! ./_baseKeysIn */ \"./node_modules/lodash/_baseKeysIn.js\"),\n    isArrayLike = __webpack_require__(/*! ./isArrayLike */ \"./node_modules/lodash/isArrayLike.js\");\n\n/**\n * Creates an array of the own and inherited enumerable property names of `object`.\n *\n * **Note:** Non-object values are coerced to objects.\n *\n * @static\n * @memberOf _\n * @since 3.0.0\n * @category Object\n * @param {Object} object The object to query.\n * @returns {Array} Returns the array of property names.\n * @example\n *\n * function Foo() {\n *   this.a = 1;\n *   this.b = 2;\n * }\n *\n * Foo.prototype.c = 3;\n *\n * _.keysIn(new Foo);\n * // => ['a', 'b', 'c'] (iteration order is not guaranteed)\n */\nfunction keysIn(object) {\n  return isArrayLike(object) ? arrayLikeKeys(object, true) : baseKeysIn(object);\n}\n\nmodule.exports = keysIn;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/keysIn.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/last.js":
+/*!*************************************!*\
+  !*** ./node_modules/lodash/last.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * Gets the last element of `array`.\n *\n * @static\n * @memberOf _\n * @since 0.1.0\n * @category Array\n * @param {Array} array The array to query.\n * @returns {*} Returns the last element of `array`.\n * @example\n *\n * _.last([1, 2, 3]);\n * // => 3\n */\nfunction last(array) {\n  var length = array == null ? 0 : array.length;\n  return length ? array[length - 1] : undefined;\n}\n\nmodule.exports = last;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/last.js?");
+
+/***/ }),
+
 /***/ "./node_modules/lodash/memoize.js":
 /*!****************************************!*\
   !*** ./node_modules/lodash/memoize.js ***!
@@ -3667,6 +4569,39 @@ eval("var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ \"./node_modules
 /***/ (function(module, exports, __webpack_require__) {
 
 eval("var MapCache = __webpack_require__(/*! ./_MapCache */ \"./node_modules/lodash/_MapCache.js\");\n\n/** Error message constants. */\nvar FUNC_ERROR_TEXT = 'Expected a function';\n\n/**\n * Creates a function that memoizes the result of `func`. If `resolver` is\n * provided, it determines the cache key for storing the result based on the\n * arguments provided to the memoized function. By default, the first argument\n * provided to the memoized function is used as the map cache key. The `func`\n * is invoked with the `this` binding of the memoized function.\n *\n * **Note:** The cache is exposed as the `cache` property on the memoized\n * function. Its creation may be customized by replacing the `_.memoize.Cache`\n * constructor with one whose instances implement the\n * [`Map`](http://ecma-international.org/ecma-262/7.0/#sec-properties-of-the-map-prototype-object)\n * method interface of `clear`, `delete`, `get`, `has`, and `set`.\n *\n * @static\n * @memberOf _\n * @since 0.1.0\n * @category Function\n * @param {Function} func The function to have its output memoized.\n * @param {Function} [resolver] The function to resolve the cache key.\n * @returns {Function} Returns the new memoized function.\n * @example\n *\n * var object = { 'a': 1, 'b': 2 };\n * var other = { 'c': 3, 'd': 4 };\n *\n * var values = _.memoize(_.values);\n * values(object);\n * // => [1, 2]\n *\n * values(other);\n * // => [3, 4]\n *\n * object.a = 2;\n * values(object);\n * // => [1, 2]\n *\n * // Modify the result cache.\n * values.cache.set(object, ['a', 'b']);\n * values(object);\n * // => ['a', 'b']\n *\n * // Replace `_.memoize.Cache`.\n * _.memoize.Cache = WeakMap;\n */\nfunction memoize(func, resolver) {\n  if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {\n    throw new TypeError(FUNC_ERROR_TEXT);\n  }\n  var memoized = function() {\n    var args = arguments,\n        key = resolver ? resolver.apply(this, args) : args[0],\n        cache = memoized.cache;\n\n    if (cache.has(key)) {\n      return cache.get(key);\n    }\n    var result = func.apply(this, args);\n    memoized.cache = cache.set(key, result) || cache;\n    return result;\n  };\n  memoized.cache = new (memoize.Cache || MapCache);\n  return memoized;\n}\n\n// Expose `MapCache`.\nmemoize.Cache = MapCache;\n\nmodule.exports = memoize;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/memoize.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/omit.js":
+/*!*************************************!*\
+  !*** ./node_modules/lodash/omit.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var arrayMap = __webpack_require__(/*! ./_arrayMap */ \"./node_modules/lodash/_arrayMap.js\"),\n    baseClone = __webpack_require__(/*! ./_baseClone */ \"./node_modules/lodash/_baseClone.js\"),\n    baseUnset = __webpack_require__(/*! ./_baseUnset */ \"./node_modules/lodash/_baseUnset.js\"),\n    castPath = __webpack_require__(/*! ./_castPath */ \"./node_modules/lodash/_castPath.js\"),\n    copyObject = __webpack_require__(/*! ./_copyObject */ \"./node_modules/lodash/_copyObject.js\"),\n    customOmitClone = __webpack_require__(/*! ./_customOmitClone */ \"./node_modules/lodash/_customOmitClone.js\"),\n    flatRest = __webpack_require__(/*! ./_flatRest */ \"./node_modules/lodash/_flatRest.js\"),\n    getAllKeysIn = __webpack_require__(/*! ./_getAllKeysIn */ \"./node_modules/lodash/_getAllKeysIn.js\");\n\n/** Used to compose bitmasks for cloning. */\nvar CLONE_DEEP_FLAG = 1,\n    CLONE_FLAT_FLAG = 2,\n    CLONE_SYMBOLS_FLAG = 4;\n\n/**\n * The opposite of `_.pick`; this method creates an object composed of the\n * own and inherited enumerable property paths of `object` that are not omitted.\n *\n * **Note:** This method is considerably slower than `_.pick`.\n *\n * @static\n * @since 0.1.0\n * @memberOf _\n * @category Object\n * @param {Object} object The source object.\n * @param {...(string|string[])} [paths] The property paths to omit.\n * @returns {Object} Returns the new object.\n * @example\n *\n * var object = { 'a': 1, 'b': '2', 'c': 3 };\n *\n * _.omit(object, ['a', 'c']);\n * // => { 'b': '2' }\n */\nvar omit = flatRest(function(object, paths) {\n  var result = {};\n  if (object == null) {\n    return result;\n  }\n  var isDeep = false;\n  paths = arrayMap(paths, function(path) {\n    path = castPath(path, object);\n    isDeep || (isDeep = path.length > 1);\n    return path;\n  });\n  copyObject(object, getAllKeysIn(object), result);\n  if (isDeep) {\n    result = baseClone(result, CLONE_DEEP_FLAG | CLONE_FLAT_FLAG | CLONE_SYMBOLS_FLAG, customOmitClone);\n  }\n  var length = paths.length;\n  while (length--) {\n    baseUnset(result, paths[length]);\n  }\n  return result;\n});\n\nmodule.exports = omit;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/omit.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/stubArray.js":
+/*!******************************************!*\
+  !*** ./node_modules/lodash/stubArray.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * This method returns a new empty array.\n *\n * @static\n * @memberOf _\n * @since 4.13.0\n * @category Util\n * @returns {Array} Returns the new empty array.\n * @example\n *\n * var arrays = _.times(2, _.stubArray);\n *\n * console.log(arrays);\n * // => [[], []]\n *\n * console.log(arrays[0] === arrays[1]);\n * // => false\n */\nfunction stubArray() {\n  return [];\n}\n\nmodule.exports = stubArray;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/stubArray.js?");
+
+/***/ }),
+
+/***/ "./node_modules/lodash/stubFalse.js":
+/*!******************************************!*\
+  !*** ./node_modules/lodash/stubFalse.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("/**\n * This method returns `false`.\n *\n * @static\n * @memberOf _\n * @since 4.13.0\n * @category Util\n * @returns {boolean} Returns `false`.\n * @example\n *\n * _.times(2, _.stubFalse);\n * // => [false, false]\n */\nfunction stubFalse() {\n  return false;\n}\n\nmodule.exports = stubFalse;\n\n\n//# sourceURL=webpack://EndpassConnect/./node_modules/lodash/stubFalse.js?");
 
 /***/ }),
 
@@ -5914,7 +6849,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Wallet; });\n/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ \"./node_modules/core-js/modules/es6.regexp.replace.js\");\n/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es6_regexp_to_string__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.regexp.to-string */ \"./node_modules/core-js/modules/es6.regexp.to-string.js\");\n/* harmony import */ var core_js_modules_es6_regexp_to_string__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_to_string__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! regenerator-runtime/runtime */ \"./node_modules/regenerator-runtime/runtime.js\");\n/* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator */ \"./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js\");\n/* harmony import */ var _Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/classCallCheck */ \"./node_modules/@babel/runtime/helpers/esm/classCallCheck.js\");\n/* harmony import */ var _Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/createClass */ \"./node_modules/@babel/runtime/helpers/esm/createClass.js\");\n/* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! lodash/get */ \"./node_modules/lodash/get.js\");\n/* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(lodash_get__WEBPACK_IMPORTED_MODULE_6__);\n/* harmony import */ var ethereumjs_tx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ethereumjs-tx */ \"./node_modules/ethereumjs-tx/es5/index.js\");\n/* harmony import */ var ethereumjs_tx__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(ethereumjs_tx__WEBPACK_IMPORTED_MODULE_7__);\n/* harmony import */ var _class_singleton_web3__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @@/class/singleton/web3 */ \"./packages/class/singleton/web3.js\");\n/* harmony import */ var _util_keystore__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @@/util/keystore */ \"./packages/util/keystore.js\");\n\n\n\n\n\n\n\n\n\n\nvar _web3$utils = _class_singleton_web3__WEBPACK_IMPORTED_MODULE_8__[\"default\"].utils,\n    isAddress = _web3$utils.isAddress,\n    bytesToHex = _web3$utils.bytesToHex;\n/**\n * A Wallet represents a single Ethereum account that can send transactions\n * ! All methods are async and return promises\n * @constructor\n * @param {Object} account Account object\n */\n\nvar Wallet =\n/*#__PURE__*/\nfunction () {\n  function Wallet(v3Keystore) {\n    Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_4__[\"default\"])(this, Wallet);\n\n    var address = Wallet.normalizeAddress(v3Keystore.address);\n\n    if (!isAddress(address)) {\n      throw new Error(\"\".concat(address, \" is not valid Etherium address!\"));\n    }\n\n    var isPublic = !_util_keystore__WEBPACK_IMPORTED_MODULE_9__[\"default\"].isV3(v3Keystore);\n    this.address = address;\n    this.index = lodash_get__WEBPACK_IMPORTED_MODULE_6___default()(v3Keystore, 'info.index');\n    this.v3 = isPublic ? null : v3Keystore;\n    this.signStrategy = null;\n    this.isPublic = isPublic;\n  }\n  /**\n   *\n   * @param {*} address\n   */\n\n\n  Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_5__[\"default\"])(Wallet, [{\n    key: \"getPrivateKey\",\n\n    /**\n     * Returns decrypted private key buffer\n     * @param {String} password Account password\n     * @returns {Promise<Buffer>} Private key buffer\n     */\n    value: function () {\n      var _getPrivateKey = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee(password) {\n        return regeneratorRuntime.wrap(function _callee$(_context) {\n          while (1) {\n            switch (_context.prev = _context.next) {\n              case 0:\n                return _context.abrupt(\"return\", _util_keystore__WEBPACK_IMPORTED_MODULE_9__[\"default\"].decrypt(password, this.v3));\n\n              case 1:\n              case \"end\":\n                return _context.stop();\n            }\n          }\n        }, _callee, this);\n      }));\n\n      function getPrivateKey(_x) {\n        return _getPrivateKey.apply(this, arguments);\n      }\n\n      return getPrivateKey;\n    }()\n    /**\n     * Returns decrypted private key in string\n     * @param {String} password Account password\n     * @returns {Promise<String>} Private key string\n     */\n\n  }, {\n    key: \"getPrivateKeyString\",\n    value: function () {\n      var _getPrivateKeyString = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee2(password) {\n        var privateKey;\n        return regeneratorRuntime.wrap(function _callee2$(_context2) {\n          while (1) {\n            switch (_context2.prev = _context2.next) {\n              case 0:\n                _context2.next = 2;\n                return this.getPrivateKey(password);\n\n              case 2:\n                privateKey = _context2.sent;\n                return _context2.abrupt(\"return\", bytesToHex(privateKey));\n\n              case 4:\n              case \"end\":\n                return _context2.stop();\n            }\n          }\n        }, _callee2, this);\n      }));\n\n      function getPrivateKeyString(_x2) {\n        return _getPrivateKeyString.apply(this, arguments);\n      }\n\n      return getPrivateKeyString;\n    }()\n    /**\n     * Validates account password\n     * Throws error on validation failure\n     * @param {String} password Account password\n     * @throws {Error}\n     * @returns {Boolean}\n     */\n\n  }, {\n    key: \"validatePassword\",\n    value: function () {\n      var _validatePassword = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee3(password) {\n        return regeneratorRuntime.wrap(function _callee3$(_context3) {\n          while (1) {\n            switch (_context3.prev = _context3.next) {\n              case 0:\n                _context3.prev = 0;\n                _context3.next = 3;\n                return this.getPrivateKey(password);\n\n              case 3:\n                return _context3.abrupt(\"return\", true);\n\n              case 6:\n                _context3.prev = 6;\n                _context3.t0 = _context3[\"catch\"](0);\n                throw new Error('Invalid password');\n\n              case 9:\n              case \"end\":\n                return _context3.stop();\n            }\n          }\n        }, _callee3, this, [[0, 6]]);\n      }));\n\n      function validatePassword(_x3) {\n        return _validatePassword.apply(this, arguments);\n      }\n\n      return validatePassword;\n    }()\n    /**\n     * Return signed message object\n     * @param {String} message Message for signing\n     * @return {Promise<Object<SignedMessage>>} Return signed message object\n     */\n\n  }, {\n    key: \"sign\",\n    value: function () {\n      var _sign = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee4(data, password) {\n        var privateKey;\n        return regeneratorRuntime.wrap(function _callee4$(_context4) {\n          while (1) {\n            switch (_context4.prev = _context4.next) {\n              case 0:\n                _context4.next = 2;\n                return this.getPrivateKeyString(password);\n\n              case 2:\n                privateKey = _context4.sent;\n                return _context4.abrupt(\"return\", this.web3.eth.accounts.sign(data, privateKey));\n\n              case 4:\n              case \"end\":\n                return _context4.stop();\n            }\n          }\n        }, _callee4, this);\n      }));\n\n      function sign(_x4, _x5) {\n        return _sign.apply(this, arguments);\n      }\n\n      return sign;\n    }()\n    /**\n     * Recover account address from signed message/hash\n     * @param {String} message Message/hash for signing\n     * @param {String<Signature>} signature Signature from signing\n     * @return {Promise<Address>} Resolve account address\n     */\n\n    /* eslint-disable-next-line */\n\n  }, {\n    key: \"recover\",\n    value: function () {\n      var _recover = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee5(message, signature) {\n        return regeneratorRuntime.wrap(function _callee5$(_context5) {\n          while (1) {\n            switch (_context5.prev = _context5.next) {\n              case 0:\n                return _context5.abrupt(\"return\", this.web3.eth.accounts.recover(message, signature));\n\n              case 1:\n              case \"end\":\n                return _context5.stop();\n            }\n          }\n        }, _callee5, this);\n      }));\n\n      function recover(_x6, _x7) {\n        return _recover.apply(this, arguments);\n      }\n\n      return recover;\n    }()\n    /**\n     * Return signed transaction hash\n     * @param {Transaction} transaction Transaction instance\n     * @return {String<SignedTrxHash>} Resolve signed transaction hash\n     */\n\n  }, {\n    key: \"signTransaction\",\n    value: function () {\n      var _signTransaction = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee6(transaction, password) {\n        var privateKey, tx;\n        return regeneratorRuntime.wrap(function _callee6$(_context6) {\n          while (1) {\n            switch (_context6.prev = _context6.next) {\n              case 0:\n                _context6.next = 2;\n                return this.getPrivateKey(password);\n\n              case 2:\n                privateKey = _context6.sent;\n                tx = transaction instanceof ethereumjs_tx__WEBPACK_IMPORTED_MODULE_7___default.a ? transaction : new ethereumjs_tx__WEBPACK_IMPORTED_MODULE_7___default.a(transaction);\n                _context6.next = 6;\n                return tx.sign(privateKey);\n\n              case 6:\n                return _context6.abrupt(\"return\", \"0x\".concat(tx.serialize().toString('hex')));\n\n              case 7:\n              case \"end\":\n                return _context6.stop();\n            }\n          }\n        }, _callee6, this);\n      }));\n\n      function signTransaction(_x8, _x9) {\n        return _signTransaction.apply(this, arguments);\n      }\n\n      return signTransaction;\n    }()\n  }], [{\n    key: \"normalizeAddress\",\n    value: function normalizeAddress(address) {\n      if (/^xpub/.test(address)) {\n        return Wallet.getAddressFromXpub(address);\n      }\n\n      return \"0x\".concat(address.replace(/^0x/, ''));\n    }\n  }]);\n\n  return Wallet;\n}();\n\n\n\n//# sourceURL=webpack://EndpassConnect/./packages/class/Wallet.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Wallet; });\n/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ \"./node_modules/core-js/modules/es6.regexp.replace.js\");\n/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var core_js_modules_es6_regexp_to_string__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.regexp.to-string */ \"./node_modules/core-js/modules/es6.regexp.to-string.js\");\n/* harmony import */ var core_js_modules_es6_regexp_to_string__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_to_string__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! regenerator-runtime/runtime */ \"./node_modules/regenerator-runtime/runtime.js\");\n/* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator */ \"./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js\");\n/* harmony import */ var _Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/classCallCheck */ \"./node_modules/@babel/runtime/helpers/esm/classCallCheck.js\");\n/* harmony import */ var _Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/createClass */ \"./node_modules/@babel/runtime/helpers/esm/createClass.js\");\n/* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! lodash/get */ \"./node_modules/lodash/get.js\");\n/* harmony import */ var lodash_get__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(lodash_get__WEBPACK_IMPORTED_MODULE_6__);\n/* harmony import */ var ethereumjs_tx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ethereumjs-tx */ \"./node_modules/ethereumjs-tx/es5/index.js\");\n/* harmony import */ var ethereumjs_tx__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(ethereumjs_tx__WEBPACK_IMPORTED_MODULE_7__);\n/* harmony import */ var _class_singleton_web3__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @@/class/singleton/web3 */ \"./packages/class/singleton/web3.js\");\n/* harmony import */ var _util_keystore__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @@/util/keystore */ \"./packages/util/keystore.js\");\n\n\n\n\n\n\n\n\n\n\nvar _web3$utils = _class_singleton_web3__WEBPACK_IMPORTED_MODULE_8__[\"default\"].utils,\n    isAddress = _web3$utils.isAddress,\n    bytesToHex = _web3$utils.bytesToHex;\n/**\n * A Wallet represents a single Ethereum account that can send transactions\n * ! All methods are async and return promises\n * @constructor\n * @param {Object} account Account object\n */\n\nvar Wallet =\n/*#__PURE__*/\nfunction () {\n  function Wallet(v3Keystore) {\n    Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_4__[\"default\"])(this, Wallet);\n\n    var address = Wallet.normalizeAddress(v3Keystore.address);\n\n    if (!isAddress(address)) {\n      throw new Error(\"\".concat(address, \" is not valid Etherium address!\"));\n    }\n\n    var isPublic = !_util_keystore__WEBPACK_IMPORTED_MODULE_9__[\"default\"].isV3(v3Keystore);\n    this.address = address;\n    this.index = lodash_get__WEBPACK_IMPORTED_MODULE_6___default()(v3Keystore, 'info.index');\n    this.v3 = isPublic ? null : v3Keystore;\n    this.signStrategy = null;\n    this.isPublic = isPublic;\n  }\n  /**\n   *\n   * @param {*} address\n   */\n\n\n  Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_5__[\"default\"])(Wallet, [{\n    key: \"getPrivateKey\",\n\n    /**\n     * Returns decrypted private key buffer\n     * @param {String} password Account password\n     * @returns {Promise<Buffer>} Private key buffer\n     */\n    value: function () {\n      var _getPrivateKey = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee(password) {\n        return regeneratorRuntime.wrap(function _callee$(_context) {\n          while (1) {\n            switch (_context.prev = _context.next) {\n              case 0:\n                return _context.abrupt(\"return\", _util_keystore__WEBPACK_IMPORTED_MODULE_9__[\"default\"].decrypt(password, this.v3));\n\n              case 1:\n              case \"end\":\n                return _context.stop();\n            }\n          }\n        }, _callee, this);\n      }));\n\n      function getPrivateKey(_x) {\n        return _getPrivateKey.apply(this, arguments);\n      }\n\n      return getPrivateKey;\n    }()\n    /**\n     * Returns decrypted private key in string\n     * @param {String} password Account password\n     * @returns {Promise<String>} Private key string\n     */\n\n  }, {\n    key: \"getPrivateKeyString\",\n    value: function () {\n      var _getPrivateKeyString = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee2(password) {\n        var privateKey;\n        return regeneratorRuntime.wrap(function _callee2$(_context2) {\n          while (1) {\n            switch (_context2.prev = _context2.next) {\n              case 0:\n                _context2.next = 2;\n                return this.getPrivateKey(password);\n\n              case 2:\n                privateKey = _context2.sent;\n                return _context2.abrupt(\"return\", bytesToHex(privateKey));\n\n              case 4:\n              case \"end\":\n                return _context2.stop();\n            }\n          }\n        }, _callee2, this);\n      }));\n\n      function getPrivateKeyString(_x2) {\n        return _getPrivateKeyString.apply(this, arguments);\n      }\n\n      return getPrivateKeyString;\n    }()\n    /**\n     * Validates account password\n     * Throws error on validation failure\n     * @param {String} password Account password\n     * @throws {Error}\n     * @returns {Boolean}\n     */\n\n  }, {\n    key: \"validatePassword\",\n    value: function () {\n      var _validatePassword = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee3(password) {\n        return regeneratorRuntime.wrap(function _callee3$(_context3) {\n          while (1) {\n            switch (_context3.prev = _context3.next) {\n              case 0:\n                _context3.prev = 0;\n                _context3.next = 3;\n                return this.getPrivateKey(password);\n\n              case 3:\n                return _context3.abrupt(\"return\", true);\n\n              case 6:\n                _context3.prev = 6;\n                _context3.t0 = _context3[\"catch\"](0);\n                throw new Error('Invalid password');\n\n              case 9:\n              case \"end\":\n                return _context3.stop();\n            }\n          }\n        }, _callee3, this, [[0, 6]]);\n      }));\n\n      function validatePassword(_x3) {\n        return _validatePassword.apply(this, arguments);\n      }\n\n      return validatePassword;\n    }()\n    /**\n     * Return signed message object\n     * @param {String} message Message for signing\n     * @return {Promise<Object<SignedMessage>>} Return signed message object\n     */\n\n  }, {\n    key: \"sign\",\n    value: function () {\n      var _sign = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee4(data, password) {\n        var privateKey;\n        return regeneratorRuntime.wrap(function _callee4$(_context4) {\n          while (1) {\n            switch (_context4.prev = _context4.next) {\n              case 0:\n                _context4.next = 2;\n                return this.getPrivateKeyString(password);\n\n              case 2:\n                privateKey = _context4.sent;\n                return _context4.abrupt(\"return\", _class_singleton_web3__WEBPACK_IMPORTED_MODULE_8__[\"default\"].eth.accounts.sign(data, privateKey));\n\n              case 4:\n              case \"end\":\n                return _context4.stop();\n            }\n          }\n        }, _callee4, this);\n      }));\n\n      function sign(_x4, _x5) {\n        return _sign.apply(this, arguments);\n      }\n\n      return sign;\n    }()\n    /**\n     * Recover account address from signed message/hash\n     * @param {String} message Message/hash for signing\n     * @param {String<Signature>} signature Signature from signing\n     * @return {Promise<Address>} Resolve account address\n     */\n\n    /* eslint-disable-next-line */\n\n  }, {\n    key: \"recover\",\n    value: function () {\n      var _recover = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee5(message, signature) {\n        return regeneratorRuntime.wrap(function _callee5$(_context5) {\n          while (1) {\n            switch (_context5.prev = _context5.next) {\n              case 0:\n                return _context5.abrupt(\"return\", _class_singleton_web3__WEBPACK_IMPORTED_MODULE_8__[\"default\"].eth.accounts.recover(message, signature));\n\n              case 1:\n              case \"end\":\n                return _context5.stop();\n            }\n          }\n        }, _callee5, this);\n      }));\n\n      function recover(_x6, _x7) {\n        return _recover.apply(this, arguments);\n      }\n\n      return recover;\n    }()\n    /**\n     * Return signed transaction hash\n     * @param {Transaction} transaction Transaction instance\n     * @return {String<SignedTrxHash>} Resolve signed transaction hash\n     */\n\n  }, {\n    key: \"signTransaction\",\n    value: function () {\n      var _signTransaction = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee6(transaction, password) {\n        var privateKey, tx;\n        return regeneratorRuntime.wrap(function _callee6$(_context6) {\n          while (1) {\n            switch (_context6.prev = _context6.next) {\n              case 0:\n                _context6.next = 2;\n                return this.getPrivateKey(password);\n\n              case 2:\n                privateKey = _context6.sent;\n                tx = transaction instanceof ethereumjs_tx__WEBPACK_IMPORTED_MODULE_7___default.a ? transaction : new ethereumjs_tx__WEBPACK_IMPORTED_MODULE_7___default.a(transaction);\n                _context6.next = 6;\n                return tx.sign(privateKey);\n\n              case 6:\n                return _context6.abrupt(\"return\", \"0x\".concat(tx.serialize().toString('hex')));\n\n              case 7:\n              case \"end\":\n                return _context6.stop();\n            }\n          }\n        }, _callee6, this);\n      }));\n\n      function signTransaction(_x8, _x9) {\n        return _signTransaction.apply(this, arguments);\n      }\n\n      return signTransaction;\n    }()\n  }], [{\n    key: \"normalizeAddress\",\n    value: function normalizeAddress(address) {\n      if (/^xpub/.test(address)) {\n        return Wallet.getAddressFromXpub(address);\n      }\n\n      return \"0x\".concat(address.replace(/^0x/, ''));\n    }\n  }]);\n\n  return Wallet;\n}();\n\n\n\n//# sourceURL=webpack://EndpassConnect/./packages/class/Wallet.js?");
 
 /***/ }),
 
@@ -5962,7 +6897,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Connect; });\n/* harmony import */ var core_js_modules_es6_object_assign__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.object.assign */ \"./node_modules/core-js/modules/es6.object.assign.js\");\n/* harmony import */ var core_js_modules_es6_object_assign__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_assign__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/objectSpread */ \"./node_modules/@babel/runtime/helpers/esm/objectSpread.js\");\n/* harmony import */ var core_js_modules_es7_array_includes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es7.array.includes */ \"./node_modules/core-js/modules/es7.array.includes.js\");\n/* harmony import */ var core_js_modules_es7_array_includes__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es7_array_includes__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var core_js_modules_es6_string_includes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es6.string.includes */ \"./node_modules/core-js/modules/es6.string.includes.js\");\n/* harmony import */ var core_js_modules_es6_string_includes__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_string_includes__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! regenerator-runtime/runtime */ \"./node_modules/regenerator-runtime/runtime.js\");\n/* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var _Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator */ \"./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js\");\n/* harmony import */ var _Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/classCallCheck */ \"./node_modules/@babel/runtime/helpers/esm/classCallCheck.js\");\n/* harmony import */ var _Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/createClass */ \"./node_modules/@babel/runtime/helpers/esm/createClass.js\");\n/* harmony import */ var core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! core-js/modules/es6.array.iterator */ \"./node_modules/core-js/modules/es6.array.iterator.js\");\n/* harmony import */ var core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_8__);\n/* harmony import */ var core_js_modules_es6_promise__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! core-js/modules/es6.promise */ \"./node_modules/core-js/modules/es6.promise.js\");\n/* harmony import */ var core_js_modules_es6_promise__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_promise__WEBPACK_IMPORTED_MODULE_9__);\n/* harmony import */ var core_js_modules_es7_promise_finally__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! core-js/modules/es7.promise.finally */ \"./node_modules/core-js/modules/es7.promise.finally.js\");\n/* harmony import */ var core_js_modules_es7_promise_finally__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es7_promise_finally__WEBPACK_IMPORTED_MODULE_10__);\n/* harmony import */ var web3_dapp__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! web3-dapp */ \"./node_modules/web3-dapp/index.js\");\n/* harmony import */ var web3_dapp__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(web3_dapp__WEBPACK_IMPORTED_MODULE_11__);\n/* harmony import */ var _service_identity__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @@/service/identity */ \"./packages/service/identity.js\");\n/* harmony import */ var _util_message__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @@/util/message */ \"./packages/util/message.js\");\n/* harmony import */ var _class_singleton_web3__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @@/class/singleton/web3 */ \"./packages/class/singleton/web3.js\");\n/* harmony import */ var _class__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @@/class */ \"./packages/class/index.js\");\n/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @@/constants */ \"./packages/constants/index.js\");\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nvar Connect =\n/*#__PURE__*/\nfunction () {\n  function Connect(_ref) {\n    var authUrl = _ref.authUrl,\n        subscribe = _ref.subscribe;\n\n    Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_6__[\"default\"])(this, Connect);\n\n    this.authUrl = authUrl;\n    this.emmiter = new _class__WEBPACK_IMPORTED_MODULE_15__[\"Emmiter\"]();\n    this.provider = new _class__WEBPACK_IMPORTED_MODULE_15__[\"InpageProvider\"](this.emmiter); // Net requests queue\n\n    this.currentRequest = null;\n    this.queueInterval = null;\n    this.queue = [];\n\n    if (subscribe) {\n      this.setupEmmiterEvents();\n      this.watchRequestsQueue();\n    }\n  }\n\n  Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_7__[\"default\"])(Connect, [{\n    key: \"watchRequestsQueue\",\n    value: function watchRequestsQueue() {\n      var _this = this;\n\n      this.queueInterval = setInterval(function () {\n        if (!_this.currentRequest && _this.queue.length > 0) {\n          _this.currentRequest = _this.queue.pop();\n\n          _this.processCurrentRequest();\n        }\n      }, 2500);\n    }\n  }, {\n    key: \"unwatchRequestsQueue\",\n    value: function unwatchRequestsQueue() {\n      clearInterval(this.queueInterval);\n      this.queueInterval = null;\n    }\n  }, {\n    key: \"processCurrentRequest\",\n    value: function () {\n      var _processCurrentRequest = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee() {\n        var currentRequest, res;\n        return regeneratorRuntime.wrap(function _callee$(_context) {\n          while (1) {\n            switch (_context.prev = _context.next) {\n              case 0:\n                currentRequest = this.currentRequest;\n                _context.prev = 1;\n\n                if (!_constants__WEBPACK_IMPORTED_MODULE_16__[\"DAPP_WHITELISTED_METHODS\"].includes(currentRequest.method)) {\n                  _context.next = 8;\n                  break;\n                }\n\n                _context.next = 5;\n                return this.sign();\n\n              case 5:\n                _context.t0 = _context.sent;\n                _context.next = 11;\n                break;\n\n              case 8:\n                _context.next = 10;\n                return this.sendToNetwork();\n\n              case 10:\n                _context.t0 = _context.sent;\n\n              case 11:\n                res = _context.t0;\n                console.log('sign success', res);\n                _context.next = 19;\n                break;\n\n              case 15:\n                _context.prev = 15;\n                _context.t1 = _context[\"catch\"](1);\n                console.error('sign error', _context.t1);\n                this.sendResponse(Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_1__[\"default\"])({}, currentRequest, {\n                  result: null,\n                  error: _context.t1\n                }));\n\n              case 19:\n                _context.prev = 19;\n                this.currentRequest = null;\n                return _context.finish(19);\n\n              case 22:\n              case \"end\":\n                return _context.stop();\n            }\n          }\n        }, _callee, this, [[1, 15, 19, 22]]);\n      }));\n\n      function processCurrentRequest() {\n        return _processCurrentRequest.apply(this, arguments);\n      }\n\n      return processCurrentRequest;\n    }()\n  }, {\n    key: \"getAuthUrl\",\n    value: function getAuthUrl(method) {\n      return !method ? this.authUrl : \"\".concat(this.authUrl, \"/#/\").concat(method);\n    }\n  }, {\n    key: \"setupEmmiterEvents\",\n    value: function setupEmmiterEvents() {\n      this.emmiter.on(_constants__WEBPACK_IMPORTED_MODULE_16__[\"INPAGE_EVENTS\"].REQUEST, this.handleRequest.bind(this));\n      this.emmiter.on(_constants__WEBPACK_IMPORTED_MODULE_16__[\"INPAGE_EVENTS\"].SETTINGS, this.handleRequest.bind(this));\n    }\n    /* eslint-disable-next-line */\n\n  }, {\n    key: \"status\",\n    value: function () {\n      var _status = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee2() {\n        var res;\n        return regeneratorRuntime.wrap(function _callee2$(_context2) {\n          while (1) {\n            switch (_context2.prev = _context2.next) {\n              case 0:\n                _context2.prev = 0;\n                _context2.next = 3;\n                return _service_identity__WEBPACK_IMPORTED_MODULE_12__[\"default\"].getAccounts();\n\n              case 3:\n                res = _context2.sent;\n                return _context2.abrupt(\"return\", !!res);\n\n              case 7:\n                _context2.prev = 7;\n                _context2.t0 = _context2[\"catch\"](0);\n                return _context2.abrupt(\"return\", false);\n\n              case 10:\n              case \"end\":\n                return _context2.stop();\n            }\n          }\n        }, _callee2, this, [[0, 7]]);\n      }));\n\n      function status() {\n        return _status.apply(this, arguments);\n      }\n\n      return status;\n    }()\n    /* eslint-disable-next-line */\n\n  }, {\n    key: \"getAccountData\",\n    value: function () {\n      var _getAccountData = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee3() {\n        var res;\n        return regeneratorRuntime.wrap(function _callee3$(_context3) {\n          while (1) {\n            switch (_context3.prev = _context3.next) {\n              case 0:\n                _context3.prev = 0;\n                _context3.next = 3;\n                return _service_identity__WEBPACK_IMPORTED_MODULE_12__[\"default\"].getAccounts();\n\n              case 3:\n                res = _context3.sent;\n                return _context3.abrupt(\"return\", {\n                  activeAccount: res[0],\n                  activeNet: 1\n                });\n\n              case 7:\n                _context3.prev = 7;\n                _context3.t0 = _context3[\"catch\"](0);\n                return _context3.abrupt(\"return\", false);\n\n              case 10:\n              case \"end\":\n                return _context3.stop();\n            }\n          }\n        }, _callee3, this, [[0, 7]]);\n      }));\n\n      function getAccountData() {\n        return _getAccountData.apply(this, arguments);\n      }\n\n      return getAccountData;\n    }()\n  }, {\n    key: \"openApp\",\n    value: function openApp(method) {\n      var pos = {\n        x: window.innerWidth / 2 - 200,\n        y: 200\n      };\n      var windowFeatures = ['chrome=yes', 'centerscreen=yes', 'resizable=no', 'width=800', 'height=800', \"top=\".concat(pos.y), \"left=\".concat(pos.x)];\n      window.name = _constants__WEBPACK_IMPORTED_MODULE_16__[\"HOST_WINDOW_NAME\"];\n      return window.open(this.getAuthUrl(method), _constants__WEBPACK_IMPORTED_MODULE_16__[\"DIALOG_WINDOW_NAME\"], windowFeatures.join(','));\n    }\n  }, {\n    key: \"auth\",\n    value: function auth() {\n      // Auth popup closing must reject\n      this.openApp('auth');\n      return Object(_util_message__WEBPACK_IMPORTED_MODULE_13__[\"awaitDialogMessage\"])();\n    }\n  }, {\n    key: \"sign\",\n    value: function sign() {\n      var _this2 = this;\n\n      return this.status().then(function (res) {\n        if (!res) throw new Error('User not autorized');\n        return res;\n      }).then(function () {\n        var dialog = _this2.openApp('sign');\n\n        setTimeout(function () {\n          Object(_util_message__WEBPACK_IMPORTED_MODULE_13__[\"sendMessageToDialog\"])({\n            target: dialog,\n            data: {\n              url: window.location.origin,\n              address: _this2.provider.settings.selectedAddress,\n              net: _this2.provider.settings.networkVersion,\n              request: _this2.currentRequest\n            }\n          });\n        }, 3500);\n        return Object(_util_message__WEBPACK_IMPORTED_MODULE_13__[\"awaitDialogMessage\"])();\n      });\n    }\n  }, {\n    key: \"sendToNetwork\",\n    value: function () {\n      var _sendToNetwork = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee4() {\n        var _this3 = this;\n\n        return regeneratorRuntime.wrap(function _callee4$(_context4) {\n          while (1) {\n            switch (_context4.prev = _context4.next) {\n              case 0:\n                return _context4.abrupt(\"return\", new Promise(function (resolve, reject) {\n                  _class_singleton_web3__WEBPACK_IMPORTED_MODULE_14__[\"default\"].currentProvider.sendAsync(_this3.currentRequest, function (err, res) {\n                    if (err) {\n                      return reject(err);\n                    }\n\n                    return resolve(res);\n                  });\n                }));\n\n              case 1:\n              case \"end\":\n                return _context4.stop();\n            }\n          }\n        }, _callee4, this);\n      }));\n\n      function sendToNetwork() {\n        return _sendToNetwork.apply(this, arguments);\n      }\n\n      return sendToNetwork;\n    }()\n  }, {\n    key: \"handleRequest\",\n    value: function handleRequest(request) {\n      if (request.id) {\n        this.queue.push(request);\n      }\n    }\n  }, {\n    key: \"sendSettings\",\n    value: function sendSettings(_ref2) {\n      var selectedAddress = _ref2.selectedAddress,\n          networkVersion = _ref2.networkVersion;\n      this.emmiter.emit(_constants__WEBPACK_IMPORTED_MODULE_16__[\"INPAGE_EVENTS\"].SETTINGS, {\n        selectedAddress: selectedAddress,\n        networkVersion: networkVersion\n      });\n    }\n  }, {\n    key: \"sendResponse\",\n    value: function sendResponse(payload) {\n      this.emmiter.emit(_constants__WEBPACK_IMPORTED_MODULE_16__[\"INPAGE_EVENTS\"].RESPONSE, payload);\n    }\n    /* eslint-disable-next-line */\n\n  }, {\n    key: \"injectWeb3\",\n    value: function () {\n      var _injectWeb = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee5() {\n        var target,\n            _args5 = arguments;\n        return regeneratorRuntime.wrap(function _callee5$(_context5) {\n          while (1) {\n            switch (_context5.prev = _context5.next) {\n              case 0:\n                target = _args5.length > 0 && _args5[0] !== undefined ? _args5[0] : window;\n\n                if (!target.web3) {\n                  Object.assign(target, {\n                    web3: new web3_dapp__WEBPACK_IMPORTED_MODULE_11___default.a()\n                  });\n                  target.web3.setProvider(this.provider);\n                } else {\n                  console.log('web3 new');\n                }\n\n              case 2:\n              case \"end\":\n                return _context5.stop();\n            }\n          }\n        }, _callee5, this);\n      }));\n\n      function injectWeb3() {\n        return _injectWeb.apply(this, arguments);\n      }\n\n      return injectWeb3;\n    }()\n  }]);\n\n  return Connect;\n}();\n\n\n\n//# sourceURL=webpack://EndpassConnect/./packages/lib/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Connect; });\n/* harmony import */ var core_js_modules_es6_object_assign__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.object.assign */ \"./node_modules/core-js/modules/es6.object.assign.js\");\n/* harmony import */ var core_js_modules_es6_object_assign__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_assign__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/objectSpread */ \"./node_modules/@babel/runtime/helpers/esm/objectSpread.js\");\n/* harmony import */ var core_js_modules_es7_array_includes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es7.array.includes */ \"./node_modules/core-js/modules/es7.array.includes.js\");\n/* harmony import */ var core_js_modules_es7_array_includes__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es7_array_includes__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var core_js_modules_es6_string_includes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es6.string.includes */ \"./node_modules/core-js/modules/es6.string.includes.js\");\n/* harmony import */ var core_js_modules_es6_string_includes__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_string_includes__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! regenerator-runtime/runtime */ \"./node_modules/regenerator-runtime/runtime.js\");\n/* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var _Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator */ \"./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js\");\n/* harmony import */ var _Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/classCallCheck */ \"./node_modules/@babel/runtime/helpers/esm/classCallCheck.js\");\n/* harmony import */ var _Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/createClass */ \"./node_modules/@babel/runtime/helpers/esm/createClass.js\");\n/* harmony import */ var core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! core-js/modules/es6.array.iterator */ \"./node_modules/core-js/modules/es6.array.iterator.js\");\n/* harmony import */ var core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_iterator__WEBPACK_IMPORTED_MODULE_8__);\n/* harmony import */ var core_js_modules_es6_promise__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! core-js/modules/es6.promise */ \"./node_modules/core-js/modules/es6.promise.js\");\n/* harmony import */ var core_js_modules_es6_promise__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_promise__WEBPACK_IMPORTED_MODULE_9__);\n/* harmony import */ var core_js_modules_es7_promise_finally__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! core-js/modules/es7.promise.finally */ \"./node_modules/core-js/modules/es7.promise.finally.js\");\n/* harmony import */ var core_js_modules_es7_promise_finally__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es7_promise_finally__WEBPACK_IMPORTED_MODULE_10__);\n/* harmony import */ var lodash_omit__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! lodash/omit */ \"./node_modules/lodash/omit.js\");\n/* harmony import */ var lodash_omit__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(lodash_omit__WEBPACK_IMPORTED_MODULE_11__);\n/* harmony import */ var web3_dapp__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! web3-dapp */ \"./node_modules/web3-dapp/index.js\");\n/* harmony import */ var web3_dapp__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(web3_dapp__WEBPACK_IMPORTED_MODULE_12__);\n/* harmony import */ var _service_identity__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @@/service/identity */ \"./packages/service/identity.js\");\n/* harmony import */ var _util_message__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @@/util/message */ \"./packages/util/message.js\");\n/* harmony import */ var _class_singleton_web3__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @@/class/singleton/web3 */ \"./packages/class/singleton/web3.js\");\n/* harmony import */ var _class__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @@/class */ \"./packages/class/index.js\");\n/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @@/constants */ \"./packages/constants/index.js\");\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nvar Connect =\n/*#__PURE__*/\nfunction () {\n  function Connect(_ref) {\n    var authUrl = _ref.authUrl,\n        subscribe = _ref.subscribe;\n\n    Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_6__[\"default\"])(this, Connect);\n\n    this.authUrl = authUrl;\n    this.emmiter = new _class__WEBPACK_IMPORTED_MODULE_16__[\"Emmiter\"]();\n    this.provider = new _class__WEBPACK_IMPORTED_MODULE_16__[\"InpageProvider\"](this.emmiter); // Net requests queue\n\n    this.currentRequest = null;\n    this.queueInterval = null;\n    this.queue = [];\n\n    if (subscribe) {\n      this.setupEmmiterEvents();\n      this.watchRequestsQueue();\n    }\n  }\n\n  Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_7__[\"default\"])(Connect, [{\n    key: \"watchRequestsQueue\",\n    value: function watchRequestsQueue() {\n      var _this = this;\n\n      this.queueInterval = setInterval(function () {\n        if (!_this.currentRequest && _this.queue.length > 0) {\n          _this.currentRequest = _this.queue.pop();\n\n          _this.processCurrentRequest();\n        }\n      }, 2500);\n    }\n  }, {\n    key: \"unwatchRequestsQueue\",\n    value: function unwatchRequestsQueue() {\n      clearInterval(this.queueInterval);\n      this.queueInterval = null;\n    }\n  }, {\n    key: \"processCurrentRequest\",\n    value: function () {\n      var _processCurrentRequest = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee() {\n        var currentRequest, res;\n        return regeneratorRuntime.wrap(function _callee$(_context) {\n          while (1) {\n            switch (_context.prev = _context.next) {\n              case 0:\n                currentRequest = this.currentRequest;\n                _context.prev = 1;\n\n                if (!_constants__WEBPACK_IMPORTED_MODULE_17__[\"DAPP_WHITELISTED_METHODS\"].includes(currentRequest.method)) {\n                  _context.next = 8;\n                  break;\n                }\n\n                _context.next = 5;\n                return this.sign();\n\n              case 5:\n                _context.t0 = _context.sent;\n                _context.next = 11;\n                break;\n\n              case 8:\n                _context.next = 10;\n                return this.sendToNetwork();\n\n              case 10:\n                _context.t0 = _context.sent;\n\n              case 11:\n                res = _context.t0;\n                this.sendResponse(res);\n                _context.next = 19;\n                break;\n\n              case 15:\n                _context.prev = 15;\n                _context.t1 = _context[\"catch\"](1);\n                console.error('sign error', _context.t1);\n                this.sendResponse(Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_1__[\"default\"])({}, currentRequest, {\n                  result: null,\n                  error: _context.t1\n                }));\n\n              case 19:\n                _context.prev = 19;\n                this.currentRequest = null;\n                return _context.finish(19);\n\n              case 22:\n              case \"end\":\n                return _context.stop();\n            }\n          }\n        }, _callee, this, [[1, 15, 19, 22]]);\n      }));\n\n      function processCurrentRequest() {\n        return _processCurrentRequest.apply(this, arguments);\n      }\n\n      return processCurrentRequest;\n    }()\n  }, {\n    key: \"getAuthUrl\",\n    value: function getAuthUrl(method) {\n      return !method ? this.authUrl : \"\".concat(this.authUrl, \"/#/\").concat(method);\n    }\n  }, {\n    key: \"setupEmmiterEvents\",\n    value: function setupEmmiterEvents() {\n      this.emmiter.on(_constants__WEBPACK_IMPORTED_MODULE_17__[\"INPAGE_EVENTS\"].REQUEST, this.handleRequest.bind(this));\n      this.emmiter.on(_constants__WEBPACK_IMPORTED_MODULE_17__[\"INPAGE_EVENTS\"].SETTINGS, this.handleRequest.bind(this));\n    }\n    /* eslint-disable-next-line */\n\n  }, {\n    key: \"status\",\n    value: function () {\n      var _status = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee2() {\n        var res;\n        return regeneratorRuntime.wrap(function _callee2$(_context2) {\n          while (1) {\n            switch (_context2.prev = _context2.next) {\n              case 0:\n                _context2.prev = 0;\n                _context2.next = 3;\n                return _service_identity__WEBPACK_IMPORTED_MODULE_13__[\"default\"].getAccounts();\n\n              case 3:\n                res = _context2.sent;\n                return _context2.abrupt(\"return\", !!res);\n\n              case 7:\n                _context2.prev = 7;\n                _context2.t0 = _context2[\"catch\"](0);\n                return _context2.abrupt(\"return\", false);\n\n              case 10:\n              case \"end\":\n                return _context2.stop();\n            }\n          }\n        }, _callee2, this, [[0, 7]]);\n      }));\n\n      function status() {\n        return _status.apply(this, arguments);\n      }\n\n      return status;\n    }()\n    /* eslint-disable-next-line */\n\n  }, {\n    key: \"getAccountData\",\n    value: function () {\n      var _getAccountData = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee3() {\n        var res;\n        return regeneratorRuntime.wrap(function _callee3$(_context3) {\n          while (1) {\n            switch (_context3.prev = _context3.next) {\n              case 0:\n                _context3.prev = 0;\n                _context3.next = 3;\n                return _service_identity__WEBPACK_IMPORTED_MODULE_13__[\"default\"].getAccounts();\n\n              case 3:\n                res = _context3.sent;\n                return _context3.abrupt(\"return\", {\n                  activeAccount: res[0],\n                  activeNet: 1\n                });\n\n              case 7:\n                _context3.prev = 7;\n                _context3.t0 = _context3[\"catch\"](0);\n                return _context3.abrupt(\"return\", false);\n\n              case 10:\n              case \"end\":\n                return _context3.stop();\n            }\n          }\n        }, _callee3, this, [[0, 7]]);\n      }));\n\n      function getAccountData() {\n        return _getAccountData.apply(this, arguments);\n      }\n\n      return getAccountData;\n    }()\n  }, {\n    key: \"openApp\",\n    value: function openApp(method) {\n      var pos = {\n        x: window.innerWidth / 2 - 200,\n        y: 200\n      };\n      var windowFeatures = ['chrome=yes', 'centerscreen=yes', 'resizable=no', 'width=480', 'height=800', \"top=\".concat(pos.y), \"left=\".concat(pos.x)];\n      window.name = _constants__WEBPACK_IMPORTED_MODULE_17__[\"HOST_WINDOW_NAME\"];\n      return window.open(this.getAuthUrl(method), _constants__WEBPACK_IMPORTED_MODULE_17__[\"DIALOG_WINDOW_NAME\"], windowFeatures.join(','));\n    }\n  }, {\n    key: \"auth\",\n    value: function auth() {\n      // Auth popup closing must reject\n      this.openApp('auth');\n      return Object(_util_message__WEBPACK_IMPORTED_MODULE_14__[\"awaitDialogMessage\"])();\n    }\n  }, {\n    key: \"sign\",\n    value: function () {\n      var _sign = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee4() {\n        var isAuthorized, dialog, signMessage;\n        return regeneratorRuntime.wrap(function _callee4$(_context4) {\n          while (1) {\n            switch (_context4.prev = _context4.next) {\n              case 0:\n                _context4.next = 2;\n                return this.status();\n\n              case 2:\n                isAuthorized = _context4.sent;\n\n                if (isAuthorized) {\n                  _context4.next = 5;\n                  break;\n                }\n\n                throw new Error('User not autorized');\n\n              case 5:\n                dialog = this.openApp('sign');\n                _context4.next = 8;\n                return Object(_util_message__WEBPACK_IMPORTED_MODULE_14__[\"awaitDialogMessage\"])();\n\n              case 8:\n                Object(_util_message__WEBPACK_IMPORTED_MODULE_14__[\"sendMessageToDialog\"])({\n                  target: dialog,\n                  data: {\n                    url: window.location.origin,\n                    address: this.provider.settings.selectedAddress,\n                    net: this.provider.settings.networkVersion,\n                    request: this.currentRequest\n                  }\n                });\n                _context4.next = 11;\n                return Object(_util_message__WEBPACK_IMPORTED_MODULE_14__[\"awaitDialogMessage\"])();\n\n              case 11:\n                signMessage = _context4.sent;\n                return _context4.abrupt(\"return\", lodash_omit__WEBPACK_IMPORTED_MODULE_11___default()(signMessage.data, ['source']));\n\n              case 13:\n              case \"end\":\n                return _context4.stop();\n            }\n          }\n        }, _callee4, this);\n      }));\n\n      function sign() {\n        return _sign.apply(this, arguments);\n      }\n\n      return sign;\n    }()\n  }, {\n    key: \"sendToNetwork\",\n    value: function () {\n      var _sendToNetwork = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee5() {\n        var _this2 = this;\n\n        return regeneratorRuntime.wrap(function _callee5$(_context5) {\n          while (1) {\n            switch (_context5.prev = _context5.next) {\n              case 0:\n                return _context5.abrupt(\"return\", new Promise(function (resolve, reject) {\n                  _class_singleton_web3__WEBPACK_IMPORTED_MODULE_15__[\"default\"].currentProvider.sendAsync(_this2.currentRequest, function (err, res) {\n                    if (err) {\n                      return reject(err);\n                    }\n\n                    return resolve(res);\n                  });\n                }));\n\n              case 1:\n              case \"end\":\n                return _context5.stop();\n            }\n          }\n        }, _callee5, this);\n      }));\n\n      function sendToNetwork() {\n        return _sendToNetwork.apply(this, arguments);\n      }\n\n      return sendToNetwork;\n    }()\n  }, {\n    key: \"handleRequest\",\n    value: function handleRequest(request) {\n      if (request.id) {\n        this.queue.push(request);\n      }\n    }\n  }, {\n    key: \"sendSettings\",\n    value: function sendSettings(_ref2) {\n      var selectedAddress = _ref2.selectedAddress,\n          networkVersion = _ref2.networkVersion;\n      this.emmiter.emit(_constants__WEBPACK_IMPORTED_MODULE_17__[\"INPAGE_EVENTS\"].SETTINGS, {\n        selectedAddress: selectedAddress,\n        networkVersion: networkVersion\n      });\n    }\n  }, {\n    key: \"sendResponse\",\n    value: function sendResponse(payload) {\n      this.emmiter.emit(_constants__WEBPACK_IMPORTED_MODULE_17__[\"INPAGE_EVENTS\"].RESPONSE, payload);\n    }\n    /* eslint-disable-next-line */\n\n  }, {\n    key: \"injectWeb3\",\n    value: function () {\n      var _injectWeb = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__[\"default\"])(\n      /*#__PURE__*/\n      regeneratorRuntime.mark(function _callee6() {\n        var target,\n            _args6 = arguments;\n        return regeneratorRuntime.wrap(function _callee6$(_context6) {\n          while (1) {\n            switch (_context6.prev = _context6.next) {\n              case 0:\n                target = _args6.length > 0 && _args6[0] !== undefined ? _args6[0] : window;\n\n                if (!target.web3) {\n                  Object.assign(target, {\n                    web3: new web3_dapp__WEBPACK_IMPORTED_MODULE_12___default.a()\n                  });\n                  target.web3.setProvider(this.provider);\n                } else {\n                  console.log('web3 new');\n                }\n\n              case 2:\n              case \"end\":\n                return _context6.stop();\n            }\n          }\n        }, _callee6, this);\n      }));\n\n      function injectWeb3() {\n        return _injectWeb.apply(this, arguments);\n      }\n\n      return injectWeb3;\n    }()\n  }]);\n\n  return Connect;\n}();\n\n\n\n//# sourceURL=webpack://EndpassConnect/./packages/lib/index.js?");
 
 /***/ }),
 
@@ -5986,7 +6921,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var rege
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var keythereum__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! keythereum */ \"./node_modules/keythereum/index.js\");\n/* harmony import */ var keythereum__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(keythereum__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var bs58check__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bs58check */ \"./node_modules/bs58check/index.js\");\n/* harmony import */ var bs58check__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(bs58check__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var ethereumjs_wallet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ethereumjs-wallet */ \"./node_modules/ethereumjs-wallet/index.js\");\n/* harmony import */ var ethereumjs_wallet__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(ethereumjs_wallet__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var ethereumjs_wallet_hdkey__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ethereumjs-wallet/hdkey */ \"./node_modules/ethereumjs-wallet/hdkey.js\");\n/* harmony import */ var ethereumjs_wallet_hdkey__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(ethereumjs_wallet_hdkey__WEBPACK_IMPORTED_MODULE_3__);\n\n\n\n // Monkey patch keythereum to skip generating address for private keys\n// This allows us to encrypt private keys of arbitrary length, and\n// conforms better to the Ethereum keystore V3 spec, which does not include\n// the address for privacy reasons.\n// See https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition#alterations-from-version-1\n\nkeythereum__WEBPACK_IMPORTED_MODULE_0___default.a.privateKeyToAddress = function (pk) {\n  return '';\n};\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  // Encrypts a private key Buffer into a V3 keystore object\n  // The exported keystore does NOT include an address\n  encrypt: function encrypt(password, privateKey) {\n    // Generate random salt and iv for each encryption\n    var dk = keythereum__WEBPACK_IMPORTED_MODULE_0___default.a.create();\n    var options = {\n      kdf: ENV.kdfParams.kdf,\n      kdfparams: ENV.kdfParams\n    };\n    var encrypted = keythereum__WEBPACK_IMPORTED_MODULE_0___default.a.dump(password, privateKey, dk.salt, dk.iv, options);\n    delete encrypted.address;\n    return encrypted;\n  },\n  // Decrypts a V3 keystore object into a private key Buffer\n  decrypt: function decrypt(password, json) {\n    if (!password) {\n      throw new Error('Password is empty');\n    }\n\n    if (!this.isV3(json)) {\n      throw new Error('Wallet is not in keystore V3 format!');\n    }\n\n    return keythereum__WEBPACK_IMPORTED_MODULE_0___default.a.recover(password, json);\n  },\n  // Encrypts an ethereumjs Wallet\n  encryptWallet: function encryptWallet(password, wallet) {\n    var json = this.encrypt(password, wallet.getPrivateKey());\n    json.address = wallet.getChecksumAddressString();\n    return json;\n  },\n  // Decrypts a keystore into an ethereumjs Wallet\n  decryptWallet: function decryptWallet(password, json) {\n    var privateKey = this.decrypt(password, json);\n    return ethereumjs_wallet__WEBPACK_IMPORTED_MODULE_2___default.a.fromPrivateKey(privateKey);\n  },\n  // Encrypts an ethereumjs Wallet\n  encryptHDWallet: function encryptHDWallet(password, wallet) {\n    var xPrv = this.decodeBase58(wallet.privateExtendedKey());\n    var json = this.encrypt(password, xPrv);\n    json.address = wallet.publicExtendedKey();\n    return json;\n  },\n  // Decrypts a keystore into an ethereumjs Wallet\n  decryptHDWallet: function decryptHDWallet(password, json) {\n    var xPrv = this.decrypt(password, json);\n    var xPrvString = this.encodeBase58(xPrv);\n    return ethereumjs_wallet_hdkey__WEBPACK_IMPORTED_MODULE_3___default.a.fromExtendedKey(xPrvString);\n  },\n  // Encode a buffer to Base58Check\n  // If already a string, silently return it\n  encodeBase58: function encodeBase58(key) {\n    if (typeof key === 'string') {\n      return key;\n    }\n\n    return bs58check__WEBPACK_IMPORTED_MODULE_1___default.a.encode(key);\n  },\n  // Decode from Base58Check string\n  // If not a string, silently return it\n  decodeBase58: function decodeBase58(key) {\n    if (typeof key !== 'string') {\n      return key;\n    }\n\n    return bs58check__WEBPACK_IMPORTED_MODULE_1___default.a.decode(key);\n  },\n  // Returns true if the key is an extended public key (xpub)\n  // Accepts string or buffer\n  isExtendedPublicKey: function isExtendedPublicKey(key) {\n    var keyString = this.encodeBase58(key);\n    return keyString.slice(0, 4) === 'xpub';\n  },\n  // Returns true if the key is an extended private key (xprv)\n  // Accepts string or buffer\n  isExtendedPrivateKey: function isExtendedPrivateKey(key) {\n    var keyString = this.encodeBase58(key);\n    return keyString.slice(0, 4) === 'xprv';\n  },\n  // Simple sanity check to ensure a valid V3 keystore\n  isV3: function isV3(json) {\n    return json && json.crypto && json.crypto.ciphertext;\n  }\n});\n\n//# sourceURL=webpack://EndpassConnect/./packages/util/keystore.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var keythereum__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! keythereum */ \"./node_modules/keythereum/index.js\");\n/* harmony import */ var keythereum__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(keythereum__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var bs58check__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bs58check */ \"./node_modules/bs58check/index.js\");\n/* harmony import */ var bs58check__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(bs58check__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var ethereumjs_wallet__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ethereumjs-wallet */ \"./node_modules/ethereumjs-wallet/index.js\");\n/* harmony import */ var ethereumjs_wallet__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(ethereumjs_wallet__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var ethereumjs_wallet_hdkey__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ethereumjs-wallet/hdkey */ \"./node_modules/ethereumjs-wallet/hdkey.js\");\n/* harmony import */ var ethereumjs_wallet_hdkey__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(ethereumjs_wallet_hdkey__WEBPACK_IMPORTED_MODULE_3__);\n\n\n\n\n/**\n * Monkey patch keythereum to skip generating address for private keys\n * This allows us to encrypt private keys of arbitrary length, and\n * conforms better to the Ethereum keystore V3 spec, which does not include\n * the address for privacy reasons.\n * See https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition#alterations-from-version-1\n */\n\nkeythereum__WEBPACK_IMPORTED_MODULE_0___default.a.privateKeyToAddress = function (pk) {\n  return '';\n};\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  // Encrypts a private key Buffer into a V3 keystore object\n  // The exported keystore does NOT include an address\n  encrypt: function encrypt(password, privateKey) {\n    // Generate random salt and iv for each encryption\n    var dk = keythereum__WEBPACK_IMPORTED_MODULE_0___default.a.create();\n    var options = {\n      kdf: ENV.kdfParams.kdf,\n      kdfparams: ENV.kdfParams\n    };\n    var encrypted = keythereum__WEBPACK_IMPORTED_MODULE_0___default.a.dump(password, privateKey, dk.salt, dk.iv, options);\n    delete encrypted.address;\n    return encrypted;\n  },\n  // Decrypts a V3 keystore object into a private key Buffer\n  decrypt: function decrypt(password, json) {\n    if (!password) {\n      throw new Error('Password is empty');\n    }\n\n    if (!this.isV3(json)) {\n      throw new Error('Wallet is not in keystore V3 format!');\n    }\n\n    return keythereum__WEBPACK_IMPORTED_MODULE_0___default.a.recover(password, json);\n  },\n  // Encrypts an ethereumjs Wallet\n  encryptWallet: function encryptWallet(password, wallet) {\n    var json = this.encrypt(password, wallet.getPrivateKey());\n    json.address = wallet.getChecksumAddressString();\n    return json;\n  },\n  // Decrypts a keystore into an ethereumjs Wallet\n  decryptWallet: function decryptWallet(password, json) {\n    var privateKey = this.decrypt(password, json);\n    return ethereumjs_wallet__WEBPACK_IMPORTED_MODULE_2___default.a.fromPrivateKey(privateKey);\n  },\n  // Encrypts an ethereumjs Wallet\n  encryptHDWallet: function encryptHDWallet(password, wallet) {\n    var xPrv = this.decodeBase58(wallet.privateExtendedKey());\n    var json = this.encrypt(password, xPrv);\n    json.address = wallet.publicExtendedKey();\n    return json;\n  },\n  // Decrypts a keystore into an ethereumjs Wallet\n  decryptHDWallet: function decryptHDWallet(password, json) {\n    var xPrv = this.decrypt(password, json);\n    var xPrvString = this.encodeBase58(xPrv);\n    return ethereumjs_wallet_hdkey__WEBPACK_IMPORTED_MODULE_3___default.a.fromExtendedKey(xPrvString);\n  },\n  // Encode a buffer to Base58Check\n  // If already a string, silently return it\n  encodeBase58: function encodeBase58(key) {\n    if (typeof key === 'string') {\n      return key;\n    }\n\n    return bs58check__WEBPACK_IMPORTED_MODULE_1___default.a.encode(key);\n  },\n  // Decode from Base58Check string\n  // If not a string, silently return it\n  decodeBase58: function decodeBase58(key) {\n    if (typeof key !== 'string') {\n      return key;\n    }\n\n    return bs58check__WEBPACK_IMPORTED_MODULE_1___default.a.decode(key);\n  },\n  // Returns true if the key is an extended public key (xpub)\n  // Accepts string or buffer\n  isExtendedPublicKey: function isExtendedPublicKey(key) {\n    var keyString = this.encodeBase58(key);\n    return keyString.slice(0, 4) === 'xpub';\n  },\n  // Returns true if the key is an extended private key (xprv)\n  // Accepts string or buffer\n  isExtendedPrivateKey: function isExtendedPrivateKey(key) {\n    var keyString = this.encodeBase58(key);\n    return keyString.slice(0, 4) === 'xprv';\n  },\n  // Simple sanity check to ensure a valid V3 keystore\n  isV3: function isV3(json) {\n    return json && json.crypto && json.crypto.ciphertext;\n  }\n});\n\n//# sourceURL=webpack://EndpassConnect/./packages/util/keystore.js?");
 
 /***/ }),
 
@@ -5998,7 +6933,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var keyt
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"sendMessage\", function() { return sendMessage; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"sendMessageToDialog\", function() { return sendMessageToDialog; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"sendMessageToOpener\", function() { return sendMessageToOpener; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"awaitMessageFromOpener\", function() { return awaitMessageFromOpener; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"awaitDialogMessage\", function() { return awaitDialogMessage; });\n/* harmony import */ var _Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties */ \"./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties.js\");\n/* harmony import */ var core_js_modules_es6_object_assign__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.object.assign */ \"./node_modules/core-js/modules/es6.object.assign.js\");\n/* harmony import */ var core_js_modules_es6_object_assign__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_assign__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var core_js_modules_es7_array_includes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es7.array.includes */ \"./node_modules/core-js/modules/es7.array.includes.js\");\n/* harmony import */ var core_js_modules_es7_array_includes__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es7_array_includes__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var core_js_modules_es6_string_includes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es6.string.includes */ \"./node_modules/core-js/modules/es6.string.includes.js\");\n/* harmony import */ var core_js_modules_es6_string_includes__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_string_includes__WEBPACK_IMPORTED_MODULE_3__);\n\n\n\n\nvar sendMessage = function sendMessage(_ref) {\n  var target = _ref.target,\n      source = _ref.source,\n      data = _ref.data;\n\n  if (!target) {\n    throw new Error('You must provide message target window!');\n  }\n\n  if (!source) {\n    throw new Error('You must provide message source!');\n  }\n\n  if (!['dialog', 'opener'].includes(source)) {\n    throw new Error(\"You provide invalid message source type \".concat(source, \", it must be equals to \\\"opener\\\" or \\\"dialog\\\"!\"));\n  }\n\n  var baseMessage = {\n    source: \"endpass-connect-\".concat(source)\n  };\n  target.postMessage(Object.assign(baseMessage, data), '*');\n};\nvar sendMessageToDialog = function sendMessageToDialog(_ref2) {\n  var target = _ref2.target,\n      data = _ref2.data;\n  return sendMessage({\n    target: target,\n    data: data,\n    source: 'opener'\n  });\n};\nvar sendMessageToOpener = function sendMessageToOpener(_ref3) {\n  var data = _ref3.data;\n  return sendMessage({\n    data: data,\n    target: window.opener,\n    source: 'dialog'\n  });\n};\nvar awaitMessageFromOpener = function awaitMessageFromOpener() {\n  return new Promise(function (resolve) {\n    var handler = function handler(message) {\n      if (!message.data) return;\n      window.removeEventListener('message', handler);\n\n      var _message$data = message.data,\n          source = _message$data.source,\n          data = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(_message$data, [\"source\"]);\n\n      var isMessageFromOpener = source === 'endpass-connect-opener';\n\n      if (isMessageFromOpener) {\n        return resolve(data);\n      }\n    };\n\n    window.addEventListener('message', handler);\n  });\n};\nvar awaitDialogMessage = function awaitDialogMessage() {\n  return new Promise(function (resolve, reject) {\n    var handler = function handler(message) {\n      if (!message.data) return;\n      window.removeEventListener('message', handler);\n\n      var _message$data2 = message.data,\n          source = _message$data2.source,\n          data = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(_message$data2, [\"source\"]);\n\n      var isMessageFromDialog = source === 'endpass-connect-dialog';\n\n      if (isMessageFromDialog && data.status) {\n        return resolve(data);\n      }\n\n      if (isMessageFromDialog && !data.status) {\n        return reject(data.message);\n      }\n    };\n\n    window.addEventListener('message', handler);\n  });\n};\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  sendMessage: sendMessage,\n  sendMessageToDialog: sendMessageToDialog,\n  sendMessageToOpener: sendMessageToOpener,\n  awaitMessageFromOpener: awaitMessageFromOpener,\n  awaitDialogMessage: awaitDialogMessage\n});\n\n//# sourceURL=webpack://EndpassConnect/./packages/util/message.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"sendMessage\", function() { return sendMessage; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"sendMessageToDialog\", function() { return sendMessageToDialog; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"sendMessageToOpener\", function() { return sendMessageToOpener; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"awaitMessageFromOpener\", function() { return awaitMessageFromOpener; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"awaitDialogMessage\", function() { return awaitDialogMessage; });\n/* harmony import */ var _Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties */ \"./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties.js\");\n/* harmony import */ var core_js_modules_es6_object_assign__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.object.assign */ \"./node_modules/core-js/modules/es6.object.assign.js\");\n/* harmony import */ var core_js_modules_es6_object_assign__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_assign__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var core_js_modules_es7_array_includes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es7.array.includes */ \"./node_modules/core-js/modules/es7.array.includes.js\");\n/* harmony import */ var core_js_modules_es7_array_includes__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es7_array_includes__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var core_js_modules_es6_string_includes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es6.string.includes */ \"./node_modules/core-js/modules/es6.string.includes.js\");\n/* harmony import */ var core_js_modules_es6_string_includes__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_string_includes__WEBPACK_IMPORTED_MODULE_3__);\n\n\n\n\nvar sendMessage = function sendMessage(_ref) {\n  var target = _ref.target,\n      source = _ref.source,\n      data = _ref.data;\n\n  if (!target) {\n    throw new Error('You must provide message target window!');\n  }\n\n  if (!source) {\n    throw new Error('You must provide message source!');\n  }\n\n  if (!['dialog', 'opener'].includes(source)) {\n    throw new Error(\"You provide invalid message source type \".concat(source, \", it must be equals to \\\"opener\\\" or \\\"dialog\\\"!\"));\n  }\n\n  var baseMessage = {\n    source: \"endpass-connect-\".concat(source)\n  };\n  target.postMessage(Object.assign(baseMessage, data), '*');\n};\nvar sendMessageToDialog = function sendMessageToDialog(_ref2) {\n  var target = _ref2.target,\n      data = _ref2.data;\n  return sendMessage({\n    source: 'opener',\n    target: target,\n    data: data\n  });\n};\nvar sendMessageToOpener = function sendMessageToOpener(_ref3) {\n  var data = _ref3.data;\n  return sendMessage({\n    source: 'dialog',\n    target: window.opener,\n    data: data\n  });\n};\nvar awaitMessageFromOpener = function awaitMessageFromOpener() {\n  return new Promise(function (resolve) {\n    /* eslint-disable-next-line */\n    var handler = function handler(_ref4) {\n      var _ref4$data = _ref4.data,\n          messageData = _ref4$data === void 0 ? {} : _ref4$data;\n\n      var source = messageData.source,\n          data = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(messageData, [\"source\"]);\n\n      var isMessageFromOpener = source === 'endpass-connect-opener';\n\n      if (isMessageFromOpener && data) {\n        window.removeEventListener('message', handler);\n        return resolve(data);\n      }\n    };\n\n    window.addEventListener('message', handler);\n  });\n};\nvar awaitDialogMessage = function awaitDialogMessage() {\n  return new Promise(function (resolve, reject) {\n    /* eslint-disable-next-line */\n    var handler = function handler(_ref5) {\n      var _ref5$data = _ref5.data,\n          messageData = _ref5$data === void 0 ? {} : _ref5$data;\n      var isMessageFromDialog = messageData.source === 'endpass-connect-dialog';\n\n      if (isMessageFromDialog && messageData) {\n        var status = messageData.status,\n            _messageData$message = messageData.message,\n            message = _messageData$message === void 0 ? null : _messageData$message,\n            data = Object(_Users_lamartire_Work_endpass_endpass_connect_node_modules_babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(messageData, [\"status\", \"message\"]);\n\n        window.removeEventListener('message', handler);\n        return status ? resolve({\n          status: status,\n          message: message,\n          data: data\n        }) : reject(message);\n      }\n    };\n\n    window.addEventListener('message', handler);\n  });\n};\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  sendMessage: sendMessage,\n  sendMessageToDialog: sendMessageToDialog,\n  sendMessageToOpener: sendMessageToOpener,\n  awaitMessageFromOpener: awaitMessageFromOpener,\n  awaitDialogMessage: awaitDialogMessage\n});\n\n//# sourceURL=webpack://EndpassConnect/./packages/util/message.js?");
 
 /***/ }),
 

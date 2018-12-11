@@ -1,3 +1,4 @@
+import { omit } from 'lodash';
 import Web3Dapp from 'web3-dapp';
 import identityService from '@@/service/identity';
 import { sendMessageToDialog, awaitDialogMessage } from '@@/util/message';
@@ -49,7 +50,7 @@ export default class Connect {
         ? await this.sign()
         : await this.sendToNetwork();
 
-      console.log('sign success', res);
+      this.sendResponse(res);
     } catch (err) {
       console.error('sign error', err);
 
@@ -106,7 +107,7 @@ export default class Connect {
       'chrome=yes',
       'centerscreen=yes',
       'resizable=no',
-      'width=800',
+      'width=480',
       'height=800',
       `top=${pos.y}`,
       `left=${pos.x}`,
@@ -128,30 +129,29 @@ export default class Connect {
     return awaitDialogMessage();
   }
 
-  sign() {
-    return this.status()
-      .then(res => {
-        if (!res) throw new Error('User not autorized');
+  async sign() {
+    const isAuthorized = await this.status();
 
-        return res;
-      })
-      .then(() => {
-        const dialog = this.openApp('sign');
+    if (!isAuthorized) throw new Error('User not autorized');
 
-        setTimeout(() => {
-          sendMessageToDialog({
-            target: dialog,
-            data: {
-              url: window.location.origin,
-              address: this.provider.settings.selectedAddress,
-              net: this.provider.settings.networkVersion,
-              request: this.currentRequest,
-            },
-          });
-        }, 3500);
+    const dialog = this.openApp('sign');
 
-        return awaitDialogMessage();
-      });
+    await awaitDialogMessage();
+
+    sendMessageToDialog({
+      target: dialog,
+      data: {
+        url: window.location.origin,
+        address: this.provider.settings.selectedAddress,
+        net: this.provider.settings.networkVersion,
+        request: this.currentRequest,
+      },
+    });
+
+    const signMessage = await awaitDialogMessage();
+
+    // TODO: handle cases if status === false and throw error
+    return omit(signMessage.data, ['source']);
   }
 
   async sendToNetwork() {

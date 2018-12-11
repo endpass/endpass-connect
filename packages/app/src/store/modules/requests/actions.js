@@ -1,6 +1,5 @@
-import web3 from '@@/class/singleton/web3';
 import { Wallet } from '@@/class';
-import { awaitMessageFromOpener } from '@@/util/message';
+import { sendMessageToOpener, awaitMessageFromOpener } from '@@/util/message';
 
 const awaitRequestMessage = async ({ commit }) => {
   const res = await awaitMessageFromOpener();
@@ -10,48 +9,45 @@ const awaitRequestMessage = async ({ commit }) => {
   }
 };
 
-// Wallet things
+const sendResponse = async ({ dispatch }, payload) => {
+  sendMessageToOpener({
+    data: {
+      ...payload,
+      status: true,
+    },
+  });
+  dispatch('closeDialog');
+};
 
-const processRequest = async ({ state, dispatch }, password) => {
-  const { request } = state;
-  const { jsonrpc } = request;
-  const account = await dispatch('getAccount', request.address);
+const processRequest = async ({ state, commit, dispatch }, password) => {
+  commit('changeLoadingStatus', true);
+
+  const { address, request } = state.request;
+  const account = await dispatch('getAccount', address);
   const wallet = new Wallet(account);
 
   try {
     const signResult = await dispatch('getSignedRequest', { wallet, password });
 
-    console.log('sign result', signResult);
-
-    // dispatch('sendResponse', {
-    //   id: requestId,
-    //   result: signResult,
-    //   jsonrpc,
-    // });
+    dispatch('sendResponse', {
+      id: request.id,
+      result: signResult,
+      jsonrpc: request.jsonrpc,
+    });
   } catch (err) {
-    // const notificationError = new NotificationError({
-    //   title: 'Sign error',
-    //   text: error.message,
-    //   type: 'is-danger',
-    // });
-
-    // dispatch('errors/emitError', notificationError, { root: true });
-    // dispatch('sendResponse', {
-    //   id: requestId,
-    //   error,
-    //   result: [],
-    //   jsonrpc,
-    // });
-
     console.log('sign error', err);
-  } finally {
-    console.log('asdasdasd');
-    // commit(REMOVE_REQUEST, requestId);
+
+    dispatch('sendResponse', {
+      id: request.id,
+      result: [],
+      error: err,
+      jsonrpc: request.jsonrpc,
+    });
   }
 };
 
 const getSignedRequest = async ({ state, dispatch }, payload) => {
-  const { request } = state;
+  const { method } = state.request;
 
   switch (method) {
     case 'eth_sendTransaction':
@@ -98,7 +94,7 @@ const getSignedTypedDataRequest = async () => {
 };
 
 const getSignedPlainRequest = async ({ state }, { password, wallet }) => {
-  const { request } = state;
+  const { request } = state.request;
   const res = await wallet.sign(request.params[0], password);
 
   return res.signature;
@@ -131,6 +127,7 @@ const sendRequestToNetwork = (ctx, request) =>
 export default {
   awaitRequestMessage,
   processRequest,
+  sendResponse,
   getSignedRequest,
   getSignedTypedDataRequest,
   getSignedTransaction,

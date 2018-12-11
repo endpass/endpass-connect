@@ -85,7 +85,7 @@ export default class Wallet {
   async sign(data, password) {
     const privateKey = await this.getPrivateKeyString(password);
 
-    return this.web3.eth.accounts.sign(data, privateKey);
+    return web3.eth.accounts.sign(data, privateKey);
   }
 
   /**
@@ -96,7 +96,7 @@ export default class Wallet {
    */
   /* eslint-disable-next-line */
   async recover(message, signature) {
-    return this.web3.eth.accounts.recover(message, signature);
+    return web3.eth.accounts.recover(message, signature);
   }
 
   /**

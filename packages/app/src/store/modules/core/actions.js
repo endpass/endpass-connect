@@ -1,9 +1,7 @@
 import { sendMessageToOpener } from '@@/util/message';
 
 const sendMessage = (ctx, data) => {
-  sendMessageToOpener({
-    data,
-  });
+  sendMessageToOpener({ data });
 };
 
 const closeDialog = () => {

@@ -33,7 +33,11 @@ export default {
     },
 
     async handleSignSubmit(res) {
-      await this.processRequest(res)
+      try {
+        await this.processRequest(res.password)
+      } catch (err) {
+        console.log('sign failed: ', err)
+      }
     },
 
     handleSignCancel() {
@@ -46,9 +50,14 @@ export default {
 
   async created() {
     try {
+      // Send ready message to opener for determine application ready
+      await this.sendMessage({
+        method: 'connect_ready',
+        status: true
+      })
       this.awaitRequestMessage()
     } catch (err) {
-      console.log(err)
+      console.log('Sign created error: ', err)
     }
   },
 
