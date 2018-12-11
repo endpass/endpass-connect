@@ -25,6 +25,10 @@ module.exports = {
     ],
   },
 
+  node: {
+    fs: 'empty',
+  },
+
   resolve: {
     modules: [
       path.resolve('./node_modules'),

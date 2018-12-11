@@ -16,31 +16,31 @@ const auth = async ({ commit }, email) => {
   }
 };
 
-const checkAuthStatus = async ({ commit, dispatch }) => {
+const getAccounts = async ({ commit }) => {
   try {
-    const res = await dispatch('getAccounts');
+    const res = await identityService.getAccounts();
 
-    commit('setAuthStatus', !!res);
+    commit('setAccounts', res);
   } catch (err) {
-    commit('setAuthStatus', false);
+    commit('setAccounts', null);
   }
 };
 
-const getAccounts = async () => {
-  const res = await identityService.getAccounts();
+const getAccount = async (ctx, address) => {
+  const res = await identityService.getAccount(address);
 
   return res;
 };
 
-const awaitAuthConfirm = async ({ commit }) => {
+const awaitAuthConfirm = async ({ dispatch }) => {
   await identityService.awaitAuthConfirm();
 
-  commit('setAuthStatus', true);
+  await dispatch('getAccounts');
 };
 
 export default {
   auth,
-  checkAuthStatus,
   getAccounts,
+  getAccount,
   awaitAuthConfirm,
 };

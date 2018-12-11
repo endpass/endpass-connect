@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import { mapActions, mapState } from 'vuex'
+  import { mapActions, mapState, mapGetters } from 'vuex'
   import AuthForm from '@/components/AuthForm.vue';
 
   export default {
@@ -34,11 +34,14 @@
     },
 
     computed: {
+      ...mapGetters({
+        authorized: 'isAuthorized'
+      }),    
+
       ...mapState({
         inited: state => state.core.inited,
         loading: state => state.core.loading,
         sent: state => state.accounts.linkSent,
-        authorized: state => state.accounts.authorized,
       }),
 
       formMessage() {
@@ -55,7 +58,7 @@
     },
 
     methods: {
-      ...mapActions(['auth', 'awaitAuthConfirm', 'checkAuthStatus', 'sendMessage', 'closeDialog']),
+      ...mapActions(['auth', 'awaitAuthConfirm', 'sendMessage', 'closeDialog']),
 
       sendMessageAndClose(message) {
         this.sendMessage(message)
@@ -79,13 +82,19 @@
         })
       },
 
+      // Return it to handle window closing by user
+      // handleWindowClose() {
+      //   sendMessageToOpener({
+      //     data: {
+      //       message: 'User close auth dialog',
+      //       status: false,
+      //     }
+      //   });
+      // },
+
       handleAuthError(error) {
         this.error = error || 'Unexpected error, try login later'
       }
-    },
-
-    async created() {
-      await this.checkAuthStatus()
     },
 
     components: {

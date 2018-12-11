@@ -1,50 +1,40 @@
 <template>
-  <input
-    :class="{ input: true, invalid: invalid, disabled: disabled }"
-    :placeholder="placeholder"
+  <select
+    class="select"
     :value="value"
-    :disabled="disabled"
-    :autofocus="autofocus"
     :name="name"
-    type="text"
-    @keypress="emitKeypress"
-    @input="emitInput"
+    @change="emitInput"
   >
+    <option v-for="item in items" :key="item" :value="item">{{item}}</option>
+  </select>
 </template>
 
 <script>
 export default {
   name: 'VInput',
+
   props: {
-    placeholder: {
-      type: String,
-      default: '',
+    items: {
+      type: Array,
+      default: () => []
     },
+
     name: {
       type: String,
       default: '',
     },
+
     value: {
-      type: String,
+      type: [String, Number],
       default: '',
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    invalid: {
-      type: Boolean,
-      default: false,
-    },
-    autofocus: {
-      type: Boolean,
-      default: false,
-    },
+    },    
   },
+
   methods: {
     emitInput(e) {
       this.$emit('input', e.target.value);
     },
+
     emitKeypress(e) {
       this.$emit('keypress', e);
     },
@@ -53,7 +43,7 @@ export default {
 </script>
 
 <style lang="postcss">
-.input {
+.select {
   width: 100%;
   border: none;
   outline: none;
@@ -65,13 +55,5 @@ export default {
   line-height: 1.5;
   transition: 0.25s;
   background: transparent;
-
-  &.invalid {
-    border-bottom: 1px solid #f00;
-  }
-
-  &.disabled {
-    color: #4d4d4d;
-  }
 }
 </style>

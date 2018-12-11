@@ -1,5 +1,5 @@
 <template>
-  <p :class="{ message: true, error: error }">
+  <p :class="{ message: true, error: error, ellipsis: ellipsis }">
     <slot/>
   </p>
 </template>
@@ -9,6 +9,11 @@ export default {
   name: 'Message',
 
   props: {
+    ellipsis: {
+      type: Boolean,
+      default: false
+    },
+
     error: {
       type: Boolean,
       default: false,
@@ -23,6 +28,13 @@ export default {
 
   &.error {
     color: #f00;
+  }
+
+  &.ellipsis {
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 }
 </style>

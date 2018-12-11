@@ -1,15 +1,17 @@
 import Web3Dapp from 'web3-dapp';
 import identityService from '@@/service/identity';
-import { sendMessageToDialog } from '@@/util/message';
+import { sendMessageToDialog, awaitDialogMessage } from '@@/util/message';
+import web3 from '@@/class/singleton/web3';
 import { Emmiter, InpageProvider } from '@@/class';
 import {
   INPAGE_EVENTS,
   HOST_WINDOW_NAME,
   DIALOG_WINDOW_NAME,
+  DAPP_WHITELISTED_METHODS,
 } from '@@/constants';
 
 export default class Connect {
-  constructor({ authUrl }) {
+  constructor({ authUrl, subscribe }) {
     this.authUrl = authUrl;
     this.emmiter = new Emmiter();
     this.provider = new InpageProvider(this.emmiter);
@@ -19,33 +21,46 @@ export default class Connect {
     this.queueInterval = null;
     this.queue = [];
 
-    this.setupEmmiterEvents();
-    this.watchRequestsQueue();
+    if (subscribe) {
+      this.setupEmmiterEvents();
+      this.watchRequestsQueue();
+    }
   }
 
   watchRequestsQueue() {
     this.queueInterval = setInterval(() => {
       if (!this.currentRequest && this.queue.length > 0) {
+        this.currentRequest = this.queue.pop();
         this.processCurrentRequest();
       }
     }, 2500);
   }
 
-  async processCurrentRequest() {
-    this.currentRequest = this.queue.pop();
-
-    try {
-      const res = await this.sign(this.currentRequest);
-
-      console.log('sign success', res);
-    } catch (err) {
-      console.log('sign error', err);
-    }
-  }
-
   unwatchRequestsQueue() {
     clearInterval(this.queueInterval);
     this.queueInterval = null;
+  }
+
+  async processCurrentRequest() {
+    const { currentRequest } = this;
+
+    try {
+      const res = DAPP_WHITELISTED_METHODS.includes(currentRequest.method)
+        ? await this.sign()
+        : await this.sendToNetwork();
+
+      console.log('sign success', res);
+    } catch (err) {
+      console.error('sign error', err);
+
+      this.sendResponse({
+        ...currentRequest,
+        result: null,
+        error: err,
+      });
+    } finally {
+      this.currentRequest = null;
+    }
   }
 
   getAuthUrl(method) {
@@ -57,10 +72,6 @@ export default class Connect {
     this.emmiter.on(INPAGE_EVENTS.SETTINGS, this.handleRequest.bind(this));
   }
 
-  /**
-   * Check auth status on endpass identity service
-   * @returns {Promise<Boolean>} Auth status
-   */
   /* eslint-disable-next-line */
   async status() {
     try {
@@ -110,66 +121,57 @@ export default class Connect {
     );
   }
 
-  /* eslint-disable-next-line */
-  awaitDialogMessage() {
-    return new Promise((resolve, reject) => {
-      const handler = message => {
-        if (!message.data) return;
-
-        window.removeEventListener('message', handler);
-
-        const { data } = message;
-        const isMessageFromDialog = data.source === 'endpass-connect-dialog';
-
-        if (isMessageFromDialog && data.status) {
-          return resolve(data);
-        }
-
-        if (isMessageFromDialog && !data.status) {
-          return reject(data.message);
-        }
-      };
-
-      window.addEventListener('message', handler);
-    });
-  }
-
   auth() {
     // Auth popup closing must reject
     this.openApp('auth');
 
-    return this.awaitDialogMessage();
+    return awaitDialogMessage();
   }
 
-  async sign(request) {
-    const dialog = this.openApp('sign');
-    const isAuth = await this.awaitDialogMessage();
+  sign() {
+    return this.status()
+      .then(res => {
+        if (!res) throw new Error('User not autorized');
 
-    if (isAuth) {
-      sendMessageToDialog({
-        target: dialog,
-        data: {
-          address: this.provider.settings.selectedAddress,
-          net: this.provider.settings.networkVersion,
-          request,
-        },
+        return res;
+      })
+      .then(() => {
+        const dialog = this.openApp('sign');
+
+        setTimeout(() => {
+          sendMessageToDialog({
+            target: dialog,
+            data: {
+              url: window.location.origin,
+              address: this.provider.settings.selectedAddress,
+              net: this.provider.settings.networkVersion,
+              request: this.currentRequest,
+            },
+          });
+        }, 3500);
+
+        return awaitDialogMessage();
       });
-    }
   }
 
-  /* eslint-disable-next-line */
-  sendToNetwork(request) {
-    console.log('send to network', request);
+  async sendToNetwork() {
+    return new Promise((resolve, reject) => {
+      web3.currentProvider.sendAsync(this.currentRequest, (err, res) => {
+        if (err) {
+          return reject(err);
+        }
+
+        return resolve(res);
+      });
+    });
   }
 
-  /* eslint-disable-next-line */
   handleRequest(request) {
     if (request.id) {
       this.queue.push(request);
     }
   }
 
-  /* eslint-disable-next-line */
   sendSettings({ selectedAddress, networkVersion }) {
     this.emmiter.emit(INPAGE_EVENTS.SETTINGS, {
       selectedAddress,
@@ -177,14 +179,9 @@ export default class Connect {
     });
   }
 
-  /* eslint-disable-next-line */
-  sendResponse(data) {
-    console.log('emit response', data);
-    // this.emmiter.emit(INPAGE_EVENTS.RESPONSE, data);
+  sendResponse(payload) {
+    this.emmiter.emit(INPAGE_EVENTS.RESPONSE, payload);
   }
-
-  /* eslint-disable-next-line */
-  provideWeb3() {}
 
   /* eslint-disable-next-line */
   async injectWeb3(target = window) {

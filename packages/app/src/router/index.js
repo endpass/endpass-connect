@@ -24,9 +24,9 @@ const router = new Router({
 
 router.beforeEach(async (to, from, next) => {
   if (to.name !== 'AuthScreen') {
-    await store.dispatch('checkAuthStatus');
+    await store.dispatch('getAccounts');
 
-    return store.state.accounts.authorized ? next() : next('auth');
+    return store.getters.isAuthorized ? next() : next('auth');
   }
 
   return next();

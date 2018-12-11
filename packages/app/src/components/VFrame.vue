@@ -5,7 +5,7 @@
       Connect
     </header>
     <div class="frame__body">
-      <LoadingScreen v-if="!loading"/>
+      <LoadingScreen v-if="loading"/>
       <slot v-else />
     </div>
   </div>

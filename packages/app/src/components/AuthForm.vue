@@ -1,13 +1,13 @@
 <template>
   <VFrame :loading="!inited"> 
-    <form class="auth-form" @submit.prevent="emitSubmit">
-      <section class="auth-form__message">
+    <form @submit.prevent="emitSubmit">
+      <FormField>
         <message>{{ message }}</message>
-      </section>
-      <section v-if="error" class="auth-form__message">
+      </FormField>
+      <FormField v-if="error">
         <message :error="true">{{ error }}</message>
-      </section>
-      <section v-if="showEmail" class="auth-form__field">
+      </FormField>
+      <FormField v-if="showEmail">
         <v-input
           v-model="email"
           :invalid="email.length > 0 && !isEmailValid"
@@ -15,8 +15,8 @@
           name="email"
           placeholder="Enter your email..."
         />
-      </section>
-      <section class="auth-form__controls">
+      </FormField>
+      <FormControls>
         <v-button
           v-if="showEmail"
           :disabled="!isEmailValid || loading"
@@ -24,7 +24,7 @@
           type="primary"
         >{{ primaryButtonLabel }}</v-button>
         <v-button @click="emitCancel">Close</v-button>
-      </section>
+      </FormControls>
     </form>
   </VFrame>  
 </template>
@@ -34,6 +34,8 @@ import VFrame from '@/components/VFrame.vue'
 import VInput from '@/components/VInput.vue';
 import VButton from '@/components/VButton.vue';
 import Message from '@/components/Message.vue';
+import FormField from '@/components/FormField.vue'
+import FormControls from '@/components/FormControls.vue'
 
 export default {
   name: 'AuthForm',
@@ -96,30 +98,8 @@ export default {
     VButton,
     VInput,
     Message,
+    FormField,
+    FormControls,
   },
 };
 </script>
-
-<style lang="postcss">
-.auth-form__field {
-  margin-bottom: 15px;
-}
-
-.auth-form__message {
-  margin-bottom: 20px;
-}
-
-.auth-form__controls {
-  display: flex;
-  align-items: center;
-  margin-top: 30px;
-
-  & > button {
-    flex: 0 0 auto;
-
-    &:last-child {
-      margin-left: auto;
-    }
-  }
-}
-</style>
