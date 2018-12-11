@@ -9,7 +9,9 @@
     "build:app": "vue-cli-service --no-clean build ./packages/app/src/main.js",
     "dev:lib": "webpack --watch --mode=development",
     "build:lib": "webpack --mode=production",
-    "test:unit": "vue-cli-service test:unit",
+    "unit": "vue-cli-service test:unit --config ./tests/jest.config.js",
+    "unit:watch":
+      "vue-cli-service test:unit --config ./tests/jest.config.js --watch",
     "format":
       "prettier --write 'packages/**/*.{js,vue,json}' && eslint packages/**/*.{js,vue} --fix"
   },
