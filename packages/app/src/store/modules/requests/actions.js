@@ -82,7 +82,6 @@ const getSignedTransaction = async ({ state }, { password, wallet }) => {
 const getSignedTypedDataRequest = async () => {
   // const wallet = rootGetters['accounts/wallet'];
   // const request = getters.currentRequest;
-
   throw new Error('Sign typed data not supported yet!');
 };
 
@@ -94,7 +93,6 @@ const getSignedPlainRequest = async ({ state }, { password, wallet }) => {
 };
 
 const sendRequestToNetwork = (ctx, request) =>
-  // TODO cancel on dialog close
   new Promise((resolve, reject) => {
     this.web3.currentProvider.sendAsync(request, (err, res) => {
       if (err) {

@@ -16,6 +16,21 @@ const auth = async ({ commit }, email) => {
   }
 };
 
+const confirmAuth = ({ dispatch }) => {
+  dispatch('sendMessage', {
+    status: true,
+  });
+  dispatch('closeDialog');
+};
+
+const cancelAuth = ({ dispatch }, message) => {
+  dispatch('sendMessage', {
+    status: false,
+    message,
+  });
+  dispatch('closeDialog');
+};
+
 const getAccounts = async ({ commit }) => {
   try {
     const res = await identityService.getAccounts();
@@ -40,6 +55,8 @@ const awaitAuthConfirm = async ({ dispatch }) => {
 
 export default {
   auth,
+  cancelAuth,
+  confirmAuth,
   getAccounts,
   getAccount,
   awaitAuthConfirm,
