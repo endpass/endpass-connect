@@ -15,4 +15,14 @@ const store = new Vuex.Store({
   },
 });
 
+store
+  .dispatch('getAccounts')
+  .then(() => {
+    /* eslint-disable-next-line */
+    throw false;
+  })
+  .catch(() => {
+    store.commit('changeInitStatus', true);
+  });
+
 export default store;

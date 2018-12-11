@@ -69,22 +69,20 @@ export default {
     },
 
     handleAuthCancel() {
-      this.cancelAuth('User cancel auth');
+      this.cancelAuth();
     },
 
-    // Return it to handle window closing by user
-    // handleWindowClose() {
-    //   sendMessageToOpener({
-    //     data: {
-    //       message: 'User close auth dialog',
-    //       status: false,
-    //     }
-    //   });
-    // },
+    handleWindowClose(e) {
+      this.cancelAuth();
+    },
 
     handleAuthError(error) {
       this.error = error || 'Unexpected error, try login later';
-    },
+    },    
+  },
+
+  created() {
+    window.addEventListener('beforeunload', this.handleWindowClose)
   },
 
   components: {
