@@ -2,17 +2,26 @@
   <VFrame :loading="!request">
     <form @submit.prevent="emitSubmit">
       <FormField v-if="requesterUrl">
-        <a :href="requesterUrl">{{requesterUrl}}</a> requests sign action.
+        <a :href="requesterUrl">{{ requesterUrl }}</a> requests sign action.
       </FormField>
       <FormField label="Requires request sign by:">
         <Message :ellipsis="true">
           {{ account }}
         </Message>
       </FormField>
-      <FormField label="Your account password:">
-        <VInput v-model="password" type="password" placeholder="Enter your password..." :autofocus="true" />
+      <FormField v-if="error">
+        <message :error="true">{{ error }}</message>
       </FormField>
-      <FormField v-if="request" label="Request data:">
+      <FormField label="Your account password:">
+        <VInput 
+          v-model="password" 
+          :autofocus="true" 
+          type="password" 
+          placeholder="Enter your password..." />
+      </FormField>
+      <FormField 
+        v-if="request" 
+        label="Request data:">
         <VCode>
           {{ JSON.stringify(request.request, null, 2) }}
         </VCode>
@@ -30,15 +39,15 @@
 </template>
 
 <script>
-import { get } from 'lodash'
+import { get } from 'lodash';
 import VFrame from '@/components/VFrame.vue';
 import VInput from '@/components/VInput.vue';
 import VSelect from '@/components/VSelect.vue';
-import VCode from '@/components/VCode.vue'
+import VCode from '@/components/VCode.vue';
 import VButton from '@/components/VButton.vue';
 import Message from '@/components/Message.vue';
-import FormField from '@/components/FormField.vue'
-import FormControls from '@/components/FormControls.vue'
+import FormField from '@/components/FormField.vue';
+import FormControls from '@/components/FormControls.vue';
 
 export default {
   name: 'SignForm',
@@ -56,13 +65,13 @@ export default {
 
     request: {
       type: Object,
-      default: null
+      default: null,
     },
 
     accounts: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
 
   data: () => ({
@@ -71,11 +80,11 @@ export default {
 
   computed: {
     account() {
-      return get(this.request, 'address')
+      return get(this.request, 'address');
     },
 
     requesterUrl() {
-      return get(this.request, 'url')
+      return get(this.request, 'url');
     },
 
     primaryButtonLabel() {
@@ -86,8 +95,8 @@ export default {
   methods: {
     emitSubmit() {
       this.$emit('submit', {
-        account: this.account, 
-        password:this.password
+        account: this.account,
+        password: this.password,
       });
     },
 

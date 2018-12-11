@@ -1,11 +1,14 @@
 <template>
   <select
-    class="select"
     :value="value"
     :name="name"
+    class="select"
     @change="emitInput"
   >
-    <option v-for="item in items" :key="item" :value="item">{{item}}</option>
+    <option 
+      v-for="item in items" 
+      :key="item" 
+      :value="item">{{ item }}</option>
   </select>
 </template>
 
@@ -16,7 +19,7 @@ export default {
   props: {
     items: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
 
     name: {
@@ -27,7 +30,7 @@ export default {
     value: {
       type: [String, Number],
       default: '',
-    },    
+    },
   },
 
   methods: {

@@ -11,7 +11,7 @@ export default {
   props: {
     ellipsis: {
       type: Boolean,
-      default: false
+      default: false,
     },
 
     error: {

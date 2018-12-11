@@ -191,7 +191,9 @@ export default class Connect {
       });
       target.web3.setProvider(this.provider);
     } else {
-      console.log('web3 new');
+      Object.assign(target, {
+        ethereum: this.provider,
+      });
     }
   }
 }

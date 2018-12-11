@@ -1,7 +1,10 @@
 <template>
   <div class="frame">
     <header class="frame__header">
-      <img class="frame__logo" src="../assets/logo.png" alt="Endpass">
+      <img 
+        class="frame__logo" 
+        src="../assets/logo.png" 
+        alt="Endpass">
       Connect
     </header>
     <div class="frame__body">

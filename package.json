@@ -9,12 +9,12 @@
     "build:app": "vue-cli-service --no-clean build ./packages/app/src/main.js",
     "dev:lib": "webpack --watch --mode=development",
     "build:lib": "webpack --mode=production",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "format":
+      "prettier --write 'packages/**/*.{js,vue,json}' && eslint packages/**/*.{js,vue} --fix"
   },
   "lint-staged": {
-    "./dist/lib/*.js": [
-      "git add"
-    ]
+    "./dist/lib/*.js": ["git add"]
   },
   "husky": {
     "hooks": {

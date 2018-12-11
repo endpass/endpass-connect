@@ -30,12 +30,12 @@
 </template>
 
 <script>
-import VFrame from '@/components/VFrame.vue'
+import VFrame from '@/components/VFrame.vue';
 import VInput from '@/components/VInput.vue';
 import VButton from '@/components/VButton.vue';
 import Message from '@/components/Message.vue';
-import FormField from '@/components/FormField.vue'
-import FormControls from '@/components/FormControls.vue'
+import FormField from '@/components/FormField.vue';
+import FormControls from '@/components/FormControls.vue';
 
 export default {
   name: 'AuthForm',
