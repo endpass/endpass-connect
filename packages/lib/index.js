@@ -12,8 +12,8 @@ import {
 } from '@@/constants';
 
 export default class Connect {
-  constructor({ authUrl, subscribe }) {
-    this.authUrl = authUrl;
+  constructor({ appUrl, subscribe }) {
+    this.appUrl = appUrl;
     this.emmiter = new Emmiter();
     this.provider = new InpageProvider(this.emmiter);
 
@@ -65,23 +65,12 @@ export default class Connect {
   }
 
   getAuthUrl(method) {
-    return !method ? this.authUrl : `${this.authUrl}/#/${method}`;
+    return !method ? this.appUrl : `${this.appUrl}/#/${method}`;
   }
 
   setupEmmiterEvents() {
     this.emmiter.on(INPAGE_EVENTS.REQUEST, this.handleRequest.bind(this));
     this.emmiter.on(INPAGE_EVENTS.SETTINGS, this.handleRequest.bind(this));
-  }
-
-  /* eslint-disable-next-line */
-  async status() {
-    try {
-      const res = await identityService.getAccounts();
-
-      return !!res;
-    } catch (err) {
-      return false;
-    }
   }
 
   /* eslint-disable-next-line */
@@ -94,7 +83,7 @@ export default class Connect {
         activeNet: 1,
       };
     } catch (err) {
-      return false;
+      throw new Error('User not autorized!');
     }
   }
 
@@ -122,17 +111,20 @@ export default class Connect {
     );
   }
 
+  /**
+   * Open application on auth screen and waits result (success of failure)
+   * @returns {Promise<Object>} Auth result, check `status` property to
+   *  know about result
+   */
   auth() {
-    // Auth popup closing must reject
     this.openApp('auth');
 
+    // TODO format returning value here for more transparency
     return awaitDialogMessage();
   }
 
   async sign() {
-    const isAuthorized = await this.status();
-
-    if (!isAuthorized) throw new Error('User not autorized');
+    await this.getAccountData();
 
     const dialog = this.openApp('sign');
 
@@ -150,7 +142,7 @@ export default class Connect {
 
     const signMessage = await awaitDialogMessage();
 
-    // TODO: handle cases if status === false and throw error
+    // TODO handle cases if status === false and throw error
     return omit(signMessage.data, ['source']);
   }
 
@@ -172,6 +164,12 @@ export default class Connect {
     }
   }
 
+  /**
+   * Sets settings to current `web3` provider injected to page with `injectWeb3`
+   * method
+   * @param {String} options.selectedAddress Currenct account checksummed address
+   * @param {String} options.networkVersion Active network ID
+   */
   sendSettings({ selectedAddress, networkVersion }) {
     this.emmiter.emit(INPAGE_EVENTS.SETTINGS, {
       selectedAddress,
@@ -183,7 +181,11 @@ export default class Connect {
     this.emmiter.emit(INPAGE_EVENTS.RESPONSE, payload);
   }
 
-  /* eslint-disable-next-line */
+  /**
+   * Injects `web3` with "mokey patching" to given target
+   * By default injects `web3` to window in the current context
+   * @param  {Window} target Target window object
+   */
   async injectWeb3(target = window) {
     if (!target.web3) {
       Object.assign(target, {
