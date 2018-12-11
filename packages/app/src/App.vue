@@ -3,25 +3,8 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
-
 export default {
   name: 'App',
-
-  methods: {
-    ...mapActions(['getAccounts']),
-    ...mapMutations(['changeInitStatus']),
-  },
-
-  async created() {
-    // TODO: redactor this
-    try {
-      await this.getAccounts();
-    } catch (err) {
-    } finally {
-      this.changeInitStatus(true);
-    }
-  },
 };
 </script>
 

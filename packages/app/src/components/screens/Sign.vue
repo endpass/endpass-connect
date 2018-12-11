@@ -49,9 +49,15 @@ export default {
     handleSignCancel() {
       this.cancelRequest();
     },
+
+    handleWindowClose(e) {
+      this.cancelRequest();
+    },
   },
 
   async created() {
+    window.addEventListener('beforeunload', this.handleWindowClose)
+    
     await this.sendReadyMessage();
     this.awaitRequestMessage();
   },

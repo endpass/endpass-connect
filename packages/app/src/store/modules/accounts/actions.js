@@ -23,10 +23,10 @@ const confirmAuth = ({ dispatch }) => {
   dispatch('closeDialog');
 };
 
-const cancelAuth = ({ dispatch }, message) => {
+const cancelAuth = ({ dispatch }) => {
   dispatch('sendMessage', {
     status: false,
-    message,
+    message: 'Auth was canceled by user!',
   });
   dispatch('closeDialog');
 };
