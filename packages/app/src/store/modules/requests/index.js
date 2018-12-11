@@ -1,15 +1,14 @@
-import actions from './actions';
 import mutations from './mutations';
+import actions from './actions';
 import getters from './getters';
 
 const state = {
-  linkSent: false,
-  accounts: null,
+  request: null,
 };
 
 export default {
   state,
-  actions,
   mutations,
+  actions,
   getters,
 };

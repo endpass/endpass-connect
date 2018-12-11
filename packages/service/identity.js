@@ -10,6 +10,14 @@ class IdentityService {
   }
 
   /* eslint-disable-next-line */
+  getAccount(address) {
+    return fetch(`${IDENTITY_SERVER_URL}/account/${address}`, {
+      method: 'GET',
+      credentials: 'include',
+    }).then(res => res.json());
+  }
+
+  /* eslint-disable-next-line */
   auth(email) {
     return fetch(`${IDENTITY_SERVER_URL}/auth`, {
       method: 'POST',

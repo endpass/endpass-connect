@@ -26,8 +26,50 @@ export const sendMessageToDialog = ({ target, data }) =>
 export const sendMessageToOpener = ({ data }) =>
   sendMessage({ data, target: window.opener, source: 'dialog' });
 
+export const awaitMessageFromOpener = () =>
+  new Promise(resolve => {
+    const handler = message => {
+      if (!message.data) return;
+
+      window.removeEventListener('message', handler);
+
+      const { source, ...data } = message.data;
+      const isMessageFromOpener = source === 'endpass-connect-opener';
+
+      if (isMessageFromOpener) {
+        return resolve(data);
+      }
+    };
+
+    window.addEventListener('message', handler);
+  });
+
+export const awaitDialogMessage = () =>
+  new Promise((resolve, reject) => {
+    const handler = message => {
+      if (!message.data) return;
+
+      window.removeEventListener('message', handler);
+
+      const { source, ...data } = message.data;
+      const isMessageFromDialog = source === 'endpass-connect-dialog';
+
+      if (isMessageFromDialog && data.status) {
+        return resolve(data);
+      }
+
+      if (isMessageFromDialog && !data.status) {
+        return reject(data.message);
+      }
+    };
+
+    window.addEventListener('message', handler);
+  });
+
 export default {
   sendMessage,
   sendMessageToDialog,
   sendMessageToOpener,
+  awaitMessageFromOpener,
+  awaitDialogMessage,
 };
