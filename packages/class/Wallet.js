@@ -112,4 +112,14 @@ export default class Wallet {
 
     return `0x${tx.serialize().toString('hex')}`;
   }
+
+  /**
+   *
+   * @return {String} Next none
+   */
+  async getNextNonce() {
+    const nonce = await web3.eth.getTransactionCount(this.address);
+
+    return nonce.toString();
+  }
 }

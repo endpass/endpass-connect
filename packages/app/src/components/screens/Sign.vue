@@ -25,12 +25,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['awaitRequestMessage', 'sendMessage', 'closeDialog', 'processRequest']),
-
-    sendMessageAndClose(message) {
-      this.sendMessage(message)
-      this.closeDialog()
-    },
+    ...mapActions(['awaitRequestMessage', 'sendMessage', 'processRequest', 'cancelRequest']),
 
     async handleSignSubmit(res) {
       try {
@@ -41,10 +36,7 @@ export default {
     },
 
     handleSignCancel() {
-      this.sendMessageAndClose({
-        message: 'User cancel sign',
-        status: false,  
-      })
+      this.cancelRequest()
     }
   },
 

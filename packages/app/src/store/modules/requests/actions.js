@@ -1,4 +1,5 @@
 import { Wallet } from '@@/class';
+import web3 from '@@/class/singleton/web3';
 import { sendMessageToOpener, awaitMessageFromOpener } from '@@/util/message';
 
 const awaitRequestMessage = async ({ commit }) => {
@@ -35,8 +36,6 @@ const processRequest = async ({ state, commit, dispatch }, password) => {
       jsonrpc: request.jsonrpc,
     });
   } catch (err) {
-    console.log('sign error', err);
-
     dispatch('sendResponse', {
       id: request.id,
       result: [],
@@ -59,30 +58,24 @@ const getSignedRequest = async ({ state, dispatch }, payload) => {
   }
 };
 
-const getSignedTransaction = async (
-  { dispatch, getters, rootGetters },
-  { password, wallet },
-) => {
-  // const wallet = rootGetters['accounts/wallet'];
-  // const request = getters.currentRequest;
-  // const nonce = await dispatch('transactions/getNextNonce', null, {
-  //   root: true,
-  // });
-  // const signedTx = await wallet.signTransaction(
-  //   {
-  //     ...request.transaction,
-  //     nonce,
-  //   },
-  //   password,
-  // );
+const getSignedTransaction = async ({ state }, { password, wallet }) => {
+  const { request } = state.request;
+  const nonce = await wallet.getNextNonce();
+  const signedTx = await wallet.signTransaction(
+    {
+      ...request.transaction,
+      nonce,
+    },
+    password,
+  );
 
   return new Promise((resolve, reject) => {
-    //     const sendEvent = web3.eth.sendSignedTransaction(signedTx);
-    //
-    //     sendEvent.then(receipt => resolve(receipt.transactionHash));
-    //
-    //     sendEvent.on('error', error => reject(error));
-    //     sendEvent.catch(error => reject(error));
+    // TODO may be move it to the Wallet class
+    const sendEvent = web3.eth.sendSignedTransaction(signedTx);
+
+    sendEvent.then(receipt => resolve(receipt.transactionHash));
+    sendEvent.on('error', error => reject(error));
+    sendEvent.catch(error => reject(error));
   });
 };
 
@@ -101,6 +94,7 @@ const getSignedPlainRequest = async ({ state }, { password, wallet }) => {
 };
 
 const sendRequestToNetwork = (ctx, request) =>
+  // TODO cancel on dialog close
   new Promise((resolve, reject) => {
     this.web3.currentProvider.sendAsync(request, (err, res) => {
       if (err) {
@@ -111,18 +105,15 @@ const sendRequestToNetwork = (ctx, request) =>
     });
   });
 
-// const cancelCurrentRequest = ({ commit, dispatch, getters }) => {
-//   const requestId = getters.currentRequestId;
-//
-//   if (!requestId) return;
-//
-//   dispatch('sendResponse', {
-//     id: requestId,
-//     error: 'canceled',
-//     result: [],
-//   });
-//   commit(REMOVE_REQUEST, requestId);
-// };
+const cancelRequest = ({ state, dispatch }) => {
+  const { request } = state.request;
+
+  dispatch('sendResponse', {
+    id: request.id,
+    error: 'canceled',
+    result: [],
+  });
+};
 
 export default {
   awaitRequestMessage,
@@ -133,4 +124,5 @@ export default {
   getSignedTransaction,
   getSignedPlainRequest,
   sendRequestToNetwork,
+  cancelRequest,
 };
