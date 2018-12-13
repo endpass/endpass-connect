@@ -1,4 +1,4 @@
-import { Wallet } from '@@/class';
+import Wallet from '@@/class/Wallet';
 import web3 from '@@/class/singleton/web3';
 import { sendMessageToOpener, awaitMessageFromOpener } from '@@/util/message';
 
@@ -92,17 +92,6 @@ const getSignedPlainRequest = async ({ state }, { password, wallet }) => {
   return res.signature;
 };
 
-const sendRequestToNetwork = (ctx, request) =>
-  new Promise((resolve, reject) => {
-    this.web3.currentProvider.sendAsync(request, (err, res) => {
-      if (err) {
-        return reject(err);
-      }
-
-      return resolve(res);
-    });
-  });
-
 const cancelRequest = ({ state, dispatch }) => {
   const { request } = state.request;
 
@@ -121,6 +110,5 @@ export default {
   getSignedTypedDataRequest,
   getSignedTransaction,
   getSignedPlainRequest,
-  sendRequestToNetwork,
   cancelRequest,
 };
