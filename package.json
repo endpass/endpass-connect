@@ -9,18 +9,14 @@
     "build:app": "vue-cli-service --no-clean build ./packages/app/src/main.js",
     "dev:lib": "webpack --watch --mode=development",
     "build:lib": "webpack --mode=production",
-    "unit": "vue-cli-service test:unit --config tests/jest.config.js",
+    "unit": "vue-cli-service test:unit",
     "unit:watch": "vue-cli-service test:unit --watch",
-    "format": "prettier --write 'packages/**/*.{js,vue,json}' && eslint packages/**/*.{js,vue} --fix"
+    "format":
+      "prettier --write 'packages/**/*.{js,vue,json}' && eslint packages/**/*.{js,vue} --fix"
   },
   "lint-staged": {
-    "./packages/**/*.{js,vue,json}": [
-      "prettier --write",
-      "git add"
-    ],
-    "./dist/lib/*.js": [
-      "git add"
-    ]
+    "./packages/**/*.{js,vue,json}": ["prettier --write", "git add"],
+    "./dist/lib/*.js": ["git add"]
   },
   "husky": {
     "hooks": {
