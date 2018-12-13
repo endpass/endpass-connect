@@ -1,5 +1,1 @@
-const isAuthorized = state => !!state.accounts;
-
-export default {
-  isAuthorized,
-};
+export default {};

@@ -1,5 +1,5 @@
 <template>
-  <AuthForm
+  <auth-form
     :inited="inited"
     :loading="loading"
     :show-email="!authorized && !sent"
@@ -11,36 +11,27 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapGetters } from 'vuex';
-import AuthForm from '@/components/AuthForm.vue';
+import { mapActions, mapState } from 'vuex';
+import AuthForm from '../AuthForm.vue';
 
 export default {
-  name: 'AuthScreen',
+  name: 'Auth',
 
   data: () => ({
     error: null,
   }),
 
-  watch: {
-    authorized() {
-      const { authorized, sent, confirmAuth } = this;
-
-      if (authorized && sent) {
-        this.confirmAuth();
-      }
-    },
-  },
-
   computed: {
-    ...mapGetters({
-      authorized: 'isAuthorized',
-    }),
-
     ...mapState({
       inited: state => state.core.inited,
       loading: state => state.core.loading,
       sent: state => state.accounts.linkSent,
+      accounts: state => state.accounts.accounts,
     }),
+
+    authorized() {
+      return !!this.accounts;
+    },
 
     formMessage() {
       if (this.authorized) {
@@ -52,6 +43,16 @@ export default {
       }
 
       return 'Log in to your Endpass account to access site actions';
+    },
+  },
+
+  watch: {
+    authorized() {
+      const { authorized, sent, confirmAuth } = this;
+
+      if (authorized && sent) {
+        this.confirmAuth();
+      }
     },
   },
 
@@ -77,12 +78,12 @@ export default {
     },
 
     handleAuthError(error) {
-      this.error = error || 'Unexpected error, try login later';
-    },    
+      this.error = error.message || 'Unexpected error, try login later';
+    },
   },
 
   created() {
-    window.addEventListener('beforeunload', this.handleWindowClose)
+    window.addEventListener('beforeunload', this.handleWindowClose);
   },
 
   components: {

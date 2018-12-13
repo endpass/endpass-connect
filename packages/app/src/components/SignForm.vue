@@ -1,53 +1,52 @@
 <template>  
-  <VFrame :loading="!request">
-    <form @submit.prevent="emitSubmit">
-      <FormField v-if="requesterUrl">
-        <a :href="requesterUrl">{{ requesterUrl }}</a> requests sign action.
-      </FormField>
-      <FormField label="Requires request sign by:">
-        <Message :ellipsis="true">
+  <v-frame :loading="!request">
+    <form data-test="sign-form" @submit.prevent="emitSubmit">
+      <form-field v-if="requesterUrl">
+        <a :href="requesterUrl" data-test="requester-url">{{ requesterUrl }}</a> requests sign action.
+      </form-field>
+      <form-field label="Requires request sign by:">
+        <message :ellipsis="true" data-test="account-address">
           {{ account }}
-        </Message>
-      </FormField>
-      <FormField v-if="error">
-        <message :error="true">{{ error }}</message>
-      </FormField>
-      <FormField label="Your account password:">
-        <VInput 
+        </message>
+      </form-field>
+      <form-field v-if="error">
+        <message :error="true" data-test="error-message">{{ error }}</message>
+      </form-field>
+      <form-field label="Your account password:">
+        <v-input 
           v-model="password" 
           :autofocus="true" 
           type="password" 
           placeholder="Enter your password..." />
-      </FormField>
-      <FormField 
-        v-if="request" 
-        label="Request data:">
-        <VCode>
-          {{ JSON.stringify(request.request, null, 2) }}
-        </VCode>
-      </FormField>
-      <FormControls>
+      </form-field>
+      <form-field v-if="requestBody" label="Request data:">
+        <v-code data-test="request-body">
+          {{ JSON.stringify(requestBody, null, 2) }}
+        </v-code>
+      </form-field>
+      <form-controls>
         <v-button
           :disabled="loading || !password"
           :submit="true"
           type="primary"
+          data-test="submit-button"
         >{{ primaryButtonLabel }}</v-button>
-        <v-button @click="emitCancel">Close</v-button>
-      </FormControls>      
+        <v-button @click="emitCancel" data-test="cancel-button">Close</v-button>
+      </form-controls>      
     </form>
-  </VFrame>
+  </v-frame>
 </template>
 
 <script>
 import { get } from 'lodash';
-import VFrame from '@/components/VFrame.vue';
-import VInput from '@/components/VInput.vue';
-import VSelect from '@/components/VSelect.vue';
-import VCode from '@/components/VCode.vue';
-import VButton from '@/components/VButton.vue';
-import Message from '@/components/Message.vue';
-import FormField from '@/components/FormField.vue';
-import FormControls from '@/components/FormControls.vue';
+import VFrame from './VFrame.vue';
+import VInput from './VInput.vue';
+import VSelect from './VSelect.vue';
+import VCode from './VCode.vue';
+import VButton from './VButton.vue';
+import Message from './Message.vue';
+import FormField from './FormField.vue';
+import FormControls from './FormControls.vue';
 
 export default {
   name: 'SignForm',
@@ -87,6 +86,10 @@ export default {
       return get(this.request, 'url');
     },
 
+    requestBody() {
+      return get(this.request, 'request');
+    },
+
     primaryButtonLabel() {
       return !this.loading ? 'Sign' : 'Loading...';
     },
@@ -94,10 +97,12 @@ export default {
 
   methods: {
     emitSubmit() {
-      this.$emit('submit', {
-        account: this.account,
-        password: this.password,
-      });
+      if (this.password) {
+        this.$emit('submit', {
+          account: this.account,
+          password: this.password,
+        });
+      }
     },
 
     emitCancel() {

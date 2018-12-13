@@ -4,6 +4,12 @@
   </pre>  
 </template>
 
+<script>
+export default {
+  name: 'VCode',
+};
+</script>
+
 <style lang="postcss">
 .code {
   padding: 20px;

@@ -8,14 +8,14 @@
       Connect
     </header>
     <div class="frame__body">
-      <LoadingScreen v-if="loading"/>
+      <loading-screen v-if="loading"/>
       <slot v-else />
     </div>
   </div>
 </template>
 
 <script>
-import LoadingScreen from '@/components/LoadingScreen.vue';
+import LoadingScreen from './LoadingScreen.vue';
 
 export default {
   name: 'VFrame',

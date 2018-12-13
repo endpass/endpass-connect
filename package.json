@@ -1,6 +1,6 @@
 {
   "name": "endpass-connect",
-  "version": "0.1.0",
+  "version": "0.1.0alpha",
   "private": true,
   "main": "./dist/lib/endpass-connect.js",
   "scripts": {
@@ -9,14 +9,18 @@
     "build:app": "vue-cli-service --no-clean build ./packages/app/src/main.js",
     "dev:lib": "webpack --watch --mode=development",
     "build:lib": "webpack --mode=production",
-    "unit": "vue-cli-service test:unit --config ./tests/jest.config.js",
-    "unit:watch":
-      "vue-cli-service test:unit --config ./tests/jest.config.js --watch",
-    "format":
-      "prettier --write 'packages/**/*.{js,vue,json}' && eslint packages/**/*.{js,vue} --fix"
+    "unit": "vue-cli-service test:unit --config tests/jest.config.js",
+    "unit:watch": "vue-cli-service test:unit --watch",
+    "format": "prettier --write 'packages/**/*.{js,vue,json}' && eslint packages/**/*.{js,vue} --fix"
   },
   "lint-staged": {
-    "./dist/lib/*.js": ["git add"]
+    "./packages/**/*.{js,vue,json}": [
+      "prettier --write",
+      "git add"
+    ],
+    "./dist/lib/*.js": [
+      "git add"
+    ]
   },
   "husky": {
     "hooks": {
@@ -43,6 +47,7 @@
     "@vue/cli-plugin-unit-jest": "^3.2.0",
     "@vue/cli-service": "^3.2.0",
     "@vue/test-utils": "^1.0.0-beta.20",
+    "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.4",
