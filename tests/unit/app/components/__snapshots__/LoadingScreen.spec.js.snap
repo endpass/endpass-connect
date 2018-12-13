@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoadingScreen render should correctly render LoadingScreen component 1`] = `
+<div class="loading-screen">
+  <div class="loading-screen__spinner">
+    <spinner-stub></spinner-stub>
+  </div>
+</div>
+`;

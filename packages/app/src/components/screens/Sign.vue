@@ -1,5 +1,5 @@
 <template>
-  <SignForm 
+  <sign-form 
     :accounts="accounts"
     :loading="loading"
     :request="request"
@@ -11,10 +11,10 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import SignForm from '@/components/SignForm.vue';
+import SignForm from '../SignForm.vue';
 
 export default {
-  name: 'SignScreen',
+  name: 'Sign',
 
   data: () => ({
     error: null,
@@ -32,9 +32,9 @@ export default {
   methods: {
     ...mapActions([
       'awaitRequestMessage',
-      'sendReadyMessage',
       'processRequest',
       'cancelRequest',
+      'sendReadyMessage',
     ]),
 
     async handleSignSubmit(res) {
@@ -56,8 +56,8 @@ export default {
   },
 
   async created() {
-    window.addEventListener('beforeunload', this.handleWindowClose)
-    
+    window.addEventListener('beforeunload', this.handleWindowClose);
+
     await this.sendReadyMessage();
     this.awaitRequestMessage();
   },
