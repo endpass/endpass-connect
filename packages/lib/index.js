@@ -13,6 +13,12 @@ import {
 
 export default class Connect {
   constructor({ appUrl, subscribe }) {
+    if (!appUrl) {
+      throw new Error(
+        'Pass url to connect application instance in appUrl proprerty!',
+      );
+    }
+
     this.appUrl = appUrl;
     this.emmiter = new Emmiter();
     this.provider = new InpageProvider(this.emmiter);
@@ -64,7 +70,7 @@ export default class Connect {
     }
   }
 
-  getAuthUrl(method) {
+  getConnectUrl(method) {
     return !method ? this.appUrl : `${this.appUrl}/#/${method}`;
   }
 
@@ -105,7 +111,7 @@ export default class Connect {
     window.name = HOST_WINDOW_NAME;
 
     return window.open(
-      this.getAuthUrl(method),
+      this.getConnectUrl(method),
       DIALOG_WINDOW_NAME,
       windowFeatures.join(','),
     );
@@ -186,7 +192,7 @@ export default class Connect {
    * By default injects `web3` to window in the current context
    * @param  {Window} target Target window object
    */
-  async injectWeb3(target = window) {
+  injectWeb3(target = window) {
     if (!target.web3) {
       Object.assign(target, {
         web3: new Web3Dapp(),
