@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import Vue from 'vue';
 import Router from 'vue-router';
 import store from '@/store';
@@ -26,7 +27,7 @@ router.beforeEach(async (to, from, next) => {
   if (to.name !== 'AuthScreen') {
     await store.dispatch('getAccounts');
 
-    return store.getters.isAuthorized ? next() : next('auth');
+    return !isEmpty(store.state.accounts.accounts) ? next() : next('auth');
   }
 
   return next();
