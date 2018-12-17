@@ -1,9 +1,8 @@
 import { omit } from 'lodash';
-import Web3Dapp from 'web3-dapp';
-import identityService from '@@/service/identity';
 import { sendMessageToDialog, awaitDialogMessage } from '@@/util/message';
-import web3 from '@@/class/singleton/web3';
-import { Emmiter, InpageProvider } from '@@/class';
+import identityService from '@@/service/identity';
+import Emmiter from '@@/class/Emmiter';
+import InpageProvider from '@@/class/InpageProvider';
 import {
   INPAGE_EVENTS,
   HOST_WINDOW_NAME,
@@ -22,6 +21,7 @@ export default class Connect {
     this.appUrl = appUrl;
     this.emmiter = new Emmiter();
     this.provider = new InpageProvider(this.emmiter);
+    this.requestProvider = null;
 
     // Net requests queue
     this.currentRequest = null;
@@ -154,7 +154,7 @@ export default class Connect {
 
   async sendToNetwork() {
     return new Promise((resolve, reject) => {
-      web3.currentProvider.sendAsync(this.currentRequest, (err, res) => {
+      this.requestProvider.sendAsync(this.currentRequest, (err, res) => {
         if (err) {
           return reject(err);
         }
@@ -188,12 +188,14 @@ export default class Connect {
   }
 
   /**
-   * Injects `web3` with "mokey patching" to given target
+   * Injects `web3` with "monkey patching" to given target
    * By default injects `web3` to window in the current context
    * @param  {Window} target Target window object
    */
-  injectWeb3(target = window) {
+  async injectWeb3(target = window) {
     if (!target.web3) {
+      const Web3Dapp = await import(/* webpackChunkName: "web3-dapp" */ 'web3-dapp');
+
       Object.assign(target, {
         web3: new Web3Dapp(),
       });
@@ -203,5 +205,13 @@ export default class Connect {
         ethereum: this.provider,
       });
     }
+
+    this.createRequestProvider(target.web3);
+  }
+
+  createRequestProvider(web3) {
+    this.requestProvider = new web3.providers.HttpProvider(
+      'https://eth-mainnet.endpass.com:2083',
+    );
   }
 }

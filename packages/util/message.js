@@ -9,7 +9,7 @@ export const sendMessage = ({ target, source, data }) => {
 
   if (!['dialog', 'opener'].includes(source)) {
     throw new Error(
-      `You provide invalid message source type ${source}, it must be equals to "opener" or "dialog"!`,
+      `You provide invalid message source type: ${source}. It must be equals to "opener" or "dialog"!`,
     );
   }
 
