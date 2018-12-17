@@ -1,4 +1,5 @@
 import { omit } from 'lodash';
+import Web3Dapp from 'web3-dapp';
 import { sendMessageToDialog, awaitDialogMessage } from '@@/util/message';
 import identityService from '@@/service/identity';
 import Emmiter from '@@/class/Emmiter';
@@ -194,17 +195,16 @@ export default class Connect {
    */
   async injectWeb3(target = window) {
     if (!target.web3) {
-      const Web3Dapp = await import(/* webpackChunkName: "web3-dapp" */ 'web3-dapp');
+      const web3 = new Web3Dapp(this.provider);
 
       Object.assign(target, {
-        web3: new Web3Dapp(),
-      });
-      target.web3.setProvider(this.provider);
-    } else {
-      Object.assign(target, {
-        ethereum: this.provider,
+        web3,
       });
     }
+
+    Object.assign(target, {
+      ethereum: this.provider,
+    });
 
     this.createRequestProvider(target.web3);
   }
