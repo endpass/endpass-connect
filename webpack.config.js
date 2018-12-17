@@ -1,4 +1,6 @@
 const path = require('path');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const LodashWebpackPlugin = require('lodash-webpack-plugin');
 
 module.exports = {
   entry: path.resolve(__dirname, './packages/lib/index.js'),
@@ -6,10 +8,19 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist/lib'),
     filename: 'endpass-connect.js',
+    chunkFilename: '[name].endpass-connect.js',
     library: 'EndpassConnect',
     libraryTarget: 'umd',
     libraryExport: 'default',
   },
+
+  plugins: [
+    new LodashWebpackPlugin(),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: false,
+    }),
+  ],
 
   module: {
     rules: [
@@ -18,8 +29,8 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/,
         options: {
-          presets: ['@babel/preset-env'],
           plugins: ['lodash'],
+          presets: ['@babel/preset-env'],
         },
       },
     ],
