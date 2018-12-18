@@ -1,4 +1,4 @@
-import { omit } from 'lodash';
+import omit from 'lodash/omit';
 import Web3Dapp from 'web3-dapp';
 import { sendMessageToDialog, awaitDialogMessage } from '@@/util/message';
 import identityService from '@@/service/identity';
