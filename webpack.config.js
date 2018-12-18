@@ -1,6 +1,5 @@
 const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const LodashWebpackPlugin = require('lodash-webpack-plugin');
 
 module.exports = {
   entry: path.resolve(__dirname, './packages/lib/index.js'),
@@ -15,7 +14,6 @@ module.exports = {
   },
 
   plugins: [
-    new LodashWebpackPlugin(),
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
       openAnalyzer: false,
