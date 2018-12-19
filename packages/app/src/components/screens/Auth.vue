@@ -1,5 +1,11 @@
 <template>
+  <create-account-form
+    v-if="needAccount"
+    @request="handleAccountRequest"
+    @cancel="handleAuthCancel"
+  />
   <auth-form
+    v-else
     :inited="inited"
     :loading="loading"
     :show-email="!authorized && !sent"
@@ -11,14 +17,17 @@
 </template>
 
 <script>
+import isEmpty from 'lodash/isEmpty';
 import { mapActions, mapState } from 'vuex';
 import AuthForm from '../AuthForm.vue';
+import CreateAccountForm from '../CreateAccountForm.vue';
 
 export default {
   name: 'Auth',
 
   data: () => ({
     error: null,
+    needAccount: false,
   }),
 
   computed: {
@@ -31,6 +40,14 @@ export default {
 
     authorized() {
       return !!this.accounts;
+    },
+
+    confirmed() {
+      return this.authorized && this.sent;
+    },
+
+    isAccountsEmpty() {
+      return isEmpty(this.accounts);
     },
 
     formMessage() {
@@ -48,32 +65,54 @@ export default {
 
   watch: {
     authorized() {
-      const { authorized, sent, confirmAuth } = this;
+      const { confirmed, isAccountsEmpty, awaitAccountCreate } = this;
 
-      if (authorized && sent) {
-        this.confirmAuth();
+      if (confirmed && isAccountsEmpty) {
+        this.needAccount = true;
+        awaitAccountCreate();
+      } else if (confirmed && !isAccountsEmpty) {
+        this.needAccount = false;
+      }
+    },
+
+    accounts() {
+      const { confirmed, isAccountsEmpty, confirmAuth } = this;
+
+      if (confirmed && !isAccountsEmpty) {
+        confirmAuth();
       }
     },
   },
 
   methods: {
-    ...mapActions(['auth', 'cancelAuth', 'confirmAuth', 'awaitAuthConfirm']),
+    ...mapActions([
+      'auth',
+      'cancelAuth',
+      'confirmAuth',
+      'awaitAuthConfirm',
+      'awaitAccountCreate',
+      'sendReadyMessage',
+      'openCreateAccountPage',
+    ]),
 
     async handleAuthSubmit(email) {
       try {
-        const res = await this.auth(email);
-
+        await this.auth(email);
         await this.awaitAuthConfirm();
       } catch (err) {
         this.handleAuthError(err);
       }
     },
 
+    async handleAccountRequest() {
+      this.openCreateAccountPage();
+    },
+
     handleAuthCancel() {
       this.cancelAuth();
     },
 
-    handleWindowClose(e) {
+    handleWindowClose() {
       this.cancelAuth();
     },
 
@@ -82,12 +121,17 @@ export default {
     },
   },
 
-  created() {
+  async created() {
     window.addEventListener('beforeunload', this.handleWindowClose);
+
+    await this.sendReadyMessage();
+
+    this.handleAuthStatusChange();
   },
 
   components: {
     AuthForm,
+    CreateAccountForm,
   },
 };
 </script>
