@@ -27,12 +27,13 @@ export const sendMessageToDialog = ({ target, data }) =>
     data,
   });
 
-export const sendMessageToOpener = ({ data }) =>
+export const sendMessageToOpener = ({ data }) => {
   sendMessage({
     source: 'dialog',
     target: window.opener,
     data,
   });
+};
 
 export const awaitMessageFromOpener = () =>
   new Promise(resolve => {

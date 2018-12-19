@@ -1,5 +1,13 @@
 <template>
+  <a
+    v-if="href"
+    :href="href"
+    :class="{ button: true, [type]: type, disabled: disabled }"
+  >
+    <slot />  
+  </a>
   <button
+    v-else
     :class="{ button: true, [type]: type, disabled: disabled }"
     :disabled="disabled"
     :type="buttonType"
@@ -28,6 +36,11 @@ export default {
       type: Boolean,
       default: false,
     },
+
+    href: {
+      type: String,
+      default: null,
+    },
   },
 
   computed: {
@@ -53,6 +66,7 @@ export default {
   line-height: 1.5;
   font-size: 20px;
   font-weight: 600;
+  text-decoration: none;
   cursor: pointer;
 
   &.primary {

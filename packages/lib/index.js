@@ -81,20 +81,50 @@ export default class Connect {
   }
 
   /* eslint-disable-next-line */
+  async getUserSettings() {
+    try {
+      const res = await identityService.getSettings();
+
+      return res;
+    } catch (err) {
+      throw new Error('User not autorized!');
+    }
+  }
+
+  /* eslint-disable */
+  async getFirstNotPublicAccountAddress() {
+    const accounts = await identityService.getAccounts();
+
+    for (const account of accounts) {
+      const res = await identityService.getAccountInfo(account);
+
+      if (res.type !== 'PublicAccount') {
+        return account;
+      }
+    }
+
+    return null;
+  }
+  /* eslint-enable */
+
+  /* eslint-disable-next-line */
   async getAccountData() {
     try {
-      const res = await identityService.getAccounts();
+      const settings = await this.getUserSettings();
+      const activeAccount =
+        settings.lastActiveAccount ||
+        (await this.getFirstNotPublicAccountAddress());
 
       return {
-        activeAccount: res[0],
-        activeNet: 1,
+        activeAccount,
+        activeNet: settings.net || 1,
       };
     } catch (err) {
       throw new Error('User not autorized!');
     }
   }
 
-  openApp(method) {
+  async openApp(method) {
     const pos = {
       x: window.innerWidth / 2 - 200,
       y: 200,
@@ -111,11 +141,15 @@ export default class Connect {
 
     window.name = HOST_WINDOW_NAME;
 
-    return window.open(
+    const dialog = window.open(
       this.getConnectUrl(method),
       DIALOG_WINDOW_NAME,
       windowFeatures.join(','),
     );
+
+    await awaitDialogMessage();
+
+    return dialog;
   }
 
   /**
@@ -123,8 +157,10 @@ export default class Connect {
    * @returns {Promise<Object>} Auth result, check `status` property to
    *  know about result
    */
-  auth() {
+  async auth() {
     this.openApp('auth');
+
+    await awaitDialogMessage();
 
     // TODO format returning value here for more transparency
     return awaitDialogMessage();
@@ -133,9 +169,7 @@ export default class Connect {
   async sign() {
     await this.getAccountData();
 
-    const dialog = this.openApp('sign');
-
-    await awaitDialogMessage();
+    const dialog = await this.openApp('sign');
 
     sendMessageToDialog({
       target: dialog,
@@ -210,6 +244,7 @@ export default class Connect {
   }
 
   createRequestProvider(web3) {
+    // TODO dont forget this!
     this.requestProvider = new web3.providers.HttpProvider(
       'https://eth-mainnet.endpass.com:2083',
     );
