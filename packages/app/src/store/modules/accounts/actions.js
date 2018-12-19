@@ -41,6 +41,12 @@ const getAccounts = async ({ commit }) => {
   }
 };
 
+const getAccountInfo = async (ctx, address) => {
+  const res = await identityService.getAccountInfo(address);
+
+  return res;
+};
+
 const getAccount = async (ctx, address) => {
   const res = await identityService.getAccount(address);
 
@@ -49,15 +55,27 @@ const getAccount = async (ctx, address) => {
 
 const awaitAuthConfirm = async ({ dispatch }) => {
   await identityService.awaitAuthConfirm();
-
   await dispatch('getAccounts');
+};
+
+const awaitAccountCreate = async ({ commit }) => {
+  const res = await identityService.awaitAccountCreate();
+
+  commit('setAccounts', res);
+};
+
+const openCreateAccountPage = async () => {
+  window.open('https://wallet-dev.endpass.com/#/');
 };
 
 export default {
   auth,
   cancelAuth,
   confirmAuth,
-  getAccounts,
   getAccount,
+  getAccountInfo,
+  getAccounts,
+  openCreateAccountPage,
+  awaitAccountCreate,
   awaitAuthConfirm,
 };

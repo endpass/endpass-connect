@@ -42,7 +42,7 @@ export default {
         await this.processRequest(res.password);
         this.error = null;
       } catch (err) {
-        this.error = err;
+        this.error = err.message;
       }
     },
 
@@ -50,7 +50,7 @@ export default {
       this.cancelRequest();
     },
 
-    handleWindowClose(e) {
+    handleWindowClose() {
       this.cancelRequest();
     },
   },
@@ -59,6 +59,7 @@ export default {
     window.addEventListener('beforeunload', this.handleWindowClose);
 
     await this.sendReadyMessage();
+
     this.awaitRequestMessage();
   },
 
