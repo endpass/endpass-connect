@@ -1,3 +1,8 @@
+const { getEnv } = require('./env');
+
+const { NODE_ENV = 'development' } = process.env;
+const ENV = getEnv(NODE_ENV);
+
 module.exports = {
   moduleFileExtensions: ['js', 'jsx', 'json', 'vue'],
   transform: {
@@ -14,4 +19,7 @@ module.exports = {
   testMatch: ['**/tests/unit/**/*.spec.(js|jsx|ts|tsx)'],
   testURL: 'http://localhost/',
   setupFiles: ['<rootDir>/tests/unit/setup'],
+  globals: {
+    ENV,
+  },
 };
