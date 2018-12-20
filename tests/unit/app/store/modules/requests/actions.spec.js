@@ -36,7 +36,7 @@ describe('requests actions', () => {
 
       awaitMessageFromOpener.mockResolvedValueOnce(request);
 
-      await requestsActions.awaitRequestMessage({ commit });
+      await requestsActions.awaitRequestMessage({ dispatch, commit });
 
       expect(commit).toBeCalledWith('setRequest', request);
     });
@@ -46,9 +46,27 @@ describe('requests actions', () => {
 
       awaitMessageFromOpener.mockResolvedValueOnce(null);
 
-      await requestsActions.awaitRequestMessage({ commit });
+      await requestsActions.awaitRequestMessage({ dispatch, commit });
 
       expect(commit).not.toBeCalled();
+    });
+
+    it('should set web3 provider if message was received', async () => {
+      awaitMessageFromOpener.mockResolvedValueOnce({
+        net: 1,
+      });
+
+      await requestsActions.awaitRequestMessage({ dispatch, commit });
+
+      expect(dispatch).toBeCalledWith('setWeb3NetworkProvider', 1);
+    });
+
+    it('should not set web3 provider if message was received', async () => {
+      awaitMessageFromOpener.mockResolvedValueOnce(null);
+
+      await requestsActions.awaitRequestMessage({ dispatch, commit });
+
+      expect(dispatch).not.toBeCalled();
     });
   });
 
