@@ -228,6 +228,9 @@ describe('Connect class', () => {
         const accounts = ['0x0', '0x1'];
 
         identityService.getAccounts.mockResolvedValueOnce(accounts);
+        connect.getUserSettings = jest.fn().mockResolvedValueOnce({
+          lastActiveAccount: '0x0',
+        });
 
         const res = await connect.getAccountData();
 
@@ -300,13 +303,12 @@ describe('Connect class', () => {
         connect.provider.settings.networkVersion = accountData.activeNet;
         connect.getAccountData = jest.fn().mockResolvedValueOnce(accountData);
         connect.openApp = jest.fn(() => dialog);
-        awaitDialogMessage.mockResolvedValueOnce();
         awaitDialogMessage.mockResolvedValueOnce(signedData);
 
         const res = await connect.sign();
 
         expect(connect.openApp).toBeCalledWith('sign');
-        expect(awaitDialogMessage).toBeCalledTimes(2);
+        expect(awaitDialogMessage).toBeCalledTimes(1);
         expect(sendMessageToDialog).toBeCalledWith({
           target: dialog,
           data: {

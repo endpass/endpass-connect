@@ -19,6 +19,9 @@ describe('Auth', () => {
         inited: true,
         loading: false,
       },
+      actions: {
+        sendReadyMessage: jest.fn(),
+      },
     };
     accountsModule = {
       state: {
@@ -30,6 +33,7 @@ describe('Auth', () => {
         cancelAuth: jest.fn(),
         confirmAuth: jest.fn(),
         awaitAuthConfirm: jest.fn(),
+        awaitAccountCreate: jest.fn(),
       },
     };
     storeData = {
@@ -64,9 +68,16 @@ describe('Auth', () => {
       expect(accountsModule.actions.confirmAuth).not.toBeCalled();
     });
 
-    it('should confirm auth if link was sent and authorization status was changed', () => {
+    it('should not confirm auth if link was sent and authorization status was changed but account are empty', () => {
       store.state.accounts.linkSent = true;
       store.state.accounts.accounts = [];
+
+      expect(accountsModule.actions.confirmAuth).not.toBeCalled();
+    });
+
+    it('should confirm auth if link was sent and authorization status was changed', () => {
+      store.state.accounts.linkSent = true;
+      store.state.accounts.accounts = ['0x0'];
 
       expect(accountsModule.actions.confirmAuth).toBeCalled();
     });
