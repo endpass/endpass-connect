@@ -1,6 +1,6 @@
 <template>
   <create-account-form
-    v-if="needAccount"
+    v-if="authorized && isAccountsEmpty"
     @request="handleAccountRequest"
     @cancel="handleAuthCancel"
   />
@@ -64,23 +64,18 @@ export default {
   },
 
   watch: {
-    authorized() {
-      const { confirmed, isAccountsEmpty, awaitAccountCreate } = this;
-
-      if (confirmed && isAccountsEmpty) {
-        this.needAccount = true;
-        awaitAccountCreate();
-      } else if (confirmed && !isAccountsEmpty) {
-        this.needAccount = false;
-      }
+    authorized: {
+      handler() {
+        this.handleAuthorizationDataChange();
+      },
+      immediate: true,
     },
 
-    accounts() {
-      const { confirmed, isAccountsEmpty, confirmAuth } = this;
-
-      if (confirmed && !isAccountsEmpty) {
-        confirmAuth();
-      }
+    accounts: {
+      handler() {
+        this.handleAuthorizationDataChange();
+      },
+      immediate: true,
     },
   },
 
@@ -105,6 +100,21 @@ export default {
       }
     },
 
+    handleAuthorizationDataChange() {
+      const {
+        authorized,
+        awaitAccountCreate,
+        isAccountsEmpty,
+        confirmAuth,
+      } = this;
+
+      if (authorized && isAccountsEmpty) {
+        awaitAccountCreate();
+      } else if (authorized && !isAccountsEmpty) {
+        confirmAuth();
+      }
+    },
+
     async handleAccountRequest() {
       this.openCreateAccountPage();
     },
@@ -126,8 +136,6 @@ export default {
     window.addEventListener('beforeunload', this.handleWindowClose);
 
     await this.sendReadyMessage();
-
-    this.handleAuthStatusChange();
   },
 
   components: {
