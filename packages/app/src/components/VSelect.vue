@@ -8,7 +8,8 @@
     <option 
       v-for="item in items" 
       :key="item" 
-      :value="item">{{ item }}</option>
+      :value="item"
+    >{{ item }}</option>
   </select>
 </template>
 

@@ -1,11 +1,17 @@
 <template>
   <v-frame :loading="!inited"> 
-    <form data-test="auth-form" @submit.prevent="emitSubmit">
+    <form 
+      data-test="auth-form" 
+      @submit.prevent="emitSubmit"
+    >
       <form-field>
         <message data-test="form-message">{{ message }}</message>
       </form-field>
       <form-field v-if="error">
-        <message :error="true" data-test="error-message">{{ error }}</message>
+        <message 
+          :error="true" 
+          data-test="error-message"
+        >{{ error }}</message>
       </form-field>
       <form-field v-if="showEmail">
         <v-input
@@ -25,7 +31,10 @@
           type="primary"
           data-test="submit-button"
         >{{ primaryButtonLabel }}</v-button>
-        <v-button @click="emitCancel" data-test="cancel-button">Close</v-button>
+        <v-button 
+          data-test="cancel-button" 
+          @click="emitCancel"
+        >Close</v-button>
       </form-controls>
     </form>
   </v-frame>  

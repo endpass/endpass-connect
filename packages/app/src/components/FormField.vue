@@ -2,7 +2,8 @@
   <label class="form-field">
     <p 
       v-if="label" 
-      class="form-field__label">
+      class="form-field__label"
+    >
       {{ label }}
     </p>
     <div class="form-field__content">

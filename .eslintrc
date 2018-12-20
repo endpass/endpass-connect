@@ -40,6 +40,10 @@
         "ignore": ["@", "fixtures", "mocks"]
       }
     ],
+    "vue/html-closing-bracket-newline": ["error", {
+      "singleline": "never",
+      "multiline": "always"
+    }],
     "vue/order-in-components": [
       "error",
       {

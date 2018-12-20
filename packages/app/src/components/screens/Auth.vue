@@ -100,6 +100,7 @@ export default {
         await this.auth(email);
         await this.awaitAuthConfirm();
       } catch (err) {
+        console.error(err);
         this.handleAuthError(err);
       }
     },

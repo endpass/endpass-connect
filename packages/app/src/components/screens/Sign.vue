@@ -42,6 +42,7 @@ export default {
         await this.processRequest(res.password);
         this.error = null;
       } catch (err) {
+        console.error(err);
         this.error = err.message;
       }
     },
