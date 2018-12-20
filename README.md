@@ -10,8 +10,8 @@
 Install library via `npm` of `yarn`.
 
 ```bash
-npm i --save endpass-connect
-yarn add endpass-connect
+npm i --save @endpass/connect
+yarn add @endpass/connect
 ```
 
 You don't need any dependencies like `web3`, Endpass Connect includes it out of
@@ -23,7 +23,7 @@ Create instance of class and use it in your application. You can know about
 options and methods in the [API section](#api).
 
 ```js
-import EndpassConnect from 'endpass-connect';
+import EndpassConnect from '@endpass/connect';
 
 const connect = new EndpassConnect({
   appUrl: 'http://connect.url',
