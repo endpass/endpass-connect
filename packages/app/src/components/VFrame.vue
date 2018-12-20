@@ -4,7 +4,8 @@
       <img 
         class="frame__logo" 
         src="../assets/logo.png" 
-        alt="Endpass">
+        alt="Endpass"
+      >
       Connect
     </header>
     <div class="frame__body">

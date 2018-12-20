@@ -1,9 +1,10 @@
 import { get } from 'lodash';
+import { utils } from 'web3';
 import Tx from 'ethereumjs-tx';
 import web3 from '@@/class/singleton/web3';
 import keystore from '@@/util/keystore';
 
-const { isAddress, bytesToHex } = web3.utils;
+const { isAddress, bytesToHex } = utils;
 
 /**
  * A Wallet represents a single Ethereum account that can send transactions
@@ -12,18 +13,18 @@ const { isAddress, bytesToHex } = web3.utils;
  * @param {Object} account Account object
  */
 export default class Wallet {
-  constructor(v3Keystore) {
-    const address = Wallet.normalizeAddress(v3Keystore.address);
+  constructor(v3) {
+    const address = Wallet.normalizeAddress(v3.address);
 
     if (!isAddress(address)) {
       throw new Error(`${address} is not valid Etherium address!`);
     }
 
-    const isPublic = !keystore.isV3(v3Keystore);
+    const isPublic = !keystore.isV3(v3);
 
     this.address = address;
-    this.index = get(v3Keystore, 'info.index');
-    this.v3 = isPublic ? null : v3Keystore;
+    this.index = get(v3, 'info.index');
+    this.v3 = isPublic ? null : v3;
     this.signStrategy = null;
     this.isPublic = isPublic;
   }
@@ -111,6 +112,25 @@ export default class Wallet {
     await tx.sign(privateKey);
 
     return `0x${tx.serialize().toString('hex')}`;
+  }
+
+  async sendSignedTransaction(transaction, password) {
+    const nonce = await this.getNextNonce();
+    const signedTx = await this.signTransaction(
+      {
+        ...transaction,
+        nonce,
+      },
+      password,
+    );
+
+    return new Promise((resolve, reject) => {
+      const sendEvent = web3.eth.sendSignedTransaction(signedTx);
+
+      sendEvent.then(receipt => resolve(receipt.transactionHash));
+      sendEvent.on('error', error => reject(error));
+      sendEvent.catch(error => reject(error));
+    });
   }
 
   /**

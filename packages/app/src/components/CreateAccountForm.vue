@@ -11,7 +11,10 @@
       >
         Create account
       </v-button>
-      <v-button @click="emitCancel" data-test="cancel-button">Close</v-button>
+      <v-button 
+        data-test="cancel-button" 
+        @click="emitCancel"
+      >Close</v-button>
     </form-controls>
   </v-frame>  
 </template>

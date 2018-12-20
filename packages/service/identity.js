@@ -1,9 +1,7 @@
-const IDENTITY_SERVER_URL = 'https://identity-dev.endpass.com/api/v1.1';
-
 class IdentityService {
   /* eslint-disable-next-line */
   getSettings() {
-    return fetch(`${IDENTITY_SERVER_URL}/settings`, {
+    return fetch(`${ENV.identity.url}/settings`, {
       method: 'GET',
       credentials: 'include',
     }).then(res => res.json());
@@ -11,7 +9,7 @@ class IdentityService {
 
   /* eslint-disable-next-line */
   getAccounts() {
-    return fetch(`${IDENTITY_SERVER_URL}/accounts`, {
+    return fetch(`${ENV.identity.url}/accounts`, {
       method: 'GET',
       credentials: 'include',
     }).then(res => res.json());
@@ -19,7 +17,7 @@ class IdentityService {
 
   /* eslint-disable-next-line */
   getAccount(address) {
-    return fetch(`${IDENTITY_SERVER_URL}/account/${address}`, {
+    return fetch(`${ENV.identity.url}/account/${address}`, {
       method: 'GET',
       credentials: 'include',
     }).then(res => res.json());
@@ -27,7 +25,7 @@ class IdentityService {
 
   /* eslint-disable-next-line */
   getAccountInfo(address) {
-    return fetch(`${IDENTITY_SERVER_URL}/account/${address}/info`, {
+    return fetch(`${ENV.identity.url}/account/${address}/info`, {
       method: 'GET',
       credentials: 'include',
     }).then(res => res.json());
@@ -35,7 +33,7 @@ class IdentityService {
 
   /* eslint-disable-next-line */
   auth(email) {
-    return fetch(`${IDENTITY_SERVER_URL}/auth`, {
+    return fetch(`${ENV.identity.url}/auth`, {
       method: 'POST',
       body: JSON.stringify({
         email,
@@ -69,7 +67,7 @@ class IdentityService {
         try {
           const res = await this.getAccounts();
 
-          if (res.length > 0) {
+          if (res.filter(address => !/^xpub/.test(address)).length > 0) {
             clearInterval(interval);
 
             return resolve(res);
