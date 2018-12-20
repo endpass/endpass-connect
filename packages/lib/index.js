@@ -1,4 +1,5 @@
 import omit from 'lodash/omit';
+import get from 'lodash/get';
 import Web3Dapp from 'web3-dapp';
 import { sendMessageToDialog, awaitDialogMessage } from '@@/util/message';
 import identityService from '@@/service/identity';
@@ -9,6 +10,7 @@ import {
   HOST_WINDOW_NAME,
   DIALOG_WINDOW_NAME,
   DAPP_WHITELISTED_METHODS,
+  DEFAULT_NETWORKS,
 } from '@@/constants';
 
 export default class Connect {
@@ -170,13 +172,14 @@ export default class Connect {
     await this.getAccountData();
 
     const dialog = await this.openApp('sign');
+    const { selectedAddress, networkVersion } = this.getSettings();
 
     sendMessageToDialog({
       target: dialog,
       data: {
         url: window.location.origin,
-        address: this.provider.settings.selectedAddress,
-        net: this.provider.settings.networkVersion,
+        address: selectedAddress,
+        net: networkVersion,
         request: this.currentRequest,
       },
     });
@@ -205,6 +208,10 @@ export default class Connect {
     }
   }
 
+  getSettings() {
+    return this.provider.settings;
+  }
+
   /**
    * Sets settings to current `web3` provider injected to page with `injectWeb3`
    * method
@@ -228,25 +235,26 @@ export default class Connect {
    * @param  {Window} target Target window object
    */
   async injectWeb3(target = window) {
-    if (!target.web3) {
-      const web3 = new Web3Dapp(this.provider);
+    const injection = {
+      ethereum: this.provider,
+    };
 
-      Object.assign(target, {
-        web3,
+    if (!target.web3) {
+      Object.assign(injection, {
+        web3: new Web3Dapp(this.provider),
       });
     }
 
-    Object.assign(target, {
-      ethereum: this.provider,
-    });
+    Object.assign(target, injection);
 
     this.createRequestProvider(target.web3);
   }
 
   createRequestProvider(web3) {
-    // TODO dont forget this!
+    const { networkVersion } = this.getSettings();
+
     this.requestProvider = new web3.providers.HttpProvider(
-      'https://eth-mainnet.endpass.com:2083',
+      get(DEFAULT_NETWORKS, `${networkVersion}.url[0]`),
     );
   }
 }

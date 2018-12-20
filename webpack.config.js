@@ -1,5 +1,10 @@
 const path = require('path');
+const webpack = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const { getEnv } = require('./env');
+
+const { NODE_ENV = 'development' } = process.env;
+const ENV = getEnv(NODE_ENV);
 
 module.exports = {
   entry: path.resolve(__dirname, './packages/lib/index.js'),
@@ -14,6 +19,9 @@ module.exports = {
   },
 
   plugins: [
+    new webpack.DefinePlugin({
+      ENV: JSON.stringify(ENV),
+    }),
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
       openAnalyzer: false,

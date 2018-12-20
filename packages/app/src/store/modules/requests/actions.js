@@ -1,11 +1,12 @@
 import Wallet from '@@/class/Wallet';
-import web3 from '@@/class/singleton/web3';
 import { sendMessageToOpener, awaitMessageFromOpener } from '@@/util/message';
 
-const awaitRequestMessage = async ({ commit }) => {
+const awaitRequestMessage = async ({ commit, dispatch }) => {
   const res = await awaitMessageFromOpener();
 
   if (res) {
+    await dispatch('setWeb3NetworkProvider', res.net);
+
     commit('setRequest', res);
   }
 };
@@ -60,23 +61,9 @@ const getSignedRequest = async ({ state, dispatch }, payload) => {
 
 const getSignedTransaction = async ({ state }, { password, wallet }) => {
   const { request } = state.request;
-  const nonce = await wallet.getNextNonce();
-  const signedTx = await wallet.signTransaction(
-    {
-      ...request.transaction,
-      nonce,
-    },
-    password,
-  );
+  const res = await wallet.sendSignedTransaction(request.transaction, password);
 
-  return new Promise((resolve, reject) => {
-    // TODO may be move it to the Wallet class
-    const sendEvent = web3.eth.sendSignedTransaction(signedTx);
-
-    sendEvent.then(receipt => resolve(receipt.transactionHash));
-    sendEvent.on('error', error => reject(error));
-    sendEvent.catch(error => reject(error));
-  });
+  return res;
 };
 
 const getSignedTypedDataRequest = async () => {

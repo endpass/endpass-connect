@@ -21,8 +21,7 @@
     "build:lib": "webpack --mode=production",
     "unit": "vue-cli-service test:unit",
     "unit:watch": "vue-cli-service test:unit --watch",
-    "format":
-      "prettier --write 'packages/**/*.{js,vue,json}' && eslint packages/**/*.{js,vue} --fix"
+    "format": "prettier --write 'packages/**/*.{js,vue,json}' && eslint packages/**/*.{js,vue} --fix"
   },
   "lint-staged": {
     "./packages/**/*.{js,vue,json}": ["prettier --write", "git add"],
