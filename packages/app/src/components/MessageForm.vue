@@ -1,61 +1,49 @@
 <template>
-  <div>    
-    <message>
-      You have not any account. Create one and you will be logged in.
-    </message>
+  <div> 
+    <form-field>
+      <message data-test="form-message">{{ message }}</message>
+    </form-field>
     <form-controls>
-      <v-button
-        type="primary"
-        data-test="submit-button"
-        @click="emitRequest"
-      >
-        Create account
-      </v-button>
       <v-button 
         :disabled="!closable"
         data-test="cancel-button" 
         @click="emitCancel"
       >Close</v-button>
-    </form-controls>  
-  </div>
+    </form-controls>
+  </div>  
 </template>
 
 <script>
-import VFrame from './VFrame.vue';
-import VInput from './VInput.vue';
 import VButton from './VButton.vue';
 import Message from './Message.vue';
+import FormField from './FormField.vue';
 import FormControls from './FormControls.vue';
 
 export default {
-  name: 'CreateAccountForm',
+  name: 'MessageForm',
 
   props: {
+    message: {
+      type: String,
+      required: true,
+    },
+
     closable: {
       type: Boolean,
       default: true,
     },
   },
 
-  data: () => ({
-    email: '',
-  }),
-
   methods: {
-    emitRequest() {
-      this.$emit('request');
-    },
-
     emitCancel() {
       this.$emit('cancel');
     },
   },
 
   components: {
-    VFrame,
     VButton,
-    VInput,
     Message,
+    FormField,
     FormControls,
   },
 };

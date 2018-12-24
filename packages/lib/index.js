@@ -1,8 +1,12 @@
 import omit from 'lodash/omit';
 import get from 'lodash/get';
 import Web3Dapp from 'web3-dapp';
-import { sendMessageToDialog, awaitDialogMessage } from '@@/util/message';
-import identityService from '@@/service/identity';
+import {
+  sendMessageToDialog,
+  sendMessageToBridge,
+  awaitDialogMessage,
+  awaitBridgeMessage,
+} from '@@/util/message';
 import Emmiter from '@@/class/Emmiter';
 import InpageProvider from '@@/class/InpageProvider';
 import {
@@ -30,6 +34,9 @@ export default class Connect {
     this.currentRequest = null;
     this.queueInterval = null;
     this.queue = [];
+
+    // Bridge
+    this.bridge = this.injectIframe();
 
     if (subscribe) {
       this.setupEmmiterEvents();
@@ -82,43 +89,67 @@ export default class Connect {
     this.emmiter.on(INPAGE_EVENTS.SETTINGS, this.handleRequest.bind(this));
   }
 
+  injectIframe() {
+    const iframeElement = document.createElement('iframe');
+
+    iframeElement.src = this.getConnectUrl('bridge');
+    iframeElement.width = 0;
+    iframeElement.height = 0;
+
+    Object.assign(iframeElement.style, {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+    });
+
+    document.body.appendChild(iframeElement);
+
+    return iframeElement;
+  }
+
+  async checkBridgeReady() {
+    return new Promise(resolve => {
+      let interval;
+
+      awaitBridgeMessage().then(res => {
+        clearInterval(interval);
+        return resolve(res);
+      });
+
+      interval = setInterval(() => {
+        sendMessageToBridge({
+          target: this.bridge.contentWindow,
+          data: {
+            method: 'check_ready',
+          },
+        });
+      }, 250);
+    });
+  }
+
   /* eslint-disable-next-line */
   async getUserSettings() {
-    try {
-      const res = await identityService.getSettings();
+    await this.checkBridgeReady();
 
-      return res;
-    } catch (err) {
-      throw new Error('User not autorized!');
-    }
+    sendMessageToBridge({
+      target: this.bridge.contentWindow,
+      data: {
+        method: 'get_accounts',
+      },
+    });
+
+    const res = await awaitBridgeMessage();
+
+    return res;
   }
-
-  /* eslint-disable */
-  async getFirstNotPublicAccountAddress() {
-    const accounts = await identityService.getAccounts();
-
-    for (const account of accounts) {
-      const res = await identityService.getAccountInfo(account);
-
-      if (res.type !== 'PublicAccount') {
-        return account;
-      }
-    }
-
-    return null;
-  }
-  /* eslint-enable */
 
   /* eslint-disable-next-line */
   async getAccountData() {
     try {
       const settings = await this.getUserSettings();
-      const activeAccount =
-        settings.lastActiveAccount ||
-        (await this.getFirstNotPublicAccountAddress());
 
       return {
-        activeAccount,
+        activeAccount: settings.lastActiveAccount,
         activeNet: settings.net || 1,
       };
     } catch (err) {
@@ -165,6 +196,14 @@ export default class Connect {
     await awaitDialogMessage();
 
     // TODO format returning value here for more transparency
+    return awaitDialogMessage();
+  }
+
+  async logout() {
+    this.openApp();
+
+    await awaitDialogMessage();
+
     return awaitDialogMessage();
   }
 

@@ -1,83 +1,113 @@
-class IdentityService {
-  /* eslint-disable-next-line */
-  getSettings() {
-    return fetch(`${ENV.identity.url}/settings`, {
-      method: 'GET',
-      credentials: 'include',
-    }).then(res => res.json());
-  }
+import axios from 'axios';
 
-  /* eslint-disable-next-line */
-  getAccounts() {
-    return fetch(`${ENV.identity.url}/accounts`, {
-      method: 'GET',
-      credentials: 'include',
-    }).then(res => res.json());
-  }
+const request = {
+  get: url =>
+    axios
+      .get(url, {
+        withCredentials: true,
+      })
+      .then(({ data }) => data),
 
-  /* eslint-disable-next-line */
-  getAccount(address) {
-    return fetch(`${ENV.identity.url}/account/${address}`, {
-      method: 'GET',
-      credentials: 'include',
-    }).then(res => res.json());
-  }
+  post: (url, body) => axios.post(url, body).then(({ data }) => data),
+};
 
-  /* eslint-disable-next-line */
-  getAccountInfo(address) {
-    return fetch(`${ENV.identity.url}/account/${address}/info`, {
-      method: 'GET',
-      credentials: 'include',
-    }).then(res => res.json());
-  }
+export const getSettings = () => request.get(`/identity/api/v1.1/settings`);
 
-  /* eslint-disable-next-line */
-  auth(email) {
-    return fetch(`${ENV.identity.url}/auth`, {
-      method: 'POST',
-      body: JSON.stringify({
-        email,
-      }),
+export const getOtpSettings = () =>
+  request.get(`/identity/api/v1.1/settings/otp`);
+
+export const getAccounts = () => request.get(`/identity/api/v1.1/accounts`);
+
+export const getAccount = address =>
+  request.get(`/identity/api/v1.1/account/${address}`);
+
+export const getAccountInfo = address =>
+  request.get(`/identity/api/v1.1/account/${address}/info`);
+
+export const auth = (email, redirectUrl) => {
+  const requestUrl = redirectUrl
+    ? `/identity/api/v1.1/auth?redirect_uri=${encodeURIComponent(redirectUrl)}`
+    : `/identity/api/v1.1/auth`;
+
+  return request
+    .post(requestUrl, {
+      email,
     })
-      .then(res => res.json())
-      .then(res => {
-        if (!res.success) throw new Error(res.message);
+    .then(res => {
+      if (!res.success) throw new Error(res.message);
 
-        return res.success;
-      });
-  }
+      return res;
+    });
+};
 
-  awaitAuthConfirm() {
-    return new Promise(resolve => {
-      const interval = setInterval(async () => {
-        try {
-          await this.getAccounts();
+export const otpAuth = (email, code) =>
+  request
+    .post(`/identity/api/v1.1/auth/token`, {
+      challenge_type: 'otp',
+      email,
+      code,
+    })
+    .then(res => {
+      if (!res.success) throw new Error(res.message);
 
+      return res;
+    });
+
+export const awaitAuthConfirm = () =>
+  new Promise(resolve => {
+    const interval = setInterval(async () => {
+      try {
+        await getAccounts();
+
+        clearInterval(interval);
+
+        return resolve();
+      } catch (err) {}
+    }, 1500);
+  });
+
+export const logout = () => request.post('/identity/api/v1.1/logout');
+
+export const awaitLogoutConfirm = () =>
+  new Promise(resolve => {
+    const interval = setInterval(async () => {
+      try {
+        await getAccounts();
+      } catch (err) {
+        clearInterval(interval);
+
+        return resolve();
+      }
+    }, 1500);
+  });
+
+export const awaitAccountCreate = () =>
+  new Promise((resolve, reject) => {
+    const interval = setInterval(async () => {
+      try {
+        const res = await getAccounts();
+
+        if (res.filter(address => !/^xpub/.test(address)).length > 0) {
           clearInterval(interval);
 
-          return resolve();
-        } catch (err) {}
-      }, 1500);
-    });
-  }
-
-  awaitAccountCreate() {
-    return new Promise((resolve, reject) => {
-      const interval = setInterval(async () => {
-        try {
-          const res = await this.getAccounts();
-
-          if (res.filter(address => !/^xpub/.test(address)).length > 0) {
-            clearInterval(interval);
-
-            return resolve(res);
-          }
-        } catch (err) {
-          return reject(err);
+          return resolve(res);
         }
-      }, 1500);
-    });
-  }
-}
+      } catch (err) {
+        return reject(err);
+      }
+    }, 1500);
+  });
 
-export default new IdentityService();
+export default {
+  getSettings,
+  getOtpSettings,
+  getAccount,
+  getAccounts,
+  getAccountInfo,
+  auth,
+  otpAuth,
+  awaitAuthConfirm,
+  logout,
+  awaitLogoutConfirm,
+  awaitAccountCreate,
+};

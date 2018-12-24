@@ -4,6 +4,7 @@ import getters from './getters';
 
 const state = {
   linkSent: false,
+  otpEmail: null,
   accounts: null,
 };
 

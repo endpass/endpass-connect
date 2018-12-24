@@ -1,16 +1,20 @@
 <template>
-  <sign-form 
-    :accounts="accounts"
-    :loading="loading"
-    :request="request"
-    :error="error"
-    @cancel="handleSignCancel"
-    @submit="handleSignSubmit"
-  />
+  <v-frame :loading="!request">    
+    <sign-form 
+      :accounts="accounts"
+      :loading="loading"
+      :request="request"
+      :error="error"
+      :closable="isDialog"
+      @cancel="handleSignCancel"
+      @submit="handleSignSubmit"
+    />
+  </v-frame> 
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
+import VFrame from '../VFrame.vue';
 import SignForm from '../SignForm.vue';
 
 export default {
@@ -27,10 +31,12 @@ export default {
       loading: state => state.core.loading,
       request: state => state.requests.request,
     }),
+    ...mapGetters(['isDialog']),
   },
 
   methods: {
     ...mapActions([
+      'init',
       'awaitRequestMessage',
       'processRequest',
       'cancelRequest',
@@ -57,15 +63,19 @@ export default {
   },
 
   async created() {
-    window.addEventListener('beforeunload', this.handleWindowClose);
+    await this.init();
 
-    await this.sendReadyMessage();
+    if (this.isDialog) {
+      window.addEventListener('beforeunload', this.handleWindowClose);
 
-    this.awaitRequestMessage();
+      await this.sendReadyMessage();
+      this.awaitRequestMessage();
+    }
   },
 
   components: {
     SignForm,
+    VFrame,
   },
 };
 </script>

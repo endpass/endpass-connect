@@ -25,6 +25,7 @@ export default {
 <style lang="postcss">
 .message {
   font-size: 1em;
+  line-height: 1.5;
 
   &.error {
     color: #f00;
