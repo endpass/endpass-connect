@@ -36,7 +36,7 @@ export default class Connect {
     this.queue = [];
 
     // Bridge
-    this.bridge = this.injectIframe();
+    this.bridge = this.injectBridge();
 
     if (subscribe) {
       this.setupEmmiterEvents();
@@ -89,7 +89,7 @@ export default class Connect {
     this.emmiter.on(INPAGE_EVENTS.SETTINGS, this.handleRequest.bind(this));
   }
 
-  injectIframe() {
+  injectBridge() {
     const iframeElement = document.createElement('iframe');
 
     iframeElement.src = this.getConnectUrl('bridge');
@@ -157,6 +157,60 @@ export default class Connect {
     }
   }
 
+  /**
+   * Open application on auth screen and waits result (success of failure)
+   * @returns {Promise<Object>} Auth result, check `status` property to
+   *  know about result
+   */
+  async auth(redirectUrl) {
+    const dialog = await this.openApp('auth');
+
+    sendMessageToDialog({
+      target: dialog,
+      data: {
+        url: redirectUrl || null,
+      },
+    });
+
+    // TODO format returning value here for more transparency
+    const res = awaitDialogMessage();
+
+    return res;
+  }
+
+  async logout() {
+    this.openApp();
+
+    await awaitDialogMessage();
+
+    return awaitDialogMessage();
+  }
+
+  async sign() {
+    // TODO ???
+    await this.getAccountData();
+
+    const dialog = await this.openApp('sign');
+    const { selectedAddress, networkVersion } = this.getSettings();
+
+    sendMessageToDialog({
+      target: dialog,
+      data: {
+        url: window.location.origin,
+        address: selectedAddress,
+        net: networkVersion,
+        request: this.currentRequest,
+      },
+    });
+
+    const signResultMessage = await awaitDialogMessage();
+
+    // TODO handle cases if status === false and throw error
+    return omit(signResultMessage.data, ['source']);
+  }
+
+  // "Normal methods" which dont need refactoring
+
   async openApp(method) {
     const pos = {
       x: window.innerWidth / 2 - 200,
@@ -183,50 +237,6 @@ export default class Connect {
     await awaitDialogMessage();
 
     return dialog;
-  }
-
-  /**
-   * Open application on auth screen and waits result (success of failure)
-   * @returns {Promise<Object>} Auth result, check `status` property to
-   *  know about result
-   */
-  async auth() {
-    this.openApp('auth');
-
-    await awaitDialogMessage();
-
-    // TODO format returning value here for more transparency
-    return awaitDialogMessage();
-  }
-
-  async logout() {
-    this.openApp();
-
-    await awaitDialogMessage();
-
-    return awaitDialogMessage();
-  }
-
-  async sign() {
-    await this.getAccountData();
-
-    const dialog = await this.openApp('sign');
-    const { selectedAddress, networkVersion } = this.getSettings();
-
-    sendMessageToDialog({
-      target: dialog,
-      data: {
-        url: window.location.origin,
-        address: selectedAddress,
-        net: networkVersion,
-        request: this.currentRequest,
-      },
-    });
-
-    const signMessage = await awaitDialogMessage();
-
-    // TODO handle cases if status === false and throw error
-    return omit(signMessage.data, ['source']);
   }
 
   async sendToNetwork() {

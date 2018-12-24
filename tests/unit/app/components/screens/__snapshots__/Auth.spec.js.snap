@@ -1,3 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Auth render should correctly render Auth component 1`] = `<auth-form-stub inited="true" showemail="true" message="Log in to your Endpass account to access site actions"></auth-form-stub>`;
+exports[`Auth render should correctly render Auth component 1`] = `
+<v-frame-stub>
+  <auth-form-stub inited="true" closable="true"></auth-form-stub>
+</v-frame-stub>
+`;

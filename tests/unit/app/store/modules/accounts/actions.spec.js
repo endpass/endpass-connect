@@ -1,4 +1,4 @@
-import IdentityService from '@@/service/identity';
+import IdentityService from '@/service/identity';
 import accountsActions from '@@/app/src/store/modules/accounts/actions';
 
 describe('accounts actions', () => {

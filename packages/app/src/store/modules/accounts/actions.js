@@ -1,11 +1,23 @@
 import get from 'lodash/get';
-import IdentityService from '@@/service/identity';
+import IdentityService from '@/service/identity';
+import { awaitMessageFromOpener } from '@@/util/message';
 
-const auth = async ({ commit }, email) => {
+const awaitAuthMessage = async ({ commit }) => {
+  const res = await awaitMessageFromOpener();
+
+  if (res) {
+    commit('setAuthParams', res);
+  }
+};
+
+const auth = async ({ state, commit }, email) => {
   commit('changeLoadingStatus', true);
 
   try {
-    const res = await IdentityService.auth(email);
+    const res = await IdentityService.auth(
+      email,
+      get(state, 'authParams.redirectUrl'),
+    );
 
     if (!res.success) throw new Error('Auth failed!');
 
@@ -23,9 +35,10 @@ const auth = async ({ commit }, email) => {
   }
 };
 
-const confirmAuthViaOtp = async ({ commit, dispatch }, { email, code }) => {
+const confirmAuthViaOtp = async (ctx, { email, code }) => {
   const res = await IdentityService.otpAuth(email, code);
 
+  // TODO: solve problem with "auto-otp-auth"
   console.log('otp auth result', res);
 };
 
@@ -139,4 +152,5 @@ export default {
   logout,
   cancelLogout,
   awaitLogoutConfirm,
+  awaitAuthMessage,
 };
