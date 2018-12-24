@@ -1,5 +1,9 @@
 import isEmpty from 'lodash/isEmpty';
 
+const setAuthParams = (state, params) => {
+  state.authParams = params;
+};
+
 const setAuthStatus = (state, status) => {
   state.authorized = status;
 };
@@ -17,6 +21,7 @@ const setAccounts = (state, accounts) => {
 };
 
 export default {
+  setAuthParams,
   setAuthStatus,
   setOtpEmail,
   setAccounts,

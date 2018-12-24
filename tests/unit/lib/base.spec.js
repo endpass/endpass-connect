@@ -1,7 +1,6 @@
 import Connect from '@@/lib';
 import { INPAGE_EVENTS, DIALOG_WINDOW_NAME } from '@@/constants';
 import { awaitDialogMessage, sendMessageToDialog } from '@@/util/message';
-import IdentityService from '@@/service/identity';
 
 describe('Connect class', () => {
   beforeEach(() => {
@@ -221,35 +220,35 @@ describe('Connect class', () => {
       });
     });
 
-    describe('getAccountData', () => {
-      it('should request accounts by identity service', async () => {
-        expect.assertions(1);
-
-        const accounts = ['0x0', '0x1'];
-
-        IdentityService.getAccounts.mockResolvedValueOnce(accounts);
-        connect.getUserSettings = jest.fn().mockResolvedValueOnce({
-          lastActiveAccount: '0x0',
-        });
-
-        const res = await connect.getAccountData();
-
-        expect(res).toEqual({
-          activeAccount: accounts[0],
-          activeNet: 1,
-        });
-      });
-
-      it('should throw error', async done => {
-        IdentityService.getAccounts.mockRejectedValueOnce();
-
-        try {
-          await connect.getAccountData();
-        } catch (err) {
-          done();
-        }
-      });
-    });
+    //     describe('getAccountData', () => {
+    //       it('should request accounts by identity service', async () => {
+    //         expect.assertions(1);
+    //
+    //         const accounts = ['0x0', '0x1'];
+    //
+    //         IdentityService.getAccounts.mockResolvedValueOnce(accounts);
+    //         connect.getUserSettings = jest.fn().mockResolvedValueOnce({
+    //           lastActiveAccount: '0x0',
+    //         });
+    //
+    //         const res = await connect.getAccountData();
+    //
+    //         expect(res).toEqual({
+    //           activeAccount: accounts[0],
+    //           activeNet: 1,
+    //         });
+    //       });
+    //
+    //       it('should throw error', async done => {
+    //         IdentityService.getAccounts.mockRejectedValueOnce();
+    //
+    //         try {
+    //           await connect.getAccountData();
+    //         } catch (err) {
+    //           done();
+    //         }
+    //       });
+    //     });
 
     describe('openApp', () => {
       it('should open app window', () => {

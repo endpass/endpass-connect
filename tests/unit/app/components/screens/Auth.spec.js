@@ -44,7 +44,6 @@ describe('Auth', () => {
     };
     store = new Vuex.Store(storeData);
     wrapper = shallowMount(Auth, {
-      stubs: ['auth-form'],
       localVue,
       store,
     });

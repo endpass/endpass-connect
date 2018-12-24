@@ -32,7 +32,7 @@
         Submit code
       </v-button>
       <v-button 
-        :disabled"!closable" 
+        :disabled="!closable" 
         data-test="cancel-button" 
         @click="emitCancel"
       >Close</v-button>

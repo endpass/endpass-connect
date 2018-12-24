@@ -93,6 +93,7 @@ export default {
       'cancelAuth',
       'confirmAuth',
       'confirmAuthViaOtp',
+      'awaitAuthMessage',
       'awaitAuthConfirm',
       'awaitAccountCreate',
       'sendReadyMessage',
@@ -160,6 +161,7 @@ export default {
       window.addEventListener('beforeunload', this.handleWindowClose);
 
       await this.sendReadyMessage();
+      this.awaitAuthMessage();
     }
   },
 
