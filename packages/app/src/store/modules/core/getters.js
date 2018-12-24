@@ -1,1 +1,5 @@
-export default {};
+export default {
+  isDialog() {
+    return !!window.opener;
+  },
+};

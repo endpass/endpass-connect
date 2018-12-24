@@ -1,4 +1,4 @@
-import identityService from '@@/service/identity';
+import IdentityService from '@@/service/identity';
 import accountsActions from '@@/app/src/store/modules/accounts/actions';
 
 describe('accounts actions', () => {
@@ -16,7 +16,7 @@ describe('accounts actions', () => {
     it('should auth user and change link status', async () => {
       expect.assertions(4);
 
-      identityService.auth.mockResolvedValueOnce(true);
+      IdentityService.auth.mockResolvedValueOnce(true);
 
       await accountsActions.auth({ commit }, 'foo@bar.baz');
 
@@ -29,7 +29,7 @@ describe('accounts actions', () => {
     it('should throw error if auth response is falsy', async done => {
       expect.assertions(3);
 
-      identityService.auth.mockResolvedValueOnce(false);
+      IdentityService.auth.mockResolvedValueOnce(false);
 
       try {
         await accountsActions.auth({ commit }, 'foo@bar.baz');
@@ -46,7 +46,7 @@ describe('accounts actions', () => {
 
       const error = new Error();
 
-      identityService.auth.mockRejectedValueOnce(error);
+      IdentityService.auth.mockRejectedValueOnce(error);
 
       try {
         await accountsActions.auth({ commit }, 'foo@bar.baz');
@@ -94,7 +94,7 @@ describe('accounts actions', () => {
 
       const accounts = ['0x0', '0x1'];
 
-      identityService.getAccounts.mockResolvedValueOnce(accounts);
+      IdentityService.getAccounts.mockResolvedValueOnce(accounts);
 
       await accountsActions.getAccounts({ commit });
 
@@ -104,7 +104,7 @@ describe('accounts actions', () => {
     it('should set empty accounts on error', async () => {
       expect.assertions(1);
 
-      identityService.getAccounts.mockRejectedValueOnce();
+      IdentityService.getAccounts.mockRejectedValueOnce();
 
       await accountsActions.getAccounts({ commit });
 
@@ -120,11 +120,11 @@ describe('accounts actions', () => {
         address: '0x0',
       };
 
-      identityService.getAccount.mockResolvedValueOnce(account);
+      IdentityService.getAccount.mockResolvedValueOnce(account);
 
       const res = await accountsActions.getAccount(null, '0x0');
 
-      expect(identityService.getAccount).toBeCalledWith('0x0');
+      expect(IdentityService.getAccount).toBeCalledWith('0x0');
       expect(res).toEqual(account);
     });
   });
@@ -133,7 +133,7 @@ describe('accounts actions', () => {
     it('should await auth confirm and then request accounts', async () => {
       expect.assertions(1);
 
-      identityService.awaitAuthConfirm.mockResolvedValueOnce(true);
+      IdentityService.awaitAuthConfirm.mockResolvedValueOnce(true);
 
       await accountsActions.awaitAuthConfirm({ dispatch });
 

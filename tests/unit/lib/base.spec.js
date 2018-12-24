@@ -1,7 +1,7 @@
 import Connect from '@@/lib';
 import { INPAGE_EVENTS, DIALOG_WINDOW_NAME } from '@@/constants';
 import { awaitDialogMessage, sendMessageToDialog } from '@@/util/message';
-import identityService from '@@/service/identity';
+import IdentityService from '@@/service/identity';
 
 describe('Connect class', () => {
   beforeEach(() => {
@@ -227,7 +227,7 @@ describe('Connect class', () => {
 
         const accounts = ['0x0', '0x1'];
 
-        identityService.getAccounts.mockResolvedValueOnce(accounts);
+        IdentityService.getAccounts.mockResolvedValueOnce(accounts);
         connect.getUserSettings = jest.fn().mockResolvedValueOnce({
           lastActiveAccount: '0x0',
         });
@@ -241,7 +241,7 @@ describe('Connect class', () => {
       });
 
       it('should throw error', async done => {
-        identityService.getAccounts.mockRejectedValueOnce();
+        IdentityService.getAccounts.mockRejectedValueOnce();
 
         try {
           await connect.getAccountData();

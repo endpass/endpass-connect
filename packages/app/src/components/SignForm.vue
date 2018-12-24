@@ -1,64 +1,62 @@
 <template>  
-  <v-frame :loading="!request">
-    <form 
-      data-test="sign-form" 
-      @submit.prevent="emitSubmit"
-    >
-      <form-field v-if="requesterUrl">
-        <a 
-          :href="requesterUrl" 
-          data-test="requester-url"
-        >{{ requesterUrl }}</a> requests sign action.
-      </form-field>
-      <form-field label="Requires request sign by:">
-        <message 
-          :ellipsis="true" 
-          data-test="account-address"
-        >
-          {{ account }}
-        </message>
-      </form-field>
-      <form-field v-if="error">
-        <message 
-          :error="true" 
-          data-test="error-message"
-        >{{ error }}</message>
-      </form-field>
-      <form-field label="Your account password:">
-        <v-input 
-          v-model="password" 
-          :autofocus="true" 
-          type="password" 
-          placeholder="Enter your password..."
-        />
-      </form-field>
-      <form-field 
-        v-if="requestBody" 
-        label="Request data:"
+  <form 
+    data-test="sign-form" 
+    @submit.prevent="emitSubmit"
+  >
+    <form-field v-if="requesterUrl">
+      <a 
+        :href="requesterUrl" 
+        data-test="requester-url"
+      >{{ requesterUrl }}</a> requests sign action.
+    </form-field>
+    <form-field label="Requires request sign by:">
+      <message 
+        :ellipsis="true" 
+        data-test="account-address"
       >
-        <v-code data-test="request-body">
-          {{ JSON.stringify(requestBody, null, 2) }}
-        </v-code>
-      </form-field>
-      <form-controls>
-        <v-button
-          :disabled="loading || !password"
-          :submit="true"
-          type="primary"
-          data-test="submit-button"
-        >{{ primaryButtonLabel }}</v-button>
-        <v-button 
-          data-test="cancel-button" 
-          @click="emitCancel"
-        >Close</v-button>
-      </form-controls>      
-    </form>
-  </v-frame>
+        {{ account }}
+      </message>
+    </form-field>
+    <form-field v-if="error">
+      <message 
+        :error="true" 
+        data-test="error-message"
+      >{{ error }}</message>
+    </form-field>
+    <form-field label="Your account password:">
+      <v-input 
+        v-model="password" 
+        :autofocus="true" 
+        type="password" 
+        placeholder="Enter your password..."
+      />
+    </form-field>
+    <form-field 
+      v-if="requestBody" 
+      label="Request data:"
+    >
+      <v-code data-test="request-body">
+        {{ JSON.stringify(requestBody, null, 2) }}
+      </v-code>
+    </form-field>
+    <form-controls>
+      <v-button
+        :disabled="loading || !password"
+        :submit="true"
+        type="primary"
+        data-test="submit-button"
+      >{{ primaryButtonLabel }}</v-button>
+      <v-button 
+        :disabled="!closable"
+        data-test="cancel-button" 
+        @click="emitCancel"
+      >Close</v-button>
+    </form-controls>      
+  </form>  
 </template>
 
 <script>
 import { get } from 'lodash';
-import VFrame from './VFrame.vue';
 import VInput from './VInput.vue';
 import VSelect from './VSelect.vue';
 import VCode from './VCode.vue';
@@ -89,6 +87,11 @@ export default {
     accounts: {
       type: Array,
       default: () => [],
+    },
+
+    closable: {
+      type: Boolean,
+      default: true,
     },
   },
 
@@ -130,7 +133,6 @@ export default {
   },
 
   components: {
-    VFrame,
     VButton,
     VInput,
     VSelect,
