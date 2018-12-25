@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreateAccountForm render should correctly render CreateAccountForm component 1`] = `
+<div>
+  <message-stub>
+    You have not any account. Create one and you will be logged in.
+  </message-stub>
+  <form-controls-stub>
+    <v-button-stub type="primary" data-test="submit-button">
+      Create account
+    </v-button-stub>
+    <v-button-stub data-test="cancel-button">Close</v-button-stub>
+  </form-controls-stub>
+</div>
+`;

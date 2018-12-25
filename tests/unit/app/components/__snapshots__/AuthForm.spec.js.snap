@@ -1,52 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AuthForm render should change submit button text if loading and make it disabled 1`] = `
-<v-frame-stub loading="true">
-  <form data-test="auth-form">
-    <form-field-stub>
-      <message-stub data-test="form-message">foo</message-stub>
-    </form-field-stub>
-    <!---->
-    <form-field-stub>
-      <v-input-stub placeholder="Enter your email..." name="email" value="" autofocus="true" data-test="email-input"></v-input-stub>
-    </form-field-stub>
-    <form-controls-stub>
-      <v-button-stub disabled="true" type="primary" submit="true" data-test="submit-button">Loading...</v-button-stub>
-      <v-button-stub data-test="cancel-button">Close</v-button-stub>
-    </form-controls-stub>
-  </form>
-</v-frame-stub>
+<form data-test="auth-form" message="foo">
+  <form-field-stub>
+    <message-stub data-test="form-message">Log in to your Endpass account to access site actions</message-stub>
+  </form-field-stub>
+  <!---->
+  <form-field-stub>
+    <v-input-stub placeholder="Enter your email..." name="email" value="" invalid="true" autofocus="true" data-test="email-input"></v-input-stub>
+  </form-field-stub>
+  <form-controls-stub>
+    <v-button-stub disabled="true" type="primary" submit="true" data-test="submit-button">Loading...</v-button-stub>
+    <v-button-stub data-test="cancel-button">Close</v-button-stub>
+  </form-controls-stub>
+</form>
 `;
 
 exports[`AuthForm render should correctly render AuthForm component 1`] = `
-<v-frame-stub>
-  <form data-test="auth-form">
-    <form-field-stub>
-      <message-stub data-test="form-message">foo</message-stub>
-    </form-field-stub>
-    <!---->
-    <form-field-stub>
-      <v-input-stub placeholder="Enter your email..." name="email" value="" autofocus="true" data-test="email-input"></v-input-stub>
-    </form-field-stub>
-    <form-controls-stub>
-      <v-button-stub disabled="true" type="primary" submit="true" data-test="submit-button">Log in</v-button-stub>
-      <v-button-stub data-test="cancel-button">Close</v-button-stub>
-    </form-controls-stub>
-  </form>
-</v-frame-stub>
-`;
-
-exports[`AuthForm render should not render form if loading passed as true 1`] = `
-<div class="frame">
-  <header class="frame__header"><img src="../assets/logo.png" alt="Endpass" class="frame__logo">
-    Connect
-  </header>
-  <div class="frame__body">
-    <div class="loading-screen">
-      <div class="loading-screen__spinner">
-        <div class="spinner"></div>
-      </div>
-    </div>
-  </div>
-</div>
+<form data-test="auth-form">
+  <form-field-stub>
+    <message-stub data-test="form-message">Log in to your Endpass account to access site actions</message-stub>
+  </form-field-stub>
+  <!---->
+  <form-field-stub>
+    <v-input-stub placeholder="Enter your email..." name="email" value="" invalid="true" autofocus="true" data-test="email-input"></v-input-stub>
+  </form-field-stub>
+  <form-controls-stub>
+    <v-button-stub disabled="true" type="primary" submit="true" data-test="submit-button">Log in</v-button-stub>
+    <v-button-stub data-test="cancel-button">Close</v-button-stub>
+  </form-controls-stub>
+</form>
 `;

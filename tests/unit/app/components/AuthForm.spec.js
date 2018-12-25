@@ -8,7 +8,6 @@ describe('AuthForm', () => {
     beforeEach(() => {
       wrapper = shallowMount(AuthForm, {
         propsData: {
-          message: 'foo',
           inited: true,
         },
       });
@@ -16,20 +15,8 @@ describe('AuthForm', () => {
 
     it('should correctly render AuthForm component', () => {
       expect(wrapper.name()).toBe('AuthForm');
-      expect(wrapper.find('[data-test=form-message]').text()).toBe('foo');
       expect(wrapper.find('[data-test=email-input]').exists()).toBe(true);
       expect(wrapper.html()).toMatchSnapshot();
-    });
-
-    it('should not render email input if showEmail is falsy', () => {
-      wrapper = shallowMount(AuthForm, {
-        propsData: {
-          message: 'foo',
-          showEmail: false,
-        },
-      });
-
-      expect(wrapper.find('[data-test=email-input]').exists()).toBe(false);
     });
 
     it('should render error', () => {
@@ -56,18 +43,6 @@ describe('AuthForm', () => {
       expect(wrapper.html()).toMatchSnapshot();
       expect(submitButton.text()).toBe('Loading...');
       expect(submitButton.attributes().disabled).toBe('true');
-    });
-
-    it('should not render form if loading passed as true', () => {
-      wrapper = mount(AuthForm, {
-        propsData: {
-          message: 'foo',
-          inited: false,
-        },
-      });
-
-      expect(wrapper.html()).toMatchSnapshot();
-      expect(wrapper.find('form').exists()).toBe(false);
     });
   });
 

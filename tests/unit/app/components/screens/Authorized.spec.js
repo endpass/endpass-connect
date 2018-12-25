@@ -20,7 +20,11 @@ describe('Authorized', () => {
         loading: false,
       },
       actions: {
+        init: jest.fn(),
         sendReadyMessage: jest.fn(),
+      },
+      getters: {
+        isDialog: jest.fn(() => true),
       },
     };
     accountsModule = {
@@ -29,11 +33,8 @@ describe('Authorized', () => {
         accounts: null,
       },
       actions: {
-        auth: jest.fn(),
-        cancelAuth: jest.fn(),
-        confirmAuth: jest.fn(),
-        awaitAuthConfirm: jest.fn(),
-        awaitAccountCreate: jest.fn(),
+        logout: jest.fn(),
+        cancelLogout: jest.fn(),
       },
     };
     storeData = {
@@ -53,6 +54,36 @@ describe('Authorized', () => {
     it('should correctly render Authorized component', () => {
       expect(wrapper.name()).toBe('Authorized');
       expect(wrapper.html()).toMatchSnapshot();
+    });
+
+    it('should render logout form by default', () => {
+      expect(wrapper.find('logout-form-stub').exists()).toBe(true);
+      expect(wrapper.html()).toMatchSnapshot();
+    });
+  });
+
+  describe('behavior', () => {
+    it('should init and send ready message if opened in dialog', async () => {
+      expect.assertions(2);
+
+      await global.flushPromises();
+
+      expect(coreModule.actions.init).toBeCalled();
+      expect(coreModule.actions.sendReadyMessage).toBeCalled();
+    });
+
+    it('should call logout action on logout form submit', () => {
+      // TODO Have troubles with triggering event from stub, solve it when possivble
+      wrapper.vm.handleLogoutSubmit();
+
+      expect(accountsModule.actions.logout).toBeCalled();
+    });
+
+    it('should call cancel logout action on logout form cancel', () => {
+      // TODO Have troubles with triggering event from stub, solve it when possivble
+      wrapper.vm.handleLogoutCancel();
+
+      expect(accountsModule.actions.cancelLogout).toBeCalled();
     });
   });
 });

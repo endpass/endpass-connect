@@ -22,6 +22,7 @@ describe('core actions', () => {
 
       expect(sendMessageToOpener).toBeCalledWith({
         data,
+        from: 'dialog',
       });
     });
   });

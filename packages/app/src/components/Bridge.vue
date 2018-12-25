@@ -9,7 +9,7 @@ export default {
   name: 'Bridge',
 
   methods: {
-    ...mapActions(['subscribeOnBridge', 'sendMessage']),
+    ...mapActions(['subscribeOnBridge']),
   },
 
   created() {
