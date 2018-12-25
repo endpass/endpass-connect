@@ -266,12 +266,25 @@ describe('Connect class', () => {
     });
 
     describe('auth', () => {
-      it('should open auth dialog and await dialog message', () => {
-        connect.openApp = jest.fn();
+      it('should open auth dialog and await dialog message', async () => {
+        expect.assertions(3);
 
-        connect.auth();
+        const dialog = {
+          foo: 'bar',
+        };
+
+        connect.openApp = jest.fn().mockResolvedValueOnce(dialog);
+
+        await connect.auth();
+        await global.flushPromises();
 
         expect(connect.openApp).toBeCalledWith('auth');
+        expect(sendMessageToDialog).toBeCalledWith({
+          target: dialog,
+          data: {
+            url: null,
+          },
+        });
         expect(awaitDialogMessage).toBeCalled();
       });
     });
@@ -420,6 +433,71 @@ describe('Connect class', () => {
         connect.injectWeb3(target);
 
         expect(target.ethereum).toBeTruthy();
+      });
+    });
+
+    describe('createRequestProvider', () => {
+      it('should create and set request provider with given web3 instance', () => {
+        const httpProvider = {
+          foo: 'bar',
+        };
+        const web3 = {
+          providers: {
+            HttpProvider: jest.fn(() => httpProvider),
+          },
+        };
+        const settings = {
+          networkVersion: 1,
+        };
+
+        connect.getSettings = jest.fn(() => settings);
+        connect.createRequestProvider(web3);
+
+        expect(connect.requestProvider).toEqual(httpProvider);
+        expect(web3.providers.HttpProvider).toBeCalledWith(expect.any(String));
+      });
+    });
+
+    describe('getSettings', () => {
+      it('should return settings from current provider', () => {
+        const settings = {
+          foo: 'bar',
+        };
+
+        connect.provider = {
+          settings,
+        };
+
+        expect(connect.getSettings()).toEqual(settings);
+      });
+    });
+
+    describe('logout', () => {
+      it('should open app and await dialog messages twince', async () => {
+        expect.assertions(2);
+
+        connect.openApp = jest.fn();
+
+        await connect.logout();
+
+        expect(connect.openApp).toBeCalled();
+        expect(awaitDialogMessage).toBeCalledTimes(2);
+      });
+    });
+
+    // TODO find way to correctly test this method
+    // describe('checkBridgeReady', () => {})
+
+    describe('injectBridge', () => {
+      it('should create iframe element, return it and append to page', () => {
+        jest.spyOn(document, 'createElement');
+        jest.spyOn(document.body, 'appendChild');
+
+        const res = connect.injectBridge();
+
+        expect(document.createElement).toBeCalledWith('iframe');
+        expect(document.body.appendChild).toBeCalled();
+        expect(res).toBeTruthy();
       });
     });
   });
