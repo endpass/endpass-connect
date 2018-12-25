@@ -16,21 +16,22 @@
   "scripts": {
     "build": "rimraf ./dist && npm run build:app && npm run build:lib",
     "dev:app": "vue-cli-service serve ./packages/app/src/main.js",
-    "build:app": "vue-cli-service --no-clean build ./packages/app/src/main.js",
+    "build:app":
+      "NODE_ENV=production vue-cli-service --no-clean build ./packages/app/src/main.js",
+    "build:app:dev":
+      "NODE_ENV=development vue-cli-service --no-clean build ./packages/app/src/main.js",
+    "build:app:test":
+      "NODE_ENV=test vue-cli-service --no-clean build ./packages/app/src/main.js",
     "dev:lib": "webpack --watch --mode=development",
     "build:lib": "webpack --mode=production",
     "unit": "vue-cli-service test:unit",
     "unit:watch": "vue-cli-service test:unit --watch",
-    "format": "prettier --write 'packages/**/*.{js,vue,json}' && eslint packages/**/*.{js,vue} --fix"
+    "format":
+      "prettier --write 'packages/**/*.{js,vue,json}' && eslint packages/**/*.{js,vue} --fix"
   },
   "lint-staged": {
-    "./packages/**/*.{js,vue,json}": [
-      "prettier --write",
-      "git add"
-    ],
-    "./dist/lib/*.js": [
-      "git add"
-    ]
+    "./packages/**/*.{js,vue,json}": ["prettier --write", "git add"],
+    "./dist/lib/*.js": ["git add"]
   },
   "husky": {
     "hooks": {
