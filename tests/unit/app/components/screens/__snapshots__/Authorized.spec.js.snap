@@ -5,3 +5,9 @@ exports[`Authorized render should correctly render Authorized component 1`] = `
   <logout-form-stub closable="true"></logout-form-stub>
 </v-frame-stub>
 `;
+
+exports[`Authorized render should render logout form by default 1`] = `
+<v-frame-stub>
+  <logout-form-stub closable="true"></logout-form-stub>
+</v-frame-stub>
+`;

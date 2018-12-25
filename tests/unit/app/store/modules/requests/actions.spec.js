@@ -151,6 +151,7 @@ describe('requests actions', () => {
           ...payload,
           status: true,
         },
+        from: 'dialog',
       });
       expect(dispatch).toBeCalledWith('closeDialog');
     });

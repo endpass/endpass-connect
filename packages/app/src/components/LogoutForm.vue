@@ -42,7 +42,9 @@ export default {
 
   methods: {
     emitSubmit() {
-      this.$emit('submit');
+      if (!this.loading) {
+        this.$emit('submit');
+      }
     },
 
     emitCancel() {

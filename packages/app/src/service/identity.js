@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const { url: identityBaseUrl } = ENV.identity;
+
 const request = {
   get: url =>
     axios
@@ -11,23 +13,27 @@ const request = {
   post: (url, body) => axios.post(url, body).then(({ data }) => data),
 };
 
-export const getSettings = () => request.get(`/identity/api/v1.1/settings`);
+export const getSettings = () =>
+  request.get(`${identityBaseUrl}/api/v1.1/settings`);
 
 export const getOtpSettings = () =>
-  request.get(`/identity/api/v1.1/settings/otp`);
+  request.get(`${identityBaseUrl}/api/v1.1/settings/otp`);
 
-export const getAccounts = () => request.get(`/identity/api/v1.1/accounts`);
+export const getAccounts = () =>
+  request.get(`${identityBaseUrl}/api/v1.1/accounts`);
 
 export const getAccount = address =>
-  request.get(`/identity/api/v1.1/account/${address}`);
+  request.get(`${identityBaseUrl}/api/v1.1/account/${address}`);
 
 export const getAccountInfo = address =>
-  request.get(`/identity/api/v1.1/account/${address}/info`);
+  request.get(`${identityBaseUrl}/api/v1.1/account/${address}/info`);
 
 export const auth = (email, redirectUrl) => {
   const requestUrl = redirectUrl
-    ? `/identity/api/v1.1/auth?redirect_uri=${encodeURIComponent(redirectUrl)}`
-    : `/identity/api/v1.1/auth`;
+    ? `${identityBaseUrl}/api/v1.1/auth?redirect_uri=${encodeURIComponent(
+        redirectUrl,
+      )}`
+    : `${identityBaseUrl}/api/v1.1/auth`;
 
   return request
     .post(requestUrl, {
@@ -42,7 +48,7 @@ export const auth = (email, redirectUrl) => {
 
 export const otpAuth = (email, code) =>
   request
-    .post(`/identity/api/v1.1/auth/token`, {
+    .post(`${identityBaseUrl}/api/v1.1/auth/token`, {
       challenge_type: 'otp',
       email,
       code,

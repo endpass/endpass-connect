@@ -26,13 +26,7 @@ export default {
   },
 
   methods: {
-    ...mapActions([
-      'init',
-      'logout',
-      'cancelLogout',
-      'awaitLogoutConfirm',
-      'sendReadyMessage',
-    ]),
+    ...mapActions(['init', 'logout', 'cancelLogout', 'sendReadyMessage']),
 
     async handleLogoutSubmit() {
       this.logout();
@@ -43,7 +37,7 @@ export default {
     },
 
     handleWindowClose() {
-      this.cancelAuth();
+      this.cancelLogout();
     },
   },
 
