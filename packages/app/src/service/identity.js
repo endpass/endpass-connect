@@ -72,7 +72,7 @@ export const awaitAuthConfirm = () =>
     }, 1500);
   });
 
-export const logout = () => request.post('/identity/api/v1.1/logout');
+export const logout = () => request.post(`${identityBaseUrl}/api/v1.1/logout`);
 
 export const awaitLogoutConfirm = () =>
   new Promise(resolve => {

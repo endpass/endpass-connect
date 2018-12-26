@@ -10,7 +10,7 @@ describe('core actions', () => {
     dispatch = jest.fn();
   });
 
-  describe('sendMessage', () => {
+  describe('sendDialogMessage', () => {
     it('should send message with given data', async () => {
       expect.assertions(1);
 
@@ -33,7 +33,7 @@ describe('core actions', () => {
 
       await coreActions.sendReadyMessage({ dispatch });
 
-      expect(dispatch).toBeCalledWith('sendMessage', {
+      expect(dispatch).toBeCalledWith('sendDialogMessage', {
         method: 'connect_ready',
         status: true,
       });

@@ -43,14 +43,14 @@ const confirmAuthViaOtp = async (ctx, { email, code }) => {
 };
 
 const confirmAuth = ({ dispatch }) => {
-  dispatch('sendMessage', {
+  dispatch('sendDialogMessage', {
     status: true,
   });
   dispatch('closeDialog');
 };
 
 const cancelAuth = ({ dispatch }) => {
-  dispatch('sendMessage', {
+  dispatch('sendDialogMessage', {
     status: false,
     message: 'Auth was canceled by user!',
   });
@@ -105,7 +105,7 @@ const logout = async ({ dispatch, commit }) => {
 
   try {
     await IdentityService.logout();
-    dispatch('sendMessage', {
+    dispatch('sendDialogMessage', {
       status: true,
     });
     dispatch('closeDialog');
@@ -117,7 +117,7 @@ const logout = async ({ dispatch, commit }) => {
 };
 
 const cancelLogout = async ({ dispatch }) => {
-  dispatch('sendMessage', {
+  dispatch('sendDialogMessage', {
     status: false,
     message: 'Logout was canceled by user!',
   });

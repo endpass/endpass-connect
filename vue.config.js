@@ -20,7 +20,7 @@ module.exports = {
   },
   devServer: {
     proxy: {
-      '/identity/api/v1.1': {
+      '^/identity/api/v1.1': {
         target: ENV.identity.url,
         changeOrigin: true,
         pathRewrite: {
