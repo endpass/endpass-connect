@@ -1,66 +1,102 @@
-export const sendMessage = ({ target, from, to, data }) => {
+import get from 'lodash/get';
+
+export const sendMessage = ({ target, meta = {}, payload = {} }) => {
   const allowedDestinations = ['dialog', 'opener', 'bridge'];
 
   if (!target) {
     throw new Error('You must provide message target window!');
   }
 
-  if (!to) {
-    throw new Error('You must provide message destination!');
+  if (!meta.to) {
+    throw new Error('You must provide message destination in meta.to!');
   }
 
-  if (!allowedDestinations.includes(to)) {
-    throw new Error(`You provide invalid message receiver type: ${to}!`);
+  if (!meta.from) {
+    throw new Error('You must provide message source in meta.from!');
   }
 
-  if (!allowedDestinations.includes(from)) {
-    throw new Error(`You provide invalid message sender type: ${from}!`);
+  if (!allowedDestinations.includes(meta.to)) {
+    throw new Error(`You provide invalid message receiver type: ${meta.to}!`);
+  }
+
+  if (!allowedDestinations.includes(meta.from)) {
+    throw new Error(`You provide invalid message sender type: ${meta.from}!`);
   }
 
   const baseMessage = {
-    to: `endpass-connect-${to}`,
-    from: `endpass-connect-${from}`,
+    meta: {
+      to: `endpass-connect-${meta.to}`,
+      from: `endpass-connect-${meta.from}`,
+    },
   };
 
-  target.postMessage(Object.assign(baseMessage, data), '*');
+  target.postMessage(
+    Object.assign(baseMessage, {
+      payload,
+    }),
+    '*',
+  );
 };
 
-export const sendMessageToDialog = ({ target, data }) =>
+export const sendMessageToDialog = (target, payload) =>
   sendMessage({
-    to: 'dialog',
-    from: 'opener',
+    meta: {
+      to: 'dialog',
+      from: 'opener',
+    },
     target,
-    data,
+    payload,
   });
 
-export const sendMessageToBridge = ({ target, data }) =>
+export const sendMessageToBridge = (target, payload) =>
   sendMessage({
-    to: 'bridge',
-    from: 'opener',
+    meta: {
+      to: 'bridge',
+      from: 'opener',
+    },
     target,
-    data,
+    payload,
   });
 
-export const sendMessageToOpener = ({ data, from }) => {
+export const sendMessageToOpener = (from, payload) => {
   sendMessage({
-    to: 'opener',
     target: from === 'bridge' ? window.parent : window.opener,
-    from,
-    data,
+    meta: {
+      to: 'opener',
+      from,
+    },
+    payload,
   });
 };
+
+export const awaitMessageFrom = from =>
+  new Promise(resolve => {
+    /* eslint-disable-next-line */
+    const handler = ({ data = {} }) => {
+      const isMessageToDialog =
+        get(data, 'meta.to') === `endpass-connect-${from}`;
+
+      if (isMessageToDialog && data.payload) {
+        window.removeEventListener('message', handler);
+
+        return resolve(data.payload);
+      }
+    };
+
+    window.addEventListener('message', handler);
+  });
 
 export const awaitMessageFromOpener = () =>
   new Promise(resolve => {
     /* eslint-disable-next-line */
-    const handler = ({ data: messageData = {} }) => {
-      const { to, ...data } = messageData;
-      const isMessageToDialog = to === 'endpass-connect-dialog';
+    const handler = ({ data = {} }) => {
+      const isMessageToDialog =
+        get(data, 'meta.to') === 'endpass-connect-dialog';
 
-      if (isMessageToDialog && data) {
+      if (isMessageToDialog && data.payload) {
         window.removeEventListener('message', handler);
 
-        return resolve(data);
+        return resolve(data.payload);
       }
     };
 
@@ -68,23 +104,16 @@ export const awaitMessageFromOpener = () =>
   });
 
 export const awaitDialogMessage = () =>
-  new Promise((resolve, reject) => {
+  new Promise(resolve => {
     /* eslint-disable-next-line */
-    const handler = ({ data: messageData = {} }) => {
-      const isMessageToOpener = messageData.to === 'endpass-connect-opener';
+    const handler = ({ data = {} }) => {
+      const isMessageToOpener =
+        get(data, 'meta.to') === 'endpass-connect-opener';
 
-      if (isMessageToOpener && messageData) {
-        const { status, message = null, ...data } = messageData;
-
+      if (isMessageToOpener && data.payload) {
         window.removeEventListener('message', handler);
 
-        return status
-          ? resolve({
-              status,
-              message,
-              data,
-            })
-          : reject(message);
+        return resolve(data.payload);
       }
     };
 
@@ -94,14 +123,14 @@ export const awaitDialogMessage = () =>
 export const awaitBridgeMessage = () =>
   new Promise(resolve => {
     /* eslint-disable-next-line */
-    const handler = ({ data: messageData = {} }) => {
-      const { to, from, ...data } = messageData;
-      const isMessageFromBridge = from === 'endpass-connect-bridge';
+    const handler = ({ data = {} }) => {
+      const isMessageFromBridge =
+        get(data, 'meta.from') === 'endpass-connect-bridge';
 
-      if (isMessageFromBridge && data) {
+      if (isMessageFromBridge && data.payload) {
         window.removeEventListener('message', handler);
 
-        return resolve(data);
+        return resolve(data.payload);
       }
     };
 
@@ -109,11 +138,11 @@ export const awaitBridgeMessage = () =>
   });
 
 export const subscribeOnBridgeMessages = handler => {
-  window.addEventListener('message', ({ data: messageData = {} }) => {
-    const isMessageToBridge = messageData.to === 'endpass-connect-bridge';
+  window.addEventListener('message', ({ data = {} }) => {
+    const isMessageToBridge = get(data, 'meta.to') === 'endpass-connect-bridge';
 
     if (isMessageToBridge) {
-      handler(messageData);
+      handler(data.payload);
     }
   });
 };

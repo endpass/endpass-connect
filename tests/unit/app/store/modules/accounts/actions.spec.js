@@ -89,7 +89,7 @@ describe('accounts actions', () => {
       await accountsActions.cancelAuth({ dispatch });
 
       expect(dispatch).toBeCalledTimes(2);
-      expect(dispatch).toHaveBeenNthCalledWith(1, 'sendMessage', {
+      expect(dispatch).toHaveBeenNthCalledWith(1, 'sendDialogMessage', {
         status: false,
         message: 'Auth was canceled by user!',
       });
@@ -104,7 +104,7 @@ describe('accounts actions', () => {
       await accountsActions.confirmAuth({ dispatch });
 
       expect(dispatch).toBeCalledTimes(2);
-      expect(dispatch).toHaveBeenNthCalledWith(1, 'sendMessage', {
+      expect(dispatch).toHaveBeenNthCalledWith(1, 'sendDialogMessage', {
         status: true,
       });
       expect(dispatch).toHaveBeenNthCalledWith(2, 'closeDialog');
@@ -174,7 +174,7 @@ describe('accounts actions', () => {
 
       expect(dispatch).toBeCalledTimes(2);
       expect(commit).toBeCalledTimes(2);
-      expect(dispatch).toHaveBeenNthCalledWith(1, 'sendMessage', {
+      expect(dispatch).toHaveBeenNthCalledWith(1, 'sendDialogMessage', {
         status: true,
       });
       expect(dispatch).toHaveBeenNthCalledWith(2, 'closeDialog');
@@ -205,7 +205,7 @@ describe('accounts actions', () => {
       await accountsActions.cancelLogout({ dispatch });
 
       expect(dispatch).toBeCalledTimes(2);
-      expect(dispatch).toHaveBeenNthCalledWith(1, 'sendMessage', {
+      expect(dispatch).toHaveBeenNthCalledWith(1, 'sendDialogMessage', {
         status: false,
         message: 'Logout was canceled by user!',
       });

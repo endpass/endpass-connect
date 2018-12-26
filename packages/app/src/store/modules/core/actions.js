@@ -4,7 +4,7 @@ import {
   sendMessageToOpener,
   subscribeOnBridgeMessages,
 } from '@@/util/message';
-import { DEFAULT_NETWORKS } from '@@/constants';
+import { DEFAULT_NETWORKS, METHODS } from '@@/constants';
 
 const init = async ({ dispatch, commit }) => {
   try {
@@ -23,22 +23,16 @@ const setWeb3NetworkProvider = (ctx, netId) => {
   web3.setProvider(provider);
 };
 
-const sendMessage = (ctx, data) => {
-  sendMessageToOpener({
-    from: 'dialog',
-    data,
-  });
+const sendDialogMessage = (ctx, data) => {
+  sendMessageToOpener('dialog', data);
 };
 
 const sendBridgeMessage = (ctx, data) => {
-  sendMessageToOpener({
-    from: 'bridge',
-    data,
-  });
+  sendMessageToOpener('bridge', data);
 };
 
 const sendReadyMessage = ({ dispatch }) => {
-  dispatch('sendMessage', {
+  dispatch('sendDialogMessage', {
     method: 'connect_ready',
     status: true,
   });
@@ -46,7 +40,11 @@ const sendReadyMessage = ({ dispatch }) => {
 
 const subscribeOnBridge = ({ dispatch }) => {
   const handler = message => {
-    if (message.method === 'get_accounts') {
+    if (message.method === METHODS.READY_STATE_BRIDGE) {
+      dispatch('sendBridgeMessage', {
+        status: true,
+      });
+    } else if (message.method === METHODS.GET_SETTINGS) {
       dispatch('getSettings')
         .then(res => {
           dispatch('sendBridgeMessage', {
@@ -59,10 +57,6 @@ const subscribeOnBridge = ({ dispatch }) => {
             status: false,
           });
         });
-    } else if (message.method === 'check_ready') {
-      dispatch('sendBridgeMessage', {
-        status: true,
-      });
     }
   };
 
@@ -76,7 +70,7 @@ const closeDialog = () => {
 export default {
   init,
   setWeb3NetworkProvider,
-  sendMessage,
+  sendDialogMessage,
   sendBridgeMessage,
   sendReadyMessage,
   subscribeOnBridge,

@@ -12,12 +12,9 @@ const awaitRequestMessage = async ({ commit, dispatch }) => {
 };
 
 const sendResponse = async ({ dispatch }, payload) => {
-  sendMessageToOpener({
-    from: 'dialog',
-    data: {
-      ...payload,
-      status: true,
-    },
+  sendMessageToOpener('dialog', {
+    ...payload,
+    status: true,
   });
   dispatch('closeDialog');
 };
