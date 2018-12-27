@@ -33,7 +33,7 @@ const sendBridgeMessage = (ctx, data) => {
 
 const sendReadyMessage = ({ dispatch }) => {
   dispatch('sendDialogMessage', {
-    method: 'connect_ready',
+    method: METHODS.READY_STATE_DIALOG,
     status: true,
   });
 };
@@ -42,18 +42,21 @@ const subscribeOnBridge = ({ dispatch }) => {
   const handler = message => {
     if (message.method === METHODS.READY_STATE_BRIDGE) {
       dispatch('sendBridgeMessage', {
+        method: METHODS.READY_STATE_BRIDGE,
         status: true,
       });
     } else if (message.method === METHODS.GET_SETTINGS) {
       dispatch('getSettings')
         .then(res => {
           dispatch('sendBridgeMessage', {
+            method: METHODS.GET_SETTINGS,
             status: true,
             ...res,
           });
         })
         .catch(() => {
           dispatch('sendBridgeMessage', {
+            method: METHODS.GET_SETTINGS,
             status: false,
           });
         });

@@ -103,14 +103,15 @@ export const awaitMessageFromOpener = () =>
     window.addEventListener('message', handler);
   });
 
-export const awaitDialogMessage = () =>
+export const awaitDialogMessage = method =>
   new Promise(resolve => {
     /* eslint-disable-next-line */
     const handler = ({ data = {} }) => {
       const isMessageToOpener =
         get(data, 'meta.to') === 'endpass-connect-opener';
+      const isMethodMatched = !method || method === get(data, 'payload.method');
 
-      if (isMessageToOpener && data.payload) {
+      if (isMessageToOpener && isMethodMatched && data.payload) {
         window.removeEventListener('message', handler);
 
         return resolve(data.payload);
@@ -120,14 +121,15 @@ export const awaitDialogMessage = () =>
     window.addEventListener('message', handler);
   });
 
-export const awaitBridgeMessage = () =>
+export const awaitBridgeMessage = method =>
   new Promise(resolve => {
     /* eslint-disable-next-line */
     const handler = ({ data = {} }) => {
       const isMessageFromBridge =
         get(data, 'meta.from') === 'endpass-connect-bridge';
+      const isMethodMatched = !method || method === get(data, 'payload.method');
 
-      if (isMessageFromBridge && data.payload) {
+      if (isMessageFromBridge && isMethodMatched && data.payload) {
         window.removeEventListener('message', handler);
 
         return resolve(data.payload);

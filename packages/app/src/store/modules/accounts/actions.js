@@ -1,6 +1,7 @@
 import get from 'lodash/get';
 import IdentityService from '@/service/identity';
 import { awaitMessageFromOpener } from '@@/util/message';
+import { METHODS } from '@@/constants';
 
 const awaitAuthMessage = async ({ commit }) => {
   const res = await awaitMessageFromOpener();
@@ -36,14 +37,15 @@ const auth = async ({ state, commit }, email) => {
 };
 
 const confirmAuthViaOtp = async (ctx, { email, code }) => {
+  // TODO complete this feature
   const res = await IdentityService.otpAuth(email, code);
 
-  // TODO: solve problem with "auto-otp-auth"
   console.log('otp auth result', res);
 };
 
 const confirmAuth = ({ dispatch }) => {
   dispatch('sendDialogMessage', {
+    method: METHODS.AUTH,
     status: true,
   });
   dispatch('closeDialog');
@@ -51,6 +53,7 @@ const confirmAuth = ({ dispatch }) => {
 
 const cancelAuth = ({ dispatch }) => {
   dispatch('sendDialogMessage', {
+    method: METHODS.AUTH,
     status: false,
     message: 'Auth was canceled by user!',
   });
@@ -106,6 +109,7 @@ const logout = async ({ dispatch, commit }) => {
   try {
     await IdentityService.logout();
     dispatch('sendDialogMessage', {
+      method: METHODS.LOGOUT,
       status: true,
     });
     dispatch('closeDialog');
@@ -118,6 +122,7 @@ const logout = async ({ dispatch, commit }) => {
 
 const cancelLogout = async ({ dispatch }) => {
   dispatch('sendDialogMessage', {
+    method: METHODS.LOGOUT,
     status: false,
     message: 'Logout was canceled by user!',
   });

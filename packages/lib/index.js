@@ -16,15 +16,29 @@ import {
   DEFAULT_NETWORKS,
 } from '@@/constants';
 
-// TODO divide private and public methods
-// TODO add methods to auth, sign and login
+export const privateMethods = {
+  checkBridgeReady: Symbol('checkBridgeReady'),
+  watchRequestsQueue: Symbol('watchRequestsQueue'),
+  unwatchRequestsQueue: Symbol('unwatchRequestsQueue'),
+  processCurrentRequest: Symbol('processCurrentRequest'),
+  getConnectUrl: Symbol('getConnectUrl'),
+  setupEmmiterEvents: Symbol('setupEmmiterEvents'),
+  injectBridge: Symbol('injectBridge'),
+  createRequestProvider: Symbol('createRequestProvider'),
+  getUserSettings: Symbol('getUserSettings'),
+  sendResponse: Symbol('sendResponse'),
+  handleRequest: Symbol('handleRequest'),
+  sendToNetwork: Symbol('sendToNetwork'),
+  openApp: Symbol('openApp'),
+  sign: Symbol('sign'),
+};
 
 export default class Connect {
   /**
    * @param {String} options.appUrl
    * @param {Boolean} options.subscribe
    */
-  constructor({ appUrl, subscribe }) {
+  constructor({ appUrl }) {
     if (!appUrl) {
       throw new Error(
         'Pass url to connect application instance in appUrl proprerty!',
@@ -42,32 +56,21 @@ export default class Connect {
     this.queue = [];
 
     // Bridge
-    this.bridge = this.injectBridge();
-
-    if (subscribe) {
-      this.setupEmmiterEvents();
-      this.watchRequestsQueue();
-    }
+    this.bridge = this[privateMethods.injectBridge]();
+    this[privateMethods.setupEmmiterEvents]();
+    this[privateMethods.watchRequestsQueue]();
   }
 
   /**
    *
    */
-  watchRequestsQueue() {
+  [privateMethods.watchRequestsQueue]() {
     this.queueInterval = setInterval(() => {
       if (!this.currentRequest && this.queue.length > 0) {
         this.currentRequest = this.queue.pop();
-        this.processCurrentRequest();
+        this[privateMethods.processCurrentRequest]();
       }
     }, 2500);
-  }
-
-  /**
-   *
-   */
-  unwatchRequestsQueue() {
-    clearInterval(this.queueInterval);
-    this.queueInterval = null;
   }
 
   /**
@@ -77,17 +80,17 @@ export default class Connect {
   /**
    * @returns {Promise}
    */
-  async processCurrentRequest() {
+  async [privateMethods.processCurrentRequest]() {
     const { currentRequest } = this;
 
     try {
       const res = DAPP_WHITELISTED_METHODS.includes(currentRequest.method)
-        ? await this.sign()
-        : await this.sendToNetwork();
+        ? await this[privateMethods.sign]()
+        : await this[privateMethods.sendToNetwork]();
 
-      this.sendResponse(res);
+      this[privateMethods.sendResponse](res);
     } catch (err) {
-      this.sendResponse({
+      this[privateMethods.sendResponse]({
         ...currentRequest,
         result: null,
         error: err,
@@ -101,25 +104,31 @@ export default class Connect {
    * @param {String} method
    * @returns {String}
    */
-  getConnectUrl(method) {
+  [privateMethods.getConnectUrl](method) {
     return !method ? this.appUrl : `${this.appUrl}/#/${method}`;
   }
 
   /**
    *
    */
-  setupEmmiterEvents() {
-    this.emmiter.on(INPAGE_EVENTS.REQUEST, this.handleRequest.bind(this));
-    this.emmiter.on(INPAGE_EVENTS.SETTINGS, this.handleRequest.bind(this));
+  [privateMethods.setupEmmiterEvents]() {
+    this.emmiter.on(
+      INPAGE_EVENTS.REQUEST,
+      this[privateMethods.handleRequest].bind(this),
+    );
+    this.emmiter.on(
+      INPAGE_EVENTS.SETTINGS,
+      this[privateMethods.handleRequest].bind(this),
+    );
   }
 
   /**
    * @returns {HTMLElement}
    */
-  injectBridge() {
+  [privateMethods.injectBridge]() {
     const iframeElement = document.createElement('iframe');
 
-    iframeElement.src = this.getConnectUrl('bridge');
+    iframeElement.src = this[privateMethods.getConnectUrl]('bridge');
     iframeElement.width = 0;
     iframeElement.height = 0;
 
@@ -135,107 +144,30 @@ export default class Connect {
   }
 
   /**
-   * @returns {Promise<Object>}
-   */
-  async getAccountData() {
-    try {
-      const settings = await this.getUserSettings();
-
-      return {
-        activeAccount: settings.lastActiveAccount,
-        activeNet: settings.net || 1,
-      };
-    } catch (err) {
-      throw new Error('User not autorized!');
-    }
-  }
-
-  /**
    * Direct messaging methods
    */
 
   /**
-   * Open application on auth screen and waits result (success of failure)
-   * @returns {Promise<boolean>} Auth result, check `status` property to
-   *  know about result
-   */
-  auth(redirectUrl) {
-    return this.openApp('auth')
-      .then(dialog => {
-        sendMessageToDialog(dialog, {
-          method: METHODS.AUTH,
-          url: redirectUrl || null,
-        });
-
-        return awaitDialogMessage();
-      })
-      .then(res => {
-        if (!res.status)
-          throw new Error(res.message || 'Authentificaton error!');
-
-        return res.status;
-      });
-  }
-
-  /**
-   * @returns {Promise<boolean>}
-   */
-  logout() {
-    return this.openApp()
-      .then(() => awaitDialogMessage())
-      .then(res => {
-        if (!res.status) throw new Error(res.message || 'Logout error!');
-
-        return res.status;
-      });
-  }
-
-  /**
    * @returns {Promise<Object>}
    */
-  sign() {
-    return this.openApp('sign')
-      .then(dialog => {
-        const { selectedAddress, networkVersion } = this.getSettings();
-
-        sendMessageToDialog(dialog, {
-          method: METHODS.SIGN,
-          url: window.location.origin,
-          address: selectedAddress,
-          net: networkVersion,
-          request: this.currentRequest,
-        });
-
-        return awaitDialogMessage();
-      })
-      .then(res => {
-        if (!res.status) throw new Error(res.message || 'Sign error!');
-
-        return omit(res, ['status']);
-      });
-  }
-
-  /**
-   * @returns {Promise<Object>}
-   */
-  getUserSettings() {
-    return this.checkBridgeReady().then(() => {
+  [privateMethods.getUserSettings]() {
+    return this[privateMethods.checkBridgeReady]().then(() => {
       sendMessageToBridge(this.bridge.contentWindow, {
         method: METHODS.GET_SETTINGS,
       });
 
-      return awaitBridgeMessage();
+      return awaitBridgeMessage(METHODS.GET_SETTINGS);
     });
   }
 
   /**
    * @returns {Promise<Boolean>}
    */
-  async checkBridgeReady() {
+  [privateMethods.checkBridgeReady]() {
     return new Promise(resolve => {
       let interval;
 
-      awaitBridgeMessage().then(res => {
+      awaitBridgeMessage(METHODS.READY_STATE_BRIDGE).then(res => {
         clearInterval(interval);
         return resolve(res.status);
       });
@@ -254,7 +186,7 @@ export default class Connect {
    * @param {String} route
    * @returns {Promise<Window>}
    */
-  async openApp(route) {
+  async [privateMethods.openApp](route) {
     const pos = {
       x: window.innerWidth / 2 - 200,
       y: 200,
@@ -270,12 +202,12 @@ export default class Connect {
     ];
 
     const dialog = window.open(
-      this.getConnectUrl(route),
+      this[privateMethods.getConnectUrl](route),
       null,
       windowFeatures.join(','),
     );
 
-    await awaitDialogMessage();
+    const res = await awaitDialogMessage(METHODS.READY_STATE_DIALOG);
 
     return dialog;
   }
@@ -283,7 +215,7 @@ export default class Connect {
   /**
    * @returns {Promise<Object>}
    */
-  async sendToNetwork() {
+  async [privateMethods.sendToNetwork]() {
     return new Promise((resolve, reject) => {
       this.requestProvider.sendAsync(this.currentRequest, (err, res) => {
         if (err) {
@@ -298,35 +230,58 @@ export default class Connect {
   /**
    * @param {Object} request
    */
-  handleRequest(request) {
+  [privateMethods.handleRequest](request) {
     if (request.id) this.queue.push(request);
   }
 
   /**
    * @returns {Object}
    */
-  getSettings() {
+  [privateMethods.getSettings]() {
     return this.provider.settings;
-  }
-
-  /**
-   * Sets settings to current `web3` provider injected to page with `injectWeb3`
-   *  method
-   * @param {String} options.selectedAddress Currenct account checksummed address
-   * @param {String} options.networkVersion Active network ID
-   */
-  sendSettings({ selectedAddress, networkVersion }) {
-    this.emmiter.emit(INPAGE_EVENTS.SETTINGS, {
-      selectedAddress,
-      networkVersion,
-    });
   }
 
   /**
    * @param {Object} payload
    */
-  sendResponse(payload) {
+  [privateMethods.sendResponse](payload) {
     this.emmiter.emit(INPAGE_EVENTS.RESPONSE, payload);
+  }
+
+  /**
+   * @param   {[type]} web3
+   * @returns {[type]}
+   */
+  [privateMethods.createRequestProvider](web3) {
+    const { networkVersion } = this[privateMethods.getSettings]();
+
+    this.requestProvider = new web3.providers.HttpProvider(
+      get(DEFAULT_NETWORKS, `${networkVersion}.url[0]`),
+    );
+  }
+
+  /**
+   * @returns {Promise<Object>}
+   */
+  async [privateMethods.sign]() {
+    const dialog = await this[privateMethods.openApp]('sign');
+    const { selectedAddress, networkVersion } = this[
+      privateMethods.getSettings
+    ]();
+
+    sendMessageToDialog(dialog, {
+      method: METHODS.SIGN,
+      url: window.location.origin,
+      address: selectedAddress,
+      net: networkVersion,
+      request: this.currentRequest,
+    });
+
+    const res = await awaitDialogMessage(METHODS.SIGN);
+
+    if (!res.status) throw new Error(res.message || 'Sign error!');
+
+    return omit(res, ['status']);
   }
 
   /**
@@ -347,18 +302,67 @@ export default class Connect {
 
     Object.assign(target, injection);
 
-    this.createRequestProvider(target.web3);
+    this[privateMethods.createRequestProvider](target.web3);
   }
 
   /**
-   * @param   {[type]} web3
-   * @returns {[type]}
+   * @returns {Promise<Object>}
    */
-  createRequestProvider(web3) {
-    const { networkVersion } = this.getSettings();
+  async getAccountData() {
+    try {
+      const settings = await this[privateMethods.getUserSettings]();
 
-    this.requestProvider = new web3.providers.HttpProvider(
-      get(DEFAULT_NETWORKS, `${networkVersion}.url[0]`),
-    );
+      return {
+        activeAccount: settings.lastActiveAccount,
+        activeNet: settings.net || 1,
+      };
+    } catch (err) {
+      throw new Error('User not autorized!');
+    }
+  }
+
+  /**
+   * Sets settings to current `web3` provider injected to page with `injectWeb3`
+   *  method
+   * @param {String} options.selectedAddress Currenct account checksummed address
+   * @param {String} options.networkVersion Active network ID
+   */
+  sendSettings({ selectedAddress, networkVersion }) {
+    this.emmiter.emit(INPAGE_EVENTS.SETTINGS, {
+      selectedAddress,
+      networkVersion,
+    });
+  }
+
+  /**
+   * Open application on auth screen and waits result (success of failure)
+   * @returns {Promise<boolean>} Auth result, check `status` property to
+   *  know about result
+   */
+  async auth(redirectUrl) {
+    const dialog = await this[privateMethods.openApp]('auth');
+
+    sendMessageToDialog(dialog, {
+      method: METHODS.AUTH,
+      redirectUrl: redirectUrl || null,
+    });
+
+    const res = await awaitDialogMessage(METHODS.AUTH);
+
+    if (!res.status) throw new Error(res.message || 'Authentificaton error!');
+
+    return res.status;
+  }
+
+  /**
+   * @returns {Promise<boolean>}
+   */
+  async logout() {
+    await this[privateMethods.openApp]();
+    const res = await awaitDialogMessage(METHODS.LOGOUT);
+
+    if (!res.status) throw new Error(res.message || 'Logout error!');
+
+    return res.status;
   }
 }
