@@ -1,5 +1,6 @@
 import { sendMessageToOpener } from '@@/util/message';
 import coreActions from '@@/app/src/store/modules/core/actions';
+import { METHODS } from '@@/constants';
 
 describe('core actions', () => {
   let dispatch;
@@ -18,12 +19,9 @@ describe('core actions', () => {
         foo: 'bar',
       };
 
-      await coreActions.sendMessage(null, data);
+      await coreActions.sendDialogMessage(null, data);
 
-      expect(sendMessageToOpener).toBeCalledWith({
-        data,
-        from: 'dialog',
-      });
+      expect(sendMessageToOpener).toBeCalledWith('dialog', data);
     });
   });
 
@@ -34,7 +32,7 @@ describe('core actions', () => {
       await coreActions.sendReadyMessage({ dispatch });
 
       expect(dispatch).toBeCalledWith('sendDialogMessage', {
-        method: 'connect_ready',
+        method: METHODS.READY_STATE_DIALOG,
         status: true,
       });
     });

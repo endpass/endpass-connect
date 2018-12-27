@@ -1,6 +1,7 @@
 import IdentityService from '@/service/identity';
 import accountsActions from '@@/app/src/store/modules/accounts/actions';
 import { awaitMessageFromOpener } from '@@/util/message';
+import { METHODS } from '@@/constants';
 
 describe('accounts actions', () => {
   let dispatch;
@@ -91,6 +92,7 @@ describe('accounts actions', () => {
       expect(dispatch).toBeCalledTimes(2);
       expect(dispatch).toHaveBeenNthCalledWith(1, 'sendDialogMessage', {
         status: false,
+        method: METHODS.AUTH,
         message: 'Auth was canceled by user!',
       });
       expect(dispatch).toHaveBeenNthCalledWith(2, 'closeDialog');
@@ -105,6 +107,7 @@ describe('accounts actions', () => {
 
       expect(dispatch).toBeCalledTimes(2);
       expect(dispatch).toHaveBeenNthCalledWith(1, 'sendDialogMessage', {
+        method: METHODS.AUTH,
         status: true,
       });
       expect(dispatch).toHaveBeenNthCalledWith(2, 'closeDialog');
@@ -175,6 +178,7 @@ describe('accounts actions', () => {
       expect(dispatch).toBeCalledTimes(2);
       expect(commit).toBeCalledTimes(2);
       expect(dispatch).toHaveBeenNthCalledWith(1, 'sendDialogMessage', {
+        method: METHODS.LOGOUT,
         status: true,
       });
       expect(dispatch).toHaveBeenNthCalledWith(2, 'closeDialog');
@@ -207,6 +211,7 @@ describe('accounts actions', () => {
       expect(dispatch).toBeCalledTimes(2);
       expect(dispatch).toHaveBeenNthCalledWith(1, 'sendDialogMessage', {
         status: false,
+        method: METHODS.LOGOUT,
         message: 'Logout was canceled by user!',
       });
       expect(dispatch).toHaveBeenNthCalledWith(2, 'closeDialog');

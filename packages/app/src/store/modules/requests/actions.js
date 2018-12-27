@@ -1,5 +1,6 @@
 import Wallet from '@@/class/Wallet';
 import { sendMessageToOpener, awaitMessageFromOpener } from '@@/util/message';
+import { METHODS } from '@@/constants';
 
 const awaitRequestMessage = async ({ commit, dispatch }) => {
   const res = await awaitMessageFromOpener();
@@ -14,6 +15,7 @@ const awaitRequestMessage = async ({ commit, dispatch }) => {
 const sendResponse = async ({ dispatch }, payload) => {
   sendMessageToOpener('dialog', {
     ...payload,
+    method: METHODS.SIGN,
     status: true,
   });
   dispatch('closeDialog');

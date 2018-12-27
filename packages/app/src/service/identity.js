@@ -10,7 +10,12 @@ const request = {
       })
       .then(({ data }) => data),
 
-  post: (url, body) => axios.post(url, body).then(({ data }) => data),
+  post: (url, body) =>
+    axios
+      .post(url, body, {
+        withCredentials: true,
+      })
+      .then(({ data }) => data),
 };
 
 export const getSettings = () =>

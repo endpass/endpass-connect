@@ -2,6 +2,7 @@ import Wallet from '@@/class/Wallet';
 import web3 from '@@/class/singleton/web3';
 import { awaitMessageFromOpener, sendMessageToOpener } from '@@/util/message';
 import requestsActions from '@@/app/src/store/modules/requests/actions';
+import { METHODS } from '@@/constants';
 
 describe('requests actions', () => {
   const password = 'secret';
@@ -146,12 +147,10 @@ describe('requests actions', () => {
 
       await requestsActions.sendResponse({ dispatch }, payload);
 
-      expect(sendMessageToOpener).toBeCalledWith({
-        data: {
-          ...payload,
-          status: true,
-        },
-        from: 'dialog',
+      expect(sendMessageToOpener).toBeCalledWith('dialog', {
+        ...payload,
+        method: METHODS.SIGN,
+        status: true,
       });
       expect(dispatch).toBeCalledWith('closeDialog');
     });
