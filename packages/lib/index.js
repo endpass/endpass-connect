@@ -16,6 +16,10 @@ import {
   DEFAULT_NETWORKS,
 } from '@@/constants';
 
+/**
+ * Private methods which can not be called by user from connect instance
+ * Commonly using the "inner" logic of connect
+ */
 export const privateMethods = {
   checkBridgeReady: Symbol('checkBridgeReady'),
   watchRequestsQueue: Symbol('watchRequestsQueue'),
@@ -36,7 +40,6 @@ export const privateMethods = {
 export default class Connect {
   /**
    * @param {String} options.appUrl
-   * @param {Boolean} options.subscribe
    */
   constructor({ appUrl }) {
     if (!appUrl) {
@@ -55,14 +58,14 @@ export default class Connect {
     this.queueInterval = null;
     this.queue = [];
 
-    // Bridge
     this.bridge = this[privateMethods.injectBridge]();
     this[privateMethods.setupEmmiterEvents]();
     this[privateMethods.watchRequestsQueue]();
   }
 
   /**
-   *
+   * Sets interval and checks queue for new requests. If current request is not
+   * present – sets it and then process
    */
   [privateMethods.watchRequestsQueue]() {
     this.queueInterval = setInterval(() => {
@@ -74,11 +77,11 @@ export default class Connect {
   }
 
   /**
-   * Requests processing
-   */
-
-  /**
-   * @returns {Promise}
+   * Process current request
+   * If request method present in whitelist – it should be signed by user
+   * In other cases request will be send to network with web3
+   * In the both cases – result will be passed back to injected provider
+   * @returns {Promise<Object>} Request processing result
    */
   async [privateMethods.processCurrentRequest]() {
     const { currentRequest } = this;
@@ -101,15 +104,16 @@ export default class Connect {
   }
 
   /**
-   * @param {String} method
-   * @returns {String}
+   * Returns connect application url with passed method
+   * @param {String} method Expected method (route)
+   * @returns {String} Completed url to open
    */
   [privateMethods.getConnectUrl](method) {
     return !method ? this.appUrl : `${this.appUrl}/#/${method}`;
   }
 
   /**
-   *
+   * Sets event listeners to inner emmiter with handlers
    */
   [privateMethods.setupEmmiterEvents]() {
     this.emmiter.on(
@@ -123,7 +127,8 @@ export default class Connect {
   }
 
   /**
-   * @returns {HTMLElement}
+   * Injects iframe-bridge to opened page and returns link to injected element
+   * @returns {HTMLElement} Injected iframe element
    */
   [privateMethods.injectBridge]() {
     const iframeElement = document.createElement('iframe');
@@ -144,11 +149,8 @@ export default class Connect {
   }
 
   /**
-   * Direct messaging methods
-   */
-
-  /**
-   * @returns {Promise<Object>}
+   * Requests user settings from connect application
+   * @returns {Promise<Object>} User settings
    */
   [privateMethods.getUserSettings]() {
     return this[privateMethods.checkBridgeReady]().then(() => {
@@ -161,6 +163,8 @@ export default class Connect {
   }
 
   /**
+   * Checks connect bridge ready state
+   * Resolves only if bridge is available and can send ready state message
    * @returns {Promise<Boolean>}
    */
   [privateMethods.checkBridgeReady]() {
@@ -180,11 +184,12 @@ export default class Connect {
     });
   }
 
-  // "Normal methods" which dont need refactoring
-
   /**
-   * @param {String} route
-   * @returns {Promise<Window>}
+   * Opens application with given route in child window
+   * Also awaits ready state message from dialog
+   * After receiving message – returns link to opened window
+   * @param {String} route Target connect application route
+   * @returns {Promise<Window>} Opened child window
    */
   async [privateMethods.openApp](route) {
     const pos = {
@@ -200,20 +205,20 @@ export default class Connect {
       `top=${pos.y}`,
       `left=${pos.x}`,
     ];
-
     const dialog = window.open(
       this[privateMethods.getConnectUrl](route),
       null,
       windowFeatures.join(','),
     );
 
-    const res = await awaitDialogMessage(METHODS.READY_STATE_DIALOG);
+    await awaitDialogMessage(METHODS.READY_STATE_DIALOG);
 
     return dialog;
   }
 
   /**
-   * @returns {Promise<Object>}
+   * Sends current request to network with request provider and returns result
+   * @returns {Promise<Object>} Result from network
    */
   async [privateMethods.sendToNetwork]() {
     return new Promise((resolve, reject) => {
@@ -228,28 +233,32 @@ export default class Connect {
   }
 
   /**
-   * @param {Object} request
+   * Handle requests and push them to the requests queue
+   * @param {Object} request Incoming request
    */
   [privateMethods.handleRequest](request) {
     if (request.id) this.queue.push(request);
   }
 
   /**
-   * @returns {Object}
+   * Returns injeted provider settings
+   * @returns {Object} Current provider settings
    */
   [privateMethods.getSettings]() {
     return this.provider.settings;
   }
 
   /**
-   * @param {Object} payload
+   * Sends response to injected provider
+   * @param {Object} payload Response payload object
    */
   [privateMethods.sendResponse](payload) {
     this.emmiter.emit(INPAGE_EVENTS.RESPONSE, payload);
   }
 
   /**
-   * @param   {[type]} web3
+   * Creates requsts provider and save it to the instance property
+   * @param {Web3} web3 Web3 instance which will provide providers
    * @returns {[type]}
    */
   [privateMethods.createRequestProvider](web3) {
@@ -261,7 +270,9 @@ export default class Connect {
   }
 
   /**
-   * @returns {Promise<Object>}
+   * Sends current request to connect application dialog, opens it and
+   * awaits sign result
+   * @returns {Promise<Object>} Sign result
    */
   async [privateMethods.sign]() {
     const dialog = await this[privateMethods.openApp]('sign');
@@ -306,7 +317,10 @@ export default class Connect {
   }
 
   /**
-   * @returns {Promise<Object>}
+   * Requests user settings from injected bridge and returns formatted data
+   * Settings includes last active account and network id
+   * Throws error if settings can not be resolved
+   * @returns {Promise<Object>} Account data
    */
   async getAccountData() {
     try {
@@ -355,6 +369,8 @@ export default class Connect {
   }
 
   /**
+   * Opens connect application on logout screen (now on the root screen) and
+   * awaits logout message
    * @returns {Promise<boolean>}
    */
   async logout() {

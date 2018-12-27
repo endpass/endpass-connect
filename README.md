@@ -33,14 +33,12 @@ const connect = new EndpassConnect({
 Next, you can try to authentificate user.
 
 ```js
-const res = await connect.auth();
-
-if (res.status) {
-  const account = await connect.getAccountData();
+try {
+  const res = await connect.auth();
 
   // Now, you have active account address and network id
-} else {
-  // Throw error or do something else to investigate user about auth failure
+} catch (err) {
+  // Something goes wrong! User is not authorized
 }
 ```
 
@@ -48,10 +46,9 @@ if (res.status) {
 
 #### Instance options
 
-| Property    | Type      | Default     | Description                                                                                                                                                                                                                                                             |
-| ----------- | --------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `appUrl`    | `string`  | `undefined` | Url of Endpass Connect application. Required params.                                                                                                                                                                                                                    |
-| `subscribe` | `boolean` | `false`     | If true, automatically subscribes to JSONRPC requests and send then to the Endpass Connect application. Enable it, if your application uses `web3` and works with Etherium network. Potentially, you don't need this option if you using Endpass Connect for auth only. |
+| Property | Type     | Default     | Description                                          |
+| -------- | -------- | ----------- | ---------------------------------------------------- |
+| `appUrl` | `string` | `undefined` | Url of Endpass Connect application. Required params. |
 
 #### Instance methods
 
