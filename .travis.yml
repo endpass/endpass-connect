@@ -1,0 +1,21 @@
+language: node_js
+node_js:
+- '10'
+cache:
+  directories:
+  - "~/.cache"
+install: yarn install --frozen-lockfile
+script:
+- yarn build:app:dev
+deploy:
+  provider: s3
+  access_key_id:
+    secure: Ykzl2OgPPfO4K8FWUcIVqTVWjItORCo8a2g9KEHZfZVzwihOkawG8DDaSKYcQzraDbFqevYhqczXsfNhqjhuV9JvVlSjyuaWoI/8YngrHHeEtQYWDQ31ljeimQ/4jFIJGOzqt+8D+3s/THqH4lYt6AAp9PxVsUnWfB/a2YqdG9uaaW2ht3Wamam1mrZrARhN/4b6OtSrsQQK1jfTYMo/91Vlu0atuA11On7fBL3hq70ivsNqzFy0gIeqPFEvSHSIkYCH3oK5cvtsxade1YNYQm4zPCornS1sXK5LW79Sy7hViFeLXfwaBPX720riZCj78hWqpusbKXKaI9E4PAjBiv1RAxGSSEr2K1NT5OMUdiO1Sn36XLRupuDVBEauZDX3CnB8SDPvwjGhiRkyjWps9LuZ0ZIJh9pirye7Fx+ITyeWUyNVXiwgoUAmJIwJrVS2AACCK+m93RiWSZlHpIoHXQWEnglZsy4s6rUmGd0tIVugS7Sxfp++UiOg/aLzDHpnpovmlTip6E6gGzaJpvusQhNYcSb69FhCHw/O8zv3TJLVOramZQfnmTzInQQpSp4B5bPEfkIYyoyStMiDE09qPxsTMuVZgvOETwE0Mf0k8mx966/U5WgD8+ksNQJKHe5sY1hqXN+fviljN2v7KwfuZ7yw2dTI4zhrFo4arGzpmEg=
+  secret_access_key:
+    secure: j94e+Z8mSWx3hMn6lghj8Aw80yDe5NRAjO8X32LBoXnU0X9/+3bpjiUJBf286ovGEgSXm56X8ca2hF7xnlROfJOqqGFQVtybr1Y9goTV/s8AVHcxDj9j2UEK/z141A+xHf+fB/SgE2Ko1kavPoUFbu3gooEIRmKcmPlMvs7Ud2wvGThSVnmRYi3QP4pwDsexNpk0aNR1HWpMk5pLKfNwbW6dcTorMN56yjdrLJcG+ShPyLZP071dR16sVXZy9WzxweUKuwzKiRZ17rcPYVyQQqHTaoky2w7g5EPDAoR0tqXAyKSRf1LsFLqZgjNt06fgo6wui/auiUf75sb6g67HMrPWpNOY4XbiuTlyv46TZ7AaKUx60eLuKLQaj2tt8NJ+jVFIlJnBUUndgguEzQTXMKMJJYCQN9FNcpoL85qSUqcjtpo23r1geeonTU23RJVnXyXtW7uAN/7FcnOML1+gOO2hJPAgVWZEgDV5AOT4qN0lJEB3rc22xZg2TcXZq2ulbH/NKM4eSGG6OBtSAYgfZrrVtFP95r1rvb3o+QxRcL5anS/6AgvTt7KLxMip/JH1aORjVSQcPcbChJVGu4GXq/F1x/cT8nOd0tuNZwExzvidZH8/asP704+T0FA1CzHBMsXJjDpJ7ZzOTnjew+yQxVmDoBfkkfh7YgmQXP11l/I=
+  bucket: auth-dev.endpass.com
+  region: us-east-1
+  skip_cleanup: true
+  local_dir: dist/app
+  on:
+    branch: master
