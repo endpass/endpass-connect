@@ -38,7 +38,7 @@ describe('accounts actions', () => {
       IdentityService.auth.mockResolvedValueOnce({
         success: true,
         challenge: {
-          challenge_type: 'otp',
+          challengeType: 'otp',
         },
       });
 

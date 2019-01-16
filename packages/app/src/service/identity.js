@@ -54,7 +54,7 @@ export const auth = (email, redirectUrl) => {
 export const otpAuth = (email, code) =>
   request
     .post(`${identityBaseUrl}/api/v1.1/auth/token`, {
-      challenge_type: 'otp',
+      challengeType: 'otp',
       email,
       code,
     })

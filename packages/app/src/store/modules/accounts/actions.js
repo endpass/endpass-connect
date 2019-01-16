@@ -22,7 +22,7 @@ const auth = async ({ state, commit }, email) => {
 
     if (!res.success) throw new Error('Auth failed!');
 
-    const type = get(res, 'challenge.challenge_type');
+    const type = get(res, 'challenge.challengeType');
 
     if (type === 'otp') {
       commit('setOtpEmail', email);
