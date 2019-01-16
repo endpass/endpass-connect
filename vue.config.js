@@ -14,9 +14,7 @@ module.exports = {
     ],
   },
   chainWebpack: config => {
-    config.resolve.alias
-      .set('@@', path.resolve(__dirname, './packages/'))
-      .set('@', path.resolve(__dirname, './packages/app/src'));
+    config.resolve.alias.set('@', path.resolve(__dirname, './src'));
   },
   devServer: {
     proxy: {

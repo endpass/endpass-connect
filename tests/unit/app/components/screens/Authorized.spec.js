@@ -1,6 +1,6 @@
 import Vuex from 'vuex';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
-import Authorized from '@@/app/src/components/screens/Authorized.vue';
+import Authorized from '@/components/screens/Authorized.vue';
 
 const localVue = createLocalVue();
 
@@ -18,10 +18,6 @@ describe('Authorized', () => {
       state: {
         inited: true,
         loading: false,
-      },
-      actions: {
-        init: jest.fn(),
-        sendReadyMessage: jest.fn(),
       },
       getters: {
         isDialog: jest.fn(() => true),
@@ -63,15 +59,6 @@ describe('Authorized', () => {
   });
 
   describe('behavior', () => {
-    it('should init and send ready message if opened in dialog', async () => {
-      expect.assertions(2);
-
-      await global.flushPromises();
-
-      expect(coreModule.actions.init).toBeCalled();
-      expect(coreModule.actions.sendReadyMessage).toBeCalled();
-    });
-
     it('should call logout action on logout form submit', () => {
       // TODO Have troubles with triggering event from stub, solve it when possivble
       wrapper.vm.handleLogoutSubmit();

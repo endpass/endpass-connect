@@ -1,5 +1,5 @@
-import { state as coreState } from '@@/app/src/store/modules/core';
-import coreMutations from '@@/app/src/store/modules/core/mutations';
+import { state as coreState } from '@/store/modules/core';
+import coreMutations from '@/store/modules/core/mutations';
 
 describe('core mutations', () => {
   let state;

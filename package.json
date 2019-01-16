@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.4.0-alpha",
+  "version": "0.5.0-alpha",
   "main": "./dist/lib/endpass-connect.js",
   "description": "",
   "repository": {
@@ -15,13 +15,13 @@
   "homepage": "https://github.com/endpass/endpass-connect",
   "scripts": {
     "build": "rimraf ./dist && npm run build:app && npm run build:lib",
-    "dev:app": "vue-cli-service serve ./packages/app/src/main.js",
+    "dev:app": "vue-cli-service serve ./src/main.js",
     "build:app":
-      "NODE_ENV=production vue-cli-service --no-clean build ./packages/app/src/main.js",
+      "NODE_ENV=production vue-cli-service --no-clean build ./src/main.js",
     "build:app:dev":
-      "NODE_ENV=development vue-cli-service --no-clean build ./packages/app/src/main.js",
+      "NODE_ENV=development vue-cli-service --no-clean build ./src/main.js",
     "build:app:test":
-      "NODE_ENV=test vue-cli-service --no-clean build ./packages/app/src/main.js",
+      "NODE_ENV=test vue-cli-service --no-clean build ./src/main.js",
     "dev:lib": "webpack --watch --mode=development",
     "build:lib": "webpack --mode=production",
     "unit": "vue-cli-service test:unit",

@@ -1,10 +1,7 @@
 import get from 'lodash/get';
-import web3 from '@@/class/singleton/web3';
-import {
-  sendMessageToOpener,
-  subscribeOnBridgeMessages,
-} from '@@/util/message';
-import { DEFAULT_NETWORKS, METHODS } from '@@/constants';
+import web3 from '@/class/singleton/web3';
+import { sendMessageToOpener, subscribeOnBridgeMessages } from '@/util/message';
+import { DEFAULT_NETWORKS, METHODS } from '@/constants';
 
 const init = async ({ dispatch, commit }) => {
   try {
@@ -24,11 +21,11 @@ const setWeb3NetworkProvider = (ctx, netId) => {
 };
 
 const sendDialogMessage = (ctx, data) => {
-  sendMessageToOpener('dialog', data);
+  if (window.opener) sendMessageToOpener('dialog', data);
 };
 
 const sendBridgeMessage = (ctx, data) => {
-  sendMessageToOpener('bridge', data);
+  if (window.parent) sendMessageToOpener('bridge', data);
 };
 
 const sendReadyMessage = ({ dispatch }) => {

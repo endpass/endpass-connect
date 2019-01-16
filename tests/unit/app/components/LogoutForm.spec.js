@@ -1,5 +1,5 @@
 import { shallowMount, mount } from '@vue/test-utils';
-import LogoutForm from '@@/app/src/components/LogoutForm.vue';
+import LogoutForm from '@/components/LogoutForm.vue';
 
 describe('LogoutForm', () => {
   describe('render', () => {

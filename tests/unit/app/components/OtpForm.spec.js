@@ -1,5 +1,5 @@
 import { shallowMount, mount } from '@vue/test-utils';
-import OtpForm from '@@/app/src/components/OtpForm.vue';
+import OtpForm from '@/components/OtpForm.vue';
 
 describe('OtpForm', () => {
   describe('render', () => {

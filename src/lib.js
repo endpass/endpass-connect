@@ -6,15 +6,15 @@ import {
   sendMessageToBridge,
   awaitDialogMessage,
   awaitBridgeMessage,
-} from '@@/util/message';
-import Emmiter from '@@/class/Emmiter';
-import InpageProvider from '@@/class/InpageProvider';
+} from '@/util/message';
+import Emmiter from '@/class/Emmiter';
+import InpageProvider from '@/class/InpageProvider';
 import {
   METHODS,
   INPAGE_EVENTS,
   DAPP_WHITELISTED_METHODS,
   DEFAULT_NETWORKS,
-} from '@@/constants';
+} from '@/constants';
 
 /**
  * Private methods which can not be called by user from connect instance
@@ -134,13 +134,13 @@ export default class Connect {
     const iframeElement = document.createElement('iframe');
 
     iframeElement.src = this[privateMethods.getConnectUrl]('bridge');
-    iframeElement.width = 0;
-    iframeElement.height = 0;
 
     Object.assign(iframeElement.style, {
       position: 'absolute',
       top: 0,
       left: 0,
+      width: 0,
+      height: 0,
     });
 
     document.body.appendChild(iframeElement);
@@ -169,18 +169,16 @@ export default class Connect {
    */
   [privateMethods.checkBridgeReady]() {
     return new Promise(resolve => {
-      let interval;
+      const interval = setInterval(() => {
+        sendMessageToBridge(this.bridge.contentWindow, {
+          method: METHODS.READY_STATE_BRIDGE,
+        });
+      }, 250);
 
       awaitBridgeMessage(METHODS.READY_STATE_BRIDGE).then(res => {
         clearInterval(interval);
         return resolve(res.status);
       });
-
-      interval = setInterval(() => {
-        sendMessageToBridge(this.bridge.contentWindow, {
-          method: METHODS.READY_STATE_BRIDGE,
-        });
-      }, 250);
     });
   }
 
@@ -253,13 +251,16 @@ export default class Connect {
    * @param {Object} payload Response payload object
    */
   [privateMethods.sendResponse](payload) {
+    if (payload.error) {
+      console.error(`Request have return error: ${payload.error}`);
+    }
+
     this.emmiter.emit(INPAGE_EVENTS.RESPONSE, payload);
   }
 
   /**
    * Creates requsts provider and save it to the instance property
    * @param {Web3} web3 Web3 instance which will provide providers
-   * @returns {[type]}
    */
   [privateMethods.createRequestProvider](web3) {
     const { networkVersion } = this[privateMethods.getSettings]();
@@ -295,6 +296,8 @@ export default class Connect {
     return omit(res, ['status']);
   }
 
+  // Public methods
+
   /**
    * Injects `web3` with "monkey patching" to given target
    * By default injects `web3` to window in the current context
@@ -325,6 +328,8 @@ export default class Connect {
   async getAccountData() {
     try {
       const settings = await this[privateMethods.getUserSettings]();
+
+      console.log('settings', settings);
 
       return {
         activeAccount: settings.lastActiveAccount,
@@ -375,6 +380,7 @@ export default class Connect {
    */
   async logout() {
     await this[privateMethods.openApp]();
+
     const res = await awaitDialogMessage(METHODS.LOGOUT);
 
     if (!res.status) throw new Error(res.message || 'Logout error!');

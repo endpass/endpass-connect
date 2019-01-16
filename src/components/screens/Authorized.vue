@@ -26,7 +26,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['init', 'logout', 'cancelLogout', 'sendReadyMessage']),
+    ...mapActions(['logout', 'cancelLogout']),
 
     async handleLogoutSubmit() {
       this.logout();
@@ -42,12 +42,8 @@ export default {
   },
 
   async created() {
-    await this.init();
-
     if (this.isDialog) {
       window.addEventListener('beforeunload', this.handleWindowClose);
-
-      await this.sendReadyMessage();
     }
   },
 

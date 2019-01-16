@@ -1,5 +1,5 @@
 import { shallowMount, mount } from '@vue/test-utils';
-import SignForm from '@@/app/src/components/SignForm.vue';
+import SignForm from '@/components/SignForm.vue';
 
 const request = {
   address: '0x0',
@@ -28,13 +28,6 @@ describe('SignForm', () => {
         request.url,
       );
       expect(wrapper.find('[data-test=error-message]').exists()).toBe(false);
-      expect(wrapper.html()).toMatchSnapshot();
-    });
-
-    it('should not render form if request is not passed', () => {
-      wrapper = mount(SignForm);
-
-      expect(wrapper.find('form').exists()).toBe(false);
       expect(wrapper.html()).toMatchSnapshot();
     });
 

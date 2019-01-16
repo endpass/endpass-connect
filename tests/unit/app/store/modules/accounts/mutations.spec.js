@@ -1,5 +1,5 @@
-import { state as accountsState } from '@@/app/src/store/modules/accounts';
-import accountsMutations from '@@/app/src/store/modules/accounts/mutations';
+import { state as accountsState } from '@/store/modules/accounts';
+import accountsMutations from '@/store/modules/accounts/mutations';
 
 describe('accounts mutations', () => {
   let state;

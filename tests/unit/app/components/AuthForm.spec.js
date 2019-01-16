@@ -1,5 +1,5 @@
 import { shallowMount, mount } from '@vue/test-utils';
-import AuthForm from '@@/app/src/components/AuthForm.vue';
+import AuthForm from '@/components/AuthForm.vue';
 
 describe('AuthForm', () => {
   describe('render', () => {
