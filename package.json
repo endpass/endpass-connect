@@ -34,7 +34,19 @@
   "lint-staged": {
     "./src/**/*.{js,vue,json}": ["prettier --write", "git add"]
   },
-  "release": {},
+  "release": {
+    "prepare": [
+      {
+        "path": "@semantic-release/changelog"
+      },
+      [
+        "@semantic-release/git",
+        {
+          "assets": ["CHANGELOG.md"]
+        }
+      ]
+    ]
+  },
   "config": {
     "commitizen": {
       "path": "node_modules/cz-conventional-changelog"
