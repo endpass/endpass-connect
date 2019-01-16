@@ -54,7 +54,7 @@ export const auth = (email, redirectUrl) => {
 export const otpAuth = (email, code) =>
   request
     .post(`${identityBaseUrl}/api/v1.1/auth/token`, {
-      challenge_type: 'otp',
+      challengeType: 'otp',
       email,
       code,
     })
@@ -66,6 +66,7 @@ export const otpAuth = (email, code) =>
 
 export const awaitAuthConfirm = () =>
   new Promise(resolve => {
+    /* eslint-disable-next-line */
     const interval = setInterval(async () => {
       try {
         await getAccounts();
@@ -81,6 +82,7 @@ export const logout = () => request.post(`${identityBaseUrl}/api/v1.1/logout`);
 
 export const awaitLogoutConfirm = () =>
   new Promise(resolve => {
+    /* eslint-disable-next-line */
     const interval = setInterval(async () => {
       try {
         await getAccounts();
@@ -94,6 +96,7 @@ export const awaitLogoutConfirm = () =>
 
 export const awaitAccountCreate = () =>
   new Promise((resolve, reject) => {
+    /* eslint-disable-next-line */
     const interval = setInterval(async () => {
       try {
         const res = await getAccounts();

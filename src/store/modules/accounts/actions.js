@@ -22,7 +22,7 @@ const auth = async ({ state, commit }, email) => {
 
     if (!res.success) throw new Error('Auth failed!');
 
-    const type = get(res, 'challenge.challenge_type');
+    const type = get(res, 'challenge.challengeType');
 
     if (type === 'otp') {
       commit('setOtpEmail', email);
@@ -36,11 +36,16 @@ const auth = async ({ state, commit }, email) => {
   }
 };
 
-const confirmAuthViaOtp = async (ctx, { email, code }) => {
-  // TODO complete this feature
-  const res = await IdentityService.otpAuth(email, code);
+const confirmAuthViaOtp = async ({ commit }, { email, code }) => {
+  commit('changeLoadingStatus', true);
 
-  console.log('otp auth result', res);
+  try {
+    await IdentityService.otpAuth(email, code);
+  } catch (err) {
+    throw err;
+  } finally {
+    commit('changeLoadingStatus', false);
+  }
 };
 
 const confirmAuth = ({ dispatch }) => {

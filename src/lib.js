@@ -329,8 +329,6 @@ export default class Connect {
     try {
       const settings = await this[privateMethods.getUserSettings]();
 
-      console.log('settings', settings);
-
       return {
         activeAccount: settings.lastActiveAccount,
         activeNet: settings.net || 1,
