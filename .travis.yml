@@ -7,8 +7,17 @@ cache:
 install: yarn install --frozen-lockfile
 script:
   - npm test && npm run build
-after_success:
-  - npm run semantic-release  
+stages:
+  - test
+  - name: deploy
+    if: branch = release
+jobs:
+  include:
+    - stage: deploy
+      script:
+        - if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
+          npm run build && npm run semantic-release
+          fi
 deploy:
   provider: s3
   access_key_id:
@@ -21,3 +30,6 @@ deploy:
   local_dir: dist/app
   on:
     branch: master
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/

@@ -28,15 +28,22 @@
     "unit:watch": "vue-cli-service test:unit --watch",
     "format":
       "prettier --write 'packages/**/*.{js,vue,json}' && eslint packages/**/*.{js,vue} --fix",
-    "semantic-release": ""
+    "semantic-release": "semantic-release",
+    "commit": "git-cz"
   },
   "lint-staged": {
-    "./packages/**/*.{js,vue,json}": ["prettier --write", "git add"],
-    "./dist/lib/*.js": ["git add"]
+    "./src/**/*.{js,vue,json}": ["prettier --write", "git add"]
+  },
+  "release": {},
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run build:lib && lint-staged"
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "dependencies": {
