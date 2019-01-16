@@ -1,3 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`VCode render should correctly render VCode component 1`] = `<pre class="code">  </pre>`;
+exports[`VCode render should correctly render VCode component 1`] = `
+<pre class="code">
+</pre>
+`;

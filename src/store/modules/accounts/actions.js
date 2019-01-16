@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import IdentityService from '@/service/identity';
-import { awaitMessageFromOpener } from '@@/util/message';
-import { METHODS } from '@@/constants';
+import { awaitMessageFromOpener } from '@/util/message';
+import { METHODS } from '@/constants';
 
 const awaitAuthMessage = async ({ commit }) => {
   const res = await awaitMessageFromOpener();
@@ -60,8 +60,17 @@ const cancelAuth = ({ dispatch }) => {
   dispatch('closeDialog');
 };
 
-const getSettings = async () => {
+const getSettings = async ({ dispatch }) => {
   const res = await IdentityService.getSettings();
+
+  if (!res.lastActiveAccount) {
+    const lastAccount = await dispatch('getFirstPrivateAccount');
+
+    return {
+      ...res,
+      lastActiveAccount: get(lastAccount, 'address'),
+    };
+  }
 
   return res;
 };
@@ -80,6 +89,34 @@ const getAccountInfo = async (ctx, address) => {
   const res = await IdentityService.getAccountInfo(address);
 
   return res;
+};
+
+const getFirstPrivateAccount = async ({ state, dispatch }) => {
+  if (!state.accounts) {
+    await dispatch('getAccounts');
+  }
+
+  const { accounts } = state;
+
+  const privateAccount = await Promise.race(
+    accounts.map(
+      (account, i) =>
+        /* eslint-disable-next-line */
+        new Promise(async resolve => {
+          const accountInfo = await dispatch('getAccountInfo', account);
+
+          if (accountInfo.type !== 'PublicAccount') {
+            return resolve(accountInfo);
+          }
+
+          if (i === accounts.length - 1) {
+            return resolve(null);
+          }
+        }),
+    ),
+  );
+
+  return privateAccount;
 };
 
 const getAccount = async (ctx, address) => {
@@ -150,10 +187,10 @@ export default {
   getAccount,
   getAccountInfo,
   getAccounts,
+  getFirstPrivateAccount,
   openCreateAccountPage,
   awaitAccountCreate,
   awaitAuthConfirm,
-
   logout,
   cancelLogout,
   awaitLogoutConfirm,

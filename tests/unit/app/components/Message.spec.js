@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
-import Message from '@@/app/src/components/Message.vue';
+import Message from '@/components/Message.vue';
 
 describe('Message', () => {
   describe('render', () => {

@@ -35,13 +35,7 @@ export default {
   },
 
   methods: {
-    ...mapActions([
-      'init',
-      'awaitRequestMessage',
-      'processRequest',
-      'cancelRequest',
-      'sendReadyMessage',
-    ]),
+    ...mapActions(['awaitRequestMessage', 'processRequest', 'cancelRequest']),
 
     async handleSignSubmit(res) {
       try {
@@ -63,12 +57,8 @@ export default {
   },
 
   async created() {
-    await this.init();
-
     if (this.isDialog) {
       window.addEventListener('beforeunload', this.handleWindowClose);
-
-      await this.sendReadyMessage();
       this.awaitRequestMessage();
     }
   },

@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
-import VCode from '@@/app/src/components/VCode.vue';
+import VCode from '@/components/VCode.vue';
 
 describe('VCode', () => {
   describe('render', () => {

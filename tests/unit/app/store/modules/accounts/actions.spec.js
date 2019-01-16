@@ -1,7 +1,7 @@
 import IdentityService from '@/service/identity';
-import accountsActions from '@@/app/src/store/modules/accounts/actions';
-import { awaitMessageFromOpener } from '@@/util/message';
-import { METHODS } from '@@/constants';
+import accountsActions from '@/store/modules/accounts/actions';
+import { awaitMessageFromOpener } from '@/util/message';
+import { METHODS } from '@/constants';
 
 describe('accounts actions', () => {
   let dispatch;
@@ -271,6 +271,59 @@ describe('accounts actions', () => {
       await accountsActions.awaitAuthMessage({ commit });
 
       expect(commit).not.toBeCalled();
+    });
+  });
+
+  describe('getFirstPrivateAccount', () => {
+    it('should returns first private account info from state', async () => {
+      expect.assertions(1);
+
+      const state = {
+        accounts: ['0x0', '0x1'],
+      };
+
+      dispatch.mockResolvedValueOnce({
+        type: 'PublicAccount',
+        address: state.accounts[0],
+      });
+      dispatch.mockResolvedValueOnce({
+        type: 'StandardAccount',
+        address: state.accounts[1],
+      });
+
+      const res = await accountsActions.getFirstPrivateAccount({
+        state,
+        dispatch,
+      });
+
+      expect(res).toEqual({
+        type: 'StandardAccount',
+        address: state.accounts[1],
+      });
+    });
+
+    it('should returns null if there are no private accounts in state', async () => {
+      expect.assertions(1);
+
+      const state = {
+        accounts: ['0x0', '0x1'],
+      };
+
+      dispatch.mockResolvedValueOnce({
+        type: 'PublicAccount',
+        address: state.accounts[0],
+      });
+      dispatch.mockResolvedValueOnce({
+        type: 'PublicAccount',
+        address: state.accounts[1],
+      });
+
+      const res = await accountsActions.getFirstPrivateAccount({
+        state,
+        dispatch,
+      });
+
+      expect(res).toBe(null);
     });
   });
 });

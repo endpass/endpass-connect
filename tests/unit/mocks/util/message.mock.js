@@ -1,4 +1,4 @@
-jest.mock('@@/util/message', () => ({
+jest.mock('@/util/message', () => ({
   sendMessage: jest.fn(),
   sendMessageToDialog: jest.fn(),
   sendMessageToOpener: jest.fn(),

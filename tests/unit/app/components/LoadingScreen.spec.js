@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
-import LoadingScreen from '@@/app/src/components/LoadingScreen.vue';
+import LoadingScreen from '@/components/LoadingScreen.vue';
 
 describe('LoadingScreen', () => {
   describe('render', () => {

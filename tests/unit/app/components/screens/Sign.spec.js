@@ -1,6 +1,6 @@
 import Vuex from 'vuex';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
-import Sign from '@@/app/src/components/screens/Sign.vue';
+import Sign from '@/components/screens/Sign.vue';
 
 const localVue = createLocalVue();
 
@@ -23,6 +23,9 @@ describe('Sign', () => {
         },
         actions: {
           sendReadyMessage: jest.fn(),
+        },
+        getters: {
+          isDialog: jest.fn(() => true),
         },
       };
       accountsModule = {

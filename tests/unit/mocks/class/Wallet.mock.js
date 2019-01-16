@@ -1,4 +1,4 @@
-jest.mock('@@/class/Wallet', () => {
+jest.mock('@/class/Wallet', () => {
   class Wallet {}
 
   Wallet.prototype.sign = jest.fn();
