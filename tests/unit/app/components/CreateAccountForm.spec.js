@@ -1,5 +1,5 @@
 import { shallowMount, mount } from '@vue/test-utils';
-import CreateAccountForm from '@@/app/src/components/CreateAccountForm.vue';
+import CreateAccountForm from '@/components/CreateAccountForm.vue';
 
 describe('CreateAccountForm', () => {
   describe('render', () => {

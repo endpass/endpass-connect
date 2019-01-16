@@ -82,7 +82,6 @@ export const awaitMessageFrom = from =>
         return resolve(data.payload);
       }
     };
-
     window.addEventListener('message', handler);
   });
 

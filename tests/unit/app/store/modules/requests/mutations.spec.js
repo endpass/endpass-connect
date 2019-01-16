@@ -1,5 +1,5 @@
-import { state as requestsState } from '@@/app/src/store/modules/requests';
-import requestsMutations from '@@/app/src/store/modules/requests/mutations';
+import { state as requestsState } from '@/store/modules/requests';
+import requestsMutations from '@/store/modules/requests/mutations';
 
 describe('requests mutations', () => {
   let state;

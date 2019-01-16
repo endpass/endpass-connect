@@ -1,6 +1,6 @@
-import { sendMessageToOpener } from '@@/util/message';
-import coreActions from '@@/app/src/store/modules/core/actions';
-import { METHODS } from '@@/constants';
+import { sendMessageToOpener } from '@/util/message';
+import coreActions from '@/store/modules/core/actions';
+import { METHODS } from '@/constants';
 
 describe('core actions', () => {
   let dispatch;
@@ -15,6 +15,8 @@ describe('core actions', () => {
     it('should send message with given data', async () => {
       expect.assertions(1);
 
+      window.opener = {};
+
       const data = {
         foo: 'bar',
       };
@@ -22,6 +24,22 @@ describe('core actions', () => {
       await coreActions.sendDialogMessage(null, data);
 
       expect(sendMessageToOpener).toBeCalledWith('dialog', data);
+    });
+  });
+
+  describe('sendBridgeMessage', () => {
+    it('should send message with given data', async () => {
+      expect.assertions(1);
+
+      window.parent = {};
+
+      const data = {
+        foo: 'bar',
+      };
+
+      await coreActions.sendBridgeMessage(null, data);
+
+      expect(sendMessageToOpener).toBeCalledWith('bridge', data);
     });
   });
 

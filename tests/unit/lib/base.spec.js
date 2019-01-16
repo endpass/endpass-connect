@@ -1,6 +1,6 @@
-import Connect, { privateMethods } from '@@/lib';
-import { INPAGE_EVENTS, DIALOG_WINDOW_NAME, METHODS } from '@@/constants';
-import { awaitDialogMessage, sendMessageToDialog } from '@@/util/message';
+import Connect, { privateMethods } from '@/lib';
+import { INPAGE_EVENTS, DIALOG_WINDOW_NAME, METHODS } from '@/constants';
+import { awaitDialogMessage, sendMessageToDialog } from '@/util/message';
 
 describe('Connect class', () => {
   beforeAll(() => {

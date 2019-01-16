@@ -88,7 +88,6 @@ export default {
 
   methods: {
     ...mapActions([
-      'init',
       'auth',
       'cancelAuth',
       'confirmAuth',
@@ -96,7 +95,6 @@ export default {
       'awaitAuthMessage',
       'awaitAuthConfirm',
       'awaitAccountCreate',
-      'sendReadyMessage',
       'openCreateAccountPage',
     ]),
 
@@ -155,12 +153,8 @@ export default {
   },
 
   async created() {
-    await this.init();
-
     if (this.isDialog) {
       window.addEventListener('beforeunload', this.handleWindowClose);
-
-      await this.sendReadyMessage();
       this.awaitAuthMessage();
     }
   },

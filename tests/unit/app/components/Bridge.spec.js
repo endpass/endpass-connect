@@ -1,6 +1,6 @@
 import Vuex from 'vuex';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
-import Bridge from '@@/app/src/components/Bridge.vue';
+import Bridge from '@/components/Bridge.vue';
 
 const localVue = createLocalVue();
 

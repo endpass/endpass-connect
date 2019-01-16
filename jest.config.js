@@ -13,8 +13,7 @@ module.exports = {
   },
   transformIgnorePatterns: ['node_modules'],
   moduleNameMapper: {
-    '^@@/(.*)$': '<rootDir>/packages/$1',
-    '^@/(.*)$': '<rootDir>/packages/app/src/$1',
+    '^@/(.*)$': '<rootDir>/src/$1',
   },
   snapshotSerializers: ['jest-serializer-vue'],
   testMatch: ['**/tests/unit/**/*.spec.(js|jsx|ts|tsx)'],

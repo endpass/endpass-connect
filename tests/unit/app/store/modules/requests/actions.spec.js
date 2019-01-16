@@ -1,8 +1,7 @@
-import Wallet from '@@/class/Wallet';
-import web3 from '@@/class/singleton/web3';
-import { awaitMessageFromOpener, sendMessageToOpener } from '@@/util/message';
-import requestsActions from '@@/app/src/store/modules/requests/actions';
-import { METHODS } from '@@/constants';
+import Wallet from '@/class/Wallet';
+import { awaitMessageFromOpener, sendMessageToOpener } from '@/util/message';
+import requestsActions from '@/store/modules/requests/actions';
+import { METHODS } from '@/constants';
 
 describe('requests actions', () => {
   const password = 'secret';

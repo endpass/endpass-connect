@@ -3,13 +3,31 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
+
 export default {
   name: 'App',
+
+  computed: {
+    ...mapGetters(['isDialog']),
+  },
+
+  methods: {
+    ...mapActions(['init', 'sendReadyMessage']),
+  },
+
+  async created() {
+    await this.init();
+
+    if (this.isDialog) {
+      await this.sendReadyMessage();
+    }
+  },
 };
 </script>
 
 <style lang="postcss">
-@import '../../../node_modules/reset.css/reset.css';
+@import '../node_modules/reset.css/reset.css';
 </style>
 
 <style lang="postcss">

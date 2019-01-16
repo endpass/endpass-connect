@@ -1,5 +1,5 @@
 import { shallowMount, mount } from '@vue/test-utils';
-import MessageForm from '@@/app/src/components/MessageForm.vue';
+import MessageForm from '@/components/MessageForm.vue';
 
 describe('MessageForm', () => {
   describe('render', () => {

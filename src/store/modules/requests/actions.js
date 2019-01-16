@@ -1,6 +1,6 @@
-import Wallet from '@@/class/Wallet';
-import { sendMessageToOpener, awaitMessageFromOpener } from '@@/util/message';
-import { METHODS } from '@@/constants';
+import Wallet from '@/class/Wallet';
+import { sendMessageToOpener, awaitMessageFromOpener } from '@/util/message';
+import { METHODS } from '@/constants';
 
 const awaitRequestMessage = async ({ commit, dispatch }) => {
   const res = await awaitMessageFromOpener();

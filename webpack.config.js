@@ -7,7 +7,7 @@ const { NODE_ENV = 'development' } = process.env;
 const ENV = getEnv(NODE_ENV);
 
 module.exports = {
-  entry: path.resolve(__dirname, './packages/lib/index.js'),
+  entry: path.resolve(__dirname, './src/lib.js'),
 
   output: {
     path: path.resolve(__dirname, './dist/lib'),
@@ -47,12 +47,9 @@ module.exports = {
   },
 
   resolve: {
-    modules: [
-      path.resolve('./node_modules'),
-      path.resolve(__dirname, './packages'),
-    ],
+    modules: [path.resolve('./node_modules'), path.resolve(__dirname, './src')],
     alias: {
-      '@@': path.resolve(__dirname, './packages/'),
+      '@': path.resolve(__dirname, './src/'),
     },
     extensions: ['.json', '.js'],
   },

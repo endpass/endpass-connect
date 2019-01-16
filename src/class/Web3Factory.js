@@ -1,6 +1,6 @@
 import get from 'lodash/get';
 import Web3 from 'web3';
-import { DEFAULT_NETWORKS } from '@@/constants';
+import { DEFAULT_NETWORKS } from '@/constants';
 
 export default class Web3Factory {
   static create(netId) {

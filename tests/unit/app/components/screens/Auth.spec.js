@@ -1,6 +1,6 @@
 import Vuex from 'vuex';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
-import Auth from '@@/app/src/components/screens/Auth.vue';
+import Auth from '@/components/screens/Auth.vue';
 
 const localVue = createLocalVue();
 
@@ -22,8 +22,6 @@ describe('Auth', () => {
         loading: false,
       },
       actions: {
-        init: jest.fn(),
-        sendReadyMessage: jest.fn(),
         openCreateAccountPage: jest.fn(),
       },
       getters: {
@@ -94,14 +92,12 @@ describe('Auth', () => {
 
   describe('behavior', () => {
     describe('initial actions', () => {
-      it('should init, await auth message from opener on create and send ready message if opened in dialog', async () => {
-        expect.assertions(3);
+      it('should await auth message from opener on create', async () => {
+        expect.assertions(1);
 
         await global.flushPromises();
 
-        expect(coreModule.actions.init).toBeCalled();
         expect(accountsModule.actions.awaitAuthMessage).toBeCalled();
-        expect(coreModule.actions.sendReadyMessage).toBeCalled();
       });
 
       // TODO: another magic moment
