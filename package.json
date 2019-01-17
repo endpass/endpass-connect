@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.5.2-alpha",
+  "version": "0.5.3-alpha",
   "main": "./dist/lib/endpass-connect.js",
   "description": "",
   "repository": {
@@ -30,7 +30,7 @@
       "prettier --write 'packages/**/*.{js,vue,json}' && eslint packages/**/*.{js,vue} --fix",
     "semantic-release": "semantic-release",
     "commit": "git-cz",
-    "postinstall": "npm run build:lib"
+    "install": "npm run build:lib"
   },
   "lint-staged": {
     "./src/**/*.{js,vue,json}": ["prettier --write", "git add"]

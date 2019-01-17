@@ -18,6 +18,8 @@ module.exports = {
     libraryExport: 'default',
   },
 
+  stats: 'errors-only',
+
   plugins: [
     new webpack.DefinePlugin({
       ENV: JSON.stringify(ENV),
