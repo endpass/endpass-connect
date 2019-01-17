@@ -110,7 +110,7 @@ export default class Connect {
    * In other cases – sign and returns signature
    * @returns {Promise<String>} Recovered address or signature
    */
-  async [privateMethods.processWhitelistedRequest]() {
+  [privateMethods.processWhitelistedRequest]() {
     if (this.currentRequest.method === METHODS.RECOVER) {
       return this[privateMethods.recover]();
     }
@@ -333,6 +333,8 @@ export default class Connect {
     });
 
     const res = await awaitBridgeMessage(METHODS.RECOVER);
+
+    if (!res.status) throw new Error(res.message || 'Recovery error!');
 
     return res;
   }

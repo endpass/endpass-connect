@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.6.0-alpha",
+  "version": "0.6.1-alpha",
   "main": "./dist/lib/endpass-connect.js",
   "description": "",
   "repository": {
