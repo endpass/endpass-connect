@@ -35,6 +35,7 @@
     "./src/**/*.{js,vue,json}": ["prettier --write", "git add"]
   },
   "release": {
+    "branch": "release",
     "prepare": [
       {
         "path": "@semantic-release/changelog"

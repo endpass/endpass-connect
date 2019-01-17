@@ -23,7 +23,6 @@ import {
 export const privateMethods = {
   checkBridgeReady: Symbol('checkBridgeReady'),
   watchRequestsQueue: Symbol('watchRequestsQueue'),
-  unwatchRequestsQueue: Symbol('unwatchRequestsQueue'),
   processCurrentRequest: Symbol('processCurrentRequest'),
   getConnectUrl: Symbol('getConnectUrl'),
   setupEmmiterEvents: Symbol('setupEmmiterEvents'),
@@ -152,14 +151,19 @@ export default class Connect {
    * Requests user settings from connect application
    * @returns {Promise<Object>} User settings
    */
-  [privateMethods.getUserSettings]() {
-    return this[privateMethods.checkBridgeReady]().then(() => {
-      sendMessageToBridge(this.bridge.contentWindow, {
-        method: METHODS.GET_SETTINGS,
-      });
-
-      return awaitBridgeMessage(METHODS.GET_SETTINGS);
+  async [privateMethods.getUserSettings]() {
+    await this[privateMethods.checkBridgeReady]();
+    sendMessageToBridge(this.bridge.contentWindow, {
+      method: METHODS.GET_SETTINGS,
     });
+
+    const res = await awaitBridgeMessage(METHODS.GET_SETTINGS);
+
+    if (!res.status) {
+      throw new Error(res.message || 'User settings are not received!');
+    }
+
+    return res;
   }
 
   /**
