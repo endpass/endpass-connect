@@ -57,6 +57,21 @@ const subscribeOnBridge = ({ dispatch }) => {
             status: false,
           });
         });
+    } else if (message.method === METHODS.RECOVER) {
+      dispatch('recoverMessage', message)
+        .then(res => {
+          dispatch('sendBridgeMessage', {
+            method: METHODS.RECOVER,
+            status: true,
+            address: res,
+          });
+        })
+        .catch(() => {
+          dispatch('sendBridgeMessage', {
+            method: METHODS.RECOVER,
+            status: false,
+          });
+        });
     }
   };
 

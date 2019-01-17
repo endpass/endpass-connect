@@ -9,6 +9,8 @@
     <otp-form 
       v-else-if="otpEmail" 
       :closable="isDialog"
+      :loading="loading"
+      :error="error"
       @submit="handleOtpSubmit"
       @cancel="handleAuthCancel"
     />

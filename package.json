@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.5.3-alpha",
+  "version": "0.6.0-alpha",
   "main": "./dist/lib/endpass-connect.js",
   "description": "",
   "repository": {
@@ -16,12 +16,9 @@
   "scripts": {
     "build": "rimraf ./dist && npm run build:app && npm run build:lib",
     "dev:app": "vue-cli-service serve ./src/main.js",
-    "build:app":
-      "NODE_ENV=production vue-cli-service --no-clean build ./src/main.js",
-    "build:app:dev":
-      "NODE_ENV=development vue-cli-service --no-clean build ./src/main.js",
-    "build:app:test":
-      "NODE_ENV=test vue-cli-service --no-clean build ./src/main.js",
+    "build:app": "NODE_ENV=production vue-cli-service build ./src/main.js",
+    "build:app:dev": "NODE_ENV=development vue-cli-service build ./src/main.js",
+    "build:app:test": "NODE_ENV=test vue-cli-service build ./src/main.js",
     "dev:lib": "webpack --watch --mode=development",
     "build:lib": "webpack --mode=production",
     "unit": "vue-cli-service test:unit",
@@ -29,8 +26,7 @@
     "format":
       "prettier --write 'packages/**/*.{js,vue,json}' && eslint packages/**/*.{js,vue} --fix",
     "semantic-release": "semantic-release",
-    "commit": "git-cz",
-    "install": "npm run build:lib"
+    "commit": "git-cz"
   },
   "lint-staged": {
     "./src/**/*.{js,vue,json}": ["prettier --write", "git add"]
