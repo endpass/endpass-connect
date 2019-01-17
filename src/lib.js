@@ -24,6 +24,7 @@ export const privateMethods = {
   checkBridgeReady: Symbol('checkBridgeReady'),
   watchRequestsQueue: Symbol('watchRequestsQueue'),
   processCurrentRequest: Symbol('processCurrentRequest'),
+  processWhitelistedRequest: Symbol('processWhitelistedRequest'),
   getConnectUrl: Symbol('getConnectUrl'),
   setupEmmiterEvents: Symbol('setupEmmiterEvents'),
   injectBridge: Symbol('injectBridge'),
@@ -34,6 +35,7 @@ export const privateMethods = {
   sendToNetwork: Symbol('sendToNetwork'),
   openApp: Symbol('openApp'),
   sign: Symbol('sign'),
+  recover: Symbol('recover'),
 };
 
 export default class Connect {
@@ -87,7 +89,7 @@ export default class Connect {
 
     try {
       const res = DAPP_WHITELISTED_METHODS.includes(currentRequest.method)
-        ? await this[privateMethods.sign]()
+        ? await this[privateMethods.processWhitelistedRequest]()
         : await this[privateMethods.sendToNetwork]();
 
       this[privateMethods.sendResponse](res);
@@ -100,6 +102,20 @@ export default class Connect {
     } finally {
       this.currentRequest = null;
     }
+  }
+
+  /**
+   * Process request which contains method from whitelist
+   * If request means recovery – recover address and returns address
+   * In other cases – sign and returns signature
+   * @returns {Promise<String>} Recovered address or signature
+   */
+  async [privateMethods.processWhitelistedRequest]() {
+    if (this.currentRequest.method === METHODS.RECOVER) {
+      return this[privateMethods.recover]();
+    }
+
+    return this[privateMethods.sign]();
   }
 
   /**
@@ -298,6 +314,27 @@ export default class Connect {
     if (!res.status) throw new Error(res.message || 'Sign error!');
 
     return omit(res, ['status']);
+  }
+
+  /**
+   * Recovers current request and returns recovered address
+   * @returns {Promise<String>} Recovered address
+   */
+  async [privateMethods.recover]() {
+    const { selectedAddress, networkVersion } = this[
+      privateMethods.getSettings
+    ]();
+
+    await sendMessageToBridge(this.bridge.contentWindow, {
+      method: METHODS.RECOVER,
+      address: selectedAddress,
+      net: networkVersion,
+      request: this.currentRequest,
+    });
+
+    const res = await awaitBridgeMessage(METHODS.RECOVER);
+
+    return res;
   }
 
   // Public methods

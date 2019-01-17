@@ -29,7 +29,7 @@
         type="primary"
         data-test="submit-button"
       >
-        Submit code
+        {{ primaryButtonLabel }}
       </v-button>
       <v-button 
         :disabled="!closable" 
@@ -72,6 +72,10 @@ export default {
   }),
 
   computed: {
+    primaryButtonLabel() {
+      return !this.loading ? 'Submit code' : 'Loading...';
+    },
+
     isCodeValid() {
       return /^\d{6}$/.test(this.code);
     },

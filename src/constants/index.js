@@ -69,6 +69,7 @@ export const STORAGE_USER_META_KEY = 'endpass-user-meta';
 export const AVAILABLE_USER_META_PROPS = ['activeAccount'];
 export const DAPP_WHITELISTED_METHODS = [
   'personal_sign',
+  'personal_ecRecover',
   'eth_personalSign',
   'eth_signTypedData',
   'eth_sendTransaction',
@@ -78,6 +79,7 @@ export const METHODS = {
   AUTH: 'AUTH',
   SIGN: 'SIGN',
   LOGOUT: 'LOGOUT',
+  RECOVER: 'RECOVER',
   GET_SETTINGS: 'GET_SETTINGS',
   READY_STATE_DIALOG: 'READY_STATE_DIALOG',
   READY_STATE_BRIDGE: 'READY_STATE_BRIDGE',
