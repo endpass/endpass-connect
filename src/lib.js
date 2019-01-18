@@ -111,7 +111,7 @@ export default class Connect {
    * @returns {Promise<String>} Recovered address or signature
    */
   [privateMethods.processWhitelistedRequest]() {
-    if (this.currentRequest.method === METHODS.RECOVER) {
+    if (this.currentRequest.method === 'personal_ecRecover') {
       return this[privateMethods.recover]();
     }
 
@@ -325,7 +325,7 @@ export default class Connect {
       privateMethods.getSettings
     ]();
 
-    await sendMessageToBridge(this.bridge.contentWindow, {
+    sendMessageToBridge(this.bridge.contentWindow, {
       method: METHODS.RECOVER,
       address: selectedAddress,
       net: networkVersion,
@@ -336,7 +336,7 @@ export default class Connect {
 
     if (!res.status) throw new Error(res.message || 'Recovery error!');
 
-    return res;
+    return omit(res, ['status']);
   }
 
   // Public methods

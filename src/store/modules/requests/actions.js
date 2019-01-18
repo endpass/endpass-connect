@@ -48,11 +48,25 @@ const processRequest = async ({ state, commit, dispatch }, password) => {
 
 const recoverMessage = async ({ dispatch }, payload) => {
   const { address, request } = payload;
-  const account = await dispatch('getAccount', address);
-  const wallet = new Wallet(account);
-  const res = await wallet.recover(request.params[0], request.params[1]);
 
-  return res;
+  try {
+    const account = await dispatch('getAccount', address);
+    const wallet = new Wallet(account);
+    const res = await wallet.recover(request.params[0], request.params[1]);
+
+    return {
+      id: request.id,
+      result: res,
+      jsonrpc: request.jsonrpc,
+    };
+  } catch (err) {
+    return {
+      id: request.id,
+      result: null,
+      error: err,
+      jsonrpc: request.jsonrpc,
+    };
+  }
 };
 
 const getSignedRequest = async ({ state, dispatch }, payload) => {
