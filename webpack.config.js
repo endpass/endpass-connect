@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const pkg = require('./package.json');
 const { getEnv } = require('./env');
 
 const { NODE_ENV = 'development' } = process.env;
@@ -18,7 +19,8 @@ module.exports = {
     libraryExport: 'default',
   },
 
-  stats: 'errors-only',
+  externals: Object.keys(pkg.dependencies),
+
 
   plugins: [
     new webpack.DefinePlugin({

@@ -74,6 +74,7 @@ export const awaitAuthConfirm = () =>
         clearInterval(interval);
 
         return resolve();
+        /* eslint-disable-next-line */
       } catch (err) {}
     }, 1500);
   });
