@@ -104,7 +104,7 @@ const getFirstPrivateAccount = async ({ state, dispatch }) => {
   const { accounts } = state;
 
   const privateAccount = await Promise.race(
-    accounts.map(
+    accounts.filter(account => !/^xpub/.test(account)).map(
       (account, i) =>
         /* eslint-disable-next-line */
         new Promise(async resolve => {
