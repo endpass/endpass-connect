@@ -63,7 +63,7 @@ const subscribeOnBridge = ({ dispatch }) => {
           dispatch('sendBridgeMessage', {
             method: METHODS.RECOVER,
             status: true,
-            address: res,
+            ...res,
           });
         })
         .catch(() => {
