@@ -1,0 +1,1 @@
+{"version":3,"sources":["/Users/lamartire/Work/endpass/simple-web3-dapp/src/main.css"],"names":[],"mappings":"AAAA,iBAGE,qBAAuB,CACxB,AAED,KACE,UAAW,AACX,SAAU,AACV,wBAA0B,CAC3B","file":"main.d5403008.chunk.css","sourcesContent":["*,\ninput,\ntextarea {\n  box-sizing: border-box;\n}\n\nbody {\n  padding: 0;\n  margin: 0;\n  background-color: #3f51b5;\n}\n"]}
