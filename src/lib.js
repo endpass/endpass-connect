@@ -1,6 +1,6 @@
 import omit from 'lodash/omit';
 import get from 'lodash/get';
-import Emmiter from '@/class/Emmiter';
+import Emmiter from '@endpass/class';
 import InpageProvider from '@/class/InpageProvider';
 import Dialog from '@/class/Dialog';
 import Bridge from '@/class/Bridge';
