@@ -1,21 +1,24 @@
 <template>
-  <v-frame :loading="!inited">
-    <logout-form 
-      :loading="loading"
-      :closable="isDialog"
-      @submit="handleLogoutSubmit"
-      @cancel="handleLogoutCancel"
-    /> 
-  </v-frame> 
+  <screen>
+    <v-frame :loading="!inited">
+      <logout-form 
+        :loading="loading"
+        :closable="isDialog"
+        @submit="handleLogoutSubmit"
+        @cancel="handleLogoutCancel"
+      /> 
+    </v-frame> 
+  </screen>
 </template>
 
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex';
+import Screen from '../Screen.vue';
 import VFrame from '../VFrame.vue';
 import LogoutForm from '../LogoutForm.vue';
 
 export default {
-  name: 'Authorized',
+  name: 'User',
 
   computed: {
     ...mapState({
@@ -48,6 +51,7 @@ export default {
   },
 
   components: {
+    Screen,
     VFrame,
     LogoutForm,
   },

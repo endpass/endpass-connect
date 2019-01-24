@@ -58,32 +58,16 @@ export const sendMessageToBridge = (target, payload) =>
     payload,
   });
 
-export const sendMessageToOpener = (from, payload) => {
+export const sendMessageToOpener = (target, from, payload) => {
   sendMessage({
-    target: from === 'bridge' ? window.parent : window.opener,
     meta: {
       to: 'opener',
       from,
     },
+    target,
     payload,
   });
 };
-
-export const awaitMessageFrom = from =>
-  new Promise(resolve => {
-    /* eslint-disable-next-line */
-    const handler = ({ data = {} }) => {
-      const isMessageToDialog =
-        get(data, 'meta.to') === `endpass-connect-${from}`;
-
-      if (isMessageToDialog && data.payload) {
-        window.removeEventListener('message', handler);
-
-        return resolve(data.payload);
-      }
-    };
-    window.addEventListener('message', handler);
-  });
 
 export const awaitMessageFromOpener = () =>
   new Promise(resolve => {
@@ -102,6 +86,7 @@ export const awaitMessageFromOpener = () =>
     window.addEventListener('message', handler);
   });
 
+// TODO: merge two methods below
 export const awaitDialogMessage = method =>
   new Promise(resolve => {
     /* eslint-disable-next-line */
@@ -138,15 +123,47 @@ export const awaitBridgeMessage = method =>
     window.addEventListener('message', handler);
   });
 
-export const subscribeOnBridgeMessages = handler => {
-  window.addEventListener('message', ({ data = {} }) => {
-    const isMessageToBridge = get(data, 'meta.to') === 'endpass-connect-bridge';
+export const forceDialogMessage = (target, payload) => {
+  if (!payload.method) {
+    throw new Error('Payload must includes method proprerty!');
+  }
 
-    if (isMessageToBridge) {
-      handler(data.payload);
-    }
+  return new Promise(resolve => {
+    const interval = setInterval(() => {
+      sendMessageToDialog(target, payload);
+    }, 250);
+
+    return awaitDialogMessage(payload.method).then(res => {
+      clearInterval(interval);
+      return resolve(res);
+    });
   });
 };
+
+export const createSubscribtion = (direction, method) => ({
+  listener: null,
+
+  on(handler) {
+    this.listener = ({ source, data = {} }) => {
+      const isCorrectDirection =
+        get(data, 'meta.to') === `endpass-connect-${direction}`;
+      const isMethodMatched = !method || get(data, 'payload.method') === method;
+
+      if (isCorrectDirection && isMethodMatched) {
+        handler(source, data.payload);
+      }
+    };
+
+    window.addEventListener('message', this.listener);
+  },
+
+  off() {
+    if (this.listener) {
+      window.removeEventListener('message', this.listener);
+      this.listener = null;
+    }
+  },
+});
 
 export default {
   sendMessage,
@@ -156,5 +173,7 @@ export default {
   awaitMessageFromOpener,
   awaitDialogMessage,
   awaitBridgeMessage,
-  subscribeOnBridgeMessages,
+  createSubscribtion,
+
+  forceDialogMessage,
 };

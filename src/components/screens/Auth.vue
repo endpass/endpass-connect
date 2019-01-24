@@ -1,40 +1,47 @@
 <template>
-  <v-frame :loading="!inited">
-    <create-account-form
-      v-if="authorized && isAccountsEmpty"
-      :closable="isDialog"
-      @request="handleAccountRequest"
-      @cancel="handleAuthCancel"
-    />
-    <otp-form 
-      v-else-if="otpEmail" 
-      :closable="isDialog"
-      :loading="loading"
-      :error="error"
-      @submit="handleOtpSubmit"
-      @cancel="handleAuthCancel"
-    />
-    <message-form 
-      v-else-if="!authorized && sent"
-      :closable="isDialog"
-      message="An email with authorization link was sent on your address. Open it in the same browser to sign in."
-      @cancel="handleAuthCancel"
-    />
-    <auth-form
-      v-else
-      :inited="inited"
-      :loading="loading"
-      :error="error"
-      :closable="isDialog"
-      @cancel="handleAuthCancel"
-      @submit="handleAuthSubmit"
-    />
-  </v-frame> 
+  <screen>
+    <v-frame :loading="!inited">
+      <create-account-form
+        v-if="authorized && isAccountsEmpty"
+        :closable="isDialog"
+        @request="handleAccountRequest"
+        @cancel="handleAuthCancel"
+      />
+      <otp-form 
+        v-else-if="otpEmail" 
+        :closable="isDialog"
+        :loading="loading"
+        :error="error"
+        @submit="handleOtpSubmit"
+        @cancel="handleAuthCancel"
+      />
+      <message-form 
+        v-else-if="!authorized && sent"
+        :closable="isDialog"
+        message="An email with authorization link was sent on your address. Open it in the same browser to sign in."
+        @cancel="handleAuthCancel"
+      />
+      <message-form 
+        v-else-if="authorized && sent"
+        message="You are successfully authorized. You will be redicected in a few seconds."
+      />
+      <auth-form
+        v-else
+        :inited="inited"
+        :loading="loading"
+        :error="error"
+        :closable="isDialog"
+        @cancel="handleAuthCancel"
+        @submit="handleAuthSubmit"
+      />
+    </v-frame> 
+  </screen>
 </template>
 
 <script>
 import isEmpty from 'lodash/isEmpty';
 import { mapActions, mapGetters, mapState } from 'vuex';
+import Screen from '../Screen.vue';
 import VFrame from '../VFrame.vue';
 import AuthForm from '../AuthForm.vue';
 import OtpForm from '../OtpForm.vue';
@@ -157,11 +164,11 @@ export default {
   async created() {
     if (this.isDialog) {
       window.addEventListener('beforeunload', this.handleWindowClose);
-      this.awaitAuthMessage();
     }
   },
 
   components: {
+    Screen,
     VFrame,
     AuthForm,
     OtpForm,

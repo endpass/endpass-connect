@@ -10,7 +10,7 @@ import HDKey from 'ethereumjs-wallet/hdkey';
  * the address for privacy reasons.
  * See https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition#alterations-from-version-1
  */
-keythereum.privateKeyToAddress = function(pk) {
+keythereum.privateKeyToAddress = function() {
   return '';
 };
 

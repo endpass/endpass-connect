@@ -1,5 +1,5 @@
 export default {
   isDialog() {
-    return !!window.opener;
+    return window.self !== window.top;
   },
 };

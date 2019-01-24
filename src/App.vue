@@ -18,10 +18,6 @@ export default {
 
   async created() {
     await this.init();
-
-    if (this.isDialog) {
-      await this.sendReadyMessage();
-    }
   },
 };
 </script>
@@ -52,5 +48,11 @@ select {
   font-family: BlinkMacSystemFont, -apple-system, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Helvetica,
     Arial, sans-serif;
+}
+
+@media (max-width: 768px) {
+  body {
+    background: #fff;
+  }
 }
 </style>

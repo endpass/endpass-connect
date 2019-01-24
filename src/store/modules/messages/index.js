@@ -3,8 +3,8 @@ import actions from './actions';
 import getters from './getters';
 
 export const state = {
-  loading: false,
-  inited: false,
+  awaits: null,
+  resolution: null,
 };
 
 export default {

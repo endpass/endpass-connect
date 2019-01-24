@@ -1,14 +1,11 @@
 import omit from 'lodash/omit';
 import get from 'lodash/get';
-import Web3Dapp from 'web3-dapp';
-import {
-  sendMessageToDialog,
-  sendMessageToBridge,
-  awaitDialogMessage,
-  awaitBridgeMessage,
-} from '@/util/message';
+// TODO: move all bridge things to abstraction, like dialog🤔
+import { sendMessageToBridge, awaitBridgeMessage } from '@/util/message';
+import { inlineStyles } from '@/util/dom';
 import Emmiter from '@/class/Emmiter';
 import InpageProvider from '@/class/InpageProvider';
+import Dialog from '@/class/Dialog';
 import {
   METHODS,
   INPAGE_EVENTS,
@@ -40,16 +37,10 @@ export const privateMethods = {
 
 export default class Connect {
   /**
-   * @param {String} options.appUrl
+   * @param {String} options.authUrl Url of hosted Endpass Connect Application
    */
-  constructor({ appUrl }) {
-    if (!appUrl) {
-      throw new Error(
-        'Pass url to connect application instance in appUrl proprerty!',
-      );
-    }
-
-    this.appUrl = appUrl;
+  constructor({ authUrl }) {
+    this.authUrl = authUrl || 'https://auth.endpass.com';
     this.emmiter = new Emmiter();
     this.provider = new InpageProvider(this.emmiter);
     this.requestProvider = null;
@@ -59,6 +50,7 @@ export default class Connect {
     this.queueInterval = null;
     this.queue = [];
 
+    this.dialog = null;
     this.bridge = this[privateMethods.injectBridge]();
     this[privateMethods.setupEmmiterEvents]();
     this[privateMethods.watchRequestsQueue]();
@@ -124,7 +116,7 @@ export default class Connect {
    * @returns {String} Completed url to open
    */
   [privateMethods.getConnectUrl](method) {
-    return !method ? this.appUrl : `${this.appUrl}/#/${method}`;
+    return !method ? this.authUrl : `${this.authUrl}/#/${method}`;
   }
 
   /**
@@ -146,21 +138,22 @@ export default class Connect {
    * @returns {HTMLElement} Injected iframe element
    */
   [privateMethods.injectBridge]() {
-    const iframeElement = document.createElement('iframe');
-
-    iframeElement.src = this[privateMethods.getConnectUrl]('bridge');
-
-    Object.assign(iframeElement.style, {
+    const iframeStyles = inlineStyles({
       position: 'absolute',
-      top: 0,
-      left: 0,
-      width: 0,
-      height: 0,
+      top: '0',
+      left: '0',
+      width: '0',
+      height: '0',
     });
+    const iframeMarkup = `
+      <iframe data-endpass="bridge" src="${this[privateMethods.getConnectUrl](
+        'bridge',
+      )}" style="${iframeStyles}" />
+    `;
 
-    document.body.appendChild(iframeElement);
+    document.body.insertAdjacentHTML('afterBegin', iframeMarkup);
 
-    return iframeElement;
+    return document.body.querySelector('[data-endpass="bridge"]');
   }
 
   /**
@@ -209,29 +202,12 @@ export default class Connect {
    * @param {String} route Target connect application route
    * @returns {Promise<Window>} Opened child window
    */
-  async [privateMethods.openApp](route) {
-    const pos = {
-      x: window.innerWidth / 2 - 200,
-      y: 200,
-    };
-    const windowFeatures = [
-      'chrome=yes',
-      'centerscreen=yes',
-      'resizable=no',
-      'width=480',
-      'height=800',
-      `top=${pos.y}`,
-      `left=${pos.x}`,
-    ];
-    const dialog = window.open(
-      this[privateMethods.getConnectUrl](route),
-      null,
-      windowFeatures.join(','),
-    );
+  async [privateMethods.openApp](route = '') {
+    const url = this[privateMethods.getConnectUrl](route);
 
-    await awaitDialogMessage(METHODS.READY_STATE_DIALOG);
+    this.dialog = new Dialog({ url });
 
-    return dialog;
+    await this.dialog.open();
   }
 
   /**
@@ -296,12 +272,13 @@ export default class Connect {
    * @returns {Promise<Object>} Sign result
    */
   async [privateMethods.sign]() {
-    const dialog = await this[privateMethods.openApp]('sign');
+    await this[privateMethods.openApp]('sign');
+
     const { selectedAddress, networkVersion } = this[
       privateMethods.getSettings
     ]();
 
-    sendMessageToDialog(dialog, {
+    const res = await this.dialog.ask({
       method: METHODS.SIGN,
       url: window.location.origin,
       address: selectedAddress,
@@ -309,7 +286,7 @@ export default class Connect {
       request: this.currentRequest,
     });
 
-    const res = await awaitDialogMessage(METHODS.SIGN);
+    this.dialog.close();
 
     if (!res.status) throw new Error(res.message || 'Sign error!');
 
@@ -342,24 +319,24 @@ export default class Connect {
   // Public methods
 
   /**
-   * Injects `web3` with "monkey patching" to given target
-   * By default injects `web3` to window in the current context
-   * @param  {Window} target Target window object
+   * Creates provider for inner requests and returns inpage provider for
+   * injection in client's web3 instance
+   * @param {Web3} web3 Web3 instance
+   *  If it is not passed web3 will be looked in application window object
+   *  If application window not contains web3 – throws an error
+   * @returns {Web3.Provider} Inpage provider for injections into application
+   *  Web3 instance
    */
-  injectWeb3(target = window) {
-    const injection = {
-      ethereum: this.provider,
-    };
-
-    if (!target.web3) {
-      Object.assign(injection, {
-        web3: new Web3Dapp(this.provider),
-      });
+  createProvider(web3) {
+    if (!web3 && !window.web3) {
+      throw new Error(
+        'Pass web3 instance as argument or provide it globally in window object!',
+      );
     }
 
-    Object.assign(target, injection);
+    this[privateMethods.createRequestProvider](web3 || window.web3);
 
-    this[privateMethods.createRequestProvider](target.web3);
+    return this.provider;
   }
 
   /**
@@ -400,14 +377,14 @@ export default class Connect {
    *  know about result
    */
   async auth(redirectUrl) {
-    const dialog = await this[privateMethods.openApp]('auth');
+    await this[privateMethods.openApp]('auth');
 
-    sendMessageToDialog(dialog, {
+    const res = await this.dialog.ask({
       method: METHODS.AUTH,
       redirectUrl: redirectUrl || null,
     });
 
-    const res = await awaitDialogMessage(METHODS.AUTH);
+    this.dialog.close();
 
     if (!res.status) throw new Error(res.message || 'Authentificaton error!');
 
@@ -422,7 +399,11 @@ export default class Connect {
   async logout() {
     await this[privateMethods.openApp]();
 
-    const res = await awaitDialogMessage(METHODS.LOGOUT);
+    const res = await this.dialog.ask({
+      method: METHODS.LOGOUT,
+    });
+
+    this.dialog.close();
 
     if (!res.status) throw new Error(res.message || 'Logout error!');
 

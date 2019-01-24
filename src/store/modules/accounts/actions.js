@@ -1,15 +1,6 @@
 import get from 'lodash/get';
 import IdentityService from '@/service/identity';
 import { awaitMessageFromOpener } from '@/util/message';
-import { METHODS } from '@/constants';
-
-const awaitAuthMessage = async ({ commit }) => {
-  const res = await awaitMessageFromOpener();
-
-  if (res) {
-    commit('setAuthParams', res);
-  }
-};
 
 const auth = async ({ state, commit }, email) => {
   commit('changeLoadingStatus', true);
@@ -30,7 +21,9 @@ const auth = async ({ state, commit }, email) => {
       commit('setSentStatus', true);
     }
   } catch (err) {
-    throw err;
+    console.error(err);
+
+    throw new Error('Something went wrong, try again later');
   } finally {
     commit('changeLoadingStatus', false);
   }
@@ -49,20 +42,16 @@ const confirmAuthViaOtp = async ({ commit }, { email, code }) => {
 };
 
 const confirmAuth = ({ dispatch }) => {
-  dispatch('sendDialogMessage', {
-    method: METHODS.AUTH,
+  dispatch('resolveMessage', {
     status: true,
   });
-  dispatch('closeDialog');
 };
 
 const cancelAuth = ({ dispatch }) => {
-  dispatch('sendDialogMessage', {
-    method: METHODS.AUTH,
+  dispatch('resolveMessage', {
     status: false,
     message: 'Auth was canceled by user!',
   });
-  dispatch('closeDialog');
 };
 
 const getSettings = async ({ dispatch }) => {
@@ -150,21 +139,21 @@ const logout = async ({ dispatch, commit }) => {
 
   try {
     await IdentityService.logout();
-    dispatch('sendDialogMessage', {
-      method: METHODS.LOGOUT,
+    dispatch('resolveMessage', {
       status: true,
     });
     dispatch('closeDialog');
   } catch (err) {
-    throw err;
+    console.error(err);
+
+    throw new Error('Something went wrong, try again later');
   } finally {
     commit('changeLoadingStatus', false);
   }
 };
 
 const cancelLogout = async ({ dispatch }) => {
-  dispatch('sendDialogMessage', {
-    method: METHODS.LOGOUT,
+  dispatch('resolveMessage', {
     status: false,
     message: 'Logout was canceled by user!',
   });
@@ -199,5 +188,4 @@ export default {
   logout,
   cancelLogout,
   awaitLogoutConfirm,
-  awaitAuthMessage,
 };

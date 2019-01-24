@@ -6,7 +6,7 @@ import store from '@/store';
 import Bridge from '@/components/Bridge';
 import Auth from '@/components/screens/Auth';
 import Sign from '@/components/screens/Sign';
-import Authorized from '@/components/screens/Authorized';
+import User from '@/components/screens/User';
 
 Vue.use(Router);
 
@@ -14,8 +14,8 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'Authorized',
-      component: Authorized,
+      name: 'User',
+      component: User,
     },
     {
       path: '/bridge',

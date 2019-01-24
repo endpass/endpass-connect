@@ -1,7 +1,8 @@
 import get from 'lodash/get';
+import omit from 'lodash/omit';
 import web3 from '@/class/singleton/web3';
-import { sendMessageToOpener, subscribeOnBridgeMessages } from '@/util/message';
-import { DEFAULT_NETWORKS, METHODS } from '@/constants';
+import { createSubscribtion, sendMessageToOpener } from '@/util/message';
+import { DEFAULT_NETWORKS, METHODS, LAZY_METHODS } from '@/constants';
 
 const init = async ({ dispatch, commit }) => {
   try {
@@ -20,62 +21,138 @@ const setWeb3NetworkProvider = (ctx, netId) => {
   web3.setProvider(provider);
 };
 
-const sendDialogMessage = (ctx, data) => {
-  if (window.opener) sendMessageToOpener('dialog', data);
+const sendDialogMessage = (ctx, { payload, target }) => {
+  if (target) sendMessageToOpener(target, 'dialog', payload);
 };
 
-const sendBridgeMessage = (ctx, data) => {
-  if (window.parent) sendMessageToOpener('bridge', data);
+const sendBridgeMessage = (ctx, { payload, target }) => {
+  if (target) sendMessageToOpener(target, 'bridge', payload);
 };
 
 const sendReadyMessage = ({ dispatch }) => {
   dispatch('sendDialogMessage', {
-    method: METHODS.READY_STATE_DIALOG,
-    status: true,
+    payload: {
+      method: METHODS.READY_STATE_DIALOG,
+      status: true,
+    },
   });
 };
 
 const subscribeOnBridge = ({ dispatch }) => {
-  const handler = message => {
+  const handler = (target, message) => {
     if (message.method === METHODS.READY_STATE_BRIDGE) {
       dispatch('sendBridgeMessage', {
-        method: METHODS.READY_STATE_BRIDGE,
-        status: true,
+        payload: {
+          method: METHODS.READY_STATE_BRIDGE,
+          status: true,
+        },
+        target,
       });
     } else if (message.method === METHODS.GET_SETTINGS) {
       dispatch('getSettings')
         .then(res => {
           dispatch('sendBridgeMessage', {
-            method: METHODS.GET_SETTINGS,
-            status: true,
-            ...res,
+            payload: {
+              method: METHODS.GET_SETTINGS,
+              status: true,
+              ...res,
+            },
+            target,
           });
         })
         .catch(() => {
           dispatch('sendBridgeMessage', {
-            method: METHODS.GET_SETTINGS,
-            status: false,
+            payload: {
+              method: METHODS.GET_SETTINGS,
+              status: false,
+            },
+            target,
           });
         });
     } else if (message.method === METHODS.RECOVER) {
       dispatch('recoverMessage', message)
         .then(res => {
           dispatch('sendBridgeMessage', {
-            method: METHODS.RECOVER,
-            status: true,
-            ...res,
+            payload: {
+              method: METHODS.RECOVER,
+              status: true,
+              ...res,
+            },
+            target,
           });
         })
         .catch(() => {
           dispatch('sendBridgeMessage', {
-            method: METHODS.RECOVER,
-            status: false,
+            payload: {
+              method: METHODS.RECOVER,
+              status: false,
+            },
+            target,
           });
         });
     }
   };
 
-  subscribeOnBridgeMessages(handler);
+  const subscribtion = createSubscribtion('bridge');
+
+  subscribtion.on(handler);
+};
+
+const subscribeOnDialog = ({ dispatch }) => {
+  const handler = async (target, message) => {
+    if (LAZY_METHODS.includes(message.method)) {
+      dispatch('processLazyMessage', { target, message });
+    } else if (message.method === METHODS.READY_STATE_DIALOG) {
+      dispatch('sendDialogMessage', {
+        payload: {
+          method: METHODS.READY_STATE_DIALOG,
+          status: true,
+        },
+        target,
+      });
+    } else if (message.method === METHODS.RESIZE_DIALOG) {
+      dispatch('sendDialogMessage', {
+        payload: {
+          method: METHODS.RESIZE_DIALOG,
+          result: document.body.offsetHeight,
+          status: true,
+        },
+        target,
+      });
+    }
+  };
+
+  const subscribtion = createSubscribtion('dialog');
+
+  subscribtion.on(handler);
+};
+
+const processLazyMessage = async (
+  { commit, dispatch },
+  { target, message },
+) => {
+  commit('setAuthParams', omit(message, 'method'));
+  commit('setMessageAwaitingStatus', true);
+
+  await dispatch('processSpecificLazyMessage', message);
+
+  const res = await dispatch('awaitMessageResolution');
+
+  dispatch('sendDialogMessage', {
+    payload: {
+      method: message.method,
+      ...res,
+    },
+    target,
+  });
+};
+
+const processSpecificLazyMessage = async ({ commit }, message) => {
+  if (message.method === METHODS.AUTH) {
+    commit('setAuthParams', omit(message, ['method']));
+  } else if (message.method === METHODS.SIGN) {
+    commit('setRequest', omit(message, ['method']));
+  }
 };
 
 const closeDialog = () => {
@@ -89,5 +166,8 @@ export default {
   sendBridgeMessage,
   sendReadyMessage,
   subscribeOnBridge,
+  subscribeOnDialog,
+  processLazyMessage,
+  processSpecificLazyMessage,
   closeDialog,
 };
