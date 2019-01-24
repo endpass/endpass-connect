@@ -3,8 +3,8 @@ import mutations from './mutations';
 import getters from './getters';
 
 const state = {
-  authParams: null,
   linkSent: false,
+  authParams: null,
   otpEmail: null,
   accounts: null,
 };

@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.6.4-alpha",
+  "version": "0.7.0-alpha",
   "main": "./dist/lib/endpass-connect.js",
   "description": "",
   "repository": {
@@ -15,7 +15,7 @@
   "homepage": "https://github.com/endpass/endpass-connect",
   "scripts": {
     "build": "rimraf ./dist && npm run build:app && npm run build:lib",
-    "dev:app": "vue-cli-service serve ./src/main.js",
+    "dev:app": "SOURCE_MAP=true vue-cli-service serve ./src/main.js",
     "build:app": "NODE_ENV=production vue-cli-service build ./src/main.js",
     "build:app:dev": "NODE_ENV=development vue-cli-service build ./src/main.js",
     "build:app:test": "NODE_ENV=test vue-cli-service build ./src/main.js",
@@ -23,14 +23,16 @@
     "build:lib": "webpack --mode=production",
     "unit": "vue-cli-service test:unit",
     "unit:watch": "vue-cli-service test:unit --watch",
-    "format":
-      "prettier --write 'packages/**/*.{js,vue,json}' && eslint packages/**/*.{js,vue} --fix",
+    "format": "prettier --write './src/**/*.{js,vue,json}' && eslint ./src/**/*.{js,vue} --fix",
     "semantic-release": "semantic-release",
     "commit": "git-cz",
     "deploy:demo": "node ./scripts/deploy-demo.js"
   },
   "lint-staged": {
-    "./src/**/*.{js,vue,json}": ["prettier --write", "git add"]
+    "./src/**/*.{js,vue,json}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "release": {
     "branch": "release",
@@ -41,7 +43,9 @@
       [
         "@semantic-release/git",
         {
-          "assets": ["CHANGELOG.md"]
+          "assets": [
+            "CHANGELOG.md"
+          ]
         }
       ]
     ]
@@ -68,8 +72,7 @@
     "vue": "^2.5.17",
     "vue-router": "^3.0.2",
     "vuex": "^3.0.1",
-    "web3": "1.0.0-beta.33",
-    "web3-dapp": "npm:web3@0.19"
+    "web3": "^1.0.0-beta.37"
   },
   "devDependencies": {
     "@babel/core": "^7.2.0",

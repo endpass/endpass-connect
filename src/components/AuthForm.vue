@@ -18,6 +18,7 @@
         :invalid="!isEmailValid"
         :autofocus="true"
         name="email"
+        type="email"
         placeholder="Enter your email..."
         data-test="email-input"
       />
@@ -30,7 +31,7 @@
         data-test="submit-button"
       >{{ primaryButtonLabel }}</v-button>
       <v-button 
-        :disabled="!closable"
+        :disabled="!closable || loading"
         data-test="cancel-button" 
         @click="emitCancel"
       >Close</v-button>
