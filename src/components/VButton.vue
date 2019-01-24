@@ -67,6 +67,7 @@ export default {
   font-size: 20px;
   font-weight: 600;
   text-decoration: none;
+  transition: background 0.25s;
   cursor: pointer;
 
   &.primary {

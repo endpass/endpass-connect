@@ -1,6 +1,5 @@
 import Wallet from '@/class/Wallet';
-import { sendMessageToOpener, awaitMessageFromOpener } from '@/util/message';
-import { METHODS } from '@/constants';
+import { awaitMessageFromOpener } from '@/util/message';
 
 const awaitRequestMessage = async ({ commit, dispatch }) => {
   const res = await awaitMessageFromOpener();
@@ -13,10 +12,9 @@ const awaitRequestMessage = async ({ commit, dispatch }) => {
 };
 
 const sendResponse = async ({ dispatch }, payload) => {
-  sendMessageToOpener('dialog', {
-    ...payload,
-    method: METHODS.SIGN,
+  dispatch('resolveMessage', {
     status: true,
+    ...payload,
   });
   dispatch('closeDialog');
 };
@@ -37,12 +35,20 @@ const processRequest = async ({ state, commit, dispatch }, password) => {
       jsonrpc: request.jsonrpc,
     });
   } catch (err) {
-    dispatch('sendResponse', {
-      id: request.id,
-      result: [],
-      error: err,
-      jsonrpc: request.jsonrpc,
-    });
+    console.log(err.message);
+    if (err.message.includes('message authentication code mismatch')) {
+      commit('changeLoadingStatus', false);
+
+      throw new Error('You have enter incorrect password');
+    } else {
+      dispatch('sendResponse', {
+        id: request.id,
+        result: [],
+        error: err,
+        jsonrpc: request.jsonrpc,
+        status: false,
+      });
+    }
   }
 };
 

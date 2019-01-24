@@ -9,9 +9,9 @@
         :disabled="loading"
         type="primary"
         data-test="submit-button" 
-      >Log out</v-button>
+      >{{ primaryButtonLabel }}</v-button>
       <v-button 
-        :disabled="!closable"
+        :disabled="!closable || loading"
         data-test="cancel-button" 
         @click="emitCancel"
       >Close</v-button>
@@ -37,6 +37,12 @@ export default {
     loading: {
       type: Boolean,
       default: false,
+    },
+  },
+
+  computed: {
+    primaryButtonLabel() {
+      return !this.loading ? 'Log out' : 'Loading...';
     },
   },
 

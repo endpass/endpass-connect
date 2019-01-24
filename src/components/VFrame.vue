@@ -74,4 +74,14 @@ export default {
   min-height: 100px;
   font-size: 1em;
 }
+
+@media (max-width: 768px) {
+  .frame {
+    max-width: initial;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    animation: none;
+  }
+}
 </style>
