@@ -11,9 +11,8 @@ module.exports = {
   entry: path.resolve(__dirname, './src/lib.js'),
 
   output: {
-    path: path.resolve(__dirname, './dist/lib'),
-    filename: 'endpass-connect.js',
-    chunkFilename: '[name].endpass-connect.js',
+    path: __dirname,
+    filename: 'endpass-connect.min.js',
     library: 'EndpassConnect',
     libraryTarget: 'umd',
     libraryExport: 'default',
