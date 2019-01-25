@@ -30,7 +30,7 @@ jobs:
         bucket: endpass-dev-test
         region: us-east-1
         skip_cleanup: true
-        local_dir: dist/app
+        local_dir: dist/
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
