@@ -34,7 +34,7 @@ export default class Dialog {
       'background-color': 'rgba(0, 0, 0, 0.6)',
     });
     const wrapperStyles = inlineStyles({
-      width: '480px',
+      width: '360px',
       margin: '50px auto',
       transition: 'opacity 0.35s ease-in-out',
       opacity: '0',
@@ -63,7 +63,7 @@ export default class Dialog {
     this.frame.onload = () => {
       const wrapper = this.overlay.querySelector('[data-endpass="wrapper"]');
 
-      // TODO: dirty hack for make wrapper visible after correct resizing
+      // Dirty hack for make wrapper visible after correct resizing
       setTimeout(() => {
         wrapper.style.opacity = '1';
       }, 250);
