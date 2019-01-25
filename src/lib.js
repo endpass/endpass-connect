@@ -1,11 +1,9 @@
 import omit from 'lodash/omit';
 import get from 'lodash/get';
-// TODO: move all bridge things to abstraction, like dialog🤔
-import { sendMessageToBridge, awaitBridgeMessage } from '@/util/message';
-import { inlineStyles } from '@/util/dom';
 import Emmiter from '@/class/Emmiter';
 import InpageProvider from '@/class/InpageProvider';
 import Dialog from '@/class/Dialog';
+import Bridge from '@/class/Bridge';
 import {
   METHODS,
   INPAGE_EVENTS,
@@ -18,13 +16,12 @@ import {
  * Commonly using the "inner" logic of connect
  */
 export const privateMethods = {
-  checkBridgeReady: Symbol('checkBridgeReady'),
   watchRequestsQueue: Symbol('watchRequestsQueue'),
   processCurrentRequest: Symbol('processCurrentRequest'),
   processWhitelistedRequest: Symbol('processWhitelistedRequest'),
   getConnectUrl: Symbol('getConnectUrl'),
   setupEmmiterEvents: Symbol('setupEmmiterEvents'),
-  injectBridge: Symbol('injectBridge'),
+  initBridge: Symbol('initBridge'),
   createRequestProvider: Symbol('createRequestProvider'),
   getUserSettings: Symbol('getUserSettings'),
   sendResponse: Symbol('sendResponse'),
@@ -50,8 +47,11 @@ export default class Connect {
     this.queueInterval = null;
     this.queue = [];
 
+    // Abstractions instances
     this.dialog = null;
-    this.bridge = this[privateMethods.injectBridge]();
+    this.bridge = null;
+
+    this[privateMethods.initBridge]();
     this[privateMethods.setupEmmiterEvents]();
     this[privateMethods.watchRequestsQueue]();
   }
@@ -137,23 +137,11 @@ export default class Connect {
    * Injects iframe-bridge to opened page and returns link to injected element
    * @returns {HTMLElement} Injected iframe element
    */
-  [privateMethods.injectBridge]() {
-    const iframeStyles = inlineStyles({
-      position: 'absolute',
-      top: '0',
-      left: '0',
-      width: '0',
-      height: '0',
+  [privateMethods.initBridge]() {
+    this.bridge = new Bridge({
+      url: this[privateMethods.getConnectUrl]('bridge'),
     });
-    const iframeMarkup = `
-      <iframe data-endpass="bridge" src="${this[privateMethods.getConnectUrl](
-        'bridge',
-      )}" style="${iframeStyles}" />
-    `;
-
-    document.body.insertAdjacentHTML('afterBegin', iframeMarkup);
-
-    return document.body.querySelector('[data-endpass="bridge"]');
+    this.bridge.mount();
   }
 
   /**
@@ -161,38 +149,15 @@ export default class Connect {
    * @returns {Promise<Object>} User settings
    */
   async [privateMethods.getUserSettings]() {
-    await this[privateMethods.checkBridgeReady]();
-    sendMessageToBridge(this.bridge.contentWindow, {
+    const res = await this.bridge.ask({
       method: METHODS.GET_SETTINGS,
     });
-
-    const res = await awaitBridgeMessage(METHODS.GET_SETTINGS);
 
     if (!res.status) {
       throw new Error(res.message || 'User settings are not received!');
     }
 
     return res;
-  }
-
-  /**
-   * Checks connect bridge ready state
-   * Resolves only if bridge is available and can send ready state message
-   * @returns {Promise<Boolean>}
-   */
-  [privateMethods.checkBridgeReady]() {
-    return new Promise(resolve => {
-      const interval = setInterval(() => {
-        sendMessageToBridge(this.bridge.contentWindow, {
-          method: METHODS.READY_STATE_BRIDGE,
-        });
-      }, 250);
-
-      awaitBridgeMessage(METHODS.READY_STATE_BRIDGE).then(res => {
-        clearInterval(interval);
-        return resolve(res.status);
-      });
-    });
   }
 
   /**
@@ -301,15 +266,12 @@ export default class Connect {
     const { selectedAddress, networkVersion } = this[
       privateMethods.getSettings
     ]();
-
-    sendMessageToBridge(this.bridge.contentWindow, {
+    const res = await this.bridge.ask({
       method: METHODS.RECOVER,
       address: selectedAddress,
       net: networkVersion,
       request: this.currentRequest,
     });
-
-    const res = await awaitBridgeMessage(METHODS.RECOVER);
 
     if (!res.status) throw new Error(res.message || 'Recovery error!');
 
