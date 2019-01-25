@@ -9,27 +9,26 @@ script:
   - npm test && npm run build
 stages:
   - test
-  - name: deploy
+  - name: deploy_npm
     if: branch = release
+  - name: deploy_s3
+    if: branch = master
 jobs:
   include:
-    - stage: deploy
+    - stage: deploy_npm
       script:
         - if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
           npm run build && npm run semantic-release
           fi
-deploy:
-  provider: s3
-  access_key_id:
-    secure: RwZVRfFg677qJYyXM5vEWT5rFqF3ai2OWgackNjTI0ZKPi52exIMwlabwqGsydHcD+yEzGqwryyaIj4ELitHiBOl/QGdoPkXx+vVHtzpOji+C8a0umMy/c5yeCL6to9utyf68mZxGF6dAXt2zedXiPOE7/peJQmi/OnFjPDi/xy8U0yujLSdbuIv3K2XHDTBDJHELLa3fV8KFgVjeLS376kEV3+tbub9nSw0dSH7ngZecRdWmFEnbKzFKDq5tTBOrRl/wnjo6vnTY9Mi+5cftoIDa3N9NSxVWYBAFB8n/GeBwe2f69JL/44/oWAWA5pADaWPNXheXXx8YqhLeyNqkr2Ete9Vsys3PLsH/ASmTvigBSRJpDpDNzW2hNZe7Z/vkABGd0v4eBE9CJlI4cGphDGV8dNtE0z0EVQv0R3WzqR5ktIoedaamMV6Jmg6vMBvhPlMAjFkjB2kuM/CStgl4/z+Hrsa5XuwYDkOKAnor5B/4sedGuuFQwAxmbKdUip0QF/9+QxSj5MdW+2Kgc/qHgwY9mGfvkZpBFgFPI9E9j85BadMtMT/UqFTKu8rW+2bHzIVMFeQzJwLSLQvBIx6CPNhXkEttuJNfvedNC8X7i6rGCgoasunFKP9bKPYoxf2q5BfhCbblbqnQ2NtYW/Q75s1/VUXRAhbkRxVkoKjxFU=
-  secret_access_key:
-    secure: vq+wAeWjmYNplFFOZjsHT0majGeyo2sO0mCu43Jx8EaZKwstYEoL+dLbCmUIw6/CH2WzOx+6rfOnmyjQNiwDO59kkgU2ibXUUu4lIy80dcSd6MYel3YDk2+HePV0TWcRZSOth4PRAmcWHgTageHBkk08M08CuEXvm1JF7OTNldfGbTza2c1wUxfO+DPBktU7YBCyIrvRq8O5Qgr0EwM7Wdl3MJGUUH1Bob4n2XbXWSYkcKDtIWt94NaF7Iccp3lJW3I91nVeF4cWMsTzzo+x6O2aL26M6Ndrr0K7PCp8upTZjZjFthqTfMyApqBU5ELcPOrato2WbbDVjc8I3Fk3MhSE1jgWOqZ4YczepAFESGDhxnW4nen890kcyWbl5GLBKWOOCBwLwi16dUAjt85Z9cLi7vjmsw76kmFWXz87yy08cVMEx3cO2K+NVC+c0A3sVb19u7aLoLzZNlA7FpiXTJ8y7IZqAkAOsDr7G3IzvznEtqN8fVfIWZweinPKuVVu0ZBRmK73jkuGFAlbPniUeYhlUNEaJFaq/iYu9PSzajVpaXesWJGEgawyouLGLqwIGuhx8I/8LwtqVHRxVxUf6xY8AWAX4JRkoECPinAqZ4oqimNL4RaQANRU1e3ObFUDscerZLkeJtbrMSnry/LTYAmOy6yQFEpe45qp9zfkd/A=
-  bucket: auth-dev.endpass.com
-  region: us-east-1
-  skip_cleanup: true
-  local_dir: dist/app
-  on:
-    branch: master
+    - stage: deploy_s3
+      deploy:
+        provider: s3
+        access_key_id: "$ACCESS_KEY_ID"
+        secret_access_key: "$SECRET_ACCESS_KEY"
+        bucket: auth-dev.endpass.com
+        region: us-east-1
+        skip_cleanup: true
+        local_dir: dist/
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
