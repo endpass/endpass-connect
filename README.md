@@ -87,20 +87,43 @@ manually, `createProvider` also should try to find it.
 
 #### Instance methods
 
-| Method           | Params                                              | Returns                                                 | Description                                                                                                                                                               |
-| ---------------- | --------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `auth`           |                                                     | `Promise<{ status: boolean, message?: string }>`        | Open Endpass Connect application for user authorization, return promise, which returns object with auth status. See [Errors handling](#errors-handling) for more details. |
-| `logout`         |                                                     | `Promise<{ status: boolean, message?: string }>`        | Open Endpass Connect application for user logout, return promise, which returns object with auth status. See [Errors handling](#errors-handling) for more details.        |
-| `getAccountData` |                                                     | `Promise<{ activeAccount: string, activeNet: number }>` | Returns authorized user active account.                                                                                                                                   |
-| `createProvider` | `web3: Web3`                                        | `Web3Provider`                                          | Creates Web3 provider for injection in Web3 instance. If web3 is not given in arguments – it will be looked in the window object                                          |
-| `sendSettings`   | `selectedAddress: string`, `networkVersion: string` |                                                         | Set user settings to the injected `web3` provider.                                                                                                                        |
+| Method                | Params                                           | Returns                                                                             | Description                                                                                                                                                               |
+| --------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `auth`                |                                                  | `Promise<{ status: boolean, message?: string }>`                                    | Open Endpass Connect application for user authorization, return promise, which returns object with auth status. See [Errors handling](#errors-handling) for more details. |
+| `logout`              |                                                  | `Promise<Boolean>`                                                                  | Makes logout request and returns status or throw error                                                                                                                    |
+| `getAccountData`      |                                                  | `Promise<{ activeAccount: string, activeNet: number }>`                             | Returns authorized user active account.                                                                                                                                   |
+| `createProvider`      | `web3: Web3`                                     | `Web3Provider`                                                                      | Creates Web3 provider for injection in Web3 instance. If web3 is not given in arguments – it will be looked in the window object                                          |
+| `setProviderSettings` | `{ activeAccount: string`, `activeNet: number }` |                                                                                     | Set user settings to the injected `web3` provider.                                                                                                                        |
+| `openAccount`         |                                                  | `Promise<{ type: string, payload?: { activeAccount: string, activeNet: number } }>` | Open Endpass Connect application for change user active address, network or logout                                                                                        |
 
-#### Errors handling
+### Interactions with current account
 
-The most of Endpass Connect methods throws errors by default, but there are some
-exceptions. For example `auth` method, which returns result of authentification
-with `status` property and `message`. If `status` if falsy, you can use `message`
-proprty to determine reason and handle error with some interface solutions.
+If you use `openAccount` method connect application will open screen with user base settings: current account and network.
+You also can makes logout here. This method will return object with type field. This field determines response type. There is
+two types of response:
+
+- `logout` – means user makes logout from his account.
+- `update` – means user update account settings. Response also contains `payload` field with updated settings object.
+
+At the same time `update` will set new account settings to injected provider. After this, you can refresh browser page
+or something else.
+
+Examples:
+
+```js
+import Connect from '@endpass/connect';
+
+const connect = new Connect();
+
+connect.openAccount().then(res => {
+  if (res.type === 'logout') {
+    // User have logout here
+  } else if (res.type === 'update') {
+    // Account settings was updated by user
+    console.log(res); // { activeAccount: "0x0", activeNet: 1 }
+  }
+});
+```
 
 ## Development
 

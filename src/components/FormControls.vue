@@ -8,7 +8,7 @@
 .form-controls {
   display: flex;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 20px;
 
   & > button {
     flex: 0 0 auto;

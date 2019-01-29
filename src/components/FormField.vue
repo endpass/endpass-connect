@@ -1,13 +1,10 @@
 <template>
   <label class="form-field">
-    <p 
-      v-if="label" 
-      class="form-field__label"
-    >
+    <p v-if="label" class="form-field__label">
       {{ label }}
     </p>
     <div class="form-field__content">
-      <slot />      
+      <slot />
     </div>
   </label>
 </template>
@@ -29,6 +26,10 @@ export default {
 .form-field {
   display: block;
   margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .form-field__label {

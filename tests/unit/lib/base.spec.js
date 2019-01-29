@@ -128,7 +128,7 @@ describe('Connect class', () => {
         });
       });
 
-      describe('sendSettings', () => {
+      describe('setProviderSettings', () => {
         it('should send given settings via emmiter', () => {
           const payload = {
             selectedAddress: '0x0',
@@ -136,7 +136,7 @@ describe('Connect class', () => {
           };
 
           connect.emmiter.emit = jest.fn();
-          connect.sendSettings(payload);
+          connect.setProviderSettings(payload);
 
           expect(connect.emmiter.emit).toBeCalledWith(
             INPAGE_EVENTS.SETTINGS,

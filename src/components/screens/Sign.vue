@@ -1,7 +1,7 @@
 <template>
-  <screen>    
-    <v-frame :loading="!request"> 
-      <sign-form 
+  <screen>
+    <v-frame :loading="!request">
+      <sign-form
         :accounts="accounts"
         :loading="loading"
         :request="request"
@@ -10,7 +10,7 @@
         @cancel="handleSignCancel"
         @submit="handleSignSubmit"
       />
-    </v-frame> 
+    </v-frame>
   </screen>
 </template>
 
@@ -18,7 +18,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex';
 import Screen from '../Screen.vue';
 import VFrame from '../VFrame.vue';
-import SignForm from '../SignForm.vue';
+import SignForm from '../forms/Sign.vue';
 
 export default {
   name: 'Sign',

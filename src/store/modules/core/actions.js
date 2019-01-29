@@ -38,7 +38,7 @@ const sendReadyMessage = ({ dispatch }) => {
   });
 };
 
-const subscribeOnBridge = ({ dispatch }) => {
+const subscribeOnBridge = ({ dispatch, rootState }) => {
   const handler = (target, message) => {
     if (message.method === METHODS.READY_STATE_BRIDGE) {
       dispatch('sendBridgeMessage', {
@@ -50,16 +50,16 @@ const subscribeOnBridge = ({ dispatch }) => {
       });
     } else if (message.method === METHODS.GET_SETTINGS) {
       dispatch('getSettings')
-        .then(res => {
+        .then(() =>
           dispatch('sendBridgeMessage', {
             payload: {
               method: METHODS.GET_SETTINGS,
               status: true,
-              ...res,
+              ...rootState.accounts.settings,
             },
             target,
-          });
-        })
+          }),
+        )
         .catch(() => {
           dispatch('sendBridgeMessage', {
             payload: {
@@ -71,7 +71,7 @@ const subscribeOnBridge = ({ dispatch }) => {
         });
     } else if (message.method === METHODS.RECOVER) {
       dispatch('recoverMessage', message)
-        .then(res => {
+        .then(res =>
           dispatch('sendBridgeMessage', {
             payload: {
               method: METHODS.RECOVER,
@@ -79,12 +79,32 @@ const subscribeOnBridge = ({ dispatch }) => {
               ...res,
             },
             target,
-          });
-        })
+          }),
+        )
         .catch(() => {
           dispatch('sendBridgeMessage', {
             payload: {
               method: METHODS.RECOVER,
+              status: false,
+            },
+            target,
+          });
+        });
+    } else if (message.method === METHODS.LOGOUT) {
+      dispatch('logout')
+        .then(() =>
+          dispatch('sendBridgeMessage', {
+            payload: {
+              method: METHODS.LOGOUT,
+              status: true,
+            },
+            target,
+          }),
+        )
+        .catch(() => {
+          dispatch('sendBridgeMessage', {
+            payload: {
+              method: METHODS.LOGOUT,
               status: false,
             },
             target,

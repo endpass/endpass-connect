@@ -2,18 +2,18 @@
   <a
     v-if="href"
     :href="href"
-    :class="{ button: true, [type]: type, disabled: disabled }"
+    :class="{ button: true, [type]: type, disabled: disabled, fluid: fluid }"
   >
-    <slot />  
+    <slot />
   </a>
   <button
     v-else
-    :class="{ button: true, [type]: type, disabled: disabled }"
+    :class="{ button: true, [type]: type, disabled: disabled, fluid: fluid }"
     :disabled="disabled"
     :type="buttonType"
     @click="emitClick"
   >
-    <slot/>
+    <slot />
   </button>
 </template>
 
@@ -40,6 +40,11 @@ export default {
     href: {
       type: String,
       default: null,
+    },
+
+    fluid: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -75,9 +80,19 @@ export default {
     color: #fff;
   }
 
+  &.danger {
+    background: #f23833;
+    color: #fff;
+  }
+
   &.disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  &.fluid {
+    width: 100%;
+    text-align: center;
   }
 }
 </style>
