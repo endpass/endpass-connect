@@ -1,6 +1,7 @@
 import get from 'lodash/get';
+import pick from 'lodash/pick';
 import IdentityService from '@/service/identity';
-import { awaitMessageFromOpener } from '@/util/message';
+import SettingsService from '@/service/settings';
 
 const auth = async ({ state, commit }, email) => {
   commit('changeLoadingStatus', true);
@@ -54,33 +55,78 @@ const cancelAuth = ({ dispatch }) => {
   });
 };
 
-const getSettings = async ({ dispatch }) => {
-  const res = await IdentityService.getSettings();
+const getSettings = async ({ dispatch, commit }) => {
+  const settings = await IdentityService.getSettings();
 
-  if (!res.lastActiveAccount) {
+  if (!settings.lastActiveAccount) {
     const lastAccount = await dispatch('getFirstPrivateAccount');
 
-    return {
-      ...res,
+    Object.assign(settings, {
       lastActiveAccount: get(lastAccount, 'address'),
-    };
+    });
   }
 
-  return res;
+  const mergedSettings = SettingsService.mergeSettings(settings);
+
+  SettingsService.setLocalSettings(mergedSettings);
+
+  commit('setSettings', {
+    ...settings,
+    ...mergedSettings,
+  });
+
+  return {
+    ...settings,
+    ...mergedSettings,
+  };
+};
+
+const setSettings = async (ctx, payload) => {
+  SettingsService.setLocalSettings(payload);
+};
+
+const updateSettings = async ({ commit, dispatch }, payload) => {
+  commit('changeLoadingStatus', true);
+
+  try {
+    await dispatch('setSettings', payload);
+
+    const res = await dispatch('getSettings');
+
+    dispatch('resolveMessage', {
+      status: true,
+      type: 'update',
+      payload: {
+        activeAccount: res.lastActiveAccount,
+        activeNet: res.net,
+      },
+    });
+    dispatch('closeDialog');
+  } catch (err) {
+    throw new Error('Something went wrong, try again later');
+  } finally {
+    commit('changeLoadingStatus', false);
+  }
 };
 
 const getAccounts = async ({ commit }) => {
   try {
     const res = await IdentityService.getAccounts();
+    const accounts = await Promise.all(
+      res.map(address => IdentityService.getAccountInfo(address)),
+    );
 
-    commit('setAccounts', res);
+    commit(
+      'setAccounts',
+      accounts.filter(account => !/^xpub/.test(account.address)),
+    );
   } catch (err) {
     commit('setAccounts', null);
   }
 };
 
-const getAccountInfo = async (ctx, address) => {
-  const res = await IdentityService.getAccountInfo(address);
+const getAccount = async (ctx, address) => {
+  const res = await IdentityService.getAccount(address);
 
   return res;
 };
@@ -92,31 +138,7 @@ const getFirstPrivateAccount = async ({ state, dispatch }) => {
 
   const { accounts } = state;
 
-  const privateAccount = await Promise.race(
-    accounts.filter(account => !/^xpub/.test(account)).map(
-      (account, i) =>
-        /* eslint-disable-next-line */
-        new Promise(async resolve => {
-          const accountInfo = await dispatch('getAccountInfo', account);
-
-          if (accountInfo.type !== 'PublicAccount') {
-            return resolve(accountInfo);
-          }
-
-          if (i === accounts.length - 1) {
-            return resolve(null);
-          }
-        }),
-    ),
-  );
-
-  return privateAccount;
-};
-
-const getAccount = async (ctx, address) => {
-  const res = await IdentityService.getAccount(address);
-
-  return res;
+  return accounts.find(account => account.type !== 'PublicAccount');
 };
 
 const awaitAuthConfirm = async ({ dispatch }) => {
@@ -132,24 +154,6 @@ const awaitAccountCreate = async ({ commit }) => {
 
 const openCreateAccountPage = async () => {
   window.open('https://wallet-dev.endpass.com/#/');
-};
-
-const logout = async ({ dispatch, commit }) => {
-  commit('changeLoadingStatus', true);
-
-  try {
-    await IdentityService.logout();
-    dispatch('resolveMessage', {
-      status: true,
-    });
-    dispatch('closeDialog');
-  } catch (err) {
-    console.error(err);
-
-    throw new Error('Something went wrong, try again later');
-  } finally {
-    commit('changeLoadingStatus', false);
-  }
 };
 
 const cancelLogout = async ({ dispatch }) => {
@@ -172,6 +176,34 @@ const awaitLogoutConfirm = async ({ commit }) => {
   }
 };
 
+const closeAccount = async ({ dispatch }) => {
+  dispatch('resolveMessage', {
+    status: true,
+    type: 'close',
+  });
+  dispatch('closeDialog');
+};
+
+const logout = async ({ dispatch, commit }) => {
+  commit('changeLoadingStatus', true);
+
+  try {
+    await IdentityService.logout();
+
+    dispatch('resolveMessage', {
+      status: true,
+      type: 'logout',
+    });
+    dispatch('closeDialog');
+  } catch (err) {
+    console.error(err);
+
+    throw new Error('Something went wrong, try again later');
+  } finally {
+    commit('changeLoadingStatus', false);
+  }
+};
+
 export default {
   auth,
   cancelAuth,
@@ -179,13 +211,15 @@ export default {
   confirmAuthViaOtp,
   getSettings,
   getAccount,
-  getAccountInfo,
   getAccounts,
   getFirstPrivateAccount,
   openCreateAccountPage,
   awaitAccountCreate,
   awaitAuthConfirm,
-  logout,
   cancelLogout,
   awaitLogoutConfirm,
+  setSettings,
+  updateSettings,
+  logout,
+  closeAccount,
 };

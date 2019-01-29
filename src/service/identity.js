@@ -21,6 +21,9 @@ const request = {
 export const getSettings = () =>
   request.get(`${identityBaseUrl}/api/v1.1/settings`);
 
+export const setSettings = settings =>
+  request.post(`${identityBaseUrl}/api/v1.1/settings`, settings);
+
 export const getOtpSettings = () =>
   request.get(`${identityBaseUrl}/api/v1.1/settings/otp`);
 
@@ -119,6 +122,7 @@ export default {
   getAccount,
   getAccounts,
   getAccountInfo,
+  setSettings,
   auth,
   otpAuth,
   awaitAuthConfirm,

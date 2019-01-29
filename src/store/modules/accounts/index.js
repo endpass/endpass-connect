@@ -7,6 +7,7 @@ const state = {
   authParams: null,
   otpEmail: null,
   accounts: null,
+  settings: null,
 };
 
 export default {

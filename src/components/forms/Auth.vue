@@ -1,16 +1,12 @@
 <template>
-  <form 
-    data-test="auth-form" 
-    @submit.prevent="emitSubmit"
-  >
+  <form data-test="auth-form" @submit.prevent="emitSubmit">
     <form-field>
-      <message data-test="form-message">Log in to your Endpass account to access site actions</message>
+      <message data-test="form-message"
+        >Log in to your Endpass account to access site actions</message
+      >
     </form-field>
     <form-field v-if="error">
-      <message 
-        :error="true" 
-        data-test="error-message"
-      >{{ error }}</message>
+      <message :error="true" data-test="error-message">{{ error }}</message>
     </form-field>
     <form-field>
       <v-input
@@ -29,23 +25,25 @@
         :submit="true"
         type="primary"
         data-test="submit-button"
-      >{{ primaryButtonLabel }}</v-button>
-      <v-button 
+        >{{ primaryButtonLabel }}</v-button
+      >
+      <v-button
         :disabled="!closable || loading"
-        data-test="cancel-button" 
+        data-test="cancel-button"
         @click="emitCancel"
-      >Close</v-button>
+        >Close</v-button
+      >
     </form-controls>
   </form>
 </template>
 
 <script>
-import VFrame from './VFrame.vue';
-import VInput from './VInput.vue';
-import VButton from './VButton.vue';
-import Message from './Message.vue';
-import FormField from './FormField.vue';
-import FormControls from './FormControls.vue';
+import VFrame from '../VFrame.vue';
+import VInput from '../VInput.vue';
+import VButton from '../VButton.vue';
+import Message from '../Message.vue';
+import FormField from '../FormField.vue';
+import FormControls from '../FormControls.vue';
 
 export default {
   name: 'AuthForm',

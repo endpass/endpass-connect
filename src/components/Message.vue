@@ -1,6 +1,13 @@
 <template>
-  <p :class="{ message: true, error: error, ellipsis: ellipsis }">
-    <slot/>
+  <p
+    :class="{
+      message: true,
+      error: error,
+      success: success,
+      ellipsis: ellipsis,
+    }"
+  >
+    <slot />
   </p>
 </template>
 
@@ -18,6 +25,11 @@ export default {
       type: Boolean,
       default: false,
     },
+
+    success: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
@@ -29,6 +41,10 @@ export default {
 
   &.error {
     color: #f00;
+  }
+
+  &.success {
+    color: #4dce4d;
   }
 
   &.ellipsis {

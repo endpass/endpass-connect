@@ -83,6 +83,9 @@ export default class Dialog {
     }, 100);
   }
 
+  /**
+   * Opens dialog application in the mounted modal widget
+   */
   async open() {
     this[privateMethods.mountDialog]();
     this[privateMethods.createResizingSubscribtion]();
@@ -99,6 +102,9 @@ export default class Dialog {
     }
   }
 
+  /**
+   * Removes dialog node from application DOM
+   */
   close() {
     clearInterval(this.resizeInterval);
     this.resizeInterval = null;
@@ -106,10 +112,21 @@ export default class Dialog {
     document.body.removeChild(this.overlay);
   }
 
+  /**
+   * Send message to the bridge
+   * @param {Object} payload Message payload, must includes method for message
+   *  identitification on connect application side
+   * @returns {Promise}
+   */
   sendMessage(payload) {
     sendMessageToDialog(this.frame.contentWindow, payload);
   }
 
+  /**
+   * Awaits answer on message with given method from connect application
+   * @param {String} method Expected message method
+   * @returns {Object} Responded message payload
+   */
   /* eslint-disable-next-line */
   async awaitMessage(method) {
     const res = await awaitDialogMessage(method);
@@ -117,6 +134,12 @@ export default class Dialog {
     return res;
   }
 
+  /**
+   * Wrapper on sendMessage and awaitMessage methods
+   * Send message with given payload and awaits answer on it
+   * @param {Object} payload Message payload. Must includes method property
+   * @returns {Object} Responded message payload
+   */
   async ask(payload) {
     if (!payload.method) {
       throw new Error('You sould provide method into you question to dialog!');

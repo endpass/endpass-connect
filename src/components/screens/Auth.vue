@@ -7,21 +7,21 @@
         @request="handleAccountRequest"
         @cancel="handleAuthCancel"
       />
-      <otp-form 
-        v-else-if="otpEmail" 
+      <otp-form
+        v-else-if="otpEmail"
         :closable="isDialog"
         :loading="loading"
         :error="error"
         @submit="handleOtpSubmit"
         @cancel="handleAuthCancel"
       />
-      <message-form 
+      <message-form
         v-else-if="!authorized && sent"
         :closable="isDialog"
         message="An email with authorization link was sent on your address. Open it in the same browser to sign in."
         @cancel="handleAuthCancel"
       />
-      <message-form 
+      <message-form
         v-else-if="authorized && sent"
         message="You are successfully authorized. You will be redicected in a few seconds."
       />
@@ -34,7 +34,7 @@
         @cancel="handleAuthCancel"
         @submit="handleAuthSubmit"
       />
-    </v-frame> 
+    </v-frame>
   </screen>
 </template>
 
@@ -43,10 +43,10 @@ import isEmpty from 'lodash/isEmpty';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import Screen from '../Screen.vue';
 import VFrame from '../VFrame.vue';
-import AuthForm from '../AuthForm.vue';
-import OtpForm from '../OtpForm.vue';
-import MessageForm from '../MessageForm.vue';
-import CreateAccountForm from '../CreateAccountForm.vue';
+import AuthForm from '../forms/Auth.vue';
+import OtpForm from '../forms/Otp.vue';
+import MessageForm from '../forms/Message.vue';
+import CreateAccountForm from '../forms/CreateAccount.vue';
 
 export default {
   name: 'Auth',

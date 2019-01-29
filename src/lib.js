@@ -16,7 +16,7 @@ import {
  * Commonly using the "inner" logic of connect
  */
 export const privateMethods = {
-  watchRequestsQueue: Symbol('watchRequestsQueue'),
+  subscribeOnRequestsQueueChanges: Symbol('subscribeOnRequestsQueueChanges'),
   processCurrentRequest: Symbol('processCurrentRequest'),
   processWhitelistedRequest: Symbol('processWhitelistedRequest'),
   getConnectUrl: Symbol('getConnectUrl'),
@@ -41,6 +41,7 @@ export default class Connect {
     this.emmiter = new Emmiter();
     this.provider = new InpageProvider(this.emmiter);
     this.requestProvider = null;
+    this.initialTimestamp = Math.round(Date.now() / 1000);
 
     // Net requests queue
     this.currentRequest = null;
@@ -53,20 +54,21 @@ export default class Connect {
 
     this[privateMethods.initBridge]();
     this[privateMethods.setupEmmiterEvents]();
-    this[privateMethods.watchRequestsQueue]();
+    this[privateMethods.subscribeOnRequestsQueueChanges]();
   }
 
   /**
    * Sets interval and checks queue for new requests. If current request is not
    * present – sets it and then process
+   * @private
    */
-  [privateMethods.watchRequestsQueue]() {
+  [privateMethods.subscribeOnRequestsQueueChanges]() {
     this.queueInterval = setInterval(() => {
       if (!this.currentRequest && this.queue.length > 0) {
         this.currentRequest = this.queue.pop();
         this[privateMethods.processCurrentRequest]();
       }
-    }, 2500);
+    }, 2000);
   }
 
   /**
@@ -74,6 +76,7 @@ export default class Connect {
    * If request method present in whitelist – it should be signed by user
    * In other cases request will be send to network with web3
    * In the both cases – result will be passed back to injected provider
+   * @private
    * @returns {Promise<Object>} Request processing result
    */
   async [privateMethods.processCurrentRequest]() {
@@ -100,6 +103,7 @@ export default class Connect {
    * Process request which contains method from whitelist
    * If request means recovery – recover address and returns address
    * In other cases – sign and returns signature
+   * @private
    * @returns {Promise<String>} Recovered address or signature
    */
   [privateMethods.processWhitelistedRequest]() {
@@ -112,6 +116,7 @@ export default class Connect {
 
   /**
    * Returns connect application url with passed method
+   * @private
    * @param {String} method Expected method (route)
    * @returns {String} Completed url to open
    */
@@ -121,6 +126,7 @@ export default class Connect {
 
   /**
    * Sets event listeners to inner emmiter with handlers
+   * @private
    */
   [privateMethods.setupEmmiterEvents]() {
     this.emmiter.on(
@@ -135,6 +141,7 @@ export default class Connect {
 
   /**
    * Injects iframe-bridge to opened page and returns link to injected element
+   * @private
    * @returns {HTMLElement} Injected iframe element
    */
   [privateMethods.initBridge]() {
@@ -146,6 +153,8 @@ export default class Connect {
 
   /**
    * Requests user settings from connect application
+   * @private
+   * @throws {Error} If settings request failed
    * @returns {Promise<Object>} User settings
    */
   async [privateMethods.getUserSettings]() {
@@ -164,6 +173,7 @@ export default class Connect {
    * Opens application with given route in child window
    * Also awaits ready state message from dialog
    * After receiving message – returns link to opened window
+   * @private
    * @param {String} route Target connect application route
    * @returns {Promise<Window>} Opened child window
    */
@@ -177,6 +187,7 @@ export default class Connect {
 
   /**
    * Sends current request to network with request provider and returns result
+   * @private
    * @returns {Promise<Object>} Result from network
    */
   async [privateMethods.sendToNetwork]() {
@@ -193,6 +204,7 @@ export default class Connect {
 
   /**
    * Handle requests and push them to the requests queue
+   * @private
    * @param {Object} request Incoming request
    */
   [privateMethods.handleRequest](request) {
@@ -201,6 +213,7 @@ export default class Connect {
 
   /**
    * Returns injeted provider settings
+   * @private
    * @returns {Object} Current provider settings
    */
   [privateMethods.getSettings]() {
@@ -209,6 +222,7 @@ export default class Connect {
 
   /**
    * Sends response to injected provider
+   * @private
    * @param {Object} payload Response payload object
    */
   [privateMethods.sendResponse](payload) {
@@ -221,6 +235,7 @@ export default class Connect {
 
   /**
    * Creates requsts provider and save it to the instance property
+   * @private
    * @param {Web3} web3 Web3 instance which will provide providers
    */
   [privateMethods.createRequestProvider](web3) {
@@ -234,20 +249,18 @@ export default class Connect {
   /**
    * Sends current request to connect application dialog, opens it and
    * awaits sign result
+   * @private
    * @returns {Promise<Object>} Sign result
    */
   async [privateMethods.sign]() {
     await this[privateMethods.openApp]('sign');
 
-    const { selectedAddress, networkVersion } = this[
-      privateMethods.getSettings
-    ]();
-
+    const { activeAccount, activeNet } = this[privateMethods.getSettings]();
     const res = await this.dialog.ask({
       method: METHODS.SIGN,
       url: window.location.origin,
-      address: selectedAddress,
-      net: networkVersion,
+      address: activeAccount,
+      net: activeNet,
       request: this.currentRequest,
     });
 
@@ -260,6 +273,8 @@ export default class Connect {
 
   /**
    * Recovers current request and returns recovered address
+   * @public
+   * @throws {Error} If recovery failed
    * @returns {Promise<String>} Recovered address
    */
   async [privateMethods.recover]() {
@@ -283,9 +298,11 @@ export default class Connect {
   /**
    * Creates provider for inner requests and returns inpage provider for
    * injection in client's web3 instance
+   * @public
    * @param {Web3} web3 Web3 instance
    *  If it is not passed web3 will be looked in application window object
    *  If application window not contains web3 – throws an error
+   * @throws {Error} If web3 is not present in argument and in window object
    * @returns {Web3.Provider} Inpage provider for injections into application
    *  Web3 instance
    */
@@ -304,7 +321,8 @@ export default class Connect {
   /**
    * Requests user settings from injected bridge and returns formatted data
    * Settings includes last active account and network id
-   * Throws error if settings can not be resolved
+   * @public
+   * @throws {Error} If settings can not be resolved
    * @returns {Promise<Object>} Account data
    */
   async getAccountData() {
@@ -323,18 +341,18 @@ export default class Connect {
   /**
    * Sets settings to current `web3` provider injected to page with `injectWeb3`
    *  method
+   * @public
    * @param {String} options.selectedAddress Currenct account checksummed address
    * @param {String} options.networkVersion Active network ID
    */
-  sendSettings({ selectedAddress, networkVersion }) {
-    this.emmiter.emit(INPAGE_EVENTS.SETTINGS, {
-      selectedAddress,
-      networkVersion,
-    });
+  setProviderSettings(payload) {
+    this.emmiter.emit(INPAGE_EVENTS.SETTINGS, payload);
   }
 
   /**
    * Open application on auth screen and waits result (success of failure)
+   * @public
+   * @throws {Error} If authentification failed
    * @returns {Promise<boolean>} Auth result, check `status` property to
    *  know about result
    */
@@ -354,21 +372,52 @@ export default class Connect {
   }
 
   /**
-   * Opens connect application on logout screen (now on the root screen) and
-   * awaits logout message
-   * @returns {Promise<boolean>}
+   * Send request to logout through injected bridge bypass application dialog
+   * @public
+   * @throws {Error} If logout failed
+   * @returns {Promise<Boolean>}
    */
   async logout() {
-    await this[privateMethods.openApp]();
-
-    const res = await this.dialog.ask({
+    const res = await this.bridge.ask({
       method: METHODS.LOGOUT,
     });
-
-    this.dialog.close();
 
     if (!res.status) throw new Error(res.message || 'Logout error!');
 
     return res.status;
+  }
+
+  /**
+   * Opens Endpass Connect appliction with user settings
+   * If type of response equals to "logout" – user makes logout
+   * If type of response equals to "update" – settings in injected provider will
+   *  be updated and promise will return updated settings
+   * @public
+   * @throws {Error} If update failed
+   * @returns {Promise<Object>}
+   */
+  async openAccount() {
+    await this[privateMethods.openApp]();
+
+    const res = await this.dialog.ask({
+      method: METHODS.ACCOUNT,
+    });
+
+    this.dialog.close();
+
+    if (!res.status) throw new Error(res.message || 'Account updating failed!');
+
+    if (res.type === 'update') {
+      this.setProviderSettings(res.payload);
+
+      return {
+        type: 'update',
+        payload: res.payload,
+      };
+    }
+
+    return {
+      type: res.type,
+    };
   }
 }
