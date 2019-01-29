@@ -39,6 +39,27 @@ const confirmAuthViaOtp = async ({ commit }, { email, code }) => {
   }
 };
 
+const authWithGoogle = async ({ commit }, { email, idToken }) => {
+  commit('changeLoadingStatus', true);
+
+  try {
+    const res = await IdentityService.authWithGoogle(idToken);
+    if (!res.success) throw new Error('Auth failed!');
+
+    const type = get(res, 'challenge.challengeType');
+
+    if (type === 'otp') {
+      commit('setOtpEmail', email);
+    } else {
+      commit('setSentStatus', true);
+    }
+  } catch (err) {
+    throw err;
+  } finally {
+    commit('changeLoadingStatus', false);
+  }
+};
+
 const confirmAuth = ({ dispatch }) => {
   dispatch('resolveMessage', {
     status: true,
@@ -195,6 +216,7 @@ const logout = async ({ dispatch, commit }) => {
 
 export default {
   auth,
+  authWithGoogle,
   cancelAuth,
   confirmAuth,
   confirmAuthViaOtp,

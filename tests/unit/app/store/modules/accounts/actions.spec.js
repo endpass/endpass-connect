@@ -81,6 +81,76 @@ describe('accounts actions', () => {
     });
   });
 
+  describe('authWithGoogle', () => {
+    const email = 'foo@bar.baz';
+    const idToken = 'kekek';
+
+    it('should auth user and change link status', async () => {
+      expect.assertions(4);
+
+      IdentityService.authWithGoogle.mockResolvedValueOnce({
+        success: true,
+      });
+
+      await accountsActions.authWithGoogle({ commit }, {email, idToken});
+
+      expect(commit).toBeCalledTimes(3);
+      expect(commit).toHaveBeenNthCalledWith(1, 'changeLoadingStatus', true);
+      expect(commit).toHaveBeenNthCalledWith(2, 'setSentStatus', true);
+      expect(commit).toHaveBeenNthCalledWith(3, 'changeLoadingStatus', false);
+    });
+
+    it('should set otp email if challenge type equals to otp', async () => {
+      expect.assertions(4);
+
+      IdentityService.authWithGoogle.mockResolvedValueOnce({
+        success: true,
+        challenge: {
+          challengeType: 'otp',
+        },
+      });
+
+      await accountsActions.authWithGoogle({ commit }, {idToken, email});
+
+      expect(commit).toBeCalledTimes(3);
+      expect(commit).toHaveBeenNthCalledWith(1, 'changeLoadingStatus', true);
+      expect(commit).toHaveBeenNthCalledWith(2, 'setOtpEmail', email);
+      expect(commit).toHaveBeenNthCalledWith(3, 'changeLoadingStatus', false);
+    });
+
+    it('should throw error if auth response is falsy', async done => {
+      expect.assertions(3);
+
+      IdentityService.authWithGoogle.mockResolvedValueOnce(false);
+
+      try {
+        await accountsActions.auth({ commit }, email);
+      } catch (err) {
+        done();
+      }
+      expect(commit).toBeCalledTimes(2);
+      expect(commit).toHaveBeenNthCalledWith(1, 'changeLoadingStatus', true);
+      expect(commit).toHaveBeenNthCalledWith(2, 'changeLoadingStatus', false);
+    });
+
+    it('should throw error', async done => {
+      expect.assertions(3);
+
+      const error = new Error();
+
+      IdentityService.auth.mockRejectedValueOnce(error);
+
+      try {
+        await accountsActions.auth({ commit }, email);
+      } catch (err) {
+        done();
+      }
+      expect(commit).toBeCalledTimes(2);
+      expect(commit).toHaveBeenNthCalledWith(1, 'changeLoadingStatus', true);
+      expect(commit).toHaveBeenNthCalledWith(2, 'changeLoadingStatus', false);
+    });
+  });
+
   describe('cancelAuth', () => {
     it('should resolve current message and close dialog', async () => {
       expect.assertions(1);
