@@ -34,6 +34,9 @@
         >Close</v-button
       >
     </form-controls>
+    <form-controls>
+      <google-auth-button></google-auth-button>
+    </form-controls>
   </form>
 </template>
 
@@ -95,11 +98,12 @@ export default {
       this.$emit('cancel');
     },
   },
-
+  created() {},
   components: {
     VFrame,
     VButton,
     VInput,
+    GoogleAuthButton,
     Message,
     FormField,
     FormControls,

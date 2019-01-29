@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <meta name="google-signin-client_id" content="<%= ENV.google.key %>">
     <title>Endpass connect / Auth</title>
   </head>
   <body>
@@ -16,5 +17,7 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://connect.facebook.net/en_US/sdk.js" id="facebook-jssdk" async defer></script>
   </body>
 </html>

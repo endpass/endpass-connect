@@ -13,6 +13,7 @@ exports[`Auth render should change submit button text if loading and make it dis
     <v-button-stub disabled="true" type="primary" submit="true" data-test="submit-button">Loading...</v-button-stub>
     <v-button-stub disabled="true" data-test="cancel-button">Close</v-button-stub>
   </form-controls-stub>
+  <form-controls-stub></form-controls-stub>
 </form>
 `;
 
@@ -29,5 +30,6 @@ exports[`Auth render should correctly render Auth component 1`] = `
     <v-button-stub disabled="true" type="primary" submit="true" data-test="submit-button">Log in</v-button-stub>
     <v-button-stub data-test="cancel-button">Close</v-button-stub>
   </form-controls-stub>
+  <form-controls-stub></form-controls-stub>
 </form>
 `;

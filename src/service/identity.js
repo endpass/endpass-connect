@@ -67,6 +67,33 @@ export const otpAuth = (email, code) =>
       return res;
     });
 
+export const authWithGoogle = idToken => {
+  return request
+    .get(
+      `${identityBaseUrl}/api/v1.1/auth/google?token=${encodeURIComponent(
+        idToken,
+      )}`,
+    )
+    .then(res => {
+      if (!res.success) throw new Error(res.message);
+      return res;
+    });
+};
+
+export const authWithFacebook = (email, id_token) => {
+  request
+    .post(`${identityBaseUrl}/api/v1.1/auth/google/`, {
+      challengeType: 'facebook',
+      email,
+      id_token,
+    })
+    .then(res => {
+      if (!res.success) throw new Error(res.message);
+
+      return res;
+    });
+};
+
 export const awaitAuthConfirm = () =>
   new Promise(resolve => {
     /* eslint-disable-next-line */
@@ -124,6 +151,7 @@ export default {
   getAccountInfo,
   setSettings,
   auth,
+  authWithGoogle,
   otpAuth,
   awaitAuthConfirm,
   logout,
