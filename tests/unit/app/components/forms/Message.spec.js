@@ -1,20 +1,20 @@
 import { shallowMount, mount } from '@vue/test-utils';
-import MessageForm from '@/components/MessageForm.vue';
+import Message from '@/components/forms/Message.vue';
 
-describe('MessageForm', () => {
+describe('Message', () => {
   describe('render', () => {
     let wrapper;
 
     beforeEach(() => {
-      wrapper = shallowMount(MessageForm, {
+      wrapper = shallowMount(Message, {
         propsData: {
           message: 'foo',
         },
       });
     });
 
-    it('should correctly render MessageForm component', () => {
-      expect(wrapper.name()).toBe('MessageForm');
+    it('should correctly render Message component', () => {
+      expect(wrapper.name()).toBe('Message');
       expect(wrapper.html()).toMatchSnapshot();
     });
   });
@@ -23,7 +23,7 @@ describe('MessageForm', () => {
     let wrapper;
 
     beforeEach(() => {
-      wrapper = mount(MessageForm, {
+      wrapper = mount(Message, {
         propsData: {
           message: 'foo',
         },

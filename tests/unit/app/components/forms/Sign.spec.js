@@ -1,5 +1,5 @@
 import { shallowMount, mount } from '@vue/test-utils';
-import SignForm from '@/components/SignForm.vue';
+import Sign from '@/components/forms/Sign.vue';
 
 const request = {
   address: '0x0',
@@ -9,20 +9,20 @@ const request = {
   },
 };
 
-describe('SignForm', () => {
+describe('Sign', () => {
   describe('render', () => {
     let wrapper;
 
     beforeEach(() => {
-      wrapper = shallowMount(SignForm, {
+      wrapper = shallowMount(Sign, {
         propsData: {
           request,
         },
       });
     });
 
-    it('should correctly render SignForm component', () => {
-      expect(wrapper.name()).toBe('SignForm');
+    it('should correctly render Sign component', () => {
+      expect(wrapper.name()).toBe('Sign');
       expect(wrapper.find('[data-test=request-body]').exists()).toBe(true);
       expect(wrapper.find('[data-test=requester-url]').text()).toBe(
         request.url,
@@ -32,7 +32,7 @@ describe('SignForm', () => {
     });
 
     it('should not render requester url if it is not passed', () => {
-      wrapper = shallowMount(SignForm, {
+      wrapper = shallowMount(Sign, {
         propsData: {
           request: {
             ...request,
@@ -45,7 +45,7 @@ describe('SignForm', () => {
     });
 
     it('should not render request body code if it is not passed', () => {
-      wrapper = shallowMount(SignForm, {
+      wrapper = shallowMount(Sign, {
         propsData: {
           request: {
             ...request,
@@ -58,7 +58,7 @@ describe('SignForm', () => {
     });
 
     it('should change submit button text if loading and make it disabled', () => {
-      wrapper = shallowMount(SignForm, {
+      wrapper = shallowMount(Sign, {
         propsData: {
           loading: true,
           request,
@@ -77,7 +77,7 @@ describe('SignForm', () => {
     let wrapper;
 
     beforeEach(() => {
-      wrapper = mount(SignForm, {
+      wrapper = mount(Sign, {
         propsData: {
           request,
         },

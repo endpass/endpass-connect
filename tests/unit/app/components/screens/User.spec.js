@@ -1,12 +1,12 @@
 import Vuex from 'vuex';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
-import Authorized from '@/components/screens/Authorized.vue';
+import User from '@/components/screens/User.vue';
 
 const localVue = createLocalVue();
 
 localVue.use(Vuex);
 
-describe('Authorized', () => {
+describe('User', () => {
   let store;
   let storeData;
   let wrapper;
@@ -40,15 +40,15 @@ describe('Authorized', () => {
       },
     };
     store = new Vuex.Store(storeData);
-    wrapper = shallowMount(Authorized, {
+    wrapper = shallowMount(User, {
       localVue,
       store,
     });
   });
 
   describe('render', () => {
-    it('should correctly render Authorized component', () => {
-      expect(wrapper.name()).toBe('Authorized');
+    it('should correctly render User component', () => {
+      expect(wrapper.name()).toBe('User');
       expect(wrapper.html()).toMatchSnapshot();
     });
 

@@ -1,18 +1,18 @@
 import { shallowMount, mount } from '@vue/test-utils';
-import LogoutForm from '@/components/LogoutForm.vue';
+import CreateAccount from '@/components/forms/CreateAccount.vue';
 
-describe('LogoutForm', () => {
+describe('CreateAccount', () => {
   describe('render', () => {
     let wrapper;
 
     beforeEach(() => {
-      wrapper = shallowMount(LogoutForm, {
+      wrapper = shallowMount(CreateAccount, {
         propsData: {},
       });
     });
 
-    it('should correctly render LogoutForm component', () => {
-      expect(wrapper.name()).toBe('LogoutForm');
+    it('should correctly render CreateAccount component', () => {
+      expect(wrapper.name()).toBe('CreateAccount');
       expect(wrapper.html()).toMatchSnapshot();
     });
   });
@@ -21,26 +21,16 @@ describe('LogoutForm', () => {
     let wrapper;
 
     beforeEach(() => {
-      wrapper = mount(LogoutForm, {
+      wrapper = mount(CreateAccount, {
         propsData: {},
       });
     });
 
     describe('submit feature', () => {
-      it('should emit submit on click submit button by default', () => {
-        wrapper.find('form').trigger('submit');
+      it('should emit request on click submit button by default', () => {
+        wrapper.find('[data-test=submit-button]').trigger('click');
 
-        expect(wrapper.emitted().submit).toBeTruthy();
-      });
-
-      it('should not emit submit on click submit button if it is loading', () => {
-        wrapper.setProps({
-          loading: true,
-        });
-
-        wrapper.find('form').trigger('submit');
-
-        expect(wrapper.emitted().submit).toBeFalsy();
+        expect(wrapper.emitted().request).toBeTruthy();
       });
     });
 
