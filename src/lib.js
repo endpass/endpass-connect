@@ -36,8 +36,8 @@ export default class Connect {
   /**
    * @param {String} options.authUrl Url of hosted Endpass Connect Application
    */
-  constructor({ authUrl }) {
-    this.authUrl = authUrl || 'https://auth.endpass.com';
+  constructor(options = {}) {
+    this.authUrl = options.authUrl || 'https://auth.endpass.com';
     this.emmiter = new Emmiter();
     this.provider = new InpageProvider(this.emmiter);
     this.requestProvider = null;
@@ -278,13 +278,11 @@ export default class Connect {
    * @returns {Promise<String>} Recovered address
    */
   async [privateMethods.recover]() {
-    const { selectedAddress, networkVersion } = this[
-      privateMethods.getSettings
-    ]();
+    const { activeAccount, activeNet } = this[privateMethods.getSettings]();
     const res = await this.bridge.ask({
       method: METHODS.RECOVER,
-      address: selectedAddress,
-      net: networkVersion,
+      address: activeAccount,
+      net: activeNet,
       request: this.currentRequest,
     });
 
@@ -372,6 +370,20 @@ export default class Connect {
   }
 
   /**
+   *
+   * @param {String} email
+   * @returns {Promise<Object>}
+   */
+  async login(email) {}
+
+  /**
+   *
+   * @param {String} code
+   * @returns {Promise<Boolean>}
+   */
+  async loginViaOtp(code) {}
+
+  /**
    * Send request to logout through injected bridge bypass application dialog
    * @public
    * @throws {Error} If logout failed
@@ -391,7 +403,7 @@ export default class Connect {
    * Opens Endpass Connect appliction with user settings
    * If type of response equals to "logout" – user makes logout
    * If type of response equals to "update" – settings in injected provider will
-   *  be updated and promise will return updated settings
+   * be updated and promise will return updated settings
    * @public
    * @throws {Error} If update failed
    * @returns {Promise<Object>}

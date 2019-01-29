@@ -1,18 +1,18 @@
 import { shallowMount, mount } from '@vue/test-utils';
-import CreateAccountForm from '@/components/CreateAccountForm.vue';
+import Account from '@/components/forms/Account.vue';
 
-describe('CreateAccountForm', () => {
+describe('Account', () => {
   describe('render', () => {
     let wrapper;
 
     beforeEach(() => {
-      wrapper = shallowMount(CreateAccountForm, {
+      wrapper = shallowMount(Account, {
         propsData: {},
       });
     });
 
-    it('should correctly render CreateAccountForm component', () => {
-      expect(wrapper.name()).toBe('CreateAccountForm');
+    it('should correctly render Account component', () => {
+      expect(wrapper.name()).toBe('Account');
       expect(wrapper.html()).toMatchSnapshot();
     });
   });
@@ -21,16 +21,26 @@ describe('CreateAccountForm', () => {
     let wrapper;
 
     beforeEach(() => {
-      wrapper = mount(CreateAccountForm, {
+      wrapper = mount(Account, {
         propsData: {},
       });
     });
 
     describe('submit feature', () => {
-      it('should emit request on click submit button by default', () => {
-        wrapper.find('[data-test=submit-button]').trigger('click');
+      it('should emit submit on click submit button by default', () => {
+        wrapper.find('form').trigger('submit');
 
-        expect(wrapper.emitted().request).toBeTruthy();
+        expect(wrapper.emitted().submit).toBeTruthy();
+      });
+
+      it('should not emit submit on click submit button if it is loading', () => {
+        wrapper.setProps({
+          loading: true,
+        });
+
+        wrapper.find('form').trigger('submit');
+
+        expect(wrapper.emitted().submit).toBeFalsy();
       });
     });
 

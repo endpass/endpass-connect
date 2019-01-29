@@ -1,26 +1,26 @@
 import { shallowMount, mount } from '@vue/test-utils';
-import AuthForm from '@/components/AuthForm.vue';
+import Auth from '@/components/forms/Auth.vue';
 
-describe('AuthForm', () => {
+describe('Auth', () => {
   describe('render', () => {
     let wrapper;
 
     beforeEach(() => {
-      wrapper = shallowMount(AuthForm, {
+      wrapper = shallowMount(Auth, {
         propsData: {
           inited: true,
         },
       });
     });
 
-    it('should correctly render AuthForm component', () => {
-      expect(wrapper.name()).toBe('AuthForm');
+    it('should correctly render Auth component', () => {
+      expect(wrapper.name()).toBe('Auth');
       expect(wrapper.find('[data-test=email-input]').exists()).toBe(true);
       expect(wrapper.html()).toMatchSnapshot();
     });
 
     it('should render error', () => {
-      wrapper = shallowMount(AuthForm, {
+      wrapper = shallowMount(Auth, {
         propsData: {
           message: 'foo',
           error: 'bar',
@@ -31,7 +31,7 @@ describe('AuthForm', () => {
     });
 
     it('should change submit button text if loading and make it disabled', () => {
-      wrapper = shallowMount(AuthForm, {
+      wrapper = shallowMount(Auth, {
         propsData: {
           message: 'foo',
           loading: true,
@@ -50,7 +50,7 @@ describe('AuthForm', () => {
     let wrapper;
 
     beforeEach(() => {
-      wrapper = mount(AuthForm, {
+      wrapper = mount(Auth, {
         propsData: {
           message: 'foo',
           inited: true,

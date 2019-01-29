@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Auth render should change submit button text if loading and make it disabled 1`] = `
+<form data-test="auth-form" message="foo">
+  <form-field-stub>
+    <message-stub data-test="form-message">Log in to your Endpass account to access site actions</message-stub>
+  </form-field-stub>
+  <!---->
+  <form-field-stub>
+    <v-input-stub placeholder="Enter your email..." name="email" value="" invalid="true" autofocus="true" type="email" data-test="email-input"></v-input-stub>
+  </form-field-stub>
+  <form-controls-stub>
+    <v-button-stub disabled="true" type="primary" submit="true" data-test="submit-button">Loading...</v-button-stub>
+    <v-button-stub disabled="true" data-test="cancel-button">Close</v-button-stub>
+  </form-controls-stub>
+</form>
+`;
