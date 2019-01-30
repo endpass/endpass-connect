@@ -19,7 +19,7 @@
       <v-select
         v-model="formData.activeNet"
         :items="networks"
-        name="activeAccount"
+        name="activeNetwork"
       />
     </form-field>
     <v-button

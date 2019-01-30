@@ -1,25 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Auth render should correctly render Auth component 1`] = `
-<v-frame-stub>
-  <auth-form-stub inited="true" closable="true"></auth-form-stub>
-</v-frame-stub>
+<screen-stub>
+  <v-frame-stub>
+    <auth-form-stub inited="true" closable="true"></auth-form-stub>
+  </v-frame-stub>
+</screen-stub>
 `;
 
 exports[`Auth render should render auth form in other cases 1`] = `
-<v-frame-stub>
-  <auth-form-stub inited="true" closable="true"></auth-form-stub>
-</v-frame-stub>
+<screen-stub>
+  <v-frame-stub>
+    <auth-form-stub inited="true" closable="true"></auth-form-stub>
+  </v-frame-stub>
+</screen-stub>
 `;
 
 exports[`Auth render should render create account form if user authorized but does not have any account 1`] = `
-<v-frame-stub>
-  <create-account-form-stub closable="true"></create-account-form-stub>
-</v-frame-stub>
+<screen-stub>
+  <v-frame-stub>
+    <create-account-form-stub closable="true"></create-account-form-stub>
+  </v-frame-stub>
+</screen-stub>
 `;
 
 exports[`Auth render should render message form if link sent but user is not authorized 1`] = `
-<v-frame-stub>
-  <message-form-stub message="An email with authorization link was sent on your address. Open it in the same browser to sign in." closable="true"></message-form-stub>
-</v-frame-stub>
+<screen-stub>
+  <v-frame-stub>
+    <message-form-stub message="An email with authorization link was sent on your address. Open it in the same browser to sign in." closable="true"></message-form-stub>
+  </v-frame-stub>
+</screen-stub>
 `;

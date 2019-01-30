@@ -92,14 +92,6 @@ describe('Auth', () => {
 
   describe('behavior', () => {
     describe('initial actions', () => {
-      it('should await auth message from opener on create', async () => {
-        expect.assertions(1);
-
-        await global.flushPromises();
-
-        expect(accountsModule.actions.awaitAuthMessage).toBeCalled();
-      });
-
       // TODO: another magic moment
       //       it('should not do anything if it opened not in dialog', async () => {
       //         expect.assertions(3);

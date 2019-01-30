@@ -35,6 +35,7 @@ const processRequest = async ({ state, commit, dispatch }, password) => {
     });
   } catch (err) {
     console.log(err.message);
+
     if (err.message.includes('message authentication code mismatch')) {
       commit('changeLoadingStatus', false);
 

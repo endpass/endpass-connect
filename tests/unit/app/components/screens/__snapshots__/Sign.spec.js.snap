@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Sign render render should correctly render Sign component 1`] = `
-<v-frame-stub>
-  <sign-form-stub request="[object Object]" accounts="" closable="true"></sign-form-stub>
-</v-frame-stub>
+<screen-stub>
+  <v-frame-stub>
+    <sign-form-stub request="[object Object]" accounts="" closable="true"></sign-form-stub>
+  </v-frame-stub>
+</screen-stub>
 `;

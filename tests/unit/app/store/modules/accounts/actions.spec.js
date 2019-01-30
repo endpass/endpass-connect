@@ -166,19 +166,17 @@ describe('accounts actions', () => {
 
   describe('logout', () => {
     it('it should logout user with identity service', async () => {
-      expect.assertions(6);
+      expect.assertions(4);
 
       IdentityService.logout.mockResolvedValueOnce();
 
       await accountsActions.logout({ dispatch, commit });
 
-      expect(dispatch).toBeCalledTimes(2);
-      expect(commit).toBeCalledTimes(2);
-      expect(dispatch).toHaveBeenNthCalledWith(1, 'resolveMessage', {
+      expect(dispatch).toBeCalledWith('resolveMessage', {
         status: true,
         type: 'logout',
       });
-      expect(dispatch).toHaveBeenNthCalledWith(2, 'closeDialog');
+      expect(commit).toBeCalledTimes(2);
       expect(commit).toHaveBeenNthCalledWith(1, 'changeLoadingStatus', true);
       expect(commit).toHaveBeenNthCalledWith(2, 'changeLoadingStatus', false);
     });

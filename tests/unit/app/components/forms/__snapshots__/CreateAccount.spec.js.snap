@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CreateAccountForm render should correctly render CreateAccountForm component 1`] = `
+exports[`CreateAccount render should correctly render CreateAccount component 1`] = `
 <div>
   <message-stub>
     You have not any account. Create one and you will be logged in.

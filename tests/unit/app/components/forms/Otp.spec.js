@@ -12,7 +12,7 @@ describe('Otp', () => {
     });
 
     it('should correctly render Otp component', () => {
-      expect(wrapper.name()).toBe('Otp');
+      expect(wrapper.name()).toBe('OtpForm');
       expect(wrapper.html()).toMatchSnapshot();
     });
   });

@@ -14,7 +14,7 @@ describe('Auth', () => {
     });
 
     it('should correctly render Auth component', () => {
-      expect(wrapper.name()).toBe('Auth');
+      expect(wrapper.name()).toBe('AuthForm');
       expect(wrapper.find('[data-test=email-input]').exists()).toBe(true);
       expect(wrapper.html()).toMatchSnapshot();
     });
