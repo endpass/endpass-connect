@@ -9,6 +9,9 @@
         :form-data="formData"
         :error="error"
         :message="message"
+        @donate-request="handleDonateRequest"
+        @donate-success="handleDonateSuccess"
+        @donate-error="handleDonateError"
         @submit="handleAccountFormSubmit"
         @cancel="handleCancel"
         @logout="handleLogout"
@@ -18,7 +21,7 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapGetters } from 'vuex';
+import { mapActions, mapMutations, mapState, mapGetters } from 'vuex';
 import { DEFAULT_NETWORKS } from '@/constants';
 import Screen from '../Screen.vue';
 import VFrame from '../VFrame.vue';
@@ -75,6 +78,7 @@ export default {
   },
 
   methods: {
+    ...mapMutations(['changeLoadingStatus']),
     ...mapActions(['logout', 'closeAccount', 'getAccounts', 'updateSettings']),
 
     async handleAccountFormSubmit() {
@@ -100,6 +104,21 @@ export default {
 
     handleCancel() {
       this.closeAccount();
+    },
+
+    handleDonateRequest() {
+      this.changeLoadingStatus(true);
+    },
+
+    handleDonateSuccess() {
+      this.message =
+        'Donation request successfully sent. In the most cases it can takes a few time before you will receive funds.';
+      this.changeLoadingStatus(false);
+    },
+
+    handleDonateError(e) {
+      this.error = e;
+      this.changeLoadingStatus(false);
     },
 
     handleWindowClose() {

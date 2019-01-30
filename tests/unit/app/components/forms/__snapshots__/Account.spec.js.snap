@@ -10,7 +10,10 @@ exports[`Account render should correctly render Account component 1`] = `
   <form-field-stub label="Active network">
     <v-select-stub items="" name="activeNetwork" value="1"></v-select-stub>
   </form-field-stub>
-  <v-button-stub type="primary" submit="true" fluid="true" data-test="submit-button">Update account</v-button-stub>
+  <form-field-stub>
+    <v-button-stub type="primary" submit="true" fluid="true" data-test="submit-button">Update account</v-button-stub>
+  </form-field-stub>
+  <!---->
   <form-controls-stub>
     <v-button-stub type="danger" data-test="logout-button">Logout</v-button-stub>
     <v-button-stub data-test="cancel-button">Close</v-button-stub>

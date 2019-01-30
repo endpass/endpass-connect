@@ -22,14 +22,26 @@
         name="activeNetwork"
       />
     </form-field>
-    <v-button
-      :submit="true"
-      :disabled="loading"
-      type="primary"
-      data-test="submit-button"
-      fluid
-      >{{ primaryButtonLabel }}</v-button
+    <form-field>
+      <v-button
+        :submit="true"
+        :disabled="loading"
+        type="primary"
+        data-test="submit-button"
+        fluid
+        >{{ primaryButtonLabel }}</v-button
+      >
+    </form-field>
+    <v-faucet-button
+      v-if="isRopsten"
+      :address="formData.activeAccount"
+      class-name="button primary fluid"
+      @before-request="emitDonateRequest"
+      @donate="emitDonateSuccess"
+      @donate-error="emitDonateError"
     >
+      Request 1 ETH from faucet
+    </v-faucet-button>
     <form-controls>
       <v-button
         :disabled="loading"
@@ -49,6 +61,8 @@
 </template>
 
 <script>
+import { VFaucetButton } from '@endpass/faucet';
+import { DEFAULT_NETWORKS } from '@/constants';
 import VButton from '../VButton.vue';
 import VSelect from '../VSelect.vue';
 import Message from '../Message.vue';
@@ -99,6 +113,15 @@ export default {
     primaryButtonLabel() {
       return !this.loading ? 'Update account' : 'Loading...';
     },
+
+    isRopsten() {
+      const ropstenNet = Object.values(DEFAULT_NETWORKS).find(
+        net => net.networkType === 'ropsten',
+      );
+
+      /* eslint-disable-next-line */
+      return this.formData.activeNet == ropstenNet.id;
+    },
   },
 
   methods: {
@@ -119,9 +142,27 @@ export default {
         this.$emit('cancel');
       }
     },
+
+    emitDonateRequest() {
+      this.$emit('donate-request');
+    },
+
+    emitDonateSuccess(e) {
+      this.$emit('donate-success', e);
+    },
+
+    emitDonateError(e) {
+      if (e.message.includes('403')) {
+        this.$emit(
+          'donate-error',
+          'Something went wrong. Try request dontaion later!',
+        );
+      }
+    },
   },
 
   components: {
+    VFaucetButton,
     VButton,
     VSelect,
     Message,
