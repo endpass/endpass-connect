@@ -1,5 +1,4 @@
 import get from 'lodash/get';
-import pick from 'lodash/pick';
 import IdentityService from '@/service/identity';
 import SettingsService from '@/service/settings';
 
@@ -9,14 +8,12 @@ const auth = async ({ state, commit }, email) => {
   try {
     const res = await IdentityService.auth(
       email,
-      get(state, 'authParams.redirectUrl'),
+      get(state, 'authParams.redirectUrl', null),
     );
 
     if (!res.success) throw new Error('Auth failed!');
 
-    const type = get(res, 'challenge.challengeType');
-
-    if (type === 'otp') {
+    if (get(res, 'challenge.challengeType') === 'otp') {
       commit('setOtpEmail', email);
     } else {
       commit('setSentStatus', true);
@@ -101,7 +98,6 @@ const updateSettings = async ({ commit, dispatch }, payload) => {
         activeNet: res.net,
       },
     });
-    dispatch('closeDialog');
   } catch (err) {
     throw new Error('Something went wrong, try again later');
   } finally {
@@ -138,7 +134,9 @@ const getFirstPrivateAccount = async ({ state, dispatch }) => {
 
   const { accounts } = state;
 
-  return accounts.find(account => account.type !== 'PublicAccount');
+  return !accounts
+    ? null
+    : accounts.find(account => account.type !== 'PublicAccount') || null;
 };
 
 const awaitAuthConfirm = async ({ dispatch }) => {
@@ -154,14 +152,6 @@ const awaitAccountCreate = async ({ commit }) => {
 
 const openCreateAccountPage = async () => {
   window.open('https://wallet-dev.endpass.com/#/');
-};
-
-const cancelLogout = async ({ dispatch }) => {
-  dispatch('resolveMessage', {
-    status: false,
-    message: 'Logout was canceled by user!',
-  });
-  dispatch('closeDialog');
 };
 
 const awaitLogoutConfirm = async ({ commit }) => {
@@ -194,7 +184,6 @@ const logout = async ({ dispatch, commit }) => {
       status: true,
       type: 'logout',
     });
-    dispatch('closeDialog');
   } catch (err) {
     console.error(err);
 
@@ -216,7 +205,6 @@ export default {
   openCreateAccountPage,
   awaitAccountCreate,
   awaitAuthConfirm,
-  cancelLogout,
   awaitLogoutConfirm,
   setSettings,
   updateSettings,

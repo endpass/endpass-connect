@@ -16,7 +16,6 @@ const sendResponse = async ({ dispatch }, payload) => {
     status: true,
     ...payload,
   });
-  dispatch('closeDialog');
 };
 
 const processRequest = async ({ state, commit, dispatch }, password) => {

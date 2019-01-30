@@ -13,7 +13,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['init', 'sendReadyMessage']),
+    ...mapActions(['init']),
   },
 
   async created() {

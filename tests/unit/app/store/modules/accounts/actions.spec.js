@@ -1,7 +1,5 @@
 import IdentityService from '@/service/identity';
 import accountsActions from '@/store/modules/accounts/actions';
-import { awaitMessageFromOpener } from '@/util/message';
-import { METHODS } from '@/constants';
 
 describe('accounts actions', () => {
   let dispatch;
@@ -38,7 +36,7 @@ describe('accounts actions', () => {
       IdentityService.auth.mockResolvedValueOnce({
         success: true,
         challenge: {
-          challenge_type: 'otp',
+          challengeType: 'otp',
         },
       });
 
@@ -84,47 +82,46 @@ describe('accounts actions', () => {
   });
 
   describe('cancelAuth', () => {
-    it('should send message and close dialog', async () => {
-      expect.assertions(3);
+    it('should resolve current message and close dialog', async () => {
+      expect.assertions(1);
 
       await accountsActions.cancelAuth({ dispatch });
 
-      expect(dispatch).toBeCalledTimes(2);
-      expect(dispatch).toHaveBeenNthCalledWith(1, 'sendDialogMessage', {
+      expect(dispatch).toBeCalledWith('resolveMessage', {
         status: false,
-        method: METHODS.AUTH,
         message: 'Auth was canceled by user!',
       });
-      expect(dispatch).toHaveBeenNthCalledWith(2, 'closeDialog');
     });
   });
 
   describe('confirmAuth', () => {
-    it('should send message and close dialog', async () => {
-      expect.assertions(3);
+    it('should resolve current message and close dialog', async () => {
+      expect.assertions(1);
 
       await accountsActions.confirmAuth({ dispatch });
 
-      expect(dispatch).toBeCalledTimes(2);
-      expect(dispatch).toHaveBeenNthCalledWith(1, 'sendDialogMessage', {
-        method: METHODS.AUTH,
+      expect(dispatch).toBeCalledWith('resolveMessage', {
         status: true,
       });
-      expect(dispatch).toHaveBeenNthCalledWith(2, 'closeDialog');
     });
   });
 
   describe('getAccounts', () => {
-    it('should request accounts from identity service and set it', async () => {
+    it('should request accounts, bypass xpub accounts and set it', async () => {
       expect.assertions(1);
 
-      const accounts = ['0x0', '0x1'];
-
-      IdentityService.getAccounts.mockResolvedValueOnce(accounts);
+      IdentityService.getAccounts.mockResolvedValueOnce(['0x0', '0x1', 'xpub']);
+      IdentityService.getAccountInfo.mockImplementation(acc => ({
+        address: acc,
+        type: 'StandardAccount',
+      }));
 
       await accountsActions.getAccounts({ commit });
 
-      expect(commit).toBeCalledWith('setAccounts', accounts);
+      expect(commit).toBeCalledWith('setAccounts', [
+        { address: '0x0', type: 'StandardAccount' },
+        { address: '0x1', type: 'StandardAccount' },
+      ]);
     });
 
     it('should set empty accounts on error', async () => {
@@ -177,9 +174,9 @@ describe('accounts actions', () => {
 
       expect(dispatch).toBeCalledTimes(2);
       expect(commit).toBeCalledTimes(2);
-      expect(dispatch).toHaveBeenNthCalledWith(1, 'sendDialogMessage', {
-        method: METHODS.LOGOUT,
+      expect(dispatch).toHaveBeenNthCalledWith(1, 'resolveMessage', {
         status: true,
+        type: 'logout',
       });
       expect(dispatch).toHaveBeenNthCalledWith(2, 'closeDialog');
       expect(commit).toHaveBeenNthCalledWith(1, 'changeLoadingStatus', true);
@@ -199,22 +196,6 @@ describe('accounts actions', () => {
 
       expect(commit).toBeCalledTimes(2);
       expect(dispatch).not.toBeCalled();
-    });
-  });
-
-  describe('cancelLogout', () => {
-    it('should cancel logout and send message with related data', async () => {
-      expect.assertions(3);
-
-      await accountsActions.cancelLogout({ dispatch });
-
-      expect(dispatch).toBeCalledTimes(2);
-      expect(dispatch).toHaveBeenNthCalledWith(1, 'sendDialogMessage', {
-        status: false,
-        method: METHODS.LOGOUT,
-        message: 'Logout was canceled by user!',
-      });
-      expect(dispatch).toHaveBeenNthCalledWith(2, 'closeDialog');
     });
   });
 
@@ -248,75 +229,48 @@ describe('accounts actions', () => {
     });
   });
 
-  describe('awaitAuthMessage', () => {
-    it('should await auth message from opener and set auth params', async () => {
-      expect.assertions(1);
-
-      const params = {
-        foo: 'bar',
-      };
-
-      awaitMessageFromOpener.mockResolvedValueOnce(params);
-
-      await accountsActions.awaitAuthMessage({ commit });
-
-      expect(commit).toBeCalledWith('setAuthParams', params);
-    });
-
-    it('should await auth message from opener and does not set auth params if it is not empty', async () => {
-      expect.assertions(1);
-
-      awaitMessageFromOpener.mockResolvedValueOnce(null);
-
-      await accountsActions.awaitAuthMessage({ commit });
-
-      expect(commit).not.toBeCalled();
-    });
-  });
-
   describe('getFirstPrivateAccount', () => {
     it('should returns first private account info from state', async () => {
       expect.assertions(1);
 
+      const accounts = [
+        {
+          address: '0x0',
+          type: 'StandardAccount',
+        },
+        {
+          address: '0x1',
+          type: 'PublicAccount',
+        },
+      ];
       const state = {
-        accounts: ['0x0', '0x1'],
+        accounts,
       };
-
-      dispatch.mockResolvedValueOnce({
-        type: 'PublicAccount',
-        address: state.accounts[0],
-      });
-      dispatch.mockResolvedValueOnce({
-        type: 'StandardAccount',
-        address: state.accounts[1],
-      });
 
       const res = await accountsActions.getFirstPrivateAccount({
         state,
         dispatch,
       });
 
-      expect(res).toEqual({
-        type: 'StandardAccount',
-        address: state.accounts[1],
-      });
+      expect(res).toEqual(accounts[0]);
     });
 
     it('should returns null if there are no private accounts in state', async () => {
       expect.assertions(1);
 
+      const accounts = [
+        {
+          address: '0x0',
+          type: 'PublicAccount',
+        },
+        {
+          address: '0x1',
+          type: 'PublicAccount',
+        },
+      ];
       const state = {
-        accounts: ['0x0', '0x1'],
+        accounts,
       };
-
-      dispatch.mockResolvedValueOnce({
-        type: 'PublicAccount',
-        address: state.accounts[0],
-      });
-      dispatch.mockResolvedValueOnce({
-        type: 'PublicAccount',
-        address: state.accounts[1],
-      });
 
       const res = await accountsActions.getFirstPrivateAccount({
         state,
@@ -324,6 +278,21 @@ describe('accounts actions', () => {
       });
 
       expect(res).toBe(null);
+    });
+
+    it('should requests accounts if there are no accounts in the state', async () => {
+      expect.assertions(1);
+
+      const state = {
+        accounts: null,
+      };
+
+      await accountsActions.getFirstPrivateAccount({
+        state,
+        dispatch,
+      });
+
+      expect(dispatch).toBeCalledWith('getAccounts');
     });
   });
 });

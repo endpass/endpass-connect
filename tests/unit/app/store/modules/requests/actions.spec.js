@@ -131,6 +131,7 @@ describe('requests actions', () => {
         id: state.request.request.id,
         result: [],
         jsonrpc: state.request.request.jsonrpc,
+        status: false,
         error,
       });
     });
@@ -142,16 +143,14 @@ describe('requests actions', () => {
     };
 
     it('should send response to opener and close dialog window', async () => {
-      expect.assertions(2);
+      expect.assertions(1);
 
       await requestsActions.sendResponse({ dispatch }, payload);
 
-      expect(sendMessageToOpener).toBeCalledWith('dialog', {
-        ...payload,
-        method: METHODS.SIGN,
+      expect(dispatch).toBeCalledWith('resolveMessage', {
         status: true,
+        ...payload,
       });
-      expect(dispatch).toBeCalledWith('closeDialog');
     });
   });
 

@@ -29,15 +29,6 @@ const sendBridgeMessage = (ctx, { payload, target }) => {
   if (target) sendMessageToOpener(target, 'bridge', payload);
 };
 
-const sendReadyMessage = ({ dispatch }) => {
-  dispatch('sendDialogMessage', {
-    payload: {
-      method: METHODS.READY_STATE_DIALOG,
-      status: true,
-    },
-  });
-};
-
 const subscribeOnBridge = ({ dispatch, rootState }) => {
   const handler = (target, message) => {
     if (message.method === METHODS.READY_STATE_BRIDGE) {
@@ -151,7 +142,6 @@ const processLazyMessage = async (
   { commit, dispatch },
   { target, message },
 ) => {
-  commit('setAuthParams', omit(message, 'method'));
   commit('setMessageAwaitingStatus', true);
 
   await dispatch('processSpecificLazyMessage', message);
@@ -175,19 +165,13 @@ const processSpecificLazyMessage = async ({ commit }, message) => {
   }
 };
 
-const closeDialog = () => {
-  window.close();
-};
-
 export default {
-  init,
-  setWeb3NetworkProvider,
   sendDialogMessage,
   sendBridgeMessage,
-  sendReadyMessage,
+  init,
+  setWeb3NetworkProvider,
   subscribeOnBridge,
   subscribeOnDialog,
   processLazyMessage,
   processSpecificLazyMessage,
-  closeDialog,
 };
