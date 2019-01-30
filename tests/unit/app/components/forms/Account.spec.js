@@ -21,6 +21,16 @@ describe('Account', () => {
       expect(wrapper.name()).toBe('AccountForm');
       expect(wrapper.html()).toMatchSnapshot();
     });
+
+    it('should render faucet button only if activeNet is ropsten', () => {
+      wrapper.setProps({
+        formData: {
+          activeNet: 3,
+        },
+      });
+
+      expect(wrapper.find('v-faucet-button-stub').exists()).toBe(true);
+    });
   });
 
   describe('behavior', () => {

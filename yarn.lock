@@ -785,6 +785,14 @@
   dependencies:
     find-up "^2.1.0"
 
+"@endpass/faucet@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@endpass/faucet/-/faucet-0.1.1.tgz#7854cc483c9b55545ccbf9acf3721b0eccae5e4b"
+  integrity sha512-SZyn3jk8hAcJEQ8aqe51fc9OZtllUwDFkefsTCWonBMTea2p1zecPDH/Vjg0vt++usKWXYuEBcvj73bl1xhNXw==
+  dependencies:
+    axios "^0.18.0"
+    vue "^2.5.22"
+
 "@iamstarkov/listr-update-renderer@0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@iamstarkov/listr-update-renderer/-/listr-update-renderer-0.4.1.tgz#d7c48092a2dcf90fd672b6c8b458649cb350c77e"
@@ -12781,6 +12789,11 @@ vue@^2.5.17:
   version "2.5.21"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.21.tgz#3d33dcd03bb813912ce894a8303ab553699c4a85"
   integrity sha512-Aejvyyfhn0zjVeLvXd70h4hrE4zZDx1wfZqia6ekkobLmUZ+vNFQer53B4fu0EjWBSiqApxPejzkO1Znt3joxQ==
+
+vue@^2.5.22:
+  version "2.5.22"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.22.tgz#3bf88041af08b8539c37b268b70ca79245e9cc30"
+  integrity sha512-pxY3ZHlXNJMFQbkjEgGVMaMMkSV1ONpz+4qB55kZuJzyJOhn6MSy/YZdzhdnumegNzVTL/Dn3Pp4UrVBYt1j/g==
 
 vuex@^3.0.1:
   version "3.0.1"
