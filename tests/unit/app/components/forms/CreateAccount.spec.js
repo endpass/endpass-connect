@@ -12,7 +12,7 @@ describe('CreateAccount', () => {
     });
 
     it('should correctly render CreateAccount component', () => {
-      expect(wrapper.name()).toBe('CreateAccount');
+      expect(wrapper.name()).toBe('CreateAccountForm');
       expect(wrapper.html()).toMatchSnapshot();
     });
   });

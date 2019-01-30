@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User render should correctly render User component 1`] = `
+<screen-stub>
+  <v-frame-stub>
+    <account-form-stub closable="true" accounts="[object Object]" networks="[object Object],[object Object],[object Object],[object Object]" formdata="[object Object]"></account-form-stub>
+  </v-frame-stub>
+</screen-stub>
+`;

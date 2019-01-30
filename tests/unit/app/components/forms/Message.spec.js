@@ -14,7 +14,7 @@ describe('Message', () => {
     });
 
     it('should correctly render Message component', () => {
-      expect(wrapper.name()).toBe('Message');
+      expect(wrapper.name()).toBe('MessageForm');
       expect(wrapper.html()).toMatchSnapshot();
     });
   });
@@ -32,19 +32,9 @@ describe('Message', () => {
 
     describe('cancel feature', () => {
       it('should emit close on click cancel button by default', () => {
-        wrapper.find('[data-test=cancel-button]').trigger('click');
+        wrapper.find('[data-test=cancel-button]').vm.$emit('click');
 
         expect(wrapper.emitted().cancel).toBeTruthy();
-      });
-
-      it('should not emit close on click cancel button if closable is false', () => {
-        wrapper.setProps({
-          closable: false,
-        });
-
-        wrapper.find('[data-test=cancel-button]').trigger('click');
-
-        expect(wrapper.emitted().cancel).toBeFalsy();
       });
     });
   });

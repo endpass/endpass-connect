@@ -22,7 +22,7 @@ describe('Sign', () => {
     });
 
     it('should correctly render Sign component', () => {
-      expect(wrapper.name()).toBe('Sign');
+      expect(wrapper.name()).toBe('SignForm');
       expect(wrapper.find('[data-test=request-body]').exists()).toBe(true);
       expect(wrapper.find('[data-test=requester-url]').text()).toBe(
         request.url,

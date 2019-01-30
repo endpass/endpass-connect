@@ -1,3 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Bridge render should render "empty" markup 1`] = `<div></div>`;
+exports[`Bridge render should render "empty" markup 1`] = `
+<v-frame-stub>
+  <p>Endpass Connect bridge v0.7.0-alpha</p>
+</v-frame-stub>
+`;

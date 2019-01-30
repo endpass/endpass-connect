@@ -27,3 +27,31 @@ exports[`Sign render should change submit button text if loading and make it dis
   </form-controls-stub>
 </form>
 `;
+
+exports[`Sign render should correctly render Sign component 1`] = `
+<form data-test="sign-form">
+  <form-field-stub><a href="http://localhost" data-test="requester-url">http://localhost</a>
+    requests sign action.
+  </form-field-stub>
+  <form-field-stub label="Requires request sign by:">
+    <message-stub ellipsis="true" data-test="account-address">
+      0x0
+    </message-stub>
+  </form-field-stub>
+  <!---->
+  <form-field-stub label="Your account password:">
+    <v-input-stub placeholder="Enter your password..." name="" value="" autofocus="true" type="password"></v-input-stub>
+  </form-field-stub>
+  <form-field-stub label="Request data:">
+    <v-code-stub data-test="request-body">
+      {
+      "foo": "bar"
+      }
+    </v-code-stub>
+  </form-field-stub>
+  <form-controls-stub>
+    <v-button-stub disabled="true" type="primary" submit="true" data-test="submit-button">Sign</v-button-stub>
+    <v-button-stub data-test="cancel-button">Close</v-button-stub>
+  </form-controls-stub>
+</form>
+`;
