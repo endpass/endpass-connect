@@ -11,7 +11,7 @@ module.exports = {
       'jest-transform-stub',
     '^.+\\.js$': 'babel-jest',
   },
-  transformIgnorePatterns: ['node_modules'],
+  transformIgnorePatterns: ['node_modules/(?!(@endpass/class))'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
