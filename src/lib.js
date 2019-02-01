@@ -1,6 +1,6 @@
 import omit from 'lodash/omit';
 import get from 'lodash/get';
-import { Emmiter } from '@/class';
+import { EventEmitter } from '@endpass/class';
 import InpageProvider from '@/class/InpageProvider';
 import Dialog from '@/class/Dialog';
 import Bridge from '@/class/Bridge';
@@ -38,7 +38,7 @@ export default class Connect {
    */
   constructor(options = {}) {
     this.authUrl = options.authUrl || 'https://auth.endpass.com';
-    this.emmiter = new Emmiter();
+    this.emmiter = new EventEmitter();
     this.provider = new InpageProvider(this.emmiter);
     this.requestProvider = null;
     this.initialTimestamp = Math.round(Date.now() / 1000);

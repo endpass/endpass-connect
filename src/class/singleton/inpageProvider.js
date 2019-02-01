@@ -1,5 +1,6 @@
-import { Emmiter, InpageProvider } from '@/class';
+import { EventEmitter } from '@endpass/class';
+import { InpageProvider } from '@/class';
 
-const emmiter = new Emmiter();
+const emmiter = new EventEmitter();
 
 export default new InpageProvider(emmiter);
