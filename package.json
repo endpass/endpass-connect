@@ -21,7 +21,7 @@
     "build:app:test": "NODE_ENV=test vue-cli-service build ./src/main.js",
     "dev:lib": "webpack --watch --mode=development",
     "build:lib": "webpack --mode=production",
-    "unit": "vue-cli-service test:unit",
+    "test": "vue-cli-service test:unit",
     "unit:watch": "vue-cli-service test:unit --watch",
     "format": "prettier --write './src/**/*.{js,vue,json}' && eslint ./src/**/*.{js,vue} --fix",
     "semantic-release": "semantic-release",
