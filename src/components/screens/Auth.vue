@@ -18,12 +18,12 @@
       <message-form
         v-else-if="!authorized && sent"
         :closable="isDialog"
-        message="An email with authorization link was sent on your address. Open it in the same browser to sign in."
+        message="An email with authorization link was sent on your address. Open it in the same browser to sign in. Also check spam folder and exclude Endpass from spam filters."
         @cancel="handleAuthCancel"
       />
       <message-form
         v-else-if="authorized && sent"
-        message="You are successfully authorized. You will be redicected in a few seconds."
+        message="You are successfully authorized. Dialog will be closed in a few seconds."
       />
       <auth-form
         v-else

@@ -41,7 +41,6 @@ export default class Connect {
     this.emmiter = new Emmiter();
     this.provider = new InpageProvider(this.emmiter);
     this.requestProvider = null;
-    this.initialTimestamp = Math.round(Date.now() / 1000);
 
     // Net requests queue
     this.currentRequest = null;
@@ -236,12 +235,13 @@ export default class Connect {
   /**
    * Creates requsts provider and save it to the instance property
    * @private
-   * @param {Web3} web3 Web3 instance which will provide providers
+   * @param {Web3.Provider} provider Web3 provider class
    */
-  [privateMethods.createRequestProvider](web3) {
+  [privateMethods.createRequestProvider](provider) {
     const { networkVersion } = this[privateMethods.getSettings]();
 
-    this.requestProvider = new web3.providers.HttpProvider(
+    /* eslint-disable-next-line */
+    this.requestProvider = new provider(
       get(DEFAULT_NETWORKS, `${networkVersion}.url[0]`),
     );
   }
@@ -294,24 +294,14 @@ export default class Connect {
   // Public methods
 
   /**
-   * Creates provider for inner requests and returns inpage provider for
-   * injection in client's web3 instance
+   * Extends given provider for inner requests and returns it back
    * @public
-   * @param {Web3} web3 Web3 instance
-   *  If it is not passed web3 will be looked in application window object
-   *  If application window not contains web3 – throws an error
-   * @throws {Error} If web3 is not present in argument and in window object
+   * @param {Web3.Provider} provider Web3-friendly provider
    * @returns {Web3.Provider} Inpage provider for injections into application
    *  Web3 instance
    */
-  createProvider(web3) {
-    if (!web3 && !window.web3) {
-      throw new Error(
-        'Pass web3 instance as argument or provide it globally in window object!',
-      );
-    }
-
-    this[privateMethods.createRequestProvider](web3 || window.web3);
+  extendProvider(provider) {
+    this[privateMethods.createRequestProvider](provider);
 
     return this.provider;
   }
@@ -338,10 +328,10 @@ export default class Connect {
 
   /**
    * Sets settings to current `web3` provider injected to page with `injectWeb3`
-   *  method
+   * method
    * @public
-   * @param {String} options.selectedAddress Currenct account checksummed address
-   * @param {String} options.networkVersion Active network ID
+   * @param {String} options.activeAccount Currenct account checksummed address
+   * @param {String} options.activeNet Active network ID
    */
   setProviderSettings(payload) {
     this.emmiter.emit(INPAGE_EVENTS.SETTINGS, payload);
@@ -368,20 +358,6 @@ export default class Connect {
 
     return res.status;
   }
-
-  /**
-   *
-   * @param {String} email
-   * @returns {Promise<Object>}
-   */
-  async login(email) {}
-
-  /**
-   *
-   * @param {String} code
-   * @returns {Promise<Boolean>}
-   */
-  async loginViaOtp(code) {}
 
   /**
    * Send request to logout through injected bridge bypass application dialog

@@ -44,6 +44,7 @@ export default class Dialog {
       height: '100%',
       'box-shadow': '0 5px 10px 1px rgba(0, 0, 0, 0.15)',
       'border-radius': '4px',
+      border: 'none',
     });
     const markup = `
       <div data-endpass="overlay" style="${overlayStyles}">
