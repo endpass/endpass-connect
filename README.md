@@ -1,5 +1,7 @@
 # Endpass Connect
 
+> Compatible with web3.js@0.37.0beta and below
+
 ## Table of contents
 
 - [Library](#library)
@@ -30,7 +32,7 @@ const web3 = new Web3('https://network.url');
 const connect = new EndpassConnect({
   appUrl: 'http://connect.url',
 });
-const provider = connect.createProvider(web3);
+const provider = connect.extendProvider(web3);
 
 web3.setProvider(provider);
 ```
@@ -54,12 +56,12 @@ If you want to use this library and process `web3` requests through `endpass` se
 Install `web3` library if you want to use it manually in you application. Create instance of `web3` and create provider based on it:
 
 ```js
-import Web3 from 'web3';
+import { HttpProvider } from 'web3-providers';
 import Connect from '@endpass/connect';
 
 const web3 = new Web3('https://network.url');
 const connect = new Connect();
-const provider = connect.createProvider(web3);
+const provider = connect.extendProvider(HttpProvider);
 
 // If you are using old versions of web3 (0.30.0-beta and below) you should call
 // setProvider
@@ -75,7 +77,7 @@ web3.setProvider(provider);
 ```
 
 If `web3` can be found in application window object you can not install `web3`
-manually, `createProvider` also should try to find it.
+manually, `extendProvider` also should try to find it.
 
 ### API
 
@@ -92,7 +94,7 @@ manually, `createProvider` also should try to find it.
 | `auth`                |                                                  | `Promise<{ status: boolean, message?: string }>`                                    | Open Endpass Connect application for user authorization, return promise, which returns object with auth status. See [Errors handling](#errors-handling) for more details. |
 | `logout`              |                                                  | `Promise<Boolean>`                                                                  | Makes logout request and returns status or throw error                                                                                                                    |
 | `getAccountData`      |                                                  | `Promise<{ activeAccount: string, activeNet: number }>`                             | Returns authorized user active account.                                                                                                                                   |
-| `createProvider`      | `web3: Web3`                                     | `Web3Provider`                                                                      | Creates Web3 provider for injection in Web3 instance. If web3 is not given in arguments – it will be looked in the window object                                          |
+| `extendProvider`      | `provider: Web3.Provider`                        | `Web3Provider`                                                                      | Creates Web3 provider for injection in Web3 instance.                                                                                                                     |
 | `setProviderSettings` | `{ activeAccount: string`, `activeNet: number }` |                                                                                     | Set user settings to the injected `web3` provider.                                                                                                                        |
 | `openAccount`         |                                                  | `Promise<{ type: string, payload?: { activeAccount: string, activeNet: number } }>` | Open Endpass Connect application for change user active address, network or logout                                                                                        |
 

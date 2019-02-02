@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.9.0-alpha",
+  "version": "0.10.0-alpha",
   "main": "./endpass-connect.min.js",
   "description": "",
   "repository": {
@@ -26,7 +26,7 @@
     "format": "prettier --write './src/**/*.{js,vue,json}' && eslint ./src/**/*.{js,vue} --fix",
     "semantic-release": "semantic-release",
     "commit": "git-cz",
-    "deploy:demo": "node ./scripts/deploy-demo.js"
+    "deploy:demo": "node ./demo/scripts/deploy.js"
   },
   "lint-staged": {
     "./src/**/*.{js,vue,json}": [
