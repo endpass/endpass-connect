@@ -6,7 +6,7 @@ describe('GoogleAuthButton', () => {
     let wrapper;
 
     beforeEach(() => {
-      wrapper = shallowMount(FormField);
+      wrapper = shallowMount(GoogleAuthButton);
     });
 
     it('should correctly render GoogleAuthButton component empty if auth2 isn\'t loaded', () => {

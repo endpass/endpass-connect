@@ -6,12 +6,12 @@ const auth = async ({ state, dispatch }, email) => {
   const request = IdentityService.auth(
     email,
     get(state, 'authParams.redirectUrl'),
-    true,
   );
 
   await dispatch('handleAuthRequest', {
     request,
     email,
+    link: true,
   });
 };
 
@@ -57,7 +57,6 @@ const handleAuthRequest = async ({ commit }, { email, request, link }) => {
     const type = get(res, 'challenge.challengeType');
 
     if (type === 'otp') {
-      console.log(email);
       commit('setOtpEmail', email);
     } else if (link) {
       commit('setSentStatus', true);
