@@ -14,7 +14,7 @@ export default class InpageProvider {
       activeAccount: null,
       activeNet: null,
     };
-    this.isMetaMask = true;
+    this.isMetaMask = true; // emulate metamask provider
     this.isConnected = () => true;
     this.enable = this.enable.bind(this);
 
