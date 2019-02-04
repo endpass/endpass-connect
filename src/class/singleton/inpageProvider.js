@@ -1,5 +1,4 @@
-import { EventEmitter } from '@endpass/class';
-import { InpageProvider } from '@/class';
+import { EventEmitter, InpageProvider } from '@endpass/class';
 
 const emmiter = new EventEmitter();
 

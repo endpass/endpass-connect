@@ -142,7 +142,7 @@ export default class Dialog {
    */
   async ask(payload) {
     if (!payload.method) {
-      throw new Error('You sould provide method into you question to dialog!');
+      throw new Error('You should provide method into you question to dialog!');
     }
 
     this.sendMessage(payload);

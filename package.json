@@ -1,7 +1,7 @@
 {
   "name": "@endpass/connect",
   "version": "0.9.0-alpha",
-  "main": "./endpass-connect.min.js",
+  "main": "./lib/endpass-connect.min.js",
   "description": "",
   "repository": {
     "type": "git",
@@ -12,6 +12,10 @@
   "bugs": {
     "url": "https://github.com/endpass/endpass-connect/issues"
   },
+  "files": [
+    "src",
+    "lib"
+  ],
   "homepage": "https://github.com/endpass/endpass-connect",
   "scripts": {
     "build": "rimraf ./dist && npm run build:app && npm run build:lib",
@@ -62,7 +66,7 @@
     }
   },
   "dependencies": {
-    "@endpass/class": "^0.1.3",
+    "@endpass/class": "^0.2.0",
     "@endpass/faucet": "^0.1.1",
     "axios": "^0.18.0",
     "bs58check": "^2.1.2",
