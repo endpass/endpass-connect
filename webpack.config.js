@@ -4,7 +4,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const pkg = require('./package.json');
 const { getEnv } = require('./env');
 
-const { NODE_ENV = 'development', WEBPACK_MODE } = process.env;
+const { NODE_ENV = 'development', SOURCE_MAP } = process.env;
 const ENV = getEnv(NODE_ENV);
 
 module.exports = {
@@ -18,7 +18,7 @@ module.exports = {
     libraryExport: 'default',
   },
 
-  devtool: WEBPACK_MODE === 'development' && 'cheap-module-eval-source-map',
+  devtool: SOURCE_MAP && 'cheap-module-eval-source-map',
 
   externals: Object.keys(pkg.dependencies),
 
