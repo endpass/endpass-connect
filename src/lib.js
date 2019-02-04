@@ -200,10 +200,7 @@ export default class Connect {
    */
   async [privateMethods.sendToNetwork]() {
     return new Promise((resolve, reject) => {
-      const { sendAsync, send } = this.requestProvider;
-      const sendMethod = sendAsync || send;
-
-      sendMethod(this.currentRequest, (err, res) => {
+      this.requestProvider.sendAsync(this.currentRequest, (err, res) => {
         if (err) {
           return reject(err);
         }
