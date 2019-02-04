@@ -12,17 +12,18 @@ describe('accounts actions', () => {
     commit = jest.fn();
   });
 
-  describe('auth', () => {
+  describe('handleAuthRequest', () => {
     const email = 'foo@bar.baz';
+    const requestFunction = jest.fn();
 
     it('should auth user and change link status', async () => {
       expect.assertions(4);
 
-      IdentityService.auth.mockResolvedValueOnce({
-        success: true,
+      requestFunction.mockResolvedValueOnce({
+        success: true
       });
-
-      await accountsActions.auth({ commit }, email);
+      const request = requestFunction();
+      await accountsActions.handleAuthRequest({ commit }, {email, request, link: true});
 
       expect(commit).toBeCalledTimes(3);
       expect(commit).toHaveBeenNthCalledWith(1, 'changeLoadingStatus', true);
@@ -33,14 +34,15 @@ describe('accounts actions', () => {
     it('should set otp email if challenge type equals to otp', async () => {
       expect.assertions(4);
 
-      IdentityService.auth.mockResolvedValueOnce({
+      requestFunction.mockResolvedValueOnce({
         success: true,
         challenge: {
           challengeType: 'otp',
         },
       });
 
-      await accountsActions.auth({ commit }, email);
+      const request = requestFunction();
+      await accountsActions.handleAuthRequest({ commit }, {email, request});
 
       expect(commit).toBeCalledTimes(3);
       expect(commit).toHaveBeenNthCalledWith(1, 'changeLoadingStatus', true);
@@ -51,10 +53,10 @@ describe('accounts actions', () => {
     it('should throw error if auth response is falsy', async done => {
       expect.assertions(3);
 
-      IdentityService.auth.mockResolvedValueOnce(false);
-
+      requestFunction.mockResolvedValueOnce(false);
+      const request = requestFunction();
       try {
-        await accountsActions.auth({ commit }, email);
+        await accountsActions.handleAuthRequest({ commit }, {email, request});
       } catch (err) {
         done();
       }
@@ -68,10 +70,10 @@ describe('accounts actions', () => {
 
       const error = new Error();
 
-      IdentityService.auth.mockRejectedValueOnce(error);
-
+      requestFunction.mockRejectedValueOnce(error);
+      const request = requestFunction();
       try {
-        await accountsActions.auth({ commit }, email);
+        await accountsActions.handleAuthRequest({ commit }, {email, request});
       } catch (err) {
         done();
       }
@@ -79,76 +81,36 @@ describe('accounts actions', () => {
       expect(commit).toHaveBeenNthCalledWith(1, 'changeLoadingStatus', true);
       expect(commit).toHaveBeenNthCalledWith(2, 'changeLoadingStatus', false);
     });
+  })
+
+  describe('auth', () => {
+    const email = 'foo@bar.baz';
+    const request = 'kek'
+    it('should call handleAuthRequest with correct params', async () => {
+      expect.assertions(2);
+      IdentityService.auth.mockReturnValueOnce(request);
+      await accountsActions.auth({dispatch}, email);
+      expect(dispatch).toBeCalledTimes(1);
+      expect(dispatch).toHaveBeenNthCalledWith(1, 'handleAuthRequest', {
+        email, request, link: true
+      });
+    })
   });
 
   describe('authWithGoogle', () => {
     const email = 'foo@bar.baz';
-    const idToken = 'kekek';
+    const request = 'kek'
 
-    it('should auth user and change link status', async () => {
-      expect.assertions(4);
+    it('should call handleAuthRequest with correct params', async () => {
+      expect.assertions(2);
 
-      IdentityService.authWithGoogle.mockResolvedValueOnce({
-        success: true,
+      IdentityService.authWithGoogle.mockReturnValueOnce(request);
+      await accountsActions.authWithGoogle({dispatch}, {email});
+      expect(dispatch).toBeCalledTimes(1);
+      expect(dispatch).toHaveBeenNthCalledWith(1, 'handleAuthRequest', {
+        email, request
       });
-
-      await accountsActions.authWithGoogle({ commit }, {email, idToken});
-
-      expect(commit).toBeCalledTimes(3);
-      expect(commit).toHaveBeenNthCalledWith(1, 'changeLoadingStatus', true);
-      expect(commit).toHaveBeenNthCalledWith(2, 'setSentStatus', true);
-      expect(commit).toHaveBeenNthCalledWith(3, 'changeLoadingStatus', false);
-    });
-
-    it('should set otp email if challenge type equals to otp', async () => {
-      expect.assertions(4);
-
-      IdentityService.authWithGoogle.mockResolvedValueOnce({
-        success: true,
-        challenge: {
-          challengeType: 'otp',
-        },
-      });
-
-      await accountsActions.authWithGoogle({ commit }, {idToken, email});
-
-      expect(commit).toBeCalledTimes(3);
-      expect(commit).toHaveBeenNthCalledWith(1, 'changeLoadingStatus', true);
-      expect(commit).toHaveBeenNthCalledWith(2, 'setOtpEmail', email);
-      expect(commit).toHaveBeenNthCalledWith(3, 'changeLoadingStatus', false);
-    });
-
-    it('should throw error if auth response is falsy', async done => {
-      expect.assertions(3);
-
-      IdentityService.authWithGoogle.mockResolvedValueOnce(false);
-
-      try {
-        await accountsActions.auth({ commit }, email);
-      } catch (err) {
-        done();
-      }
-      expect(commit).toBeCalledTimes(2);
-      expect(commit).toHaveBeenNthCalledWith(1, 'changeLoadingStatus', true);
-      expect(commit).toHaveBeenNthCalledWith(2, 'changeLoadingStatus', false);
-    });
-
-    it('should throw error', async done => {
-      expect.assertions(3);
-
-      const error = new Error();
-
-      IdentityService.auth.mockRejectedValueOnce(error);
-
-      try {
-        await accountsActions.auth({ commit }, email);
-      } catch (err) {
-        done();
-      }
-      expect(commit).toBeCalledTimes(2);
-      expect(commit).toHaveBeenNthCalledWith(1, 'changeLoadingStatus', true);
-      expect(commit).toHaveBeenNthCalledWith(2, 'changeLoadingStatus', false);
-    });
+    })
   });
 
   describe('cancelAuth', () => {
