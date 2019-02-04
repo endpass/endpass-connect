@@ -3,7 +3,7 @@ node_js:
   - '10'
 cache:
   directories:
-  - "~/.cache"
+    - '~/.cache'
 install: yarn install --frozen-lockfile
 script:
   - npm test && npm run build
@@ -21,10 +21,12 @@ jobs:
           npm run build && npm run semantic-release
           fi
     - stage: deploy_s3
+      script:
+        - npm run build:app:dev
       deploy:
         provider: s3
-        access_key_id: "$ACCESS_KEY_ID"
-        secret_access_key: "$SECRET_ACCESS_KEY"
+        access_key_id: '$ACCESS_KEY_ID'
+        secret_access_key: '$SECRET_ACCESS_KEY'
         bucket: auth-dev.endpass.com
         region: us-east-1
         skip_cleanup: true
