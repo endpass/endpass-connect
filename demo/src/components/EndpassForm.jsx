@@ -55,7 +55,6 @@ class EndpassForm extends React.Component {
       classes,
       form,
       onSign,
-      onSignTypedData,
       onRecover,
       onPresonalSign,
       onSignOut,
@@ -96,7 +95,7 @@ class EndpassForm extends React.Component {
               variant="contained"
               onClick={onRequestAccount}
             >
-              eth_accounts
+              web3.eth.getAccounts
             </Button>
           </Grid>
         </Grid>
@@ -112,51 +111,51 @@ class EndpassForm extends React.Component {
                 disabled={!form.from || !form.message}
                 onClick={onSign}
               >
-                eth_sign
+                web3.eth.sign
               </Button>
             </Grid>
           </Grid>
         </FormControl>
-        <FormControl className={classes.field} component="fieldset">
-          <FormLabel className={classes.field} component="legend">
-            Legacy typed data (EIP-712 jsonrpc accepted standard)
-          </FormLabel>
-          <Grid>
-            <Grid item xs={12}>
-              <Button
-                className={classes.row}
-                variant="contained"
-                disabled={!form.from}
-                onClick={onSignTypedData}
-              >
-                eth_signTypedData
-              </Button>
-            </Grid>
-          </Grid>
-        </FormControl>
+        {/* <FormControl className={classes.field} component="fieldset"> */}
+        {/*   <FormLabel className={classes.field} component="legend"> */}
+        {/*     Legacy typed data (EIP-712 jsonrpc accepted standard) */}
+        {/*   </FormLabel> */}
+        {/*   <Grid> */}
+        {/*     <Grid item xs={12}> */}
+        {/*       <Button */}
+        {/*         className={classes.row} */}
+        {/*         variant="contained" */}
+        {/*         disabled={!form.from} */}
+        {/*         onClick={onSignTypedData} */}
+        {/*       > */}
+        {/*         eth_signTypedData */}
+        {/*       </Button> */}
+        {/*     </Grid> */}
+        {/*   </Grid> */}
+        {/* </FormControl> */}
         <FormControl className={classes.field} component="fieldset">
           <FormLabel className={classes.field} component="legend">
             Personal
           </FormLabel>
-          <Grid container spacing={8}>
-            <Grid item xs={6}>
+          <Grid container>
+            <Grid item xs={12}>
               <Button
                 className={classes.row}
                 variant="contained"
                 disabled={!form.from || !form.message}
                 onClick={onPresonalSign}
               >
-                personal_sign
+                web3.eth.personal.sign
               </Button>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <Button
                 className={classes.row}
                 variant="contained"
                 disabled={!form.signature}
                 onClick={onRecover}
               >
-                personal_ecRecover
+                web3.eth.personal.ecRecover
               </Button>
             </Grid>
           </Grid>

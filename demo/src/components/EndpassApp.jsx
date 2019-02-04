@@ -46,22 +46,20 @@ class EndpassApp extends React.Component {
 
   initConnect() {
     this.connect = new Connect({
-      // appUrl: 'https://auth.endpass.com',
-      authUrl: 'http://localhost:5000',
+      appUrl: 'https://auth-dev.endpass.com',
     });
 
-    const connectProvider = this.connect.extendProvider(
-      web3.providers.HttpProvider,
-    );
-
     window.web3 = web3;
-
-    web3.setProvider(connectProvider);
   }
 
   async getAccountDataAndUpdateProviderSettings() {
     try {
       const { activeAccount, activeNet } = await this.connect.getAccountData();
+      const connectProvider = this.connect.extendProvider(
+        web3.providers.HttpProvider,
+      );
+
+      web3.setProvider(connectProvider);
 
       this.connect.setProviderSettings({
         activeAccount,
@@ -118,42 +116,35 @@ class EndpassApp extends React.Component {
   recover() {
     const { message, signature } = this.state.form;
 
-    this.makeRequest(
-      'personal_ecRecover',
-      [message, signature],
-      (err, { result }) => {
-        if (err) {
-          this.errorNotification();
-          console.error(err);
-          return;
-        }
+    window.web3.eth.personal.ecRecover(message, signature, (err, res) => {
+      if (err) {
+        this.errorNotification();
+        console.error(err);
+        return;
+      }
 
-        alert(`Address verified. Recovered address: ${result}`);
-      },
-    );
+      alert(`Address verified. Recovered address: ${res}`);
+    });
   }
 
   sign() {
     const { from, message } = this.state.form;
 
-    this.makeRequest(
-      'eth_sign',
-      [from, `0x${Buffer.from(message, 'utf8').toString('hex')}`],
-      (err, { result }) => {
-        if (err) {
-          this.errorNotification();
-          console.error(err);
-          return;
-        }
+    window.web3.eth.sign(message, from, (err, res) => {
+      if (err) {
+        this.errorNotification();
+        console.error(err);
+        return;
+      }
 
-        this.setState(state => ({
-          ...state,
-          signature: result,
-        }));
-      },
-    );
+      this.setState(state => ({
+        ...state,
+        signature: res,
+      }));
+    });
   }
 
+  // legacy EIP
   signTypedData() {
     const { from } = this.state;
     const typedData = [
@@ -196,49 +187,38 @@ class EndpassApp extends React.Component {
 
   personalSign() {
     const { form } = this.state;
-    const isNewWeb3 = this.isNewWeb3();
-    const params = [
-      form.from,
-      `0x${Buffer.from(form.message, 'utf8').toString('hex')}`,
-    ];
 
-    this.makeRequest(
-      'personal_sign',
-      isNewWeb3 ? params.reverse() : params,
-      (err, { result }) => {
-        if (err) {
-          this.errorNotification();
-          console.error(err);
-          return;
-        }
-
-        this.setState(state => ({
-          ...state,
-          form: {
-            ...state.form,
-            signature: result,
-          },
-        }));
-      },
-    );
-  }
-
-  requestAccount() {
-    this.makeRequest('eth_accounts', [], (err, { result }) => {
+    window.web3.eth.personal.sign(form.message, form.from, '', (err, res) => {
       if (err) {
         this.errorNotification();
         console.error(err);
         return;
       }
 
-      console.log(result, this.connect);
+      this.setState(state => ({
+        ...state,
+        form: {
+          ...state.form,
+          signature: res,
+        },
+      }));
+    });
+  }
+
+  requestAccount() {
+    window.web3.eth.getAccounts((err, res) => {
+      if (err) {
+        this.errorNotification();
+        console.error(err);
+        return;
+      }
 
       this.setState(state => ({
         ...state,
-        accounts: result,
+        accounts: res,
         form: {
           ...state.form,
-          from: result[0],
+          from: res[0] || null,
         },
       }));
     });

@@ -10,6 +10,8 @@ import {
   DAPP_WHITELISTED_METHODS,
   DEFAULT_NETWORKS,
 } from '@/constants';
+import createInpageProvider from '@/util/createInpageProvider';
+import pkg from '../package.json';
 
 /**
  * Private methods which can not be called by user from connect instance
@@ -23,6 +25,7 @@ export const privateMethods = {
   setupEmmiterEvents: Symbol('setupEmmiterEvents'),
   initBridge: Symbol('initBridge'),
   createRequestProvider: Symbol('createRequestProvider'),
+  createInpageProvider: Symbol('createInpageProvider'),
   getUserSettings: Symbol('getUserSettings'),
   sendResponse: Symbol('sendResponse'),
   handleRequest: Symbol('handleRequest'),
@@ -37,9 +40,15 @@ export default class Connect {
    * @param {String} options.authUrl Url of hosted Endpass Connect Application
    */
   constructor(options = {}) {
+    /* eslint-disable-next-line */
+    console.info(
+      `%cEndpass connect version ${pkg.version} loaded 🔌`,
+      'color: #fff; background: #4B0873',
+    );
+
     this.authUrl = options.authUrl || 'https://auth.endpass.com';
-    this.emmiter = new Emmiter();
-    this.provider = new InpageProvider(this.emmiter);
+    this.emitter = new Emmiter();
+    this.provider = new InpageProvider(this.emitter);
     this.requestProvider = null;
 
     // Net requests queue
@@ -120,19 +129,19 @@ export default class Connect {
    * @returns {String} Completed url to open
    */
   [privateMethods.getConnectUrl](method) {
-    return !method ? this.authUrl : `${this.authUrl}/#/${method}`;
+    return !method ? this.authUrl : `${this.authUrl}/${method}`;
   }
 
   /**
-   * Sets event listeners to inner emmiter with handlers
+   * Sets event listeners to inner emitter with handlers
    * @private
    */
   [privateMethods.setupEmmiterEvents]() {
-    this.emmiter.on(
+    this.emitter.on(
       INPAGE_EVENTS.REQUEST,
       this[privateMethods.handleRequest].bind(this),
     );
-    this.emmiter.on(
+    this.emitter.on(
       INPAGE_EVENTS.SETTINGS,
       this[privateMethods.handleRequest].bind(this),
     );
@@ -191,7 +200,10 @@ export default class Connect {
    */
   async [privateMethods.sendToNetwork]() {
     return new Promise((resolve, reject) => {
-      this.requestProvider.sendAsync(this.currentRequest, (err, res) => {
+      const { sendAsync, send } = this.requestProvider;
+      const sendMethod = sendAsync || send;
+
+      sendMethod(this.currentRequest, (err, res) => {
         if (err) {
           return reject(err);
         }
@@ -229,7 +241,7 @@ export default class Connect {
       console.error(`Request have return error: ${payload.error}`);
     }
 
-    this.emmiter.emit(INPAGE_EVENTS.RESPONSE, payload);
+    this.emitter.emit(INPAGE_EVENTS.RESPONSE, payload);
   }
 
   /**
@@ -238,12 +250,23 @@ export default class Connect {
    * @param {Web3.Provider} provider Web3 provider class
    */
   [privateMethods.createRequestProvider](provider) {
-    const { networkVersion } = this[privateMethods.getSettings]();
+    const { activeNet } = this[privateMethods.getSettings]();
 
     /* eslint-disable-next-line */
     this.requestProvider = new provider(
-      get(DEFAULT_NETWORKS, `${networkVersion}.url[0]`),
+      get(DEFAULT_NETWORKS, `${activeNet}.url[0]`),
     );
+  }
+
+  // TODO: Not ready yet (>= web3 1.0.0-beta.40 support)
+  [privateMethods.createInpageProvider](provider) {
+    const { activeNet } = this[privateMethods.getSettings]();
+
+    this.provider = createInpageProvider({
+      emitter: this.emitter,
+      url: get(DEFAULT_NETWORKS, `${activeNet}.url[0]`),
+      provider,
+    });
   }
 
   /**
@@ -302,6 +325,7 @@ export default class Connect {
    */
   extendProvider(provider) {
     this[privateMethods.createRequestProvider](provider);
+    // this[privateMethods.createInpageProvider](provider);
 
     return this.provider;
   }
@@ -334,7 +358,7 @@ export default class Connect {
    * @param {String} options.activeNet Active network ID
    */
   setProviderSettings(payload) {
-    this.emmiter.emit(INPAGE_EVENTS.SETTINGS, payload);
+    this.emitter.emit(INPAGE_EVENTS.SETTINGS, payload);
   }
 
   /**
