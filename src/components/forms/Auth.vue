@@ -37,13 +37,19 @@
     <form-controls>
       <google-auth-button></google-auth-button>
     </form-controls>
+    <form-controls>
+      <git-auth-button></git-auth-button>
+    </form-controls>
   </form>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import VFrame from '../VFrame.vue';
 import VInput from '../VInput.vue';
 import VButton from '../VButton.vue';
+import GoogleAuthButton from './GoogleAuthButton.vue';
+import GitAuthButton from './GitAuthButton.vue';
 import Message from '../Message.vue';
 import FormField from '../FormField.vue';
 import FormControls from '../FormControls.vue';
@@ -98,12 +104,12 @@ export default {
       this.$emit('cancel');
     },
   },
-  created() {},
   components: {
     VFrame,
     VButton,
     VInput,
     GoogleAuthButton,
+    GitAuthButton,
     Message,
     FormField,
     FormControls,
