@@ -2,21 +2,40 @@ import get from 'lodash/get';
 import IdentityService from '@/service/identity';
 import SettingsService from '@/service/settings';
 
-const auth = async ({ state, commit }, email) => {
+const auth = async ({ state, dispatch }, email) => {
+  const request = IdentityService.auth(
+    email,
+    get(state, 'authParams.redirectUrl'),
+    true,
+  );
+
+  await dispatch('handleAuthRequest', {
+    request,
+    email,
+  });
+};
+
+const authWithGoogle = async ({ dispatch }, { email, idToken }) => {
+  const request = IdentityService.authWithGoogle(idToken);
+
+  await dispatch('handleAuthRequest', {
+    request,
+    email,
+  });
+};
+
+const authWithGitHub = async ({ dispatch, commit }, code) => {
   commit('changeLoadingStatus', true);
 
   try {
-    const res = await IdentityService.auth(
-      email,
-      get(state, 'authParams.redirectUrl', null),
-    );
+    const res = await IdentityService.authWithGitHub(code);
 
-    if (!res.success) throw new Error('Auth failed!');
+    if (!res.success) throw new Error(res.message || 'Auth failed!');
 
-    if (get(res, 'challenge.challengeType') === 'otp') {
-      commit('setOtpEmail', email);
-    } else {
-      commit('setSentStatus', true);
+    const type = get(res, 'challenge.challengeType');
+
+    if (type === 'otp') {
+      commit('setOtpEmail', 'lenseg1@gmail.com');
     }
   } catch (err) {
     console.error(err);
@@ -27,11 +46,22 @@ const auth = async ({ state, commit }, email) => {
   }
 };
 
-const confirmAuthViaOtp = async ({ commit }, { email, code }) => {
+const handleAuthRequest = async ({ commit }, { email, request, link }) => {
   commit('changeLoadingStatus', true);
 
   try {
-    await IdentityService.otpAuth(email, code);
+    const res = await request;
+
+    if (!res.success) throw new Error('Auth failed!');
+
+    const type = get(res, 'challenge.challengeType');
+
+    if (type === 'otp') {
+      console.log(email);
+      commit('setOtpEmail', email);
+    } else if (link) {
+      commit('setSentStatus', true);
+    }
   } catch (err) {
     throw err;
   } finally {
@@ -39,20 +69,11 @@ const confirmAuthViaOtp = async ({ commit }, { email, code }) => {
   }
 };
 
-const authWithGoogle = async ({ commit }, { email, idToken }) => {
+const confirmAuthViaOtp = async ({ commit }, { email, code }) => {
   commit('changeLoadingStatus', true);
 
   try {
-    const res = await IdentityService.authWithGoogle(idToken);
-    if (!res.success) throw new Error('Auth failed!');
-
-    const type = get(res, 'challenge.challengeType');
-
-    if (type === 'otp') {
-      commit('setOtpEmail', email);
-    } else {
-      commit('setSentStatus', true);
-    }
+    await IdentityService.otpAuth(email, code);
   } catch (err) {
     throw err;
   } finally {
@@ -217,9 +238,11 @@ const logout = async ({ dispatch, commit }) => {
 export default {
   auth,
   authWithGoogle,
+  authWithGitHub,
   cancelAuth,
   confirmAuth,
   confirmAuthViaOtp,
+  handleAuthRequest,
   getSettings,
   getAccount,
   getAccounts,

@@ -80,17 +80,19 @@ export const authWithGoogle = idToken => {
     });
 };
 
-export const authWithFacebook = (email, id_token) => {
-  request
-    .post(`${identityBaseUrl}/api/v1.1/auth/google/`, {
-      challengeType: 'facebook',
-      email,
-      id_token,
-    })
+export const authWithGitHub = code => {
+  return request
+    .get(
+      `${identityBaseUrl}/api/v1.1/auth/github?code=${encodeURIComponent(
+        code,
+      )}`,
+    )
     .then(res => {
       if (!res.success) throw new Error(res.message);
-
       return res;
+    })
+    .catch(err => {
+      throw err.response.data;
     });
 };
 
@@ -152,6 +154,7 @@ export default {
   setSettings,
   auth,
   authWithGoogle,
+  authWithGitHub,
   otpAuth,
   awaitAuthConfirm,
   logout,

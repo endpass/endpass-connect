@@ -1,11 +1,11 @@
 <template lang="html">
   <v-button
-      v-if="auth2Loaded"
+      :disabled="!auth2Loaded"
       @click="loginWithGoogle"
       :submit="false"
       type="primary"
       data-test="submit-button"
-    >Log in with google</v-button>
+    >Log in with Gmail</v-button>
 </template>
 
 <script>
@@ -15,32 +15,28 @@ import VButton from './VButton.vue';
 
 export default {
   data() {
-    let gapi = window.gapi;
+    const gapi = window.gapi;
     return {
       auth2Loaded: false,
       gapi,
     };
   },
   methods: {
-    ...mapActions([
-      'authWithGoogle',
-      'awaitAuthConfirm',
-      'confirmAuth',
-      'handleAuthError',
-    ]),
+    ...mapActions(['authWithGoogle']),
     async loginWithGoogle() {
-      let auth = gapi.auth2.init({
+      const auth = gapi.auth2.init({
         client_id: ENV.google.key,
         scope: 'profile',
       });
-      await auth.signIn().then(function() {});
+      await auth.signIn();
       try {
         await this.authWithGoogle({
-          email: auth.currentUser.get().getBasicProfile().getEmail,
+          email: auth.currentUser
+            .get()
+            .getBasicProfile()
+            .getEmail(),
           idToken: auth.currentUser.get().getAuthResponse().id_token,
         });
-        await this.awaitAuthConfirm();
-        await this.confirmAuth();
         this.$router.push({ path: '/' });
       } catch (err) {
         console.error(err);
@@ -56,7 +52,7 @@ export default {
       if (this.gapi) {
         this.loadAuth2();
       } else {
-        let unwatch = this.$watch(
+        const unwatch = this.$watch(
           () => window.gapi,
           () => {
             this.initGoogle();
@@ -64,6 +60,9 @@ export default {
           },
         );
       }
+    },
+    handleAuthError(error) {
+      this.$emit(error);
     },
   },
   created() {
@@ -74,6 +73,3 @@ export default {
   },
 };
 </script>
-
-<style lang="css">
-</style>
