@@ -52,9 +52,11 @@ router.beforeEach(async (to, from, next) => {
 
   if (!isPublicRoute) {
     await store.dispatch('getAccounts');
-    await store.dispatch('getSettings');
-
-    return !isEmpty(store.state.accounts.accounts) ? next() : next('auth');
+    try {
+      await store.dispatch('getSettings');
+    } finally {
+      return !isEmpty(store.state.accounts.accounts) ? next() : next('auth');
+    }
   }
 
   return next();
