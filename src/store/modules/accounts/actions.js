@@ -35,7 +35,7 @@ const authWithGitHub = async ({ dispatch, commit }, code) => {
     const type = get(res, 'challenge.challengeType');
 
     if (type === 'otp') {
-      commit('setOtpEmail', 'lenseg1@gmail.com');
+      commit('setOtpEmail', res.email);
     }
   } catch (err) {
     console.error(err);

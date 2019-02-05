@@ -1,11 +1,12 @@
 <template lang="html">
   <v-button
-      :disabled="!auth2Loaded"
-      @click="loginWithGoogle"
-      :submit="false"
-      type="primary"
-      data-test="submit-button"
-    >Log in with Gmail</v-button>
+    :disabled="!auth2Loaded"
+    @click="loginWithGoogle"
+    :submit="false"
+    type="primary"
+    data-test="submit-button"
+    >Log in with Gmail</v-button
+  >
 </template>
 
 <script>
@@ -60,9 +61,6 @@ export default {
           },
         );
       }
-    },
-    handleAuthError(error) {
-      this.$emit(error);
     },
   },
   created() {
