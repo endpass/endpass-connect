@@ -24,7 +24,7 @@ const authWithGoogle = async ({ dispatch }, { email, idToken }) => {
   });
 };
 
-const authWithGitHub = async ({ dispatch, commit }, code) => {
+const authWithGitHub = async ({ commit }, code) => {
   commit('changeLoadingStatus', true);
 
   try {
@@ -40,7 +40,7 @@ const authWithGitHub = async ({ dispatch, commit }, code) => {
   } catch (err) {
     console.error(err);
 
-    throw new Error('Something went wrong, try again later');
+    throw new Error(err);
   } finally {
     commit('changeLoadingStatus', false);
   }
