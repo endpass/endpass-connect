@@ -40,7 +40,7 @@ const authWithGitHub = async ({ commit }, code) => {
   } catch (err) {
     console.error(err);
 
-    throw new Error(err);
+    throw new Error(err.message);
   } finally {
     commit('changeLoadingStatus', false);
   }
