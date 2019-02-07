@@ -7,17 +7,22 @@ exports[`Auth render should change submit button text if loading and make it dis
   </form-field-stub>
   <!---->
   <form-field-stub>
-    <v-input-stub placeholder="Enter your email..." name="email" value="" invalid="true" autofocus="true" type="email" data-test="email-input"></v-input-stub>
+    <div class="auth__fields-as-line">
+      <v-input-stub placeholder="Enter your email..." name="email" value="" invalid="true" autofocus="true" type="email" data-test="email-input"></v-input-stub>
+      <v-button-stub disabled="true" type="primary" submit="true" data-test="submit-button">Loading...</v-button-stub>
+    </div>
   </form-field-stub>
   <form-controls-stub>
-    <v-button-stub disabled="true" type="primary" submit="true" data-test="submit-button">Loading...</v-button-stub>
-    <v-button-stub disabled="true" data-test="cancel-button">Close</v-button-stub>
-  </form-controls-stub>
-  <form-controls-stub>
     <google-auth-button-stub></google-auth-button-stub>
+    <git-auth-button-stub></git-auth-button-stub>
   </form-controls-stub>
   <form-controls-stub>
-    <git-auth-button-stub></git-auth-button-stub>
+    <v-checkbox-stub value="true" name="checkbox">
+      I accept the
+      <a href="https://endpass.com/terms/" target="_blank">Terms of Service</a>
+      and
+      <a href="https://endpass.com/privacy/" target="_blank">Privacy Policy</a>.
+    </v-checkbox-stub>
   </form-controls-stub>
 </form>
 `;
@@ -29,17 +34,22 @@ exports[`Auth render should correctly render Auth component 1`] = `
   </form-field-stub>
   <!---->
   <form-field-stub>
-    <v-input-stub placeholder="Enter your email..." name="email" value="" invalid="true" autofocus="true" type="email" data-test="email-input"></v-input-stub>
+    <div class="auth__fields-as-line">
+      <v-input-stub placeholder="Enter your email..." name="email" value="" invalid="true" autofocus="true" type="email" data-test="email-input"></v-input-stub>
+      <v-button-stub disabled="true" type="primary" submit="true" data-test="submit-button">Log in</v-button-stub>
+    </div>
   </form-field-stub>
   <form-controls-stub>
-    <v-button-stub disabled="true" type="primary" submit="true" data-test="submit-button">Log in</v-button-stub>
-    <v-button-stub data-test="cancel-button">Close</v-button-stub>
-  </form-controls-stub>
-  <form-controls-stub>
     <google-auth-button-stub></google-auth-button-stub>
+    <git-auth-button-stub></git-auth-button-stub>
   </form-controls-stub>
   <form-controls-stub>
-    <git-auth-button-stub></git-auth-button-stub>
+    <v-checkbox-stub value="true" name="checkbox">
+      I accept the
+      <a href="https://endpass.com/terms/" target="_blank">Terms of Service</a>
+      and
+      <a href="https://endpass.com/privacy/" target="_blank">Privacy Policy</a>.
+    </v-checkbox-stub>
   </form-controls-stub>
 </form>
 `;

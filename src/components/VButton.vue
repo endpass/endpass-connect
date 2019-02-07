@@ -74,6 +74,7 @@ export default {
   text-decoration: none;
   transition: background 0.25s;
   cursor: pointer;
+  white-space: nowrap;
 
   &.primary {
     background: #4b0472;

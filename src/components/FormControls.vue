@@ -8,14 +8,11 @@
 .form-controls {
   display: flex;
   align-items: center;
+  justify-content: center;
   margin-top: 20px;
 
-  & > button {
-    flex: 0 0 auto;
-
-    &:last-child {
-      margin-left: auto;
-    }
+  .button + .button {
+    margin-left: 10px;
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <pre class="code">
     <slot />
-  </pre>  
+  </pre>
 </template>
 
 <script>

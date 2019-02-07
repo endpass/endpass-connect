@@ -34,5 +34,5 @@ module.exports = {
     },
   },
 
-  outputDir: path.resolve(__dirname, './dist'),
+  outputDir: path.resolve(__dirname, './dist/app'),
 };

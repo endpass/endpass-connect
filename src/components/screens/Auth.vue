@@ -1,19 +1,15 @@
 <template>
   <screen>
-    <v-frame :loading="!inited">
+    <v-frame :loading="!inited" :closable="isDialog" @close="handleAuthCancel">
       <create-account-form
         v-if="authorized && isAccountsEmpty"
-        :closable="isDialog"
         @request="handleAccountRequest"
-        @cancel="handleAuthCancel"
       />
       <otp-form
         v-else-if="otpEmail"
-        :closable="isDialog"
         :loading="loading"
         :error="error"
         @submit="handleOtpSubmit"
-        @cancel="handleAuthCancel"
       />
       <message-form
         v-else-if="!authorized && sent"
@@ -24,14 +20,13 @@
       <message-form
         v-else-if="authorized && sent"
         message="You are successfully authorized. Dialog will be closed in a few seconds."
+        @cancel="handleAuthCancel"
       />
       <auth-form
         v-else
         :inited="inited"
         :loading="loading"
         :error="error"
-        :closable="isDialog"
-        @cancel="handleAuthCancel"
         @submit="handleAuthSubmit"
       />
     </v-frame>

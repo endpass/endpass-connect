@@ -77,17 +77,23 @@ describe('Auth', () => {
     it('should allow submit of email is valid', () => {
       wrapper.setData({
         email: 'foo@bar.baz',
+        termsAccepted: false,
       });
+
+      const submitButton = wrapper.find('[data-test=submit-button]');
+      expect(submitButton.attributes().disabled).toBe('disabled');
+
+      wrapper.setData({
+        termsAccepted: true,
+      });
+
+      expect(
+        wrapper.find('[data-test=submit-button]').attributes().disabled,
+      ).not.toBe('disabled');
 
       wrapper.find('form').trigger('submit');
 
       expect(wrapper.emitted().submit).toEqual([['foo@bar.baz']]);
-    });
-
-    it('should cancel auth on cancel button press', () => {
-      wrapper.find('[data-test=cancel-button]').trigger('click');
-
-      expect(wrapper.emitted().cancel).toEqual([[]]);
     });
   });
 });

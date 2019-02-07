@@ -67,8 +67,8 @@ export const otpAuth = (email, code) =>
       return res;
     });
 
-export const authWithGoogle = idToken => {
-  return request
+export const authWithGoogle = idToken =>
+  request
     .get(
       `${identityBaseUrl}/api/v1.1/auth/google?token=${encodeURIComponent(
         idToken,
@@ -78,10 +78,9 @@ export const authWithGoogle = idToken => {
       if (!res.success) throw new Error(res.message);
       return res;
     });
-};
 
-export const authWithGitHub = code => {
-  return request
+export const authWithGitHub = code =>
+  request
     .get(
       `${identityBaseUrl}/api/v1.1/auth/github?code=${encodeURIComponent(
         code,
@@ -94,7 +93,6 @@ export const authWithGitHub = code => {
     .catch(err => {
       throw err.response.data;
     });
-};
 
 export const awaitAuthConfirm = () =>
   new Promise(resolve => {

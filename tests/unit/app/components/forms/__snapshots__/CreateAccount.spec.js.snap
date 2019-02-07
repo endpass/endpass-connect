@@ -9,7 +9,6 @@ exports[`CreateAccount render should correctly render CreateAccount component 1`
     <v-button-stub type="primary" data-test="submit-button">
       Create account
     </v-button-stub>
-    <v-button-stub data-test="cancel-button">Close</v-button-stub>
   </form-controls-stub>
 </div>
 `;

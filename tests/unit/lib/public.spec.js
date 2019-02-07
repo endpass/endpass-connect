@@ -1,6 +1,4 @@
 import Connect, { privateMethods } from '@/lib';
-import Bridge from '@/class/Bridge';
-import Dialog from '@/class/Dialog';
 import { INPAGE_EVENTS, METHODS } from '@/constants';
 
 describe('Connect class – public methods', () => {
@@ -26,18 +24,8 @@ describe('Connect class – public methods', () => {
       connect[privateMethods.createRequestProvider] = jest.fn();
     });
 
-    it('should create provider with web3 from given parameters', () => {
-      connect.createProvider(web3);
-
-      expect(connect[privateMethods.createRequestProvider]).toBeCalledWith(
-        web3,
-      );
-    });
-
-    it('should create provider with web3 from window object', () => {
-      window.web3 = web3;
-
-      connect.createProvider();
+    it('should extend provider with web3 from given parameters', () => {
+      connect.extendProvider(web3);
 
       expect(connect[privateMethods.createRequestProvider]).toBeCalledWith(
         web3,
@@ -77,23 +65,23 @@ describe('Connect class – public methods', () => {
   });
 
   describe('setProviderSettings', () => {
-    let emmiter;
+    let emitter;
 
     beforeEach(() => {
-      emmiter = {
+      emitter = {
         emit: jest.fn(),
       };
-      connect.emmiter = emmiter;
+      connect.emitter = emitter;
     });
 
-    it('should emit settings by inner connect emmiter', () => {
+    it('should emit settings by inner connect emitter', () => {
       const payload = {
         foo: 'bar',
       };
 
       connect.setProviderSettings(payload);
 
-      expect(connect.emmiter.emit).toBeCalledWith(
+      expect(connect.emitter.emit).toBeCalledWith(
         INPAGE_EVENTS.SETTINGS,
         payload,
       );

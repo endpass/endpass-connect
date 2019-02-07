@@ -12,7 +12,7 @@ module.exports = {
 
   output: {
     path: __dirname,
-    filename: 'endpass-connect.min.js',
+    filename: './dist/lib/endpass-connect.min.js',
     library: 'EndpassConnect',
     libraryTarget: 'umd',
     libraryExport: 'default',

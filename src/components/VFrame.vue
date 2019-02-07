@@ -1,15 +1,25 @@
 <template>
   <div class="frame">
     <header class="frame__header">
-      <img 
-        class="frame__logo" 
-        src="../assets/logo.png" 
-        alt="Endpass"
-      >
+      <img class="frame__logo" src="../assets/logo.png" alt="Endpass" />
       Connect
+      <span class="frame__close-btn">
+        <v-button v-if="closable" data-test="close-button" @click="emitClose">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 8 8"
+          >
+            <path
+              d="M1.41 0l-1.41 1.41.72.72 1.78 1.81-1.78 1.78-.72.69 1.41 1.44.72-.72 1.81-1.81 1.78 1.81.69.72 1.44-1.44-.72-.69-1.81-1.78 1.81-1.81.72-.72-1.44-1.41-.69.72-1.78 1.78-1.81-1.78-.72-.72z"
+            />
+          </svg>
+        </v-button>
+      </span>
     </header>
     <div class="frame__body">
-      <loading-screen v-if="loading"/>
+      <loading-screen v-if="loading" />
       <slot v-else />
     </div>
   </div>
@@ -17,19 +27,33 @@
 
 <script>
 import LoadingScreen from './LoadingScreen.vue';
+import VButton from './VButton.vue';
+import VIcon from './VIcon';
 
 export default {
   name: 'VFrame',
 
   props: {
+    closable: {
+      type: Boolean,
+      default: true,
+    },
     loading: {
       type: Boolean,
       default: false,
     },
   },
 
+  methods: {
+    emitClose() {
+      this.$emit('close');
+    },
+  },
+
   components: {
     LoadingScreen,
+    VButton,
+    VIcon,
   },
 };
 </script>
@@ -50,6 +74,13 @@ export default {
   box-shadow: 0 5px 10px 1px rgba(0, 0, 0, 0.15);
   background-color: #fff;
   animation: slideIn 0.75s;
+}
+
+.frame__close-btn {
+  margin-left: auto;
+  path {
+    fill: #fff;
+  }
 }
 
 .frame__header {

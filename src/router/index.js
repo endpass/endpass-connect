@@ -28,9 +28,8 @@ const router = new Router({
       path: '/git',
       name: 'AuthGitScreen',
       component: AuthGit,
-      beforeEnter: (to, from, next) => {
-        return typeof to.query.code !== 'undefined' ? next() : next('auth');
-      },
+      beforeEnter: (to, from, next) =>
+        typeof to.query.code !== 'undefined' ? next() : next('auth'),
     },
     {
       path: '/auth',

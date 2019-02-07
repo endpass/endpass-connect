@@ -9,42 +9,47 @@
       <message :error="true" data-test="error-message">{{ error }}</message>
     </form-field>
     <form-field>
-      <v-input
-        v-model="email"
-        :invalid="!isEmailValid"
-        :autofocus="true"
-        name="email"
-        type="email"
-        placeholder="Enter your email..."
-        data-test="email-input"
-      />
+      <div class="auth__fields-as-line">
+        <v-input
+          v-model="email"
+          :invalid="!isEmailValid"
+          :autofocus="true"
+          name="email"
+          type="email"
+          placeholder="Enter your email..."
+          data-test="email-input"
+        />
+        <v-button
+          :disabled="!termsAccepted || !isEmailValid || loading"
+          :submit="true"
+          type="primary"
+          data-test="submit-button"
+          >{{ primaryButtonLabel }}</v-button
+        >
+      </div>
     </form-field>
     <form-controls>
-      <v-button
-        :disabled="!isEmailValid || loading"
-        :submit="true"
-        type="primary"
-        data-test="submit-button"
-        >{{ primaryButtonLabel }}</v-button
-      >
-      <v-button
-        :disabled="!closable || loading"
-        data-test="cancel-button"
-        @click="emitCancel"
-        >Close</v-button
-      >
+      <google-auth-button />
+      <git-auth-button />
     </form-controls>
     <form-controls>
-      <google-auth-button></google-auth-button>
-    </form-controls>
-    <form-controls>
-      <git-auth-button></git-auth-button>
+      <v-checkbox v-model="termsAccepted">
+        I accept the
+        <a href="https://endpass.com/terms/" target="_blank"
+          >Terms of Service</a
+        >
+        and
+        <a href="https://endpass.com/privacy/" target="_blank">Privacy Policy</a
+        >.
+      </v-checkbox>
     </form-controls>
   </form>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import Vue from 'vue';
+
+import VCheckbox from '@endpass/ui/dist/components/VCheckbox';
 import VFrame from '../VFrame.vue';
 import VInput from '../VInput.vue';
 import VButton from '../VButton.vue';
@@ -53,6 +58,8 @@ import GitAuthButton from '@/components/GitAuthButton.vue';
 import Message from '../Message.vue';
 import FormField from '../FormField.vue';
 import FormControls from '../FormControls.vue';
+
+Vue.component(VCheckbox);
 
 export default {
   name: 'AuthForm',
@@ -72,14 +79,10 @@ export default {
       type: String,
       default: null,
     },
-
-    closable: {
-      type: Boolean,
-      default: true,
-    },
   },
 
   data: () => ({
+    termsAccepted: true,
     email: '',
   }),
 
@@ -99,12 +102,9 @@ export default {
         this.$emit('submit', this.email);
       }
     },
-
-    emitCancel() {
-      this.$emit('cancel');
-    },
   },
   components: {
+    VCheckbox,
     VFrame,
     VButton,
     VInput,
@@ -116,3 +116,8 @@ export default {
   },
 };
 </script>
+<style>
+.auth__fields-as-line {
+  display: flex;
+}
+</style>

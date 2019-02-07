@@ -5,16 +5,16 @@ cache:
   directories:
     - '~/.cache'
 install: yarn install --frozen-lockfile
-script:
-  - npm test && npm run build
 stages:
-  - test
+  - name: test
   - name: deploy_npm
     if: branch = release
   - name: deploy_s3
     if: branch = master
 jobs:
   include:
+    - stage: test
+      script: npm test
     - stage: deploy_npm
       script:
         - if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
@@ -30,7 +30,7 @@ jobs:
         bucket: auth-dev.endpass.com
         region: us-east-1
         skip_cleanup: true
-        local_dir: dist/
+        local_dir: dist/app
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
