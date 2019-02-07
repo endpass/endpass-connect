@@ -1,9 +1,16 @@
 <template>
-  <v-button class="primary" :href="`https://github.com/login/oauth/authorize?scope=user:email&client_id=${appId}`">Log in with GitHub</v-button>
+  <v-button
+    :href="
+      `https://github.com/login/oauth/authorize?scope=user:email&client_id=${appId}`
+    "
+  >
+    <v-icon><img src="@/img/github.svg"/></v-icon>
+  </v-button>
 </template>
 
 <script>
 import VButton from './VButton.vue';
+import VIcon from '@/components/VIcon';
 
 export default {
   data() {
@@ -13,6 +20,7 @@ export default {
   },
   components: {
     VButton,
+    VIcon,
   },
 };
 </script>

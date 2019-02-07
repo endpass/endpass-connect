@@ -1,6 +1,6 @@
 <template>
   <screen>
-    <v-frame :loading="!inited">
+    <v-frame :loading="!inited" :closable="false">
       <account-form
         :loading="loading"
         :closable="isDialog"

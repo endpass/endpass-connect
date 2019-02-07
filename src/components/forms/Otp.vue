@@ -28,12 +28,6 @@
       >
         {{ primaryButtonLabel }}
       </v-button>
-      <v-button
-        :disabled="!closable"
-        data-test="cancel-button"
-        @click="emitCancel"
-        >Close</v-button
-      >
     </form-controls>
   </form>
 </template>
@@ -58,11 +52,6 @@ export default {
       type: String,
       default: null,
     },
-
-    closable: {
-      type: Boolean,
-      default: true,
-    },
   },
 
   data: () => ({
@@ -84,10 +73,6 @@ export default {
       if (this.isCodeValid) {
         this.$emit('submit', this.code);
       }
-    },
-
-    emitCancel() {
-      this.$emit('cancel');
     },
   },
 

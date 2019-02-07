@@ -177,25 +177,25 @@ describe('Connect class – private methods', () => {
   describe('getConnectUrl', () => {
     it('should return url to auth on connect application', () => {
       expect(connect[privateMethods.getConnectUrl]('foo')).toBe(
-        'https://auth.endpass.com/#/foo',
+        'https://auth.endpass.com/foo',
       );
     });
   });
 
   describe('setupEmmiterEvents', () => {
-    it('should subscribe on emmiter events', () => {
-      connect.emmiter = {
+    it('should subscribe on emitter events', () => {
+      connect.emitter = {
         on: jest.fn(),
       };
       connect[privateMethods.setupEmmiterEvents]();
 
-      expect(connect.emmiter.on).toBeCalledTimes(2);
-      expect(connect.emmiter.on).toHaveBeenNthCalledWith(
+      expect(connect.emitter.on).toBeCalledTimes(2);
+      expect(connect.emitter.on).toHaveBeenNthCalledWith(
         1,
         INPAGE_EVENTS.REQUEST,
         expect.any(Function),
       );
-      expect(connect.emmiter.on).toHaveBeenNthCalledWith(
+      expect(connect.emitter.on).toHaveBeenNthCalledWith(
         2,
         INPAGE_EVENTS.SETTINGS,
         expect.any(Function),
@@ -204,15 +204,15 @@ describe('Connect class – private methods', () => {
   });
 
   describe('sendResponse', () => {
-    it('should send response via emmiter', () => {
+    it('should send response via emitter', () => {
       const payload = {
         foo: 'bar',
       };
 
-      connect.emmiter.emit = jest.fn();
+      connect.emitter.emit = jest.fn();
       connect[privateMethods.sendResponse](payload);
 
-      expect(connect.emmiter.emit).toBeCalledWith(
+      expect(connect.emitter.emit).toBeCalledWith(
         INPAGE_EVENTS.RESPONSE,
         payload,
       );
@@ -248,11 +248,13 @@ describe('Connect class – private methods', () => {
         },
       };
       const settings = {
-        networkVersion: 1,
+        activeNet: 1,
       };
 
       connect[privateMethods.getSettings] = jest.fn(() => settings);
-      connect[privateMethods.createRequestProvider](web3);
+      connect[privateMethods.createRequestProvider](
+        web3.providers.HttpProvider,
+      );
 
       expect(connect.requestProvider).toEqual(httpProvider);
       expect(web3.providers.HttpProvider).toBeCalledWith(expect.any(String));

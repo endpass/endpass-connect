@@ -9,7 +9,7 @@
     type="text"
     @keypress="emitKeypress"
     @input="emitInput"
-  >
+  />
 </template>
 
 <script>

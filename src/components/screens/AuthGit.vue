@@ -1,6 +1,8 @@
 <template>
-  <v-frame :loading="!gitLoded">
-    <message v-if="error" data-test="git-error-message" :error="true">{{errorMessage}}</message>
+  <v-frame :loading="!gitLoaded" :closable="false">
+    <message v-if="error" :error="true" data-test="git-error-message">{{
+      errorMessage
+    }}</message>
     <form-controls>
       <router-link to="/auth">
         <a>Try again</a>
@@ -10,16 +12,16 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import VFrame from '../VFrame.vue';
 import Message from '../Message.vue';
 import FormControls from '../FormControls.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'AuthGit',
   data() {
     return {
-      gitLoded: false,
+      gitLoaded: false,
       error: false,
       errorMessage: '',
     };
@@ -29,7 +31,7 @@ export default {
     handleAuthError(error) {
       this.error = true;
       this.errorMessage = error.message || 'Unexpected error, try login later';
-      this.gitLoded = true;
+      this.gitLoaded = true;
     },
   },
   async created() {

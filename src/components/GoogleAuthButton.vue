@@ -1,18 +1,19 @@
 <template lang="html">
   <v-button
     :disabled="!auth2Loaded"
-    @click="loginWithGoogle"
     :submit="false"
-    type="primary"
     data-test="submit-button"
-    >Log in with Gmail</v-button
+    @click="loginWithGoogle"
   >
+    <v-icon><img src="@/img/google.svg"/></v-icon>
+  </v-button>
 </template>
 
 <script>
 import router from '@/router';
 import { mapActions } from 'vuex';
 import VButton from './VButton.vue';
+import VIcon from '@/components/VIcon';
 
 export default {
   data() {
@@ -67,6 +68,7 @@ export default {
     this.initGoogle();
   },
   components: {
+    VIcon,
     VButton,
   },
 };
