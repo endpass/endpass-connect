@@ -5,16 +5,7 @@
       Connect
       <span class="frame__close-btn">
         <v-button v-if="closable" data-test="close-button" @click="emitClose">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 8 8"
-          >
-            <path
-              d="M1.41 0l-1.41 1.41.72.72 1.78 1.81-1.78 1.78-.72.69 1.41 1.44.72-.72 1.81-1.81 1.78 1.81.69.72 1.44-1.44-.72-.69-1.81-1.78 1.81-1.81.72-.72-1.44-1.41-.69.72-1.78 1.78-1.81-1.78-.72-.72z"
-            />
-          </svg>
+          <v-svg-icon name="x" fill="white" />
         </v-button>
       </span>
     </header>
@@ -26,9 +17,9 @@
 </template>
 
 <script>
-import LoadingScreen from './LoadingScreen.vue';
-import VButton from './VButton.vue';
-import VIcon from './VIcon';
+import LoadingScreen from '@/components/LoadingScreen';
+import VButton from '@/components/VButton';
+import VSvgIcon from '@/components/VSvgIcon';
 
 export default {
   name: 'VFrame',
@@ -53,7 +44,7 @@ export default {
   components: {
     LoadingScreen,
     VButton,
-    VIcon,
+    VSvgIcon,
   },
 };
 </script>

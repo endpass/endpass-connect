@@ -4,13 +4,13 @@
       `https://github.com/login/oauth/authorize?scope=user:email&client_id=${appId}`
     "
   >
-    <v-icon><img src="@/img/github.svg"/></v-icon>
+    <v-svg-icon name="github" width="30px" height="30px" />
   </v-button>
 </template>
 
 <script>
-import VButton from './VButton.vue';
-import VIcon from '@/components/VIcon';
+import VButton from '@/components/VButton';
+import VSvgIcon from '@/components/VSvgIcon';
 
 export default {
   data() {
@@ -20,7 +20,7 @@ export default {
   },
   components: {
     VButton,
-    VIcon,
+    VSvgIcon,
   },
 };
 </script>
