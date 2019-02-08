@@ -7800,6 +7800,15 @@ loader-utils@^1.0.2, loader-utils@^1.1.0:
     emojis-list "^2.0.0"
     json5 "^1.0.1"
 
+loader-utils@^1.0.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-1.2.3.tgz#1ff5dc6911c9f0a062531a4c04b609406108c2c7"
+  integrity sha512-fkpz8ejdnEMG3s37wGL07iSBDg99O9D5yflE9RGNH3hRdx9SOwYfnGYdZOUIZitN8E+E2vkq3MUMYMvPYl5ZZA==
+  dependencies:
+    big.js "^5.2.2"
+    emojis-list "^2.0.0"
+    json5 "^1.0.1"
+
 locate-path@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/locate-path/-/locate-path-2.0.0.tgz#2b568b265eec944c6d9c0de9c3dbbbca0354cd8e"
@@ -12145,7 +12154,7 @@ svg-baker@^1.4.0:
     query-string "^4.3.2"
     traverse "^0.6.6"
 
-svg-sprite-loader@^4.1.3:
+svg-sprite-loader@^4.0.0, svg-sprite-loader@^4.1.3:
   version "4.1.3"
   resolved "https://registry.yarnpkg.com/svg-sprite-loader/-/svg-sprite-loader-4.1.3.tgz#d25cfa75a5c4e499f7b5282281db6eb3bda13fe0"
   integrity sha512-lOLDSJoyriYnOeGYc7nhxTDYj2vfdBVKpxIS/XK70//kA3VB55H89T1lct2OEClY4w5kQLZJAvDGQ41g3YTogQ==
@@ -12168,6 +12177,14 @@ svg-to-vue@^0.3.0:
     svgo "^1.1.1"
     vue-template-compiler "^2.5.17"
     vue-template-es2015-compiler "^1.6.0"
+
+svgo-loader@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/svgo-loader/-/svgo-loader-2.2.0.tgz#f29eb43efc14c34a15c4023f56ba12775ccdbe5f"
+  integrity sha512-AtIy4kmUQc1zo+QK3ZFvRrULRZAhUC63cLJxdVo1cONZ9WeYAkySUlaB05uZKKcYpsTb/9tDsBSXMab3/0QWtw==
+  dependencies:
+    js-yaml "^3.12.0"
+    loader-utils "^1.0.3"
 
 svgo@^1.0.0, svgo@^1.1.1:
   version "1.1.1"
@@ -12940,6 +12957,13 @@ vm-browserify@0.0.4:
   integrity sha1-XX6kW7755Kb/ZflUOOCofDV9WnM=
   dependencies:
     indexof "0.0.1"
+
+vue-cli-plugin-svg-sprite@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/vue-cli-plugin-svg-sprite/-/vue-cli-plugin-svg-sprite-0.3.1.tgz#bf1a9126ef1e48e9fb62625ae745dc25b5894b68"
+  integrity sha512-rTdGQRC1Bxa3/5YjFbRoeZSV+guNDvftg7vQ0VRI47aYf95re0BEHUSmt+uFs5VXft90cp5ibsuaIFMy21CGdQ==
+  dependencies:
+    svg-sprite-loader "^4.0.0"
 
 vue-cli-plugin-svg@^0.1.2:
   version "0.1.2"
