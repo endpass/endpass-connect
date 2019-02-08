@@ -27,7 +27,7 @@ export default {
     ...mapActions(['authWithGoogle']),
     async loginWithGoogle() {
       const auth = gapi.auth2.init({
-        client_id: ENV.google.key,
+        client_id: ENV.googleClientId,
         scope: 'profile',
       });
       await auth.signIn();
