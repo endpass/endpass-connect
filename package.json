@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.12.1-beta",
+  "version": "0.12.2-beta",
   "main": "./dist/lib/endpass-connect.min.js",
   "description": "",
   "repository": {
@@ -19,7 +19,7 @@
   "homepage": "https://github.com/endpass/endpass-connect",
   "scripts": {
     "build": "rimraf ./dist && npm run build:app && npm run build:lib",
-    "dev:app": "SOURCE_MAP=true vue-cli-service serve ./src/main.js",
+    "dev:app": "SOURCE_MAP=true NODE_ENV=local vue-cli-service serve ./src/main.js",
     "build:app": "NODE_ENV=production vue-cli-service build ./src/main.js",
     "build:app:dev": "NODE_ENV=development vue-cli-service build ./src/main.js",
     "build:app:test": "NODE_ENV=test vue-cli-service build ./src/main.js",

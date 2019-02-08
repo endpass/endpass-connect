@@ -15,7 +15,7 @@ import VIcon from '@/components/VIcon';
 export default {
   data() {
     return {
-      appId: ENV.git.appId,
+      appId: ENV.gitClientId,
     };
   },
   components: {

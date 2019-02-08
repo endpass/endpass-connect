@@ -5,17 +5,13 @@ const identity = {
   url: 'https://identity-dev.endpass.com',
 };
 
-const google = {
-  key: '220380332743-kpaj8gfru8klrb50vu9pbk9ncf8f7nb5.apps.googleusercontent.com'
-};
+const googleClientId = '885568627115-2lu9inbk9n7o1hc0me6dip2ac5drprj0.apps.googleusercontent.com';
 
-const git = {
-  appId: 'fe651c25ffef0f8983fb',
-};
+const gitClientId = '346108128ad51a5eccd1';
 
 module.exports = {
   infura,
   identity,
-  google,
-  git
+  googleClientId,
+  gitClientId
 };
