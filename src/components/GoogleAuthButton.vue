@@ -45,6 +45,9 @@ export default {
         this.handleAuthError(err);
       }
     },
+    handleAuthError(err) {
+      this.$emit('error', err);
+    },
     loadAuth2() {
       this.gapi.load('auth2', () => {
         this.auth2Loaded = true;
