@@ -24,13 +24,13 @@ const router = new Router({
       name: 'Bridge',
       component: Bridge,
     },
-    {
-      path: '/git',
-      name: 'AuthGitScreen',
-      component: AuthGit,
-      beforeEnter: (to, from, next) =>
-        typeof to.query.code !== 'undefined' ? next() : next('auth'),
-    },
+    // {
+    //   path: '/git',
+    //   name: 'AuthGitScreen',
+    //   component: AuthGit,
+    //   beforeEnter: (to, from, next) =>
+    //     typeof to.query.code !== 'undefined' ? next() : next('auth'),
+    // },
     {
       path: '/auth',
       name: 'AuthScreen',

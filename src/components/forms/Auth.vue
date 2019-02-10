@@ -29,8 +29,8 @@
       </div>
     </form-field>
     <form-controls>
-      <google-auth-button />
-      <git-auth-button />
+      <google-auth-button @error="handleError" />
+      <!-- <git-auth-button /> -->
     </form-controls>
     <form-controls>
       <v-checkbox v-model="termsAccepted">
@@ -54,7 +54,7 @@ import VFrame from '../VFrame.vue';
 import VInput from '../VInput.vue';
 import VButton from '../VButton.vue';
 import GoogleAuthButton from '@/components/GoogleAuthButton.vue';
-import GitAuthButton from '@/components/GitAuthButton.vue';
+// import GitAuthButton from '@/components/GitAuthButton.vue';
 import Message from '../Message.vue';
 import FormField from '../FormField.vue';
 import FormControls from '../FormControls.vue';
@@ -102,6 +102,9 @@ export default {
         this.$emit('submit', this.email);
       }
     },
+    handleError(err) {
+      this.$emit('error', err);
+    },
   },
   components: {
     VCheckbox,
@@ -109,7 +112,7 @@ export default {
     VButton,
     VInput,
     GoogleAuthButton,
-    GitAuthButton,
+    // GitAuthButton,
     Message,
     FormField,
     FormControls,
