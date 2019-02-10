@@ -77,6 +77,9 @@ export const authWithGoogle = idToken =>
     .then(res => {
       if (!res.success) throw new Error(res.message);
       return res;
+    })
+    .catch(err => {
+      throw err.response.data;
     });
 
 export const authWithGitHub = code =>

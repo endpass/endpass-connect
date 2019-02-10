@@ -29,7 +29,7 @@
       </div>
     </form-field>
     <form-controls>
-      <google-auth-button @error="handleError" />
+      <google-auth-button @error="handleOauthError" />
       <!-- <git-auth-button /> -->
     </form-controls>
     <form-controls>
@@ -102,7 +102,8 @@ export default {
         this.$emit('submit', this.email);
       }
     },
-    handleError(err) {
+
+    handleOauthError(err) {
       this.$emit('error', err);
     },
   },

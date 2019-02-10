@@ -28,6 +28,7 @@
         :loading="loading"
         :error="error"
         @submit="handleAuthSubmit"
+        @error="handleAuthError"
       />
     </v-frame>
   </screen>
