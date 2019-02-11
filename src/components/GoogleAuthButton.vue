@@ -24,7 +24,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['authWithGoogle']),
+    ...mapActions(['authWithGoogle', 'awaitAuthConfirm']),
     async loginWithGoogle() {
       const auth = gapi.auth2.init({
         client_id: ENV.googleClientId,
@@ -39,7 +39,7 @@ export default {
             .getEmail(),
           idToken: auth.currentUser.get().getAuthResponse().id_token,
         });
-        this.$router.push({ path: '/' });
+        await this.awaitAuthConfirm();
       } catch (err) {
         console.error(err);
         this.handleAuthError(err);
