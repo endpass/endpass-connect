@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import get from 'lodash/get';
 import Emmiter from './Emmiter';
 import { INPAGE_EVENTS, INPAGE_ID_PREFIX } from '../constants';
 

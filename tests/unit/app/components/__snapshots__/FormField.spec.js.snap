@@ -1,8 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`FormField render should correctly render FormField component without label by default 1`] = `
-<label class="form-field">
-  <!---->
-  <div class="form-field__content"></div>
-</label>
-`;

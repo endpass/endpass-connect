@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`Spinner render should correctly render Spinner component 1`] = `<div class="spinner"></div>`;
