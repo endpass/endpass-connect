@@ -1,10 +1,10 @@
-import { get } from 'lodash';
-import Emmiter from '../class/Emmiter';
-import { INPAGE_EVENTS, INPAGE_ID_PREFIX } from '../constants';
+import get from 'lodash/get';
+import { Emmiter } from '@/class';
+import { INPAGE_EVENTS, INPAGE_ID_PREFIX } from '@/constants';
 
 function createInpageProvider({ url, options, provider, emitter }) {
   /**
-   *  @param {Stirng} params.url
+   *  @param {String} params.url
    *  @param {Object} params.options
    *  @param {Emitter} params.emitter
    */

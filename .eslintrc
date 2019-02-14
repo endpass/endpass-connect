@@ -16,7 +16,6 @@
   "extends": [
     "airbnb-base",
     "plugin:prettier/recommended",
-    "plugin:vue/recommended"
   ],
   "rules": {
     "prettier/prettier": [
@@ -38,56 +37,6 @@
       "error",
       {
         "ignore": ["@", "fixtures", "mocks"]
-      }
-    ],
-    "vue/max-attributes-per-line": [
-      "error",
-      {
-        "singleline": 1,
-        "multiline": {
-          "max": 1,
-          "allowFirstLine": false
-        }
-      }
-    ],
-    "vue/html-closing-bracket-newline": [
-      "error",
-      {
-        "singleline": "never",
-        "multiline": "always"
-      }
-    ],
-    "vue/order-in-components": [
-      "error",
-      {
-        "order": [
-          "el",
-          "name",
-          "inheritAttrs",
-          "inject",
-          "provide",
-          ["props", "propsData"],
-          "data",
-          "computed",
-          "watch",
-          "methods",
-          "LIFECYCLE_HOOKS",
-          "mixins",
-          "components",
-          [
-            "functional",
-            "delimiters",
-            "comments",
-            "directives",
-            "filters",
-            "parent",
-            "extends",
-            "model",
-            "template",
-            "render",
-            "renderError"
-          ]
-        ]
       }
     ]
   }

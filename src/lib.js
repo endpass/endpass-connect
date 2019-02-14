@@ -1,9 +1,6 @@
 import omit from 'lodash/omit';
 import get from 'lodash/get';
-import Emmiter from '@/class/Emmiter';
-import InpageProvider from '@/class/InpageProvider';
-import Dialog from '@/class/Dialog';
-import Bridge from '@/class/Bridge';
+import { Emmiter, InpageProvider, Dialog, Bridge } from '@/class';
 import {
   METHODS,
   INPAGE_EVENTS,
@@ -12,6 +9,11 @@ import {
 } from '@/constants';
 import createInpageProvider from '@/util/createInpageProvider';
 import pkg from '../package.json';
+
+console.info(
+  `%cEndpass connect version ${pkg.version} loaded 🔌`,
+  'color: #fff; background: #4B0873',
+);
 
 /**
  * Private methods which can not be called by user from connect instance
@@ -41,11 +43,6 @@ export default class Connect {
    */
   constructor(options = {}) {
     /* eslint-disable-next-line */
-    console.info(
-      `%cEndpass connect version ${pkg.version} loaded 🔌`,
-      'color: #fff; background: #4B0873',
-    );
-
     this.authUrl = options.authUrl || 'https://auth.endpass.com';
     this.emitter = new Emmiter();
     this.provider = new InpageProvider(this.emitter);

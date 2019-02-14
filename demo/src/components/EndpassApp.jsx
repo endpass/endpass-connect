@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 
-import Connect from '../../../dist/lib/endpass-connect.min';
+import Connect from '../../../dist/endpass-connect.esm';
 import web3 from '../utils/web3';
 
 import AuthForm from './AuthForm.jsx';

@@ -1,4 +1,9 @@
 module.exports = {
-  presets: ['@vue/app'],
+  presets: ['@babel/preset-env'],
   plugins: ['lodash'],
+  env: {
+    test: {
+      plugins: [['@babel/plugin-transform-runtime']],
+    },
+  },
 };
