@@ -1,4 +1,6 @@
-import Connect, { privateMethods } from '@/lib';
+import Connect from '@/lib/Connect';
+import PrivateMethods from '@/lib/PrivateMethods';
+import privateFields from '@/lib/privateFields';
 
 describe('Connect class – instance', () => {
   beforeAll(() => {
@@ -17,28 +19,25 @@ describe('Connect class – instance', () => {
     });
 
     it('should subscribe on events is subscribe property passed to constructor', () => {
-      jest.spyOn(Connect.prototype, privateMethods.setupEmmiterEvents);
-      jest.spyOn(
-        Connect.prototype,
-        privateMethods.subscribeOnRequestsQueueChanges,
-      );
-      jest.spyOn(Connect.prototype, privateMethods.initBridge);
+      jest.spyOn(PrivateMethods.prototype, 'setupEmmiterEvents');
+      jest.spyOn(PrivateMethods.prototype, 'subscribeOnRequestsQueueChanges');
+      jest.spyOn(PrivateMethods.prototype, 'initBridge');
 
       const connect = new Connect({
         authUrl: 'http://localhost:5000',
       });
 
-      expect(connect[privateMethods.setupEmmiterEvents]).toBeCalled();
-      expect(
-        connect[privateMethods.subscribeOnRequestsQueueChanges],
-      ).toBeCalled();
-      expect(connect[privateMethods.initBridge]).toBeCalled();
+      const privateMethods = connect[privateFields.methods];
+
+      expect(privateMethods.setupEmmiterEvents).toBeCalled();
+      expect(privateMethods.subscribeOnRequestsQueueChanges).toBeCalled();
+      expect(privateMethods.initBridge).toBeCalled();
     });
 
     it('should be created without authUrl parameter', () => {
       const connect = new Connect();
-
-      expect(connect.authUrl).not.toBe(undefined);
+      const context = connect[privateFields.context];
+      expect(context.authUrl).not.toBe(undefined);
     });
   });
 });
