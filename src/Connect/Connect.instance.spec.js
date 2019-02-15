@@ -1,5 +1,5 @@
 import Connect from '@/lib/Connect';
-import PrivateMethods from '@/lib/PrivateMethods';
+import PrivateMethods from '@/lib/Providers';
 import privateFields from '@/lib/privateFields';
 
 describe('Connect class – instance', () => {
@@ -19,7 +19,7 @@ describe('Connect class – instance', () => {
     });
 
     it('should subscribe on events is subscribe property passed to constructor', () => {
-      jest.spyOn(PrivateMethods.prototype, 'setupEmmiterEvents');
+      jest.spyOn(PrivateMethods.prototype, 'setupEmitterEvents');
       jest.spyOn(PrivateMethods.prototype, 'subscribeOnRequestsQueueChanges');
       jest.spyOn(PrivateMethods.prototype, 'initBridge');
 
@@ -29,7 +29,7 @@ describe('Connect class – instance', () => {
 
       const privateMethods = connect[privateFields.methods];
 
-      expect(privateMethods.setupEmmiterEvents).toBeCalled();
+      expect(privateMethods.setupEmitterEvents).toBeCalled();
       expect(privateMethods.subscribeOnRequestsQueueChanges).toBeCalled();
       expect(privateMethods.initBridge).toBeCalled();
     });

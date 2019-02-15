@@ -1,5 +1,4 @@
 import { Emmiter, InpageProvider, Dialog, Bridge } from '@/class';
-import createInpageProvider from '@/util/createInpageProvider';
 
 export default class Context {
   /**
@@ -9,50 +8,44 @@ export default class Context {
     this.authUrl = options.authUrl || 'https://auth.endpass.com';
 
     this.emitter = new Emmiter();
-    this.provider = new InpageProvider(this.emitter);
+    const provider = new InpageProvider(this.emitter);
+    this.setProvider(provider);
 
     this.requestProvider = null;
-    this.currentRequest = null;
 
     this.dialog = null;
     this.bridge = null;
-  }
-
-  /**
-   * Define Dialog instance
-   * @param {props} props properties for instance
-   */
-  initDialog(props) {
-    this.dialog = new Dialog(props);
+    this.initBridge();
   }
 
   /**
    * Define Bridge instance
    * @param {props} props properties for instance
    */
-  initBridge(props) {
-    this.bridge = new Bridge(props);
+  initBridge() {
+    const url = this.getConnectUrl('bridge');
+    this.bridge = new Bridge({ url });
+    this.initBridge({ url });
+    this.getBridge().mount();
   }
 
   /**
-   * Create InpageProvider
-   * @param {Web3.Provider} provider Web3-friendly provider
-   * @param {url} url for provider
+   * Opens application with given route in child window
+   * Also awaits ready state message from dialog
+   * After receiving message – returns link to opened window
+   * @param {String} route Target connect application route
+   * @returns {Promise<Window>} Opened child window
    */
-  createInpageProvider(provider, url) {
-    this.provider = createInpageProvider({
-      emitter: this.getEmitter(),
-      url,
-      provider,
-    });
+  async openApp(route = '') {
+    const url = this.getConnectUrl(route);
+
+    this.dialog = new Dialog({ url });
+
+    await this.getDialog().open();
   }
 
-  /**
-   * Define Current request
-   * @param {Object} request Incoming request
-   */
-  setCurrentRequest(request) {
-    this.currentRequest = request;
+  setProvider(provider) {
+    this.provider = provider;
   }
 
   /**
@@ -63,16 +56,21 @@ export default class Context {
     this.requestProvider = reqProvider;
   }
 
-  getCurrentRequest() {
-    return this.currentRequest;
-  }
-
   getProvider() {
     return this.provider;
   }
 
   getRequestProvider() {
     return this.requestProvider;
+  }
+
+  /**
+   * Returns injected provider settings
+   * @private
+   * @returns {Object} Current provider settings
+   */
+  getProviderSettings() {
+    return this.getProvider().settings;
   }
 
   /**

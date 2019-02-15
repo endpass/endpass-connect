@@ -2,12 +2,6 @@ import { sendMessageToBridge, awaitBridgeMessage } from '@/util/message';
 import { inlineStyles } from '@/util/dom';
 import { METHODS } from '@/constants';
 
-export const privateMethods = {
-  mountDialog: Symbol('mountDialog'),
-  createResizingSubscribtion: Symbol('createResizingSubscribtion'),
-  handleDialogResize: Symbol('handleDialogResize'),
-};
-
 export default class Bridge {
   constructor({ url }) {
     this.url = url;

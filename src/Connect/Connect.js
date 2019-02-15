@@ -1,9 +1,11 @@
-import Context from '../Context';
-import PrivateMethods from '../PrivateMethods';
-import privateFields from '../privateFields';
+import Context from '@/Context';
+import Providers from '@/Providers';
+import privateFields from '@/privateFields';
+import Queue from '@/Queue';
 import { METHODS, INPAGE_EVENTS } from '@/constants';
+import middleWares from '@/middlewares';
 
-import pkg from '../../../package.json';
+import pkg from '../../package.json';
 
 console.info(
   `%cEndpass connect version ${pkg.version} loaded 🔌`,
@@ -16,8 +18,8 @@ export default class Connect {
    */
   constructor(options) {
     const context = new Context(options);
-    this[privateFields.methods] = new PrivateMethods(context, options);
-
+    this[privateFields.providers] = new Providers(context);
+    this[privateFields.queue] = new Queue(context, { middleWares });
     this[privateFields.context] = context;
   }
 
@@ -43,7 +45,13 @@ export default class Connect {
    */
   async getAccountData() {
     try {
-      const settings = await this[privateFields.methods].getUserSettings();
+      const settings = await this[privateFields.context].getBridge().ask({
+        method: METHODS.GET_SETTINGS,
+      });
+
+      if (!settings.status) {
+        throw new Error(settings.message || 'User settings are not received!');
+      }
 
       return {
         activeAccount: settings.lastActiveAccount,
@@ -62,8 +70,8 @@ export default class Connect {
    *  Web3 instance
    */
   extendProvider(provider) {
-    this[privateFields.methods].createRequestProvider(provider);
-    // this[privateMethods.createInpageProvider](provider);
+    this[privateFields.providers].createRequestProvider(provider);
+    // this[privateFields.providers]createInpageProvider(provider);
 
     return this[privateFields.context].getProvider();
   }
@@ -76,9 +84,10 @@ export default class Connect {
    *  know about result
    */
   async auth(redirectUrl) {
-    await this[privateFields.methods].openApp('auth');
+    const context = this[privateFields.context];
+    await context.openApp('auth');
 
-    const dialog = this[privateFields.context].getDialog();
+    const dialog = context.getDialog();
 
     const res = await dialog.ask({
       method: METHODS.AUTH,
@@ -118,9 +127,10 @@ export default class Connect {
    * @returns {Promise<Object>}
    */
   async openAccount() {
-    await this[privateFields.methods].openApp();
+    const context = this[privateFields.context];
+    await context.openApp();
 
-    const dialog = this[privateFields.context].getDialog();
+    const dialog = context.getDialog();
 
     const res = await dialog.ask({
       method: METHODS.ACCOUNT,

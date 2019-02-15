@@ -1,6 +1,6 @@
 import get from 'lodash/get';
 import Emmiter from './Emmiter';
-import { INPAGE_EVENTS, INPAGE_ID_PREFIX } from '../constants';
+import { INPAGE_EVENTS, INPAGE_ID_PREFIX } from '@/constants';
 
 export default class InpageProvider {
   constructor(eventEmitter) {
