@@ -25,7 +25,6 @@ export default class Context {
   initBridge() {
     const url = this.getConnectUrl('bridge');
     this.bridge = new Bridge({ url });
-    this.initBridge({ url });
     this.getBridge().mount();
   }
 
