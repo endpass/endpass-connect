@@ -1,10 +1,13 @@
-import Connect, { privateMethods } from '@/lib';
+import Connect from '@/lib/Connect';
 import Bridge from '@/class/Bridge';
 import Dialog from '@/class/Dialog';
 import { INPAGE_EVENTS, METHODS } from '@/constants';
+import privateFields from '@/lib/privateFields';
 
 describe('Connect class – private methods', () => {
   let connect;
+  let privateMethods;
+  let context;
 
   beforeAll(() => {
     window.open = jest.fn();
@@ -14,17 +17,21 @@ describe('Connect class – private methods', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     connect = new Connect({ appUrl: 'http://localhost:5000' });
+    // eslint-disable-next-line
+    privateMethods = connect[privateFields.methods];
+    // eslint-disable-next-line
+    context = connect[privateFields.context];
   });
 
   describe('subscribeOnRequestsQueueChanges', () => {
     beforeEach(() => {
-      connect[privateMethods.processCurrentRequest] = jest.fn();
+      privateMethods.processCurrentRequest = jest.fn();
     });
 
     it('should set queue interval', () => {
-      connect[privateMethods.subscribeOnRequestsQueueChanges]();
+      privateMethods.subscribeOnRequestsQueueChanges();
 
-      expect(connect.queueInterval).not.toBeNull();
+      expect(privateMethods.queueInterval).not.toBeNull();
     });
 
     it('should process current request if queue is not empty', () => {
@@ -34,42 +41,42 @@ describe('Connect class – private methods', () => {
         },
       ];
 
-      connect[privateMethods.subscribeOnRequestsQueueChanges]();
-      connect.queue = [...queue];
+      privateMethods.subscribeOnRequestsQueueChanges();
+      privateMethods.queue = [...queue];
 
       jest.advanceTimersByTime(3000);
 
-      expect(connect.currentRequest).toEqual(queue[0]);
-      expect(connect.queue).toHaveLength(0);
-      expect(connect[privateMethods.processCurrentRequest]).toBeCalledTimes(1);
+      expect(context.currentRequest).toEqual(queue[0]);
+      expect(privateMethods.queue).toHaveLength(0);
+      expect(privateMethods.processCurrentRequest).toBeCalledTimes(1);
     });
 
     it('should not do anything if current request is not empty', () => {
-      connect.currentRequest = {
+      context.currentRequest = {
         foo: 'bar',
       };
 
-      connect[privateMethods.subscribeOnRequestsQueueChanges]();
+      privateMethods.subscribeOnRequestsQueueChanges();
 
       jest.advanceTimersByTime(3000);
 
-      expect(connect[privateMethods.processCurrentRequest]).not.toBeCalled();
+      expect(privateMethods.processCurrentRequest).not.toBeCalled();
     });
 
     it('should not do anything if queue is empty', () => {
-      connect.queue = [];
+      privateMethods.queue = [];
 
-      connect[privateMethods.subscribeOnRequestsQueueChanges]();
+      privateMethods.subscribeOnRequestsQueueChanges();
 
       jest.advanceTimersByTime(3000);
 
-      expect(connect[privateMethods.processCurrentRequest]).not.toBeCalled();
+      expect(privateMethods.processCurrentRequest).not.toBeCalled();
     });
   });
 
   describe('processCurrentRequest', () => {
     beforeEach(() => {
-      connect[privateMethods.sendResponse] = jest.fn();
+      privateMethods.sendResponse = jest.fn();
     });
 
     it('should process current request with sign if request in whitelist and send response', async () => {
@@ -79,20 +86,20 @@ describe('Connect class – private methods', () => {
         method: 'personal_sign',
       };
 
-      connect.currentRequest = { ...request };
-      connect[privateMethods.sign] = jest.fn(() => ({
+      context.currentRequest = { ...request };
+      privateMethods.sign = jest.fn(() => ({
         ...request,
         signed: true,
       }));
 
-      await connect[privateMethods.processCurrentRequest]();
+      await privateMethods.processCurrentRequest();
 
-      expect(connect[privateMethods.sign]).toBeCalled();
-      expect(connect[privateMethods.sendResponse]).toBeCalledWith({
+      expect(privateMethods.sign).toBeCalled();
+      expect(privateMethods.sendResponse).toBeCalledWith({
         ...request,
         signed: true,
       });
-      expect(connect.currentRequest).toBe(null);
+      expect(context.currentRequest).toBe(null);
     });
 
     it('should send current request to network and send response', async () => {
@@ -102,20 +109,20 @@ describe('Connect class – private methods', () => {
         method: 'eth_some',
       };
 
-      connect.currentRequest = { ...request };
-      connect[privateMethods.sendToNetwork] = jest.fn(() => ({
+      context.currentRequest = { ...request };
+      privateMethods.sendToNetwork = jest.fn(() => ({
         ...request,
         signed: true,
       }));
 
-      await connect[privateMethods.processCurrentRequest]();
+      await privateMethods.processCurrentRequest();
 
-      expect(connect[privateMethods.sendToNetwork]).toBeCalled();
-      expect(connect[privateMethods.sendResponse]).toBeCalledWith({
+      expect(privateMethods.sendToNetwork).toBeCalled();
+      expect(privateMethods.sendResponse).toBeCalledWith({
         ...request,
         signed: true,
       });
-      expect(connect.currentRequest).toBe(null);
+      expect(context.currentRequest).toBe(null);
     });
 
     it('should handle errors and send response with empty result and error', async () => {
@@ -126,27 +133,25 @@ describe('Connect class – private methods', () => {
       };
       const error = new Error('foo');
 
-      connect.currentRequest = { ...request };
-      connect[privateMethods.sendToNetwork] = jest
-        .fn()
-        .mockRejectedValue(error);
+      context.currentRequest = { ...request };
+      privateMethods.sendToNetwork = jest.fn().mockRejectedValue(error);
 
-      await connect[privateMethods.processCurrentRequest]();
+      await privateMethods.processCurrentRequest();
 
-      expect(connect[privateMethods.sendToNetwork]).toBeCalled();
-      expect(connect[privateMethods.sendResponse]).toBeCalledWith({
+      expect(privateMethods.sendToNetwork).toBeCalled();
+      expect(privateMethods.sendResponse).toBeCalledWith({
         ...request,
         result: null,
         error,
       });
-      expect(connect.currentRequest).toBe(null);
+      expect(context.currentRequest).toBe(null);
     });
   });
 
   describe('processWhitelistedRequest', () => {
     beforeEach(() => {
-      connect[privateMethods.sign] = jest.fn();
-      connect[privateMethods.recover] = jest.fn();
+      privateMethods.sign = jest.fn();
+      privateMethods.recover = jest.fn();
     });
 
     it('should call recover private method if request method is personal_ecRecover', () => {
@@ -154,11 +159,11 @@ describe('Connect class – private methods', () => {
         method: 'personal_ecRecover',
       };
 
-      connect.currentRequest = request;
-      connect[privateMethods.processWhitelistedRequest]();
+      context.currentRequest = request;
+      privateMethods.processWhitelistedRequest();
 
-      expect(connect[privateMethods.recover]).toBeCalled();
-      expect(connect[privateMethods.sign]).not.toBeCalled();
+      expect(privateMethods.recover).toBeCalled();
+      expect(privateMethods.sign).not.toBeCalled();
     });
 
     it('should call sign private method in other cases', () => {
@@ -166,36 +171,34 @@ describe('Connect class – private methods', () => {
         method: 'personal_sign',
       };
 
-      connect.currentRequest = request;
-      connect[privateMethods.processWhitelistedRequest]();
+      context.currentRequest = request;
+      privateMethods.processWhitelistedRequest();
 
-      expect(connect[privateMethods.recover]).not.toBeCalled();
-      expect(connect[privateMethods.sign]).toBeCalled();
+      expect(privateMethods.recover).not.toBeCalled();
+      expect(privateMethods.sign).toBeCalled();
     });
   });
 
   describe('getConnectUrl', () => {
     it('should return url to auth on connect application', () => {
-      expect(connect[privateMethods.getConnectUrl]('foo')).toBe(
-        'https://auth.endpass.com/foo',
-      );
+      expect(context.getConnectUrl('foo')).toBe('https://auth.endpass.com/foo');
     });
   });
 
   describe('setupEmmiterEvents', () => {
     it('should subscribe on emitter events', () => {
-      connect.emitter = {
+      context.emitter = {
         on: jest.fn(),
       };
-      connect[privateMethods.setupEmmiterEvents]();
+      privateMethods.setupEmmiterEvents();
 
-      expect(connect.emitter.on).toBeCalledTimes(2);
-      expect(connect.emitter.on).toHaveBeenNthCalledWith(
+      expect(context.emitter.on).toBeCalledTimes(2);
+      expect(context.emitter.on).toHaveBeenNthCalledWith(
         1,
         INPAGE_EVENTS.REQUEST,
         expect.any(Function),
       );
-      expect(connect.emitter.on).toHaveBeenNthCalledWith(
+      expect(context.emitter.on).toHaveBeenNthCalledWith(
         2,
         INPAGE_EVENTS.SETTINGS,
         expect.any(Function),
@@ -209,10 +212,10 @@ describe('Connect class – private methods', () => {
         foo: 'bar',
       };
 
-      connect.emitter.emit = jest.fn();
-      connect[privateMethods.sendResponse](payload);
+      context.emitter.emit = jest.fn();
+      privateMethods.sendResponse(payload);
 
-      expect(connect.emitter.emit).toBeCalledWith(
+      expect(context.emitter.emit).toBeCalledWith(
         INPAGE_EVENTS.RESPONSE,
         payload,
       );
@@ -221,19 +224,19 @@ describe('Connect class – private methods', () => {
 
   describe('handleRequest', () => {
     it('should push reuest to queue if it contains id', () => {
-      connect[privateMethods.handleRequest]({
+      privateMethods.handleRequest({
         id: 1,
       });
 
-      expect(connect.queue).toHaveLength(1);
+      expect(privateMethods.queue).toHaveLength(1);
     });
 
     it('should not push reuest to queue if it not contains id', () => {
-      connect[privateMethods.handleRequest]({
+      privateMethods.handleRequest({
         foo: 'bar',
       });
 
-      expect(connect.queue).toHaveLength(0);
+      expect(privateMethods.queue).toHaveLength(0);
     });
   });
 
@@ -251,12 +254,10 @@ describe('Connect class – private methods', () => {
         activeNet: 1,
       };
 
-      connect[privateMethods.getSettings] = jest.fn(() => settings);
-      connect[privateMethods.createRequestProvider](
-        web3.providers.HttpProvider,
-      );
+      privateMethods.getSettings = jest.fn(() => settings);
+      privateMethods.createRequestProvider(web3.providers.HttpProvider);
 
-      expect(connect.requestProvider).toEqual(httpProvider);
+      expect(context.requestProvider).toEqual(httpProvider);
       expect(web3.providers.HttpProvider).toBeCalledWith(expect.any(String));
     });
   });
@@ -283,7 +284,7 @@ describe('Connect class – private methods', () => {
   //         connect.requestProvider = requestProvider;
   //         connect.currentRequest = request;
   //
-  //         const res = await connect[privateMethods.sendToNetwork]();
+  //         const res = await privateMethods.sendToNetwork();
   //
   //         expect(requestProvider.sendAsync).toBeCalledWith(
   //           request,
@@ -297,11 +298,11 @@ describe('Connect class – private methods', () => {
     it('should create new bridge and save link to it in connect instance', () => {
       jest.spyOn(Bridge.prototype, 'mount');
 
-      connect.bridge = null;
-      connect[privateMethods.initBridge]();
+      context.bridge = null;
+      privateMethods.initBridge();
 
-      expect(connect.bridge).not.toBe(null);
-      expect(connect.bridge.mount).toBeCalled();
+      expect(context.bridge).not.toBe(null);
+      expect(context.bridge.mount).toBeCalled();
     });
   });
 
@@ -312,7 +313,7 @@ describe('Connect class – private methods', () => {
       bridge = {
         ask: jest.fn(),
       };
-      connect.bridge = bridge;
+      context.bridge = bridge;
     });
 
     it('should request user settings through inner connect bridge', async () => {
@@ -321,11 +322,11 @@ describe('Connect class – private methods', () => {
       const response = {
         status: true,
       };
-      connect.bridge.ask.mockResolvedValueOnce(response);
+      context.bridge.ask.mockResolvedValueOnce(response);
 
-      const res = await connect[privateMethods.getUserSettings]();
+      const res = await privateMethods.getUserSettings();
 
-      expect(connect.bridge.ask).toBeCalledWith({
+      expect(context.bridge.ask).toBeCalledWith({
         method: METHODS.GET_SETTINGS,
       });
       expect(res).toBe(response);
@@ -336,7 +337,7 @@ describe('Connect class – private methods', () => {
         status: false,
       });
 
-      expect(connect[privateMethods.getUserSettings]()).rejects.toThrow();
+      expect(privateMethods.getUserSettings()).rejects.toThrow();
     });
   });
 
@@ -352,25 +353,25 @@ describe('Connect class – private methods', () => {
       bridge = {
         ask: jest.fn(),
       };
-      connect[privateMethods.getSettings] = jest.fn(() => ({
+      privateMethods.getSettings = jest.fn(() => ({
         activeAccount: '0x0',
         activeNet: 1,
       }));
-      connect.bridge = bridge;
-      connect.currentRequest = request;
+      context.bridge = bridge;
+      context.currentRequest = request;
     });
 
     it('should recover request through bridge messaging', async () => {
       expect.assertions(1);
 
-      connect.bridge.ask.mockResolvedValueOnce({
+      context.bridge.ask.mockResolvedValueOnce({
         status: true,
         result: 'hello',
       });
 
-      await connect[privateMethods.recover]();
+      await privateMethods.recover();
 
-      expect(connect.bridge.ask).toBeCalledWith({
+      expect(context.bridge.ask).toBeCalledWith({
         method: METHODS.RECOVER,
         address: '0x0',
         net: 1,
@@ -383,7 +384,7 @@ describe('Connect class – private methods', () => {
         status: false,
       });
 
-      expect(connect[privateMethods.recover]()).rejects.toThrow();
+      expect(privateMethods.recover()).rejects.toThrow();
     });
   });
 
@@ -402,17 +403,19 @@ describe('Connect class – private methods', () => {
         }),
         close: jest.fn(),
       };
-      connect[privateMethods.openApp] = jest.fn().mockResolvedValueOnce();
-      connect[privateMethods.getSettings] = jest.fn(() => ({
+      privateMethods.openApp = jest.fn().mockResolvedValueOnce();
+      privateMethods.getSettings = jest.fn(() => ({
         activeAccount: '0x0',
         activeNet: 1,
       }));
-      connect.currentRequest = request;
-      connect.dialog = dialog;
+      context.currentRequest = request;
+      context.dialog = dialog;
     });
 
     it('should requests account data, open sign dialog, await sign message and send message to dialog', async () => {
-      await connect[privateMethods.sign]();
+      expect.assertions(2);
+
+      await privateMethods.sign();
 
       expect(dialog.ask).toBeCalledWith({
         address: '0x0',
@@ -424,12 +427,22 @@ describe('Connect class – private methods', () => {
       expect(dialog.close).toBeCalled();
     });
 
-    it('should throw error is request status is falsy', () => {
-      dialog.ask.mockResolvedValueOnce({
+    it('should throw error is request status is falsy', async () => {
+      expect.assertions(1);
+
+      dialog.ask = jest.fn().mockResolvedValueOnce({
         status: false,
       });
 
-      expect(connect[privateMethods.sign]()).rejects.toThrow();
+      const err = new Error('Sign error!');
+      let check;
+      try {
+        await privateMethods.sign();
+      } catch (e) {
+        check = e;
+      }
+
+      expect(check).toEqual(err);
     });
   });
 
@@ -441,9 +454,9 @@ describe('Connect class – private methods', () => {
     it('should open modal', async () => {
       expect.assertions(1);
 
-      await connect[privateMethods.openApp]('auth');
+      await privateMethods.openApp('auth');
 
-      expect(connect.dialog.open).toBeCalled();
+      expect(context.dialog.open).toBeCalled();
     });
   });
 });

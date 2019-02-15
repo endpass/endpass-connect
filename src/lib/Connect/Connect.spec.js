@@ -1,8 +1,11 @@
-import Connect, { privateMethods } from '@/lib';
+import Connect from '@/lib/Connect';
 import { INPAGE_EVENTS, METHODS } from '@/constants';
+import privateFields from '@/lib/privateFields';
 
 describe('Connect class – public methods', () => {
   let connect;
+  let privateMethods;
+  let context;
 
   beforeAll(() => {
     window.open = jest.fn();
@@ -12,6 +15,10 @@ describe('Connect class – public methods', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     connect = new Connect({ appUrl: 'http://localhost:5000' });
+    // eslint-disable-next-line
+    privateMethods = connect[privateFields.methods];
+    // eslint-disable-next-line
+    context = connect[privateFields.context];
   });
 
   describe('createProvider', () => {
@@ -21,15 +28,13 @@ describe('Connect class – public methods', () => {
 
     beforeEach(() => {
       window.web3 = undefined;
-      connect[privateMethods.createRequestProvider] = jest.fn();
+      privateMethods.createRequestProvider = jest.fn();
     });
 
     it('should extend provider with web3 from given parameters', () => {
       connect.extendProvider(web3);
 
-      expect(connect[privateMethods.createRequestProvider]).toBeCalledWith(
-        web3,
-      );
+      expect(privateMethods.createRequestProvider).toBeCalledWith(web3);
     });
 
     it('should throw error if web3 is not passed as parameter and it is not exist in window', () => {
@@ -41,14 +46,12 @@ describe('Connect class – public methods', () => {
 
   describe('getAccountData', () => {
     beforeEach(() => {
-      connect[privateMethods.getUserSettings] = jest
-        .fn()
-        .mockResolvedValueOnce({
-          lastActiveAccount: '0x0',
-          net: 1,
-          foo: 'bar',
-          bar: 'baz',
-        });
+      privateMethods.getUserSettings = jest.fn().mockResolvedValueOnce({
+        lastActiveAccount: '0x0',
+        net: 1,
+        foo: 'bar',
+        bar: 'baz',
+      });
     });
 
     it('should request user settings with private method and returns formated value', async () => {
@@ -56,7 +59,7 @@ describe('Connect class – public methods', () => {
 
       const res = await connect.getAccountData();
 
-      expect(connect[privateMethods.getUserSettings]).toBeCalled();
+      expect(privateMethods.getUserSettings).toBeCalled();
       expect(res).toEqual({
         activeAccount: '0x0',
         activeNet: 1,
@@ -71,7 +74,7 @@ describe('Connect class – public methods', () => {
       emitter = {
         emit: jest.fn(),
       };
-      connect.emitter = emitter;
+      context.emitter = emitter;
     });
 
     it('should emit settings by inner connect emitter', () => {
@@ -81,7 +84,7 @@ describe('Connect class – public methods', () => {
 
       connect.setProviderSettings(payload);
 
-      expect(connect.emitter.emit).toBeCalledWith(
+      expect(context.emitter.emit).toBeCalledWith(
         INPAGE_EVENTS.SETTINGS,
         payload,
       );
@@ -96,8 +99,8 @@ describe('Connect class – public methods', () => {
         ask: jest.fn(),
         close: jest.fn(),
       };
-      connect.dialog = dialog;
-      connect[privateMethods.openApp] = jest.fn();
+      context.dialog = dialog;
+      privateMethods.openApp = jest.fn();
     });
 
     it('should auth user through dialog request and returns result', async () => {
@@ -109,7 +112,7 @@ describe('Connect class – public methods', () => {
 
       const res = await connect.auth();
 
-      expect(connect[privateMethods.openApp]).toBeCalledWith('auth');
+      expect(privateMethods.openApp).toBeCalledWith('auth');
       expect(dialog.ask).toBeCalledWith({
         method: METHODS.AUTH,
         redirectUrl: null,
@@ -135,8 +138,8 @@ describe('Connect class – public methods', () => {
         ask: jest.fn(),
         close: jest.fn(),
       };
-      connect.dialog = dialog;
-      connect[privateMethods.openApp] = jest.fn();
+      context.dialog = dialog;
+      privateMethods.openApp = jest.fn();
       connect.setProviderSettings = jest.fn();
     });
 
@@ -150,10 +153,10 @@ describe('Connect class – public methods', () => {
 
       const res = await connect.openAccount();
 
-      expect(connect.dialog.ask).toBeCalledWith({
+      expect(context.dialog.ask).toBeCalledWith({
         method: METHODS.ACCOUNT,
       });
-      expect(connect.dialog.close).toBeCalled();
+      expect(context.dialog.close).toBeCalled();
       expect(res).toEqual({
         type: 'foo',
       });

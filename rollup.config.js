@@ -30,7 +30,7 @@ const outputConf = {
 };
 
 export default {
-  input: resolveFile('./src/lib.js'),
+  input: resolveFile('./src/index.js'),
   external: [...Object.keys(pkg.dependencies)],
   plugins: [
     json(),
