@@ -74,7 +74,7 @@ describe('Connect class – private methods', () => {
     });
   });
 
-  describe('processCurrentRequest', () => {
+  describe('processRequest', () => {
     beforeEach(() => {
       privateMethods.sendResponse = jest.fn();
     });
@@ -185,12 +185,12 @@ describe('Connect class – private methods', () => {
     });
   });
 
-  describe('setupEmmiterEvents', () => {
+  describe('setupEmitterEvents', () => {
     it('should subscribe on emitter events', () => {
       context.emitter = {
         on: jest.fn(),
       };
-      privateMethods.setupEmmiterEvents();
+      privateMethods.setupEmitterEvents();
 
       expect(context.emitter.on).toBeCalledTimes(2);
       expect(context.emitter.on).toHaveBeenNthCalledWith(

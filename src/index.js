@@ -1,3 +1,3 @@
-import Connect from './lib/Connect';
+import Connect from '@/Connect';
 
 export default Connect;
