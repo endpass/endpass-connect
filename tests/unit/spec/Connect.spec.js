@@ -1,5 +1,5 @@
 import Connect from '@/lib/Connect';
-import { INPAGE_EVENTS, METHODS } from '@/constants';
+import { INPAGE_EVENTS, METHODS } from '../../../src/constants';
 import privateFields from '@/lib/privateFields';
 
 describe('Connect class – public methods', () => {

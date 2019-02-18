@@ -1,6 +1,7 @@
 import get from 'lodash/get';
 import Emmiter from './Emmiter';
 import { INPAGE_EVENTS, INPAGE_ID_PREFIX } from '@/constants';
+import processPayload from './processPayload';
 
 export default class InpageProvider {
   constructor(eventEmitter) {
@@ -67,55 +68,20 @@ export default class InpageProvider {
     }
   }
 
-  processPayload(payload) {
-    let result = null;
-
-    switch (payload.method) {
-      case 'eth_accounts':
-        result = this.settings.activeAccount
-          ? [this.settings.activeAccount]
-          : [];
-        break;
-      case 'eth_coinbase':
-        result = this.settings.activeAccount || null;
-        break;
-      case 'eth_uninstallFilter':
-        this.sendAsync(payload, () => {});
-        result = true;
-        break;
-      case 'net_version':
-        result = this.settings.activeNet || null;
-        break;
-      default:
-        break;
-    }
-
-    return {
-      id: payload.id,
-      jsonrpc: payload.jsonrpc,
-      result,
-    };
-  }
-
   sendAsync(payload, callback) {
-    const processedPayload = this.processPayload({ ...payload });
-
-    if (processedPayload.result !== null) {
-      callback(null, processedPayload);
-    } else {
-      this.pendingRequestsHandlers[payload.id] = callback;
-      this.eventEmitter.emit(INPAGE_EVENTS.REQUEST, {
-        ...payload,
-        id: InpageProvider.createInpageIdFromRequestId(payload.id),
-      });
-    }
+    const payloadId = payload.id;
+    this.pendingRequestsHandlers[payloadId] = callback;
+    this.eventEmitter.emit(INPAGE_EVENTS.REQUEST, {
+      ...payload,
+      id: InpageProvider.createInpageIdFromRequestId(payloadId),
+    });
   }
 
   send(payload) {
-    return this.processPayload(payload);
+    return processPayload(payload, this.settings);
   }
 
   async enable() {
-    return this.processPayload({ method: 'eth_accounts' }).result;
+    return processPayload({ method: 'eth_accounts' }, this.settings).result;
   }
 }

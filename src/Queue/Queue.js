@@ -2,6 +2,23 @@ import { INPAGE_EVENTS } from '@/constants';
 
 const QUEUE_TIMEOUT = 1000; // 1 sec
 
+const QUEUE_ITEM_STATE = {
+  repeat: 'repeat',
+  finish: 'finish',
+};
+
+function onRepeat() {
+  this.state = QUEUE_ITEM_STATE.repeat;
+}
+
+function onFinish() {
+  this.state = QUEUE_ITEM_STATE.finish;
+}
+
+function setPayload(res) {
+  this.payload = res;
+}
+
 export default class Queue {
   /**
    * @param {Context} context instance of connect
@@ -28,22 +45,45 @@ export default class Queue {
    * @private
    */
   nextTick() {
-    const { queue, middleWares, context } = this;
+    const { queue } = this;
     if (this.queueTimeout || queue.length === 0) {
       return;
     }
 
     this.queueTimeout = setTimeout(async () => {
       try {
-        for (const fn of middleWares) {
-          await fn(context, queue);
-        }
+        const item = queue[0];
+
+        const isFinished = await this.processMiddleWares(item);
+        if (isFinished) queue.shift();
       } catch (e) {
         console.error(e);
       }
       this.queueTimeout = null;
       this.nextTick();
     }, QUEUE_TIMEOUT);
+  }
+
+  async processMiddleWares(item) {
+    const { queue, middleWares, context } = this;
+    let isProcessed = true;
+
+    for (const fn of middleWares) {
+      await fn(context, item, queue);
+      const { state } = item;
+      if (state) {
+        switch (state) {
+          case QUEUE_ITEM_STATE.repeat:
+            isProcessed = false;
+            break;
+          default:
+        }
+
+        break; // break for loop
+      }
+    }
+
+    return isProcessed;
   }
 
   /**
@@ -61,7 +101,17 @@ export default class Queue {
    * @param {Object} request Incoming request
    */
   handleRequest(request) {
-    if (request.id) this.queue.push(request);
+    if (request.id) {
+      const item = {
+        state: '',
+        request,
+        payload: null,
+        repeat: onRepeat,
+        finish: onFinish,
+        setPayload,
+      };
+      this.queue.push(item);
+    }
     this.nextTick();
   }
 }
