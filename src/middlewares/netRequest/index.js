@@ -1,8 +1,9 @@
 import RequestProcess from './RequestProcess';
+import itemStates from '@/Queue/itemStates';
 
 export default async function(context, item) {
-  const req = item.payload;
-
-  const netRequest = new RequestProcess(context, req);
-  await netRequest.doProcess();
+  if (item.state !== itemStates.END) {
+    const netRequest = new RequestProcess(context, item.request);
+    await netRequest.doProcess();
+  }
 }

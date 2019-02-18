@@ -12,17 +12,16 @@ export default class Providers {
   }
 
   /**
-   * Creates requsts provider and save it to the instance property
+   * Creates requests provider and save it to the instance property
    * @private
    * @param {Web3.Provider} Provider Web3 provider class
    */
   createRequestProvider(Provider) {
     const { context } = this;
     const { activeNet } = context.getProviderSettings();
+    const url = get(DEFAULT_NETWORKS, `${activeNet}.url[0]`);
 
-    const reqProvider = new Provider(
-      get(DEFAULT_NETWORKS, `${activeNet}.url[0]`),
-    );
+    const reqProvider = new Provider(url);
     context.setRequestProvider(reqProvider);
   }
 
