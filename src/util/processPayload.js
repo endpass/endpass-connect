@@ -8,10 +8,6 @@ export default function(payload, settings) {
     case 'eth_coinbase':
       result = settings.activeAccount || null;
       break;
-    case 'eth_uninstallFilter':
-      // todo: add tests for this case
-      result = true;
-      break;
     case 'net_version':
       result = settings.activeNet || null;
       break;

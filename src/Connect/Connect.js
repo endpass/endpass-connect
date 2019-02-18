@@ -1,3 +1,4 @@
+import Web3HttpProvider from 'web3-providers-http';
 import Context from '@/Context';
 import Providers from '@/Providers';
 import privateFields from '@/privateFields';
@@ -21,6 +22,8 @@ export default class Connect {
     this[privateFields.providers] = new Providers(context);
     this[privateFields.queue] = new Queue(context, { middleWares });
     this[privateFields.context] = context;
+
+    this[privateFields.providers].createRequestProvider(Web3HttpProvider);
   }
 
   /**
@@ -55,7 +58,7 @@ export default class Connect {
 
       return {
         activeAccount: settings.lastActiveAccount,
-        activeNet: settings.net || 1,
+        activeNet: settings.net,
       };
     } catch (err) {
       throw new Error('User not autorized!');
@@ -64,15 +67,27 @@ export default class Connect {
 
   /**
    * Extends given provider for inner requests and returns it back
+   * @deprecated
    * @public
    * @param {Web3.Provider} provider Web3-friendly provider
    * @returns {Web3.Provider} Inpage provider for injections into application
    *  Web3 instance
    */
   extendProvider(provider) {
-    this[privateFields.providers].createRequestProvider(provider);
+    // this[privateFields.providers].createRequestProvider(provider);
     // this[privateFields.providers]createInpageProvider(provider);
 
+    return this[privateFields.context].getProvider();
+  }
+
+  /**
+   * Return Inpage provider for inner requests and returns it back
+   * @public
+   * @param {Web3.Provider} provider Web3-friendly provider
+   * @returns {Web3.Provider} Inpage provider for injections into application
+   *  Web3 instance
+   */
+  getProvider() {
     return this[privateFields.context].getProvider();
   }
 

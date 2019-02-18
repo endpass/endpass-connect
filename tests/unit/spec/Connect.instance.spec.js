@@ -1,6 +1,9 @@
-import Connect from '@/lib/Connect';
-import PrivateMethods from '@/lib/Providers';
-import privateFields from '@/lib/privateFields';
+import Web3HttpProvider from 'web3-providers-http';
+import Connect from '@/Connect';
+import Context from '@/Context';
+import Providers from '@/Providers';
+import Queue from '@/Queue';
+import privateFields from '@/privateFields';
 
 describe('Connect class – instance', () => {
   beforeAll(() => {
@@ -19,19 +22,21 @@ describe('Connect class – instance', () => {
     });
 
     it('should subscribe on events is subscribe property passed to constructor', () => {
-      jest.spyOn(PrivateMethods.prototype, 'setupEmitterEvents');
-      jest.spyOn(PrivateMethods.prototype, 'subscribeOnRequestsQueueChanges');
-      jest.spyOn(PrivateMethods.prototype, 'initBridge');
+      jest.spyOn(Queue.prototype, 'setupEmitterEvents');
+      jest.spyOn(Context.prototype, 'initBridge');
+      jest.spyOn(Providers.prototype, 'createRequestProvider');
 
       const connect = new Connect({
         authUrl: 'http://localhost:5000',
       });
 
-      const privateMethods = connect[privateFields.methods];
+      const queue = connect[privateFields.queue];
+      const context = connect[privateFields.context];
+      const providers = connect[privateFields.providers];
 
-      expect(privateMethods.setupEmitterEvents).toBeCalled();
-      expect(privateMethods.subscribeOnRequestsQueueChanges).toBeCalled();
-      expect(privateMethods.initBridge).toBeCalled();
+      expect(queue.setupEmitterEvents).toBeCalled();
+      expect(context.initBridge).toBeCalled();
+      expect(providers.createRequestProvider).toBeCalledWith(Web3HttpProvider);
     });
 
     it('should be created without authUrl parameter', () => {

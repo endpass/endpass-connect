@@ -1,22 +1,14 @@
 import { INPAGE_EVENTS } from '@/constants';
+import itemStates from './itemStates';
 
-const QUEUE_TIMEOUT = 1000; // 1 sec
-
-const QUEUE_ITEM_STATE = {
-  repeat: 'repeat',
-  finish: 'finish',
-};
-
-function onRepeat() {
-  this.state = QUEUE_ITEM_STATE.repeat;
-}
-
-function onFinish() {
-  this.state = QUEUE_ITEM_STATE.finish;
-}
+const QUEUE_TIMEOUT = 2000; // 2 sec
 
 function setPayload(res) {
   this.payload = res;
+}
+
+function setState(state) {
+  this.state = state;
 }
 
 export default class Queue {
@@ -52,10 +44,12 @@ export default class Queue {
 
     this.queueTimeout = setTimeout(async () => {
       try {
-        const item = queue[0];
+        const { middleWares, context } = this;
 
-        const isFinished = await this.processMiddleWares(item);
-        if (isFinished) queue.shift();
+        for (const fn of middleWares) {
+          const item = queue[0];
+          await fn(context, item, queue);
+        }
       } catch (e) {
         console.error(e);
       }
@@ -64,35 +58,13 @@ export default class Queue {
     }, QUEUE_TIMEOUT);
   }
 
-  async processMiddleWares(item) {
-    const { queue, middleWares, context } = this;
-    let isProcessed = true;
-
-    for (const fn of middleWares) {
-      await fn(context, item, queue);
-      const { state } = item;
-      if (state) {
-        switch (state) {
-          case QUEUE_ITEM_STATE.repeat:
-            isProcessed = false;
-            break;
-          default:
-        }
-
-        break; // break for loop
-      }
-    }
-
-    return isProcessed;
-  }
-
   /**
    * Sets event listeners to inner emitter with handlers
    */
   setupEmitterEvents() {
-    const { context } = this;
-    context.getEmitter().on(INPAGE_EVENTS.REQUEST, this.handleRequest);
-    context.getEmitter().on(INPAGE_EVENTS.SETTINGS, this.handleRequest);
+    const emi = this.context.getEmitter();
+    emi.on(INPAGE_EVENTS.REQUEST, this.handleRequest);
+    emi.on(INPAGE_EVENTS.SETTINGS, this.handleRequest);
   }
 
   /**
@@ -103,11 +75,10 @@ export default class Queue {
   handleRequest(request) {
     if (request.id) {
       const item = {
-        state: '',
         request,
+        state: itemStates.INITIAL,
         payload: null,
-        repeat: onRepeat,
-        finish: onFinish,
+        setState,
         setPayload,
       };
       this.queue.push(item);

@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import Emmiter from './Emmiter';
 import { INPAGE_EVENTS, INPAGE_ID_PREFIX } from '@/constants';
-import processPayload from './processPayload';
+import processPayload from '@/util/processPayload';
 
 export default class InpageProvider {
   constructor(eventEmitter) {
@@ -39,6 +39,12 @@ export default class InpageProvider {
       INPAGE_EVENTS.RESPONSE,
       this.handleResponse.bind(this),
     );
+    this.eventEmitter.on(INPAGE_EVENTS.DROP, this.handleDropPending.bind(this));
+  }
+
+  handleDropPending({ id }) {
+    const requestId = InpageProvider.restoreRequestIdFromInpageId(id);
+    delete this.pendingRequestsHandlers[requestId];
   }
 
   handleResponse({ error, id, result, jsonrpc }) {
@@ -51,8 +57,7 @@ export default class InpageProvider {
         result,
         jsonrpc,
       });
-
-      delete this.pendingRequestsHandlers[requestId];
+      this.handleDropPending({ id });
     }
   }
 

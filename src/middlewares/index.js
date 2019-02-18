@@ -1,9 +1,14 @@
 import netRequest from './netRequest';
-import processPayload from './processPayload';
-import auth from './auth';
+import payloadHandle from './payloadHandle';
+import shiftItem from './shiftItem';
+import payloadEthUninstallFilter from './payloadEthUninstallFilter';
+import payloadCheck from './payloadCheck';
 
 export default [
-  processPayload,
-  // auth,
+  payloadHandle,
+  payloadEthUninstallFilter,
+  payloadCheck,
+
   netRequest,
+  shiftItem,
 ];

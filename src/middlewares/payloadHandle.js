@@ -1,5 +1,6 @@
-import { processPayload } from '@/class';
-import { INPAGE_EVENTS } from '../constants';
+import processPayload from '@/util/processPayload';
+import { INPAGE_EVENTS } from '@/constants';
+import itemStates from '@/Queue/itemStates';
 
 export default function(context, item) {
   const { request } = item;
@@ -7,8 +8,8 @@ export default function(context, item) {
 
   item.setPayload(payload);
 
-  if (payload.result || request.method === 'eth_uninstallFilter') {
-    item.finish();
+  if (payload.result) {
+    item.setState(itemStates.END);
     context.getEmitter().emit(INPAGE_EVENTS.RESPONSE, payload);
   }
 }

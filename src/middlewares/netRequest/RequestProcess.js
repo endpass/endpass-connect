@@ -48,19 +48,6 @@ export default class RequestProcess {
   }
 
   /**
-   * Sets event listeners to inner emitter with handlers
-   */
-  setupEmitterEvents() {
-    const { context } = this;
-    context
-      .getEmitter()
-      .on(INPAGE_EVENTS.REQUEST, this.handleRequest.bind(this));
-    context
-      .getEmitter()
-      .on(INPAGE_EVENTS.SETTINGS, this.handleRequest.bind(this));
-  }
-
-  /**
    * Sends current request to network with request provider and returns result
    * @returns {Promise<Object>} Result from network
    */
@@ -68,7 +55,8 @@ export default class RequestProcess {
     const { context } = this;
     return new Promise((resolve, reject) => {
       const reqProvider = context.getRequestProvider();
-      reqProvider.sendAsync(this.currentRequest, (err, res) => {
+      const req = this.currentRequest;
+      reqProvider.send(req, (err, res) => {
         if (err) {
           return reject(err);
         }
@@ -76,15 +64,6 @@ export default class RequestProcess {
         return resolve(res);
       });
     });
-  }
-
-  /**
-   * Handle requests and push them to the requests queue
-   * @param {Object} request Incoming request
-   */
-  handleRequest(request) {
-    if (request.id) this.queue.push(request);
-    this.nextTick();
   }
 
   /**

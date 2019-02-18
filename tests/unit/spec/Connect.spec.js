@@ -1,11 +1,14 @@
-import Connect from '@/lib/Connect';
-import { INPAGE_EVENTS, METHODS } from '../../../src/constants';
-import privateFields from '@/lib/privateFields';
+import Web3HttpProvider from 'web3-providers-http';
+import Connect from '@/Connect';
+import { InpageProvider } from '@/class';
+import { INPAGE_EVENTS, METHODS } from '@/constants';
+import privateFields from '@/privateFields';
 
 describe('Connect class – public methods', () => {
   let connect;
   let privateMethods;
   let context;
+  let providers;
 
   beforeAll(() => {
     window.open = jest.fn();
@@ -15,26 +18,19 @@ describe('Connect class – public methods', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     connect = new Connect({ appUrl: 'http://localhost:5000' });
-    // eslint-disable-next-line
-    privateMethods = connect[privateFields.methods];
-    // eslint-disable-next-line
     context = connect[privateFields.context];
+    providers = connect[privateFields.providers];
   });
 
   describe('createProvider', () => {
-    const web3 = {
-      foo: 'bar',
-    };
-
     beforeEach(() => {
       window.web3 = undefined;
-      privateMethods.createRequestProvider = jest.fn();
     });
 
-    it('should extend provider with web3 from given parameters', () => {
-      connect.extendProvider(web3);
+    it('should return Inpage provider from given parameters', () => {
+      const res = connect.getProvider();
 
-      expect(privateMethods.createRequestProvider).toBeCalledWith(web3);
+      expect(res).toBe(Web3HttpProvider);
     });
 
     it('should throw error if web3 is not passed as parameter and it is not exist in window', () => {
