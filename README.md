@@ -131,8 +131,7 @@ connect.openAccount().then(res => {
 
 | Command     | Description                                            |
 | ----------- | ------------------------------------------------------ |
-| `build`     | Builds application and library.                        |
-| `dev:app`   | Starts application dev server.                         |
+| `build`     | Builds library for production.                        |
 | `build:app` | Builds application.                                    |
 | `dev:lib`   | Starts library development environment.                |
 | `build:lib` | Builds library.                                        |

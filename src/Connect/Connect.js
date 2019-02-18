@@ -84,21 +84,7 @@ export default class Connect {
    *  know about result
    */
   async auth(redirectUrl) {
-    const context = this[privateFields.context];
-    await context.openApp('auth');
-
-    const dialog = context.getDialog();
-
-    const res = await dialog.ask({
-      method: METHODS.AUTH,
-      redirectUrl: redirectUrl || null,
-    });
-
-    dialog.close();
-
-    if (!res.status) throw new Error(res.message || 'Authentificaton error!');
-
-    return res.status;
+    return this[privateFields.context].auth(redirectUrl);
   }
 
   /**

@@ -1,7 +1,7 @@
 import Connect from '@/lib/Connect';
-import Bridge from '@/class/Bridge';
-import Dialog from '@/class/Dialog';
-import { INPAGE_EVENTS, METHODS } from '@/constants';
+import Bridge from '../../../src/class/Bridge';
+import Dialog from '../../../src/class/Dialog';
+import { INPAGE_EVENTS, METHODS } from '../../../src/constants';
 import privateFields from '@/lib/privateFields';
 
 describe('Connect class – private methods', () => {

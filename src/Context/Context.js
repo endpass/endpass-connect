@@ -1,4 +1,5 @@
 import { Emmiter, InpageProvider, Dialog, Bridge } from '@/class';
+import { METHODS } from '../constants';
 
 export default class Context {
   /**
@@ -41,6 +42,30 @@ export default class Context {
     this.dialog = new Dialog({ url });
 
     await this.getDialog().open();
+  }
+
+  /**
+   * Open application on auth screen and waits result (success of failure)
+   * @public
+   * @throws {Error} If authentification failed
+   * @returns {Promise<boolean>} Auth result, check `status` property to
+   *  know about result
+   */
+  async auth(redirectUrl) {
+    await this.openApp('auth');
+
+    const dialog = this.getDialog();
+
+    const res = await dialog.ask({
+      method: METHODS.AUTH,
+      redirectUrl: redirectUrl || null,
+    });
+
+    dialog.close();
+
+    if (!res.status) throw new Error(res.message || 'Authentificaton error!');
+
+    return res.status;
   }
 
   setProvider(provider) {
