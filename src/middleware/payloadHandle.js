@@ -4,7 +4,7 @@ export default function(context, item) {
   const { request } = item;
   const payload = processPayload(request, context.getProviderSettings());
 
-  if (payload.result) {
+  if (payload && payload.result) {
     item.setPayload(payload);
   }
 }

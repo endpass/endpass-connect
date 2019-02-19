@@ -1,7 +1,7 @@
 import { INPAGE_EVENTS } from '@/constants';
 
 export default function(context, item) {
-  const { request, payload } = item;
+  const { request, payload = {} } = item;
 
   if (request.method === 'eth_uninstallFilter') {
     item.end();
