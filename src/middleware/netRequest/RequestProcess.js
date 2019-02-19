@@ -9,13 +9,13 @@ export default class RequestProcess {
   }
 
   /**
-   * Process current request
+   * Start process current request
    * If request method present in whitelist – it should be signed by user
    * In other cases request will be send to network with web3
    * In the both cases – result will be passed back to injected provider
    * @returns {Promise<Object>} RequestProcess processing result
    */
-  async doProcess() {
+  async start() {
     const { currentRequest } = this;
 
     try {

@@ -32,9 +32,6 @@ const web3 = new Web3('https://network.url');
 const connect = new EndpassConnect({
   appUrl: 'http://connect.url',
 });
-const provider = connect.extendProvider(web3);
-
-web3.setProvider(provider);
 ```
 
 Next, you can try to authentificate user.
@@ -61,7 +58,7 @@ import Connect from '@endpass/connect';
 
 const web3 = new Web3('https://network.url');
 const connect = new Connect();
-const provider = connect.extendProvider(HttpProvider);
+const provider = connect.getProvider();
 
 // If you are using old versions of web3 (0.30.0-beta and below) you should call
 // setProvider
@@ -75,9 +72,6 @@ window.ethereum = provider;
 window.ethereum = provider;
 web3.setProvider(provider);
 ```
-
-If `web3` can be found in application window object you can not install `web3`
-manually, `extendProvider` also should try to find it.
 
 ### API
 
@@ -94,7 +88,7 @@ manually, `extendProvider` also should try to find it.
 | `auth`                |                                                  | `Promise<{ status: boolean, message?: string }>`                                    | Open Endpass Connect application for user authorization, return promise, which returns object with auth status. See [Errors handling](#errors-handling) for more details. |
 | `logout`              |                                                  | `Promise<Boolean>`                                                                  | Makes logout request and returns status or throw error                                                                                                                    |
 | `getAccountData`      |                                                  | `Promise<{ activeAccount: string, activeNet: number }>`                             | Returns authorized user active account.                                                                                                                                   |
-| `extendProvider`      | `provider: Web3.Provider`                        | `Web3Provider`                                                                      | Creates Web3 provider for injection in Web3 instance.                                                                                                                     |
+| `getProvider`         | `provider: Web3.Provider`                        | `Web3Provider`                                                                      | Creates Web3 provider for injection in Web3 instance.                                                                                                                     |
 | `setProviderSettings` | `{ activeAccount: string`, `activeNet: number }` |                                                                                     | Set user settings to the injected `web3` provider.                                                                                                                        |
 | `openAccount`         |                                                  | `Promise<{ type: string, payload?: { activeAccount: string, activeNet: number } }>` | Open Endpass Connect application for change user active address, network or logout                                                                                        |
 
@@ -131,9 +125,10 @@ connect.openAccount().then(res => {
 
 | Command     | Description                                            |
 | ----------- | ------------------------------------------------------ |
-| `build`     | Builds library for production.                        |
-| `build:app` | Builds application.                                    |
-| `dev:lib`   | Starts library development environment.                |
+| `dev`       | Starts library development environment.                |
+| `build:dev` | Builds library for development.                        |
+| `build`     | Builds library for production.                         |
 | `build:lib` | Builds library.                                        |
-| `test:unit` | Runs unit tests.                                       |
+| `test`      | Runs unit tests.                                       |
 | `format`    | Formats code of packages with `eslint` and `prettier`. |
+| `commit`    | Use commitizen for commit messages.                    |

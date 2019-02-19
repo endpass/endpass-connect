@@ -19,6 +19,7 @@ export default class Providers {
   createRequestProvider(Provider) {
     const { context } = this;
     const { activeNet } = context.getProviderSettings();
+
     const url = get(DEFAULT_NETWORKS, `${activeNet}.url[0]`);
 
     const reqProvider = new Provider(url);

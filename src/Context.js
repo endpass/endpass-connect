@@ -1,5 +1,5 @@
 import { Emmiter, InpageProvider, Dialog, Bridge } from '@/class';
-import { METHODS } from '../constants';
+import { METHODS } from '@/constants';
 
 export default class Context {
   /**

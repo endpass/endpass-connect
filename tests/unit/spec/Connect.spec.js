@@ -1,14 +1,15 @@
 import Web3HttpProvider from 'web3-providers-http';
 import Connect from '@/Connect';
+import Context from '@/Context';
+import Providers from '@/Providers';
+import Queue from '@/Queue';
+import privateFields from '@/privateFields';
 import { InpageProvider } from '@/class';
 import { INPAGE_EVENTS, METHODS } from '@/constants';
-import privateFields from '@/privateFields';
 
-describe('Connect class – public methods', () => {
+describe('Connect class – instance', () => {
   let connect;
-  let privateMethods;
   let context;
-  let providers;
 
   beforeAll(() => {
     window.open = jest.fn();
@@ -19,47 +20,45 @@ describe('Connect class – public methods', () => {
     jest.clearAllMocks();
     connect = new Connect({ appUrl: 'http://localhost:5000' });
     context = connect[privateFields.context];
-    providers = connect[privateFields.providers];
   });
 
-  describe('createProvider', () => {
+  describe('initial', () => {
     beforeEach(() => {
-      window.web3 = undefined;
+      jest.clearAllMocks();
+    });
+
+    it('should create instance of connect if all appUrl present', () => {
+      connect = new Connect({ authUrl: 'http://localhost:5000' });
+      expect(connect).toBeInstanceOf(Connect);
+    });
+
+    it('should subscribe on events is subscribe property passed to constructor', () => {
+      jest.spyOn(Queue.prototype, 'setupEventEmitter');
+      jest.spyOn(Context.prototype, 'initBridge');
+      jest.spyOn(Providers.prototype, 'createRequestProvider');
+
+      connect = new Connect({ authUrl: 'http://localhost:5000' });
+
+      const queue = connect[privateFields.queue];
+      context = connect[privateFields.context];
+      const providers = connect[privateFields.providers];
+
+      expect(queue.setupEventEmitter).toBeCalled();
+      expect(context.initBridge).toBeCalled();
+      expect(providers.createRequestProvider).toBeCalledWith(Web3HttpProvider);
+    });
+
+    it('should be created without authUrl parameter', () => {
+      connect = new Connect();
+      context = connect[privateFields.context];
+      expect(context.authUrl).toBe('https://auth.endpass.com');
     });
 
     it('should return Inpage provider from given parameters', () => {
+      connect = new Connect({ authUrl: 'http://localhost:5000' });
       const res = connect.getProvider();
 
-      expect(res).toBe(Web3HttpProvider);
-    });
-
-    it('should throw error if web3 is not passed as parameter and it is not exist in window', () => {
-      expect(() => {
-        connect.createProvider();
-      }).toThrow();
-    });
-  });
-
-  describe('getAccountData', () => {
-    beforeEach(() => {
-      privateMethods.getUserSettings = jest.fn().mockResolvedValueOnce({
-        lastActiveAccount: '0x0',
-        net: 1,
-        foo: 'bar',
-        bar: 'baz',
-      });
-    });
-
-    it('should request user settings with private method and returns formated value', async () => {
-      expect.assertions(2);
-
-      const res = await connect.getAccountData();
-
-      expect(privateMethods.getUserSettings).toBeCalled();
-      expect(res).toEqual({
-        activeAccount: '0x0',
-        activeNet: 1,
-      });
+      expect(res instanceof InpageProvider).toBe(true);
     });
   });
 
@@ -87,42 +86,79 @@ describe('Connect class – public methods', () => {
     });
   });
 
-  describe('auth', () => {
-    let dialog;
-
+  describe('getProvider', () => {
     beforeEach(() => {
-      dialog = {
-        ask: jest.fn(),
-        close: jest.fn(),
-      };
-      context.dialog = dialog;
-      privateMethods.openApp = jest.fn();
+      jest.clearAllMocks();
+      connect = new Connect({ authUrl: 'http://localhost:5000' });
     });
 
-    it('should auth user through dialog request and returns result', async () => {
-      expect.assertions(4);
+    it('should return Inpage provider from given parameters', () => {
+      const res = connect.getProvider();
 
-      dialog.ask.mockResolvedValueOnce({
+      expect(res instanceof InpageProvider).toBe(true);
+    });
+  });
+
+  describe('getAccountData', () => {
+    beforeEach(() => {
+      context.bridge.ask = jest.fn().mockResolvedValueOnce({
+        lastActiveAccount: '0x0',
+        net: 1,
+        foo: 'bar',
+        bar: 'baz',
+        status: 'ok',
+      });
+    });
+
+    it('should request user settings with private method and returns formatted value', async () => {
+      expect.assertions(1);
+
+      const res = await connect.getAccountData();
+
+      expect(res).toEqual({
+        activeAccount: '0x0',
+        activeNet: 1,
+      });
+    });
+
+    it('should request user settings through inner connect bridge', async () => {
+      expect.assertions(2);
+
+      const response = {
+        lastActiveAccount: 'lastActiveAccount',
+        net: 'net',
         status: true,
+      };
+      context.getBridge().ask = jest.fn().mockResolvedValueOnce(response);
+
+      const res = await connect.getAccountData();
+
+      expect(context.getBridge().ask).toBeCalledWith({
+        method: METHODS.GET_SETTINGS,
       });
 
-      const res = await connect.auth();
-
-      expect(privateMethods.openApp).toBeCalledWith('auth');
-      expect(dialog.ask).toBeCalledWith({
-        method: METHODS.AUTH,
-        redirectUrl: null,
+      expect(res).toEqual({
+        activeAccount: response.lastActiveAccount,
+        activeNet: response.net,
       });
-      expect(dialog.close).toBeCalled();
-      expect(res).toBe(true);
     });
 
-    it('should throw error if auth status is falsy', () => {
-      dialog.ask.mockResolvedValueOnce({
+    it('should throw error is request status is falsy', async () => {
+      expect.assertions(1);
+
+      context.getBridge().ask = jest.fn().mockResolvedValueOnce({
         status: false,
       });
 
-      expect(connect.auth()).rejects.toThrow();
+      const err = new Error('User not autorized!');
+      let check;
+      try {
+        await connect.getAccountData();
+      } catch (e) {
+        check = e;
+      }
+
+      expect(check).toEqual(err);
     });
   });
 
@@ -135,12 +171,12 @@ describe('Connect class – public methods', () => {
         close: jest.fn(),
       };
       context.dialog = dialog;
-      privateMethods.openApp = jest.fn();
+      context.openApp = jest.fn();
       connect.setProviderSettings = jest.fn();
     });
 
     it('should open connect application and awaits any signals from it', async () => {
-      expect.assertions(4);
+      expect.assertions(3);
 
       dialog.ask.mockResolvedValueOnce({
         type: 'foo',
