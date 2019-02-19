@@ -1,11 +1,10 @@
-import { INPAGE_EVENTS } from '../constants';
-import itemStates from '@/Queue/itemStates';
+import { INPAGE_EVENTS } from '@/constants';
 
 export default function(context, item) {
   const { payload } = item;
 
   if (payload.result) {
-    item.setState(itemStates.END);
+    item.end();
     context.getEmitter().emit(INPAGE_EVENTS.RESPONSE, payload);
   }
 }

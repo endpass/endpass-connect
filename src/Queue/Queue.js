@@ -15,9 +15,10 @@ export default class Queue {
   /**
    * @param {Context} context instance of connect
    * @param {Object} options Queue options
+   * @param {Array} options.middleware middleware for process queue
    */
   constructor(context, options = {}) {
-    this.middleWares = options.middleWares || [];
+    this.middleware = options.middleware || [];
     this.context = context;
 
     this.handleRequest = this.handleRequest.bind(this);
@@ -27,7 +28,7 @@ export default class Queue {
     this.queue = [];
 
     // start queue
-    this.setupEmitterEvents();
+    this.setupEventEmitter();
     this.nextTick();
   }
 
@@ -44,11 +45,18 @@ export default class Queue {
 
     this.queueTimeout = setTimeout(async () => {
       try {
-        const { middleWares, context } = this;
-
-        for (const fn of middleWares) {
-          const item = queue[0];
+        const { middleware, context } = this;
+        let item;
+        for (const fn of middleware) {
+          item = queue[0];
           await fn(context, item, queue);
+
+          if (item.state === itemStates.END) {
+            break;
+          }
+        }
+        if (item && item.state !== itemStates.REPEAT) {
+          queue.shift();
         }
       } catch (e) {
         console.error(e);
@@ -61,10 +69,10 @@ export default class Queue {
   /**
    * Sets event listeners to inner emitter with handlers
    */
-  setupEmitterEvents() {
-    const emi = this.context.getEmitter();
-    emi.on(INPAGE_EVENTS.REQUEST, this.handleRequest);
-    emi.on(INPAGE_EVENTS.SETTINGS, this.handleRequest);
+  setupEventEmitter() {
+    const emitter = this.context.getEmitter();
+    emitter.on(INPAGE_EVENTS.REQUEST, this.handleRequest);
+    emitter.on(INPAGE_EVENTS.SETTINGS, this.handleRequest);
   }
 
   /**
@@ -74,14 +82,18 @@ export default class Queue {
    */
   handleRequest(request) {
     if (request.id) {
+      const { queue } = this;
       const item = {
         request,
         state: itemStates.INITIAL,
         payload: null,
+        end: () => {
+          item.setState(itemStates.END);
+        },
         setState,
         setPayload,
       };
-      this.queue.push(item);
+      queue.push(item);
     }
     this.nextTick();
   }

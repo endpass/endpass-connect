@@ -3,10 +3,10 @@ import Context from '@/Context';
 import Providers from '@/Providers';
 import privateFields from '@/privateFields';
 import Queue from '@/Queue';
-import { METHODS, INPAGE_EVENTS } from '@/constants';
-import middleWares from '@/middlewares';
+import { METHODS, INPAGE_EVENTS, NET_ID } from '@/constants';
+import middleware from '@/middleware';
 
-import pkg from '../../package.json';
+import pkg from '../package.json';
 
 console.info(
   `%cEndpass connect version ${pkg.version} loaded 🔌`,
@@ -20,7 +20,7 @@ export default class Connect {
   constructor(options) {
     const context = new Context(options);
     this[privateFields.providers] = new Providers(context);
-    this[privateFields.queue] = new Queue(context, { middleWares });
+    this[privateFields.queue] = new Queue(context, { middleware });
     this[privateFields.context] = context;
 
     this[privateFields.providers].createRequestProvider(Web3HttpProvider);
@@ -58,26 +58,11 @@ export default class Connect {
 
       return {
         activeAccount: settings.lastActiveAccount,
-        activeNet: settings.net,
+        activeNet: settings.net || NET_ID.MAIN,
       };
     } catch (err) {
       throw new Error('User not autorized!');
     }
-  }
-
-  /**
-   * Extends given provider for inner requests and returns it back
-   * @deprecated
-   * @public
-   * @param {Web3.Provider} provider Web3-friendly provider
-   * @returns {Web3.Provider} Inpage provider for injections into application
-   *  Web3 instance
-   */
-  extendProvider(provider) {
-    // this[privateFields.providers].createRequestProvider(provider);
-    // this[privateFields.providers]createInpageProvider(provider);
-
-    return this[privateFields.context].getProvider();
   }
 
   /**

@@ -39,7 +39,10 @@ export default class InpageProvider {
       INPAGE_EVENTS.RESPONSE,
       this.handleResponse.bind(this),
     );
-    this.eventEmitter.on(INPAGE_EVENTS.DROP, this.handleDropPending.bind(this));
+    this.eventEmitter.on(
+      INPAGE_EVENTS.DROP_PENDING,
+      this.handleDropPending.bind(this),
+    );
   }
 
   handleDropPending({ id }) {
