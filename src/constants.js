@@ -72,6 +72,7 @@ export const INPAGE_EVENTS = {
 };
 export const INPAGE_ID_PREFIX = 'ep_';
 export const DAPP_WHITELISTED_METHODS = [
+  'eth_sign',
   'personal_sign',
   'personal_ecRecover',
   'eth_personalSign',
