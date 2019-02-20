@@ -3,8 +3,9 @@ import Emmiter from './Emmiter';
 import { INPAGE_EVENTS, INPAGE_ID_PREFIX } from '@/constants';
 import processPayload from '@/util/processPayload';
 
-export default class InpageProvider {
+export default class InpageProvider extends Emmiter {
   constructor(eventEmitter) {
+    super();
     if (!(eventEmitter instanceof Emmiter)) {
       throw new Error('Event emitter is not provided');
     }
@@ -16,10 +17,18 @@ export default class InpageProvider {
       activeNet: null,
     };
     this.isMetaMask = true;
-    this.isConnected = () => true;
+
     this.enable = this.enable.bind(this);
 
     this.setupEventsHandlers();
+  }
+
+  get networkVersion() {
+    return this.settings.activeNet;
+  }
+
+  get selectedAddress() {
+    return this.settings.activeAccount;
   }
 
   static createInpageIdFromRequestId(id) {
@@ -28,6 +37,10 @@ export default class InpageProvider {
 
   static restoreRequestIdFromInpageId(id) {
     return parseInt(id.replace(INPAGE_ID_PREFIX, ''), 10);
+  }
+
+  isConnected() {
+    return true;
   }
 
   setupEventsHandlers() {
@@ -67,12 +80,14 @@ export default class InpageProvider {
   handleSettings(payload) {
     const { activeAccount, activeNet } = payload;
 
-    if (activeAccount) {
+    if (activeAccount !== this.settings.activeAccount) {
       this.settings.activeAccount = activeAccount;
+      this.emit('accountsChanged', [activeAccount]);
     }
 
-    if (activeNet) {
+    if (activeNet !== this.settings.activeNet) {
       this.settings.activeNet = activeNet;
+      this.emit('accountsChanged', activeNet);
     }
   }
 
@@ -85,11 +100,32 @@ export default class InpageProvider {
     });
   }
 
-  send(payload) {
-    return processPayload(payload, this.settings);
+  send(payload, callback) {
+    if (callback) {
+      this.sendAsync(payload, callback);
+    } else {
+      const res = processPayload(payload, this.settings);
+      if (payload.method === 'eth_uninstallFilter') {
+        this.sendAsync(payload, () => {});
+      }
+      return res;
+    }
+  }
+
+  getEthAccounts() {
+    return [this.settings.activeAccount];
   }
 
   async enable() {
-    return processPayload({ method: 'eth_accounts' }, this.settings).result;
+    return new Promise((resolve, reject) => {
+      this.eventEmitter.once(INPAGE_EVENTS.LOGGED_IN, ({ error }) => {
+        if (error) {
+          return reject(error);
+        }
+        const res = this.getEthAccounts();
+        return resolve(res);
+      });
+      this.eventEmitter.emit(INPAGE_EVENTS.LOGIN);
+    });
   }
 }

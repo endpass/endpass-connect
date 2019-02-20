@@ -18,7 +18,7 @@ export default class Providers {
    */
   createRequestProvider(Provider) {
     const { context } = this;
-    const { activeNet } = context.getProviderSettings();
+    const { activeNet } = context.getInpageProviderSettings();
 
     const url = get(DEFAULT_NETWORKS, `${activeNet}.url[0]`);
 
@@ -34,7 +34,7 @@ export default class Providers {
    */
   createInpageProvider(provider) {
     const { context } = this;
-    const { activeNet } = context.getProviderSettings();
+    const { activeNet } = context.getInpageProviderSettings();
     const url = get(DEFAULT_NETWORKS, `${activeNet}.url[0]`);
 
     const instance = createInpageProvider({
@@ -42,6 +42,6 @@ export default class Providers {
       url,
       provider,
     });
-    context.setProvider(instance);
+    context.setInpageProvider(instance);
   }
 }

@@ -83,10 +83,12 @@ export default class Queue {
   handleRequest(request) {
     if (request.id) {
       const { queue } = this;
+      const settings = this.context.getInpageProviderSettings();
       const item = {
         request,
         state: itemStates.INITIAL,
         payload: null,
+        settings,
         end: () => {
           item.setState(itemStates.END);
         },

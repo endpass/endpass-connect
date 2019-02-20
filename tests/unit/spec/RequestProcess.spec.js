@@ -184,7 +184,7 @@ describe('Connect class – private methods', () => {
       bridge = {
         ask: jest.fn(),
       };
-      context.getProviderSettings = jest.fn(() => ({
+      context.getInpageProviderSettings = jest.fn(() => ({
         activeAccount: '0x0',
         activeNet: 1,
       }));
@@ -235,7 +235,7 @@ describe('Connect class – private methods', () => {
         close: jest.fn(),
       };
       context.openApp = jest.fn().mockResolvedValueOnce();
-      context.getProviderSettings = jest.fn(() => ({
+      context.getInpageProviderSettings = jest.fn(() => ({
         activeAccount: '0x0',
         activeNet: 1,
       }));

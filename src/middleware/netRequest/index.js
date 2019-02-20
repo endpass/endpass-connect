@@ -1,6 +1,7 @@
 import RequestProcess from './RequestProcess';
 
 export default async function(context, item) {
-  const netRequest = new RequestProcess(context, item.request);
+  const { request, settings } = item;
+  const netRequest = new RequestProcess({ context, request, settings });
   await netRequest.start();
 }

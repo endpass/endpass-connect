@@ -3,9 +3,10 @@ import omit from 'lodash/omit';
 import { METHODS, INPAGE_EVENTS, DAPP_WHITELISTED_METHODS } from '@/constants';
 
 export default class RequestProcess {
-  constructor(context, req) {
+  constructor({ context, request, settings }) {
     this.context = context;
-    this.currentRequest = req;
+    this.currentRequest = request;
+    this.settings = settings;
   }
 
   /**
@@ -87,7 +88,7 @@ export default class RequestProcess {
     const { context } = this;
     await context.openApp('sign');
 
-    const { activeAccount, activeNet } = context.getProviderSettings();
+    const { activeAccount, activeNet } = this.settings;
     const dialog = context.getDialog();
     const res = await dialog.ask({
       method: METHODS.SIGN,
@@ -112,7 +113,7 @@ export default class RequestProcess {
    */
   async recover() {
     const { context } = this;
-    const { activeAccount, activeNet } = context.getProviderSettings();
+    const { activeAccount, activeNet } = this.settings;
     const res = await context.getBridge().ask({
       method: METHODS.RECOVER,
       address: activeAccount,
