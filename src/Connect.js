@@ -34,9 +34,7 @@ export default class Connect {
    * @param {String} options.activeNet Active network ID
    */
   setProviderSettings(payload) {
-    this[privateFields.context]
-      .getEmitter()
-      .emit(INPAGE_EVENTS.SETTINGS, payload);
+    this[privateFields.context].setProviderSettings(payload);
   }
 
   /**
@@ -47,22 +45,7 @@ export default class Connect {
    * @returns {Promise<Object>} Account data
    */
   async getAccountData() {
-    try {
-      const settings = await this[privateFields.context].getBridge().ask({
-        method: METHODS.GET_SETTINGS,
-      });
-
-      if (!settings.status) {
-        throw new Error(settings.message || 'User settings are not received!');
-      }
-
-      return {
-        activeAccount: settings.lastActiveAccount,
-        activeNet: settings.net || NET_ID.MAIN,
-      };
-    } catch (err) {
-      throw new Error('User not autorized!');
-    }
+    return this[privateFields.context].getAccountData();
   }
 
   /**
@@ -73,7 +56,7 @@ export default class Connect {
    *  Web3 instance
    */
   getProvider() {
-    return this[privateFields.context].getProvider();
+    return this[privateFields.context].getInpageProvider();
   }
 
   /**
@@ -94,13 +77,7 @@ export default class Connect {
    * @returns {Promise<Boolean>}
    */
   async logout() {
-    const res = await this[privateFields.context].getBridge().ask({
-      method: METHODS.LOGOUT,
-    });
-
-    if (!res.status) throw new Error(res.message || 'Logout error!');
-
-    return res.status;
+    return this[privateFields.context].logout();
   }
 
   /**

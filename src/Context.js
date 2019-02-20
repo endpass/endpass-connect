@@ -1,5 +1,5 @@
 import { Emmiter, InpageProvider, Dialog, Bridge } from '@/class';
-import { METHODS } from '@/constants';
+import { INPAGE_EVENTS, METHODS, NET_ID } from '@/constants';
 
 export default class Context {
   /**
@@ -10,13 +10,15 @@ export default class Context {
 
     this.emitter = new Emmiter();
     const provider = new InpageProvider(this.emitter);
-    this.setProvider(provider);
+    this.setInpageProvider(provider);
 
     this.requestProvider = null;
 
     this.dialog = null;
     this.bridge = null;
+    this.isServerLogin = false;
     this.initBridge();
+    this.setupLoginEvents();
   }
 
   /**
@@ -27,6 +29,20 @@ export default class Context {
     const url = this.getConnectUrl('bridge');
     this.bridge = new Bridge({ url });
     this.getBridge().mount();
+  }
+
+  setupLoginEvents() {
+    this.emitter.on(INPAGE_EVENTS.LOGIN, async () => {
+      let error = '';
+      if (!this.isLogin()) {
+        try {
+          await this.serverAuth();
+        } catch (e) {
+          error = new Error('Request data error');
+        }
+      }
+      this.emitter.emit(INPAGE_EVENTS.LOGGED_IN, { error });
+    });
   }
 
   /**
@@ -42,6 +58,12 @@ export default class Context {
     this.dialog = new Dialog({ url });
 
     await this.getDialog().open();
+  }
+
+  isLogin() {
+    return (
+      this.getInpageProvider().settings.activeAccount && this.isServerLogin
+    );
   }
 
   /**
@@ -64,12 +86,71 @@ export default class Context {
     dialog.close();
 
     if (!res.status) throw new Error(res.message || 'Authentificaton error!');
+    this.isServerLogin = true;
 
     return res.status;
   }
 
-  setProvider(provider) {
-    this.provider = provider;
+  /**
+   * Send request to logout through injected bridge bypass application dialog
+   * @public
+   * @throws {Error} If logout failed
+   * @returns {Promise<Boolean>}
+   */
+  async logout() {
+    const res = await this.getBridge().ask({
+      method: METHODS.LOGOUT,
+    });
+
+    if (!res.status) throw new Error(res.message || 'Logout error!');
+    this.isServerLogin = false;
+
+    return res.status;
+  }
+
+  /**
+   * Requests user settings from injected bridge and returns formatted data
+   * Settings includes last active account and network id
+   * @public
+   * @throws {Error} If settings can not be resolved
+   * @returns {Promise<Object>} Account data
+   */
+  async getAccountData() {
+    try {
+      const settings = await this.getBridge().ask({
+        method: METHODS.GET_SETTINGS,
+      });
+
+      if (!settings.status) {
+        throw new Error(settings.message || 'User settings are not received!');
+      }
+
+      this.isServerLogin = true;
+
+      return {
+        activeAccount: settings.lastActiveAccount,
+        activeNet: settings.net || NET_ID.MAIN,
+      };
+    } catch (err) {
+      throw new Error('User not autorized!');
+    }
+  }
+
+  async serverAuth() {
+    let settings;
+    try {
+      settings = await this.getAccountData();
+    } catch (e) {
+      await this.auth();
+      settings = await this.getAccountData();
+    }
+
+    this.setProviderSettings(settings);
+    this.isServerLogin = true;
+  }
+
+  setInpageProvider(provider) {
+    this.inpageProvider = provider;
   }
 
   /**
@@ -80,8 +161,18 @@ export default class Context {
     this.requestProvider = reqProvider;
   }
 
-  getProvider() {
-    return this.provider;
+  /**
+   * Sets settings to current `web3` provider injected to page with `injectWeb3`
+   * method
+   * @param {String} options.activeAccount Currenct account checksummed address
+   * @param {String} options.activeNet Active network ID
+   */
+  setProviderSettings(payload) {
+    this.getEmitter().emit(INPAGE_EVENTS.SETTINGS, payload);
+  }
+
+  getInpageProvider() {
+    return this.inpageProvider;
   }
 
   getRequestProvider() {
@@ -93,8 +184,8 @@ export default class Context {
    * @private
    * @returns {Object} Current provider settings
    */
-  getProviderSettings() {
-    return this.getProvider().settings;
+  getInpageProviderSettings() {
+    return { ...this.getInpageProvider().settings };
   }
 
   /**
