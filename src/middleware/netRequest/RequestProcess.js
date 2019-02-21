@@ -3,7 +3,7 @@ import omit from 'lodash/omit';
 import { METHODS, INPAGE_EVENTS, DAPP_WHITELISTED_METHODS } from '@/constants';
 
 export default class RequestProcess {
-  constructor({ context, request, settings }) {
+  constructor({ context, request, settings = {} }) {
     this.context = context;
     this.currentRequest = request;
     this.settings = settings;

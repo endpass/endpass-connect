@@ -4,7 +4,7 @@ import Dialog from '@/class/Dialog';
 import privateFields from '@/privateFields';
 import { METHODS } from '../../../src/constants';
 
-describe('Connect class – private methods', () => {
+describe('Context class', () => {
   let connect;
   let context;
 

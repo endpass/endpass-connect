@@ -7,7 +7,7 @@ import privateFields from '@/privateFields';
 import { InpageProvider } from '@/class';
 import { INPAGE_EVENTS, METHODS } from '@/constants';
 
-describe('Connect class – instance', () => {
+describe('Connect class', () => {
   let connect;
   let context;
 

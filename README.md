@@ -19,6 +19,8 @@ yarn add @endpass/connect
 You don't need any dependencies like `web3`, Endpass Connect includes it out of
 the box.
 
+See example in [Demo repository](https://github.com/endpass/connect-demo)
+
 ### Usage
 
 Create instance of class and use it in your application. You can know about

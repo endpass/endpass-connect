@@ -33,7 +33,7 @@ export default class Context {
 
   setupLoginEvents() {
     this.emitter.on(INPAGE_EVENTS.LOGIN, async () => {
-      let error = '';
+      let error = null;
       if (!this.isLogin()) {
         try {
           await this.serverAuth();
