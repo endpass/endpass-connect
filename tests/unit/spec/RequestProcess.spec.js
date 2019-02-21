@@ -3,7 +3,7 @@ import { INPAGE_EVENTS, METHODS } from '@/constants';
 import privateFields from '@/privateFields';
 import RequestProcess from '@/middleware/netRequest/RequestProcess';
 
-describe('Connect class – private methods', () => {
+describe('Request process middleware', () => {
   let reqProcess;
   let connect;
   let context;
@@ -17,12 +17,12 @@ describe('Connect class – private methods', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    reqProcess = new RequestProcess(context, {});
+    reqProcess = new RequestProcess({ context });
   });
 
   describe('processRequest', () => {
     beforeEach(() => {
-      reqProcess = new RequestProcess(context, {});
+      reqProcess = new RequestProcess({ context });
       reqProcess.sendResponse = jest.fn();
     });
 
@@ -116,7 +116,7 @@ describe('Connect class – private methods', () => {
         method: 'personal_sign',
       };
 
-      context.currentRequest = request;
+      reqProcess.currentRequest = request;
       reqProcess.processWhitelistedRequest();
 
       expect(reqProcess.recover).not.toBeCalled();
@@ -184,10 +184,10 @@ describe('Connect class – private methods', () => {
       bridge = {
         ask: jest.fn(),
       };
-      context.getInpageProviderSettings = jest.fn(() => ({
+      reqProcess.settings = {
         activeAccount: '0x0',
         activeNet: 1,
-      }));
+      };
       context.bridge = bridge;
       reqProcess.currentRequest = request;
     });
@@ -235,10 +235,10 @@ describe('Connect class – private methods', () => {
         close: jest.fn(),
       };
       context.openApp = jest.fn().mockResolvedValueOnce();
-      context.getInpageProviderSettings = jest.fn(() => ({
+      reqProcess.settings = {
         activeAccount: '0x0',
         activeNet: 1,
-      }));
+      };
       context.dialog = dialog;
       reqProcess.currentRequest = request;
     });

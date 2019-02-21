@@ -3,7 +3,7 @@ import Queue from '@/Queue';
 import { INPAGE_EVENTS } from '@/constants';
 import privateFields from '@/privateFields';
 
-describe('Connect class – private methods', () => {
+describe('Queue class', () => {
   let connect;
   let context;
   let queue;

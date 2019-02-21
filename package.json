@@ -26,8 +26,7 @@
     "test": "jest",
     "format": "prettier --write './src/**/*.{js,json}' && eslint ./src/**/*.{js} --fix",
     "semantic-release": "semantic-release",
-    "commit": "git-cz",
-    "deploy:demo": "node ./demo/scripts/deploy.js"
+    "commit": "git-cz"
   },
   "lint-staged": {
     "./src/**/*.{js,json}": [
