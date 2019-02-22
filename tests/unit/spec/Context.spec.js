@@ -68,9 +68,22 @@ describe('Context class', () => {
     it('should auth user through dialog request and returns result', async () => {
       expect.assertions(4);
 
-      dialog.ask.mockResolvedValueOnce({
+      const dialogResponse = {
         status: true,
-      });
+        payload: {
+          type: 'local',
+          serverUrl: undefined,
+          status: false,
+        },
+      };
+
+      const authResponse = {
+        status: true,
+        type: 'local',
+        serverUrl: undefined,
+      };
+
+      dialog.ask.mockResolvedValueOnce(dialogResponse);
 
       const res = await context.auth();
 
@@ -80,7 +93,7 @@ describe('Context class', () => {
         redirectUrl: null,
       });
       expect(dialog.close).toBeCalled();
-      expect(res).toBe(true);
+      expect(res).toEqual(authResponse);
     });
 
     it('should throw error if auth status is falsy', () => {
