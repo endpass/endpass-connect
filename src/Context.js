@@ -7,6 +7,7 @@ export default class Context {
    */
   constructor(options = {}) {
     this.authUrl = options.authUrl || 'https://auth.endpass.com';
+    this.isIdentityMode = options.isIdentityMode || false;
 
     this.emitter = new Emmiter();
     const provider = new InpageProvider(this.emitter);
@@ -74,7 +75,8 @@ export default class Context {
    *  know about result
    */
   async auth(redirectUrl) {
-    await this.openApp('auth');
+    const uri = this.isIdentityMode ? 'auth?mode=true' : 'auth';
+    await this.openApp(uri);
 
     const dialog = this.getDialog();
 
@@ -88,7 +90,12 @@ export default class Context {
     if (!res.status) throw new Error(res.message || 'Authentificaton error!');
     this.isServerLogin = true;
 
-    return res.status;
+    const result = {
+      ...res.payload,
+      status: res.status,
+    };
+
+    return result;
   }
 
   /**
