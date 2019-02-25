@@ -1,4 +1,4 @@
-import get from 'lodash/get';
+import get from 'lodash.get';
 
 import createInpageProvider from '@/util/createInpageProvider';
 import { DEFAULT_NETWORKS } from '@/constants';
