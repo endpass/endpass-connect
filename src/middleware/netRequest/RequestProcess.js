@@ -1,4 +1,4 @@
-import omit from 'lodash/omit';
+import omit from 'lodash.omit';
 
 import { METHODS, INPAGE_EVENTS, DAPP_WHITELISTED_METHODS } from '@/constants';
 

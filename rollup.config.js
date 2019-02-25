@@ -35,7 +35,7 @@ export default {
   plugins: [
     json(),
     resolve({
-      // preferBuiltins: false,
+      preferBuiltins: false,
     }),
     alias({
       '@': resolveDir('./src'),
@@ -45,10 +45,10 @@ export default {
       exclude: ['node_modules'],
       runtimeHelpers: true,
     }),
-    commonjs(),
     replace({
       ENV: JSON.stringify(ENV),
     }),
+    commonjs(),
     !withSourceMaps && terser(),
   ],
   watch: {

@@ -1,4 +1,4 @@
-import get from 'lodash/get';
+import get from 'lodash.get';
 
 export const sendMessage = ({ target, meta = {}, payload = {} }) => {
   const allowedDestinations = ['dialog', 'opener', 'bridge'];
