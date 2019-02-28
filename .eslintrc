@@ -10,12 +10,14 @@
     "cy": true,
     "ENV": true
   },
-  "parserOptions": {
-    "parser": "babel-eslint"
-  },
+  "parser": "babel-eslint",
   "extends": [
     "airbnb-base",
     "plugin:prettier/recommended",
+    "plugin:flowtype/recommended"
+  ],
+  "plugins": [
+    "flowtype"
   ],
   "rules": {
     "prettier/prettier": [

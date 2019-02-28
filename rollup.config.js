@@ -7,6 +7,8 @@ import alias from 'rollup-plugin-alias';
 import babel from 'rollup-plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import replace from 'rollup-plugin-replace';
+import flow from 'rollup-plugin-flow';
+import copy from 'rollup-plugin-cpy';
 
 import pkg from './package.json';
 
@@ -33,6 +35,7 @@ export default {
   input: resolveFile('./src/index.js'),
   external: [...Object.keys(pkg.dependencies)],
   plugins: [
+    flow(),
     json(),
     resolve({
       preferBuiltins: false,
@@ -50,6 +53,10 @@ export default {
     }),
     commonjs(),
     !withSourceMaps && terser(),
+    copy({
+      files: ['src/*.flow'],
+      dest: 'dist',
+    }),
   ],
   watch: {
     exclude: ['node_modules/**'],
