@@ -1,6 +1,4 @@
-import Web3HttpProvider from 'web3-providers-http';
 import Context from '@/Context';
-import Providers from '@/Providers';
 import privateFields from '@/privateFields';
 import Queue from '@/Queue';
 import { METHODS } from '@/constants';
@@ -19,11 +17,8 @@ export default class Connect {
    */
   constructor(options) {
     const context = new Context(options);
-    this[privateFields.providers] = new Providers(context);
     this[privateFields.queue] = new Queue(context, { middleware });
     this[privateFields.context] = context;
-
-    this[privateFields.providers].createRequestProvider(Web3HttpProvider);
   }
 
   /**
