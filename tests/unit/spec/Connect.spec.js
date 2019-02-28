@@ -1,4 +1,3 @@
-import Web3HttpProvider from 'web3-providers-http';
 import Connect from '@/Connect';
 import Context from '@/Context';
 import Providers from '@/Providers';
@@ -36,17 +35,16 @@ describe('Connect class', () => {
     it('should subscribe on events is subscribe property passed to constructor', () => {
       jest.spyOn(Queue.prototype, 'setupEventEmitter');
       jest.spyOn(Context.prototype, 'initBridge');
-      jest.spyOn(Providers.prototype, 'createRequestProvider');
+      jest.spyOn(Providers, 'createRequestProvider');
 
       connect = new Connect({ authUrl });
 
       const queue = connect[privateFields.queue];
       context = connect[privateFields.context];
-      const providers = connect[privateFields.providers];
 
       expect(queue.setupEventEmitter).toBeCalled();
       expect(context.initBridge).toBeCalled();
-      expect(providers.createRequestProvider).toBeCalledWith(Web3HttpProvider);
+      expect(Providers.createRequestProvider).toBeCalled();
     });
 
     it('should be created without authUrl parameter', () => {

@@ -1,3 +1,5 @@
+// @flow
+
 export const DEFAULT_AUTH_URL = 'https://auth.endpass.com';
 
 export const NET_ID = Object.freeze({
@@ -32,7 +34,11 @@ export const NETWORK_URL = Object.freeze({
   ],
 });
 
-export const DEFAULT_NETWORKS = Object.freeze({
+declare type DefaultNetworks = {
+  +[key: $Values<typeof NET_ID>]: { [string]: number },
+};
+
+export const DEFAULT_NETWORKS: DefaultNetworks = Object.freeze({
   [NET_ID.MAIN]: {
     id: NET_ID.MAIN,
     networkType: 'main',

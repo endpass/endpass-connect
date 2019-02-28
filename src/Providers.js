@@ -1,47 +1,22 @@
+// @flow
 import get from 'lodash.get';
 
-import createInpageProvider from '@/util/createInpageProvider';
-import { DEFAULT_NETWORKS } from '@/constants';
+import Web3HttpProvider from 'web3-providers-http';
+import { DEFAULT_NETWORKS, NET_ID } from '@/constants';
 
 export default class Providers {
   /**
-   * @param {Context} context instance of connect
+   * Creates requests provider
+   * @param {String} activeNetId Network id
+   * @returns {Web3HttpProvider}
    */
-  constructor(context) {
-    this.context = context;
-  }
+  static createRequestProvider(
+    activeNetId?: number = NET_ID.MAIN,
+  ): Web3HttpProvider {
+    const isExistInNetworkList = Object.values(NET_ID).includes(activeNetId);
+    const netId = isExistInNetworkList ? activeNetId : NET_ID.MAIN;
+    const url = get(DEFAULT_NETWORKS, `${netId}.url[0]`);
 
-  /**
-   * Creates requests provider and save it to the instance property
-   * @private
-   * @param {Web3.Provider} Provider Web3 provider class
-   */
-  createRequestProvider(Provider) {
-    const { context } = this;
-    const { activeNet } = context.getInpageProviderSettings();
-
-    const url = get(DEFAULT_NETWORKS, `${activeNet}.url[0]`);
-
-    const reqProvider = new Provider(url);
-    context.setRequestProvider(reqProvider);
-  }
-
-  // TODO: Not ready yet (>= web3 1.0.0-beta.40 support)
-  /**
-   * Create InpageProvider
-   * @param {Web3.Provider} provider Web3-friendly provider
-   * @param {url} url for provider
-   */
-  createInpageProvider(provider) {
-    const { context } = this;
-    const { activeNet } = context.getInpageProviderSettings();
-    const url = get(DEFAULT_NETWORKS, `${activeNet}.url[0]`);
-
-    const instance = createInpageProvider({
-      emitter: this.getEmitter(),
-      url,
-      provider,
-    });
-    context.setInpageProvider(instance);
+    return new Web3HttpProvider(url);
   }
 }
