@@ -4,7 +4,7 @@ import get from 'lodash.get';
 import Web3HttpProvider from 'web3-providers-http';
 import { DEFAULT_NETWORKS, NET_ID } from '@/constants';
 
-export default class Providers {
+export default class ProviderFactory {
   /**
    * Creates requests provider
    * @param {String} activeNetId Network id
