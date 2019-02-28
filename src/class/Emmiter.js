@@ -1,9 +1,12 @@
+// @flow
 export default class Emitter {
+  events: Object;
+
   constructor() {
     this.events = {};
   }
 
-  on(event, listener) {
+  on(event: string, listener: () => mixed) {
     if (typeof this.events[event] !== 'object') {
       this.events[event] = [];
     }
@@ -13,7 +16,7 @@ export default class Emitter {
     return () => this.off(event, listener);
   }
 
-  off(event, listener) {
+  off(event: string, listener: () => mixed) {
     if (typeof this.events[event] === 'object') {
       const idx = this.events[event].indexOf(listener);
       if (idx > -1) {
@@ -22,13 +25,13 @@ export default class Emitter {
     }
   }
 
-  emit(event, ...args) {
+  emit(event: string, ...args: Array<mixed>) {
     if (typeof this.events[event] === 'object') {
       this.events[event].forEach(listener => listener.apply(this, args));
     }
   }
 
-  once(event, listener) {
+  once(event: string, listener: () => mixed) {
     const remove = this.on(event, (...args) => {
       remove();
       listener.apply(this, args);
