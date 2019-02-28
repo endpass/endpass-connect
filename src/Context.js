@@ -1,5 +1,5 @@
-import Providers from '@/Providers';
 import { Emmiter, InpageProvider, Dialog, Bridge } from '@/class';
+import ProviderFactory from '@/class/ProviderFactory';
 import { INPAGE_EVENTS, METHODS, NET_ID, DEFAULT_AUTH_URL } from '@/constants';
 
 export default class Context {
@@ -17,7 +17,7 @@ export default class Context {
     const provider = new InpageProvider(this.emitter);
     this.setInpageProvider(provider);
 
-    this.requestProvider = Providers.createRequestProvider();
+    this.requestProvider = ProviderFactory.createRequestProvider();
 
     this.dialog = null;
     this.bridge = null;

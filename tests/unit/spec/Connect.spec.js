@@ -1,9 +1,8 @@
 import Connect from '@/Connect';
 import Context from '@/Context';
-import Providers from '@/Providers';
 import Queue from '@/Queue';
 import privateFields from '@/privateFields';
-import { InpageProvider } from '@/class';
+import { InpageProvider, ProviderFactory } from '@/class';
 import { INPAGE_EVENTS, METHODS, DEFAULT_AUTH_URL } from '@/constants';
 
 describe('Connect class', () => {
@@ -35,7 +34,7 @@ describe('Connect class', () => {
     it('should subscribe on events is subscribe property passed to constructor', () => {
       jest.spyOn(Queue.prototype, 'setupEventEmitter');
       jest.spyOn(Context.prototype, 'initBridge');
-      jest.spyOn(Providers, 'createRequestProvider');
+      jest.spyOn(ProviderFactory, 'createRequestProvider');
 
       connect = new Connect({ authUrl });
 
@@ -44,7 +43,7 @@ describe('Connect class', () => {
 
       expect(queue.setupEventEmitter).toBeCalled();
       expect(context.initBridge).toBeCalled();
-      expect(Providers.createRequestProvider).toBeCalled();
+      expect(ProviderFactory.createRequestProvider).toBeCalled();
     });
 
     it('should be created without authUrl parameter', () => {
