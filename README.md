@@ -32,7 +32,7 @@ import EndpassConnect from '@endpass/connect';
 
 const web3 = new Web3('https://network.url');
 const connect = new EndpassConnect({
-  appUrl: 'http://connect.url',
+  authUrl: 'http://connect.url',
 });
 ```
 

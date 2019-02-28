@@ -5,11 +5,12 @@ import Providers from '@/Providers';
 import Queue from '@/Queue';
 import privateFields from '@/privateFields';
 import { InpageProvider } from '@/class';
-import { INPAGE_EVENTS, METHODS } from '@/constants';
+import { INPAGE_EVENTS, METHODS, DEFAULT_AUTH_URL } from '@/constants';
 
 describe('Connect class', () => {
   let connect;
   let context;
+  const authUrl = 'http://test.auth';
 
   beforeAll(() => {
     window.open = jest.fn();
@@ -18,7 +19,7 @@ describe('Connect class', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    connect = new Connect({ appUrl: 'http://localhost:5000' });
+    connect = new Connect({ authUrl });
     context = connect[privateFields.context];
   });
 
@@ -27,8 +28,8 @@ describe('Connect class', () => {
       jest.clearAllMocks();
     });
 
-    it('should create instance of connect if all appUrl present', () => {
-      connect = new Connect({ authUrl: 'http://localhost:5000' });
+    it('should create instance of connect if all authUrl present', () => {
+      connect = new Connect({ authUrl });
       expect(connect).toBeInstanceOf(Connect);
     });
 
@@ -37,7 +38,7 @@ describe('Connect class', () => {
       jest.spyOn(Context.prototype, 'initBridge');
       jest.spyOn(Providers.prototype, 'createRequestProvider');
 
-      connect = new Connect({ authUrl: 'http://localhost:5000' });
+      connect = new Connect({ authUrl });
 
       const queue = connect[privateFields.queue];
       context = connect[privateFields.context];
@@ -51,11 +52,11 @@ describe('Connect class', () => {
     it('should be created without authUrl parameter', () => {
       connect = new Connect();
       context = connect[privateFields.context];
-      expect(context.authUrl).toBe('https://auth.endpass.com');
+      expect(context.authUrl).toBe(DEFAULT_AUTH_URL);
     });
 
     it('should return Inpage provider from given parameters', () => {
-      connect = new Connect({ authUrl: 'http://localhost:5000' });
+      connect = new Connect({ authUrl });
       const res = connect.getProvider();
 
       expect(res instanceof InpageProvider).toBe(true);
@@ -89,7 +90,7 @@ describe('Connect class', () => {
   describe('getProvider', () => {
     beforeEach(() => {
       jest.clearAllMocks();
-      connect = new Connect({ authUrl: 'http://localhost:5000' });
+      connect = new Connect({ authUrl });
     });
 
     it('should return Inpage provider from given parameters', () => {

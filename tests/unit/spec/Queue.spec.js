@@ -24,7 +24,7 @@ describe('Queue class', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    connect = new Connect({ appUrl: 'http://localhost:5000' });
+    connect = new Connect({ authUrl: 'http://test.auth' });
     context = connect[privateFields.context];
     jest.clearAllTimers();
 
