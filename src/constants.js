@@ -1,3 +1,5 @@
+export const DEFAULT_AUTH_URL = 'https://auth.endpass.com';
+
 export const NET_ID = Object.freeze({
   MAIN: 1,
   ROPSTEN: 3,

@@ -1,13 +1,16 @@
 import { Emmiter, InpageProvider, Dialog, Bridge } from '@/class';
-import { INPAGE_EVENTS, METHODS, NET_ID } from '@/constants';
+import { INPAGE_EVENTS, METHODS, NET_ID, DEFAULT_AUTH_URL } from '@/constants';
 
 export default class Context {
   /**
    * @param {String} options.authUrl Url of hosted Endpass Connect Application
+   * @param {Boolean} options.isIdentityMode isIdentityMode for define auth like identity
+   * @param {Object} options.demoData demoData passed object to auth
    */
   constructor(options = {}) {
-    this.authUrl = options.authUrl || 'https://auth.endpass.com';
+    this.authUrl = options.authUrl || DEFAULT_AUTH_URL;
     this.isIdentityMode = options.isIdentityMode || false;
+    this.demoData = options.demoData;
 
     this.emitter = new Emmiter();
     const provider = new InpageProvider(this.emitter);
@@ -20,6 +23,20 @@ export default class Context {
     this.isServerLogin = false;
     this.initBridge();
     this.setupLoginEvents();
+  }
+
+  static getDemoDataQueryString(demoData) {
+    if (!demoData) {
+      return '';
+    }
+
+    let res = '';
+    try {
+      const passData = encodeURIComponent(JSON.stringify(demoData));
+      res = `demoData=${passData}`;
+    } catch (e) {}
+
+    return res;
   }
 
   /**
@@ -53,8 +70,20 @@ export default class Context {
    * @param {String} route Target connect application route
    * @returns {Promise<Window>} Opened child window
    */
-  async openApp(route = '') {
-    const url = this.getConnectUrl(route);
+  async openApp(route = '', queryParams = {}) {
+    const queryStr = Object.keys(queryParams)
+      .map(key => {
+        return `${key}=${queryParams[key]}`;
+      })
+      .join('&');
+
+    const demoQuery = Context.getDemoDataQueryString(this.demoData);
+
+    const queries = [queryStr, demoQuery].filter(item => !!item).join('&');
+
+    const path = queries ? `${route}?${queries}` : route;
+
+    const url = this.getConnectUrl(path);
 
     this.dialog = new Dialog({ url });
 
@@ -62,9 +91,12 @@ export default class Context {
   }
 
   isLogin() {
-    return (
-      this.getInpageProvider().settings.activeAccount && this.isServerLogin
-    );
+    if (this.demoData) {
+      return true;
+    }
+
+    const { activeAccount } = this.getInpageProvider().settings;
+    return !!(activeAccount && this.isServerLogin);
   }
 
   /**
@@ -75,8 +107,8 @@ export default class Context {
    *  know about result
    */
   async auth(redirectUrl) {
-    const uri = this.isIdentityMode ? 'auth?mode=true' : 'auth';
-    await this.openApp(uri);
+    const query = this.isIdentityMode ? { mode: true } : {};
+    await this.openApp('auth', query);
 
     const dialog = this.getDialog();
 

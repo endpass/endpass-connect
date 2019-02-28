@@ -11,7 +11,7 @@ describe('Request process middleware', () => {
   beforeAll(() => {
     window.open = jest.fn();
     jest.useFakeTimers();
-    connect = new Connect({ appUrl: 'http://localhost:5000' });
+    connect = new Connect({ authUrl: 'http://localhost:5000' });
     context = connect[privateFields.context];
   });
 

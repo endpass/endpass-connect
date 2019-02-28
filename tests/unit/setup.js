@@ -1,3 +1,3 @@
-// import '../../src/util/__mock__/message.mock';
+// import '../../src/util/__mocks__/message.mock';
 
 global.flushPromises = () => new Promise(resolve => setImmediate(resolve));

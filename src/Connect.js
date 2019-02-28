@@ -3,7 +3,7 @@ import Context from '@/Context';
 import Providers from '@/Providers';
 import privateFields from '@/privateFields';
 import Queue from '@/Queue';
-import { METHODS, INPAGE_EVENTS, NET_ID } from '@/constants';
+import { METHODS } from '@/constants';
 import middleware from '@/middleware';
 
 import pkg from '../package.json';
