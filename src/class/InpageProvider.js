@@ -1,6 +1,6 @@
 import get from 'lodash.get';
 import Emmiter from './Emmiter';
-import { INPAGE_EVENTS, INPAGE_ID_PREFIX } from '@/constants';
+import { INPAGE_EVENTS, INPAGE_ID_PREFIX, NET_ID } from '@/constants';
 import processPayload from '@/util/processPayload';
 
 export default class InpageProvider extends Emmiter {
@@ -14,7 +14,7 @@ export default class InpageProvider extends Emmiter {
     this.pendingRequestsHandlers = {};
     this.settings = {
       activeAccount: null,
-      activeNet: null,
+      activeNet: NET_ID.MAIN,
     };
     this.isMetaMask = true;
 

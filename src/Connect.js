@@ -6,10 +6,12 @@ import middleware from '@/middleware';
 
 import pkg from '../package.json';
 
-console.info(
-  `%cEndpass connect version ${pkg.version} loaded 🔌`,
-  'color: #fff; background: #4B0873',
-);
+if (ENV.isProduction) {
+  console.info(
+    `%cEndpass connect version ${pkg.version} loaded 🔌`,
+    'color: #fff; background: #4B0873',
+  );
+}
 
 export default class Connect {
   /**
