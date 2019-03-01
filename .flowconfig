@@ -3,3 +3,7 @@ module.name_mapper='@' ->'<PROJECT_ROOT>/src'
 
 [libs]
 <PROJECT_ROOT>/flow-typed
+
+[ignore]
+<PROJECT_ROOT>/tests/.*
+<PROJECT_ROOT>/dist/.*
