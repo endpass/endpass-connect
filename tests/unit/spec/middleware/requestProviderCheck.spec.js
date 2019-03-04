@@ -29,7 +29,7 @@ describe('requestProviderCheck middleware', () => {
 
   it(`should chain request with a valid net id`, () => {
     const item = Object.freeze({
-      settings: Object.freeze({ activeNet: NET_ID.MAIN }),
+      settings: Object.freeze({ activeNet: String(NET_ID.MAIN) }),
     });
     const cachedItem = { ...item };
 
