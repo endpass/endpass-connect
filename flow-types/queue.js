@@ -1,5 +1,5 @@
 // @flow
-import itemStates from '@/Queue/itemStates';
+import itemStates from '../src/Queue/itemStates';
 
 type ItemState = $Values<typeof itemStates>;
 

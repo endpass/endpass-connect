@@ -1,13 +1,24 @@
-// @flow
-export default class Emitter {
-  events: Object;
+// @ts-check
+/**
+ * @callback Listener
+ */
 
+/**
+ * @typedef {Object<string, Array<Listener>>} Events
+ */
+
+export default class Emitter {
   constructor() {
+    /** @type Events */
     this.events = {};
   }
 
-  on(event: string, listener: () => mixed) {
-    if (typeof this.events[event] !== 'object') {
+  /**
+   * @param {String} event - event name
+   * @param {Listener} listener - callback
+   */
+  on(event, listener) {
+    if (!Array.isArray(this.events[event])) {
       this.events[event] = [];
     }
 
@@ -16,8 +27,12 @@ export default class Emitter {
     return () => this.off(event, listener);
   }
 
-  off(event: string, listener: () => mixed) {
-    if (typeof this.events[event] === 'object') {
+  /**
+   * @param {string} event - event name
+   * @param {Listener} listener - callback
+   */
+  off(event, listener) {
+    if (Array.isArray(this.events[event])) {
       const idx = this.events[event].indexOf(listener);
       if (idx > -1) {
         this.events[event].splice(idx, 1);
@@ -25,13 +40,21 @@ export default class Emitter {
     }
   }
 
-  emit(event: string, ...args: Array<mixed>) {
-    if (typeof this.events[event] === 'object') {
+  /**
+   * @param {string} event - event name
+   * @param {any} args - arguments
+   */
+  emit(event, ...args) {
+    if (Array.isArray(this.events[event])) {
       this.events[event].forEach(listener => listener.apply(this, args));
     }
   }
 
-  once(event: string, listener: () => mixed) {
+  /**
+   * @param {string} event - event name
+   * @param {Listener} listener - callback
+   */
+  once(event, listener) {
     const remove = this.on(event, (...args) => {
       remove();
       listener.apply(this, args);

@@ -1,4 +1,3 @@
-// @flow
 import get from 'lodash.get';
 
 import Web3HttpProvider from 'web3-providers-http';
@@ -10,9 +9,7 @@ export default class ProviderFactory {
    * @param {String} activeNetId Network id
    * @returns {Web3HttpProvider}
    */
-  static createRequestProvider(
-    activeNetId?: number = NET_ID.MAIN,
-  ): Web3HttpProvider {
+  static createRequestProvider(activeNetId = NET_ID.MAIN) {
     const isExistInNetworkList = Object.values(NET_ID).includes(activeNetId);
     const netId = isExistInNetworkList ? activeNetId : NET_ID.MAIN;
     const url = get(DEFAULT_NETWORKS, `${netId}.url[0]`);

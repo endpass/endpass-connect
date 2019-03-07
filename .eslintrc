@@ -10,14 +10,28 @@
     "cy": true,
     "ENV": true
   },
-  "parser": "babel-eslint",
+  "parser": "eslint-multiple-parsers",
+  "parserOptions": {
+    "parsers": [
+      {
+        "test": ".*\\.js$",
+        "path": "babel-eslint",
+        "options": {
+          "sourceType": "module"
+        }
+      },
+      {
+        "test": ".*\\.ts$",
+        "path": "@typescript-eslint/parser"
+      }
+    ]
+  },
   "extends": [
     "airbnb-base",
-    "plugin:prettier/recommended",
-    "plugin:flowtype/recommended"
+    "plugin:prettier/recommended"
   ],
   "plugins": [
-    "flowtype"
+    "@typescript-eslint"
   ],
   "rules": {
     "prettier/prettier": [
@@ -32,13 +46,19 @@
       "error",
       {
         "props": true,
-        "ignorePropertyModificationsFor": ["state"]
+        "ignorePropertyModificationsFor": [
+          "state"
+        ]
       }
     ],
     "import/no-unresolved": [
       "error",
       {
-        "ignore": ["@", "fixtures", "mocks"]
+        "ignore": [
+          "@",
+          "fixtures",
+          "mocks"
+        ]
       }
     ]
   }
