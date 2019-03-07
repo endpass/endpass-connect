@@ -1,7 +1,6 @@
-// @flow
 import { NET_ID } from '@/constants';
 
-const middleware: Middleware = (context, item) => {
+const middleware = (context, item) => {
   const { activeNet } = item.settings;
   const isNetIdAllowed = Object.values(NET_ID)
     .map(id => String(id))

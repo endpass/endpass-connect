@@ -1,13 +1,21 @@
-// @flow
-
+// @ts-check
 export const DEFAULT_AUTH_URL = 'https://auth.endpass.com';
 
-export const NET_ID = Object.freeze({
+/**
+ * @typedef {object} NET_ID - network id enum
+ * @property {1} MAIN "Main network"
+ * @property {3} ROPSTEN "Ropsten network"
+ * @property {4} RINKEBY "Rinkeby network"
+ * @property {61} ETHEREUM_CLASSIC "ETC network"
+ */
+
+/** @type {Readonly<NET_ID>} */
+export const NET_ID = {
   MAIN: 1,
   ROPSTEN: 3,
   RINKEBY: 4,
   ETHEREUM_CLASSIC: 61,
-});
+};
 
 /**
  * Networks map
@@ -17,14 +25,17 @@ export const NETWORK_URL = Object.freeze({
     // 'wss://eth-mainnet.endpass.com:2084',
     // 'wss://eth-mainnet.endpass.com',
     'https://eth-mainnet.endpass.com:2083',
+    // @ts-ignore
     `https://mainnet.infura.io/${ENV.infura.key}`,
   ],
   ROP: [
     // 'wss://eth-ropsten.endpass.com:2084',
     // 'wss://eth-ropsten.endpass.com',
     'https://eth-ropsten.endpass.com:2083',
+    // @ts-ignore
     `https://ropsten.infura.io/${ENV.infura.key}`,
   ],
+  // @ts-ignore
   RIN: [`https://rinkeby.infura.io/${ENV.infura.key}`],
   ETC: [
     // 'wss://etc-mainnet.endpass.com:2084',
@@ -34,11 +45,11 @@ export const NETWORK_URL = Object.freeze({
   ],
 });
 
-declare type DefaultNetworks = {
-  +[key: $Values<typeof NET_ID>]: { [string]: number },
-};
+// declare type DefaultNetworks = {
+//   +[key: $Values<typeof NET_ID>]: { [string]: number },
+// };
 
-export const DEFAULT_NETWORKS: DefaultNetworks = Object.freeze({
+export const DEFAULT_NETWORKS = Object.freeze({
   [NET_ID.MAIN]: {
     id: NET_ID.MAIN,
     networkType: 'main',

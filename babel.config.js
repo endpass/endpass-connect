@@ -9,7 +9,7 @@ module.exports = {
         modules: false,
       },
     ],
-    ['@babel/preset-flow'],
+    ["@babel/preset-typescript"],
   ],
   env: {
     test: {
