@@ -1,7 +1,8 @@
 import { INPAGE_EVENTS } from '@/constants';
 
-export default function(context, item) {
-  const { request, payload = {} } = item;
+/** @type {import("@/types/Middleware").Middleware} */
+export default function(context, action) {
+  const { request, payload = {} } = action;
 
   if (request.method === 'eth_uninstallFilter') {
     context

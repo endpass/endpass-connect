@@ -1,7 +1,8 @@
 import { NET_ID } from '@/constants';
 
-const middleware = (context, item) => {
-  const { activeNet } = item.settings;
+/** @type {import("@/types/Middleware").Middleware} */
+const middleware = (context, action) => {
+  const { activeNet } = action.settings;
   const isNetIdAllowed = Object.values(NET_ID)
     .map(id => String(id))
     .includes(String(activeNet));
@@ -14,7 +15,7 @@ const middleware = (context, item) => {
     `Network with ${message} isn't allowed. Please select another from the settings`,
   );
 
-  item.end();
+  action.end();
 };
 
 export default middleware;

@@ -1,9 +1,7 @@
-// @flow
-
 declare type RpcVersion = '2.0';
 declare type RpcId = string | number;
 
-declare type RpcRequest = {
+export declare type RpcRequest = {
   jsonrpc: RpcVersion,
   id: RpcId,
   method: string,
@@ -32,7 +30,7 @@ declare type RpcSubscriptionResponse = {
   },
 };
 
-declare type RpcResponse =
+export declare type RpcResponse =
   | RpcSuccessResponse
   | RpcErrorResponse
   | RpcSubscriptionResponse;
