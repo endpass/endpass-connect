@@ -1,12 +1,17 @@
+// @ts-check
+
 import get from 'lodash.get';
+// eslint-disable-next-line no-unused-vars
+import { $Values } from 'utility-types';
 
 import Web3HttpProvider from 'web3-providers-http';
+
 import { DEFAULT_NETWORKS, NET_ID } from '@/constants';
 
 export default class ProviderFactory {
   /**
    * Creates requests provider
-   * @param {String} activeNetId Network id
+   * @param {$Values<typeof NET_ID>} activeNetId Network id
    * @returns {Web3HttpProvider}
    */
   static createRequestProvider(activeNetId = NET_ID.MAIN) {

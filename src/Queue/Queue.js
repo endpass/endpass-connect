@@ -30,16 +30,16 @@ export default class Queue {
     const { queue } = this;
 
     // eslint-disable-next-line no-restricted-syntax
-    for await (const queueItem of queue) {
+    for await (const action of queue) {
       try {
         const { middleware, context } = this;
 
         // eslint-disable-next-line no-restricted-syntax
         for (const fn of middleware) {
           // eslint-disable-next-line no-await-in-loop
-          await fn(context, queueItem);
+          await fn(context, action);
 
-          if (queueItem.state === itemStates.END) {
+          if (action.state === itemStates.END) {
             break;
           }
         }
@@ -68,7 +68,7 @@ export default class Queue {
     if (!request.id) return;
 
     const settings = this.context.getInpageProviderSettings();
-    const item = {
+    const action = {
       request,
       state: itemStates.INITIAL,
       payload: null,
@@ -84,6 +84,6 @@ export default class Queue {
       },
     };
 
-    this.queue.put(item);
+    this.queue.put(action);
   }
 }

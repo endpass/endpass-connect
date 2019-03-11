@@ -3,8 +3,9 @@ import get from 'lodash.get';
 import ProviderFactory from '@/class/ProviderFactory';
 import { DEFAULT_NETWORKS } from '@/constants';
 
-const middleware = (context, item) => {
-  const { activeNet } = item.settings;
+/** @type {import("@/types/Middleware").Middleware} */
+const middleware = (context, action) => {
+  const { activeNet } = action.settings;
   const itemUrl = get(DEFAULT_NETWORKS, `${String(activeNet)}.url[0]`);
   const { host } = context.getRequestProvider();
 

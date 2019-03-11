@@ -1,10 +1,11 @@
 import processPayload from '@/util/processPayload';
 
-export default function(context, item) {
-  const { request } = item;
-  const payload = processPayload(request, item.settings);
+/** @type {import("@/types/Middleware").Middleware} */
+export default function(context, action) {
+  const { request } = action;
+  const payload = processPayload(request, action.settings);
 
   if (payload && payload.result) {
-    item.setPayload(payload);
+    action.setPayload(payload);
   }
 }

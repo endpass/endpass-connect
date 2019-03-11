@@ -1,3 +1,5 @@
+// @ts-check
+
 import path from 'path';
 
 import json from 'rollup-plugin-json';

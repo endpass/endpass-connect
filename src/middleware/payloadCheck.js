@@ -1,10 +1,11 @@
 import { INPAGE_EVENTS } from '@/constants';
 
-export default function(context, item) {
-  const { payload } = item;
+/** @type {import("@/types/Middleware").Middleware} */
+export default function(context, action) {
+  const { payload } = action;
 
   if (payload && payload.result) {
-    item.end();
+    action.end();
     context.getEmitter().emit(INPAGE_EVENTS.RESPONSE, payload);
   }
 }
