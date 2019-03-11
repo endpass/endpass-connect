@@ -1,125 +1,86 @@
-import Connect from '@/Connect';
 import Queue from '@/Queue';
 import { INPAGE_EVENTS } from '@/constants';
-import privateFields from '@/privateFields';
 
 describe('Queue class', () => {
-  let connect;
+  let emitter;
   let context;
   let queue;
   const middleWareMock = jest.fn();
   const middleware = [middleWareMock];
 
-  function jestTimeout(ms = 3000) {
-    return new Promise(resolve => {
-      resolve();
-      jest.advanceTimersByTime(ms);
-    });
-  }
-
   beforeAll(() => {
     window.open = jest.fn();
-    jest.useFakeTimers();
   });
 
   beforeEach(() => {
     jest.clearAllMocks();
-    connect = new Connect({ authUrl: 'http://test.auth' });
-    context = connect[privateFields.context];
-    jest.clearAllTimers();
 
-    queue = new Queue(context, middleware);
+    emitter = {
+      on: jest.fn(),
+    };
+    context = {
+      emitter,
+      getEmitter: jest.fn().mockReturnValue(emitter),
+      getInpageProviderSettings: jest.fn(),
+    };
+
+    queue = new Queue(context, { middleware });
   });
 
-  describe('ticks call', () => {
-    it('should call next tick', () => {
-      expect(queue.queueTimeout).toBe(null);
-
-      queue.handleRequest({ id: 'test' });
-
-      expect(queue.queueTimeout).not.toBe(null);
+  describe('constructor', () => {
+    it('should subscribe on emitter events', () => {
+      expect(context.emitter.on).toBeCalledTimes(2);
+      expect(context.emitter.on).toHaveBeenNthCalledWith(
+        1,
+        INPAGE_EVENTS.REQUEST,
+        queue.handleRequest,
+      );
+      expect(context.emitter.on).toHaveBeenNthCalledWith(
+        2,
+        INPAGE_EVENTS.SETTINGS,
+        queue.handleRequest,
+      );
     });
+  });
 
-    it('should process current request if queue is not empty', async () => {
-      expect.assertions(2);
-
-      queue = new Queue(context, { middleware });
-      queue.handleRequest({
-        id: 'block',
-        foo: 'bar',
-      });
-
-      jest.runAllTimers();
-      await jestTimeout();
-
-      expect(queue.queue.length).toBe(0);
-      expect(middleWareMock).toBeCalledTimes(1);
-    });
-
-    it('should pass only first element in queue', async () => {
+  describe('handleRequest', () => {
+    it('should process requests using middleware', async () => {
       expect.assertions(3);
 
-      const mock = jest.fn();
-      queue = new Queue(context, {
-        middleware: [
-          (ctx, item) => {
-            mock(item.request);
-          },
-        ],
-      });
       const firstItem = {
         id: 'first',
       };
-      queue.handleRequest(firstItem);
-      queue.handleRequest({
+      const secondItem = {
         id: 'second',
-      });
+      };
+      queue.handleRequest(firstItem);
+      queue.handleRequest(secondItem);
 
-      expect(queue.queue.length).toBe(2);
+      await global.flushPromises();
 
-      jest.runAllTimers();
-      await jestTimeout();
-      expect(mock).toBeCalledWith(firstItem);
-      expect(queue.queue.length).toBe(1);
+      expect(middleWareMock).toBeCalledTimes(2);
+      expect(middleWareMock).toHaveBeenNthCalledWith(
+        1,
+        context,
+        expect.objectContaining({
+          request: firstItem,
+        }),
+      );
+      expect(middleWareMock).toHaveBeenNthCalledWith(
+        2,
+        context,
+        expect.objectContaining({
+          request: secondItem,
+        }),
+      );
     });
 
     it('should not do anything if queue is empty', async () => {
       expect.assertions(1);
 
-      const mock = jest.fn();
-      queue = new Queue(context, {
-        middleware: [
-          (ctx, item) => {
-            mock(item.request);
-          },
-        ],
-      });
+      await global.flushPromises();
 
-      jest.runAllTimers();
-      await jestTimeout();
-
-      expect(mock).not.toBeCalled();
-    });
-  });
-
-  describe('setupEventEmitter', () => {
-    it('should subscribe on emitter events', () => {
-      context.emitter = {
-        on: jest.fn(),
-      };
-      queue.setupEventEmitter();
-
-      expect(context.emitter.on).toBeCalledTimes(2);
-      expect(context.emitter.on).toHaveBeenNthCalledWith(
-        1,
-        INPAGE_EVENTS.REQUEST,
-        expect.any(Function),
-      );
-      expect(context.emitter.on).toHaveBeenNthCalledWith(
-        2,
-        INPAGE_EVENTS.SETTINGS,
-        expect.any(Function),
-      );
+      expect(middleWareMock).not.toBeCalled();
     });
   });
 });

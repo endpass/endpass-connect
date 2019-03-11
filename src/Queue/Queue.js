@@ -1,15 +1,6 @@
 import { INPAGE_EVENTS } from '@/constants';
+import { AsyncQueue } from '@/class';
 import itemStates from './itemStates';
-
-const QUEUE_TIMEOUT = 2000; // 2 sec
-
-function setPayload(res) {
-  this.payload = res;
-}
-
-function setState(state) {
-  this.state = state;
-}
 
 export default class Queue {
   /**
@@ -24,50 +15,43 @@ export default class Queue {
     this.handleRequest = this.handleRequest.bind(this);
 
     // Setup net requests queue
-    this.queueTimeout = null;
-    this.queue = [];
+    this.queue = new AsyncQueue();
 
     // start queue
     this.setupEventEmitter();
-    this.nextTick();
+    this.initRequestHandlerLoop();
   }
 
   /**
-   * Sets interval and checks queue for new requests. If current request is not
-   * present – sets it and then process
+   * Handle requests from the queue using middleware
    * @private
    */
-  nextTick() {
+  async initRequestHandlerLoop() {
     const { queue } = this;
-    if (this.queueTimeout || queue.length === 0) {
-      return;
-    }
 
-    this.queueTimeout = setTimeout(async () => {
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const queueItem of queue) {
       try {
         const { middleware, context } = this;
-        let item;
-        for (const fn of middleware) {
-          item = queue[0];
-          await fn(context, item, queue);
 
-          if (item.state === itemStates.END) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const fn of middleware) {
+          // eslint-disable-next-line no-await-in-loop
+          await fn(context, queueItem);
+
+          if (queueItem.state === itemStates.END) {
             break;
           }
-        }
-        if (item && item.state !== itemStates.REPEAT) {
-          queue.shift();
         }
       } catch (e) {
         console.error(e);
       }
-      this.queueTimeout = null;
-      this.nextTick();
-    }, QUEUE_TIMEOUT);
+    }
   }
 
   /**
    * Sets event listeners to inner emitter with handlers
+   * @private
    */
   setupEventEmitter() {
     const emitter = this.context.getEmitter();
@@ -76,27 +60,30 @@ export default class Queue {
   }
 
   /**
-   * Handle requests and push them to the requests queue
+   * Transform requests and put them to the requests queue
    * @private
    * @param {Object} request Incoming request
    */
-  handleRequest(request) {
-    if (request.id) {
-      const { queue } = this;
-      const settings = this.context.getInpageProviderSettings();
-      const item = {
-        request,
-        state: itemStates.INITIAL,
-        payload: null,
-        settings,
-        end: () => {
-          item.setState(itemStates.END);
-        },
-        setState,
-        setPayload,
-      };
-      queue.push(item);
-    }
-    this.nextTick();
+  handleRequest(request = {}) {
+    if (!request.id) return;
+
+    const settings = this.context.getInpageProviderSettings();
+    const item = {
+      request,
+      state: itemStates.INITIAL,
+      payload: null,
+      settings,
+      end() {
+        this.setState(itemStates.END);
+      },
+      setPayload(res) {
+        this.payload = res;
+      },
+      setState(state) {
+        this.state = state;
+      },
+    };
+
+    this.queue.put(item);
   }
 }
