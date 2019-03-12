@@ -1,14 +1,17 @@
+// @ts-check
 import { INPAGE_EVENTS } from '@/constants';
 import { AsyncQueue } from '@/class';
 import itemStates from './itemStates';
 
+// eslint-disable-next-line no-unused-vars
+import Context from '@/Context';
+
 export default class Queue {
   /**
-   * @param {Context} context instance of connect
-   * @param {Object} options Queue options
-   * @param {Array} options.middleware middleware for process queue
+   * @param { InstanceType<typeof Context> } context instance of connect
+   * @param { { middleware: import('@/types/Middleware').Middleware[]; } } options Queue options
    */
-  constructor(context, options = {}) {
+  constructor(context, options) {
     this.middleware = options.middleware || [];
     this.context = context;
 
@@ -60,16 +63,22 @@ export default class Queue {
   }
 
   /**
+   * @typedef {import('@/types/json-rpc').RpcRequest} RpcRequest
+   */
+  /**
    * Transform requests and put them to the requests queue
    * @private
-   * @param {Object} request Incoming request
+   * @param { RpcRequest | Object<string, any> } request Incoming request
    */
   handleRequest(request = {}) {
     if (!request.id) return;
 
     const settings = this.context.getInpageProviderSettings();
+
+    /** @type import('@/types/QueueAction').QueueAction */
     const action = {
-      request,
+      /* eslint-disable-next-line */
+      request: /** @type {RpcRequest} */ (request),
       state: itemStates.INITIAL,
       payload: null,
       settings,

@@ -1,12 +1,15 @@
+import { JsonRPCRequest } from 'web3/providers';
+import { Overwrite } from 'utility-types';
+
 declare type RpcVersion = '2.0';
 declare type RpcId = string | number;
 
-export declare type RpcRequest = {
+declare type RpcRequestExt = {
   jsonrpc: RpcVersion,
   id: RpcId,
-  method: string,
-  params?: Array<any>,
 };
+
+export declare type RpcRequest = Overwrite<JsonRPCRequest, RpcRequestExt>;
 
 declare type RpcSuccessResponse = {
   jsonrpc: RpcVersion,
@@ -33,4 +36,5 @@ declare type RpcSubscriptionResponse = {
 export declare type RpcResponse =
   | RpcSuccessResponse
   | RpcErrorResponse
-  | RpcSubscriptionResponse;
+  | RpcSubscriptionResponse
+  | null;
