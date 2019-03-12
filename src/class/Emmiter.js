@@ -1,6 +1,6 @@
 // @ts-check
 /**
- * @callback Listener
+ * @callback Listener:(...args: any) => void
  */
 
 /**
