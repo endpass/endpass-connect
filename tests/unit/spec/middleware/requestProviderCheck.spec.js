@@ -1,8 +1,8 @@
 import requestProviderCheck from '@/middleware/requestProviderCheck';
-import { NETWORK_URL, NET_ID } from '@/constants';
+import { Network } from '@endpass/class';
 
 describe('requestProviderCheck middleware', () => {
-  const mainUrl = NETWORK_URL.ETH[0];
+  const mainUrl = Network.NETWORK_URL_HTTP[Network.NET_ID.MAIN][0];
   const getRequestProvider = jest.fn().mockReturnValue({ host: mainUrl });
   const context = {
     getRequestProvider,
@@ -29,7 +29,7 @@ describe('requestProviderCheck middleware', () => {
 
   it(`should chain request with a valid net id`, () => {
     const item = Object.freeze({
-      settings: Object.freeze({ activeNet: String(NET_ID.MAIN) }),
+      settings: Object.freeze({ activeNet: String(Network.NET_ID.MAIN) }),
     });
     const cachedItem = { ...item };
 

@@ -1,7 +1,7 @@
-import { NET_ID } from '@/constants';
+import { Network } from '@endpass/class';
 import { $Values } from 'utility-types';
 
 export declare type UserSettings = {
-  activeNet: $Values<typeof NET_ID>;
+  activeNet: $Values<Network.NET_ID>;
   activeAccount: string | null;
 };
