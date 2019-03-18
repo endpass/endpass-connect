@@ -1,9 +1,9 @@
-import { NET_ID } from '@/constants';
+import { Network } from '@endpass/class';
 
 /** @type {import("@/types/Middleware").Middleware} */
 const middleware = (context, action) => {
   const { activeNet } = action.settings;
-  const isNetIdAllowed = Object.values(NET_ID)
+  const isNetIdAllowed = Object.values(Network.NET_ID)
     .map(id => String(id))
     .includes(String(activeNet));
 

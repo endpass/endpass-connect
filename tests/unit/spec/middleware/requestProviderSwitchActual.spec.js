@@ -1,6 +1,6 @@
 import Web3HttpProvider from 'web3-providers-http';
 import requestProviderSwitchActual from '@/middleware/requestProviderSwitchActual';
-import { NETWORK_URL, NET_ID } from '@/constants';
+import { Network } from '@endpass/class';
 
 jest.mock('web3-providers-http', () =>
   jest.fn(host => ({
@@ -9,7 +9,7 @@ jest.mock('web3-providers-http', () =>
 );
 
 describe('requestProviderCheck middleware', () => {
-  const mainUrl = NETWORK_URL.ETH[0];
+  const mainUrl = Network.NETWORK_URL_HTTP[Network.NET_ID.MAIN][0];
   const getRequestProvider = jest.fn().mockReturnValue({ host: mainUrl });
   const setRequestProvider = jest.fn();
   const context = {
@@ -21,11 +21,11 @@ describe('requestProviderCheck middleware', () => {
     jest.clearAllMocks();
   });
 
-  const ropstenUrl = NETWORK_URL.ROP[0];
+  const ropstenUrl = Network.NETWORK_URL_HTTP[Network.NET_ID.ROPSTEN][0];
 
   it('should set a new provider if the net id has been changed', () => {
     const item = {
-      settings: { activeNet: NET_ID.ROPSTEN },
+      settings: { activeNet: Network.NET_ID.ROPSTEN },
     };
 
     requestProviderSwitchActual(context, item);
@@ -37,7 +37,7 @@ describe('requestProviderCheck middleware', () => {
 
   it(`should chain request if the net id hasn't been changed`, () => {
     const item = Object.freeze({
-      settings: Object.freeze({ activeNet: NET_ID.MAIN }),
+      settings: Object.freeze({ activeNet: Network.NET_ID.MAIN }),
     });
 
     const freezeContext = Object.freeze({ getRequestProvider });

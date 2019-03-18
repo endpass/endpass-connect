@@ -6,18 +6,20 @@ import { $Values } from 'utility-types';
 
 import Web3HttpProvider from 'web3-providers-http';
 
-import { DEFAULT_NETWORKS, NET_ID } from '@/constants';
+import { Network } from '@endpass/class';
 
 export default class ProviderFactory {
   /**
    * Creates requests provider
-   * @param {$Values<typeof NET_ID>} activeNetId Network id
+   * @param {$Values<Network.NET_ID>} activeNetId Network id
    * @returns {Web3HttpProvider}
    */
-  static createRequestProvider(activeNetId = NET_ID.MAIN) {
-    const isExistInNetworkList = Object.values(NET_ID).includes(activeNetId);
-    const netId = isExistInNetworkList ? activeNetId : NET_ID.MAIN;
-    const url = get(DEFAULT_NETWORKS, `${netId}.url[0]`);
+  static createRequestProvider(activeNetId = Network.NET_ID.MAIN) {
+    const isExistInNetworkList = Object.values(Network.NET_ID).includes(
+      activeNetId,
+    );
+    const netId = isExistInNetworkList ? activeNetId : Network.NET_ID.MAIN;
+    const url = Network.NETWORK_URL_HTTP[netId][0];
 
     return new Web3HttpProvider(url);
   }

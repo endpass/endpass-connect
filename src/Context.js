@@ -1,6 +1,9 @@
 import { Emmiter, InpageProvider, Dialog, Bridge } from '@/class';
+
 import ProviderFactory from '@/class/ProviderFactory';
-import { INPAGE_EVENTS, METHODS, NET_ID, DEFAULT_AUTH_URL } from '@/constants';
+import { INPAGE_EVENTS, METHODS, DEFAULT_AUTH_URL } from '@/constants';
+
+import { Network } from '@endpass/class';
 
 export default class Context {
   /**
@@ -169,7 +172,7 @@ export default class Context {
 
       return {
         activeAccount: settings.lastActiveAccount,
-        activeNet: settings.net || NET_ID.MAIN,
+        activeNet: settings.net || Network.NET_ID.MAIN,
       };
     } catch (err) {
       throw new Error('User not autorized!');
