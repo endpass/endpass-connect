@@ -1,6 +1,6 @@
 import Web3HttpProvider from 'web3-providers-http';
-import ProviderFactory from '@/class/ProviderFactory';
 import { Network } from '@endpass/class';
+import ProviderFactory from '@/class/ProviderFactory';
 
 jest.mock('web3-providers-http');
 
@@ -19,9 +19,13 @@ describe('ProviderFactory class', () => {
   });
 
   it('should return provider with net url which exist in net list', () => {
-    const provider = ProviderFactory.createRequestProvider(Network.NET_ID.ROPSTEN);
+    const provider = ProviderFactory.createRequestProvider(
+      Network.NET_ID.ROPSTEN,
+    );
 
-    expect(Web3HttpProvider).toBeCalledWith(Network.NETWORK_URL_HTTP[Network.NET_ID.ROPSTEN][0]);
+    expect(Web3HttpProvider).toBeCalledWith(
+      Network.NETWORK_URL_HTTP[Network.NET_ID.ROPSTEN][0],
+    );
     expect(provider).toBeInstanceOf(Web3HttpProvider);
   });
 

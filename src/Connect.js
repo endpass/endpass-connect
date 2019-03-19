@@ -3,6 +3,7 @@ import privateFields from '@/privateFields';
 import Queue from '@/Queue';
 import { METHODS } from '@/constants';
 import middleware from '@/middleware';
+import Dialog from '@/class/Dialog';
 
 import pkg from '../package.json';
 
@@ -64,7 +65,11 @@ export default class Connect {
    *  know about result
    */
   async auth(redirectUrl) {
-    return this[privateFields.context].auth(redirectUrl);
+    const res = await this[privateFields.context].auth(redirectUrl);
+    return {
+      ...res.payload,
+      status: res.status,
+    };
   }
 
   /**
@@ -78,7 +83,7 @@ export default class Connect {
   }
 
   /**
-   * Opens Endpass Connect appliction with user settings
+   * Opens Endpass Connect application with user settings
    * If type of response equals to "logout" – user makes logout
    * If type of response equals to "update" – settings in injected provider will
    * be updated and promise will return updated settings
@@ -88,29 +93,26 @@ export default class Connect {
    */
   async openAccount() {
     const context = this[privateFields.context];
-    await context.openApp();
 
-    const dialog = context.getDialog();
-
-    const res = await dialog.ask({
+    const params = Dialog.createParams({
       method: METHODS.ACCOUNT,
     });
+    const res = await context.askDialog(params);
 
-    dialog.close();
+    if (!res.status) throw new Error(res.error || 'Account updating failed!');
+    const { type, settings } = res.payload;
 
-    if (!res.status) throw new Error(res.message || 'Account updating failed!');
-
-    if (res.type === 'update') {
-      this.setProviderSettings(res.payload);
+    if (type === 'update') {
+      this.setProviderSettings(settings);
 
       return {
-        type: 'update',
-        payload: res.payload,
+        type,
+        settings,
       };
     }
 
     return {
-      type: res.type,
+      type,
     };
   }
 }

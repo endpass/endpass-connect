@@ -1,6 +1,6 @@
 // @ts-check
 /**
- * @callback Listener:(...args: any) => void
+ * @callback Listener {import('@types/global').Listener}
  */
 
 /**

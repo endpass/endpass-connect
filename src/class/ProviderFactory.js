@@ -19,7 +19,7 @@ export default class ProviderFactory {
       activeNetId,
     );
     const netId = isExistInNetworkList ? activeNetId : Network.NET_ID.MAIN;
-    const url = Network.NETWORK_URL_HTTP[netId][0];
+    const url = get(Network.NETWORK_URL_HTTP, `${netId}[0]`);
 
     return new Web3HttpProvider(url);
   }

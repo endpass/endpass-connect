@@ -1,7 +1,7 @@
 import Context from '@/Context';
 import { QueueAction } from '@/types/QueueAction';
 
-export type Middleware = (
+type Middleware = (
   context: Context,
   action: QueueAction,
 ) => void;

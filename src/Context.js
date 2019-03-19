@@ -1,56 +1,51 @@
-import { Emmiter, InpageProvider, Dialog, Bridge } from '@/class';
-
-import ProviderFactory from '@/class/ProviderFactory';
-import { INPAGE_EVENTS, METHODS, DEFAULT_AUTH_URL } from '@/constants';
-
-import { Network } from '@endpass/class';
+import { CrossWindowMessenger, Network } from '@endpass/class';
+import { Emmiter, InpageProvider, Bridge, ProviderFactory } from '@/class';
+import {
+  INPAGE_EVENTS,
+  METHODS,
+  DEFAULT_AUTH_URL,
+  DIRECTION,
+} from '@/constants';
+import Dialog from './class/Dialog';
 
 export default class Context {
   /**
    * @param {String} options.authUrl Url of hosted Endpass Connect Application
+   * @param {String} [options.namespace] namespace for see difference, between two instances
    * @param {Boolean} options.isIdentityMode isIdentityMode for define auth like identity
    * @param {Object} options.demoData demoData passed object to auth
    */
   constructor(options = {}) {
     this.authUrl = options.authUrl || DEFAULT_AUTH_URL;
-    this.isIdentityMode = options.isIdentityMode || false;
-    this.demoData = options.demoData;
+    this.namespace = options.namespace;
+
+    this.haveDemoData = !!options.demoData;
 
     this.emitter = new Emmiter();
     const provider = new InpageProvider(this.emitter);
     this.setInpageProvider(provider);
 
+    this.messenger = new CrossWindowMessenger({
+      showLogs: !ENV.isProduction,
+      name: `connect-bridge[${this.namespace}]`,
+      to: DIRECTION.AUTH,
+      from: DIRECTION.CONNECT,
+    });
+
     this.requestProvider = ProviderFactory.createRequestProvider();
 
-    this.dialog = null;
-    this.bridge = null;
     this.isServerLogin = false;
-    this.initBridge();
+
+    this.bridge = new Bridge({
+      context: this,
+      url: this.getConnectUrl('bridge'),
+      initialPayload: {
+        demoData: options.demoData,
+        isIdentityMode: options.isIdentityMode || false,
+      },
+    });
+
     this.setupLoginEvents();
-  }
-
-  static getDemoDataQueryString(demoData) {
-    if (!demoData) {
-      return '';
-    }
-
-    let res = '';
-    try {
-      const passData = encodeURIComponent(JSON.stringify(demoData));
-      res = `demoData=${passData}`;
-    } catch (e) {}
-
-    return res;
-  }
-
-  /**
-   * Define Bridge instance
-   * @param {props} props properties for instance
-   */
-  initBridge() {
-    const url = this.getConnectUrl('bridge');
-    this.bridge = new Bridge({ url });
-    this.getBridge().mount();
   }
 
   setupLoginEvents() {
@@ -67,35 +62,22 @@ export default class Context {
     });
   }
 
-  /**
-   * Opens application with given route in child window
-   * Also awaits ready state message from dialog
-   * After receiving message – returns link to opened window
-   * @param {String} route Target connect application route
-   * @returns {Promise<Window>} Opened child window
-   */
-  async openApp(route = '', queryParams = {}) {
-    const queryStr = Object.keys(queryParams)
-      .map(key => {
-        return `${key}=${queryParams[key]}`;
-      })
-      .join('&');
+  async askDialog(params) {
+    const { method, route, payload } = params;
 
-    const demoQuery = Context.getDemoDataQueryString(this.demoData);
+    const bridge = this.getBridge();
 
-    const queries = [queryStr, demoQuery].filter(item => !!item).join('&');
+    await bridge.openDialog({ route });
 
-    const path = queries ? `${route}?${queries}` : route;
+    const res = await bridge.ask(method, payload);
 
-    const url = this.getConnectUrl(path);
+    bridge.closeDialog();
 
-    this.dialog = new Dialog({ url });
-
-    await this.getDialog().open();
+    return res;
   }
 
   isLogin() {
-    if (this.demoData) {
+    if (this.haveDemoData) {
       return true;
     }
 
@@ -111,23 +93,19 @@ export default class Context {
    *  know about result
    */
   async auth(redirectUrl) {
-    const query = this.isIdentityMode ? { mode: true } : {};
-    await this.openApp('auth', query);
-
-    const dialog = this.getDialog();
-
-    const res = await dialog.ask({
+    const params = Dialog.createParams({
       method: METHODS.AUTH,
-      redirectUrl: redirectUrl || null,
+      payload: {
+        redirectUrl: redirectUrl || null,
+      },
     });
+    const res = await this.askDialog(params);
 
-    dialog.close();
-
-    if (!res.status) throw new Error(res.message || 'Authentificaton error!');
+    if (!res.status) throw new Error(res.error || 'Authentificaton error!');
     this.isServerLogin = true;
 
     const result = {
-      ...res.payload,
+      payload: res.payload,
       status: res.status,
     };
 
@@ -141,11 +119,9 @@ export default class Context {
    * @returns {Promise<Boolean>}
    */
   async logout() {
-    const res = await this.getBridge().ask({
-      method: METHODS.LOGOUT,
-    });
+    const res = await this.getBridge().ask(METHODS.LOGOUT);
 
-    if (!res.status) throw new Error(res.message || 'Logout error!');
+    if (!res.status) throw new Error(res.error || 'Logout error!');
     this.isServerLogin = false;
 
     return res.status;
@@ -160,15 +136,16 @@ export default class Context {
    */
   async getAccountData() {
     try {
-      const settings = await this.getBridge().ask({
-        method: METHODS.GET_SETTINGS,
-      });
+      const { payload, status, error } = await this.getBridge().ask(
+        METHODS.GET_SETTINGS,
+      );
 
-      if (!settings.status) {
-        throw new Error(settings.message || 'User settings are not received!');
+      if (!status) {
+        throw new Error(error || 'User settings are not received!');
       }
-
       this.isServerLogin = true;
+
+      const { settings = {} } = payload;
 
       return {
         activeAccount: settings.lastActiveAccount,
@@ -246,11 +223,15 @@ export default class Context {
     return this.emitter;
   }
 
-  getDialog() {
-    return this.dialog;
-  }
-
   getBridge() {
     return this.bridge;
+  }
+
+  getMessenger() {
+    return this.messenger;
+  }
+
+  getNamespace() {
+    return this.namespace;
   }
 }

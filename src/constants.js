@@ -22,14 +22,21 @@ export const DAPP_WHITELISTED_METHODS = [
   'eth_sendTransaction',
 ];
 
-export const METHODS = {
+export const METHODS = Object.freeze({
   AUTH: 'AUTH',
   SIGN: 'SIGN',
   LOGOUT: 'LOGOUT',
   ACCOUNT: 'ACCOUNT',
   RECOVER: 'RECOVER',
-  RESIZE_DIALOG: 'RESIZE_DIALOG',
+  DIALOG_RESIZE: 'DIALOG_RESIZE',
+  DIALOG_OPEN: 'DIALOG_OPEN',
+  DIALOG_CLOSE: 'DIALOG_CLOSE',
   GET_SETTINGS: 'GET_SETTINGS',
-  READY_STATE_DIALOG: 'READY_STATE_DIALOG',
+  INITIATE: 'INITIATE',
   READY_STATE_BRIDGE: 'READY_STATE_BRIDGE',
-};
+});
+
+export const DIRECTION = Object.freeze({
+  AUTH: 'auth',
+  CONNECT: 'connect',
+});
