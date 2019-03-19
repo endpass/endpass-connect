@@ -50,6 +50,7 @@ export default {
     }),
     ts(),
     babel({
+      runtimeHelpers: true,
       exclude: 'node_modules/**',
       extensions: ['.js', '.ts'],
     }),

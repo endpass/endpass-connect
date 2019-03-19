@@ -33,7 +33,6 @@ describe('Connect class', () => {
 
     it('should subscribe on events is subscribe property passed to constructor', () => {
       jest.spyOn(Queue.prototype, 'setupEventEmitter');
-      jest.spyOn(Context.prototype, 'initBridge');
       jest.spyOn(ProviderFactory, 'createRequestProvider');
 
       connect = new Connect({ authUrl });
@@ -42,7 +41,6 @@ describe('Connect class', () => {
       context = connect[privateFields.context];
 
       expect(queue.setupEventEmitter).toBeCalled();
-      expect(context.initBridge).toBeCalled();
       expect(ProviderFactory.createRequestProvider).toBeCalled();
     });
 
@@ -100,11 +98,15 @@ describe('Connect class', () => {
   describe('getAccountData', () => {
     beforeEach(() => {
       context.bridge.ask = jest.fn().mockResolvedValueOnce({
-        lastActiveAccount: '0x0',
-        net: 1,
-        foo: 'bar',
-        bar: 'baz',
-        status: 'ok',
+        status: true,
+        payload: {
+          settings: {
+            lastActiveAccount: '0x0',
+            net: 1,
+            foo: 'bar',
+            bar: 'baz',
+          },
+        },
       });
     });
 
@@ -122,26 +124,29 @@ describe('Connect class', () => {
     it('should request user settings through inner connect bridge', async () => {
       expect.assertions(2);
 
-      const response = {
+      const settings = {
         lastActiveAccount: 'lastActiveAccount',
         net: 'net',
+      };
+      const response = {
         status: true,
+        payload: {
+          settings,
+        },
       };
       context.getBridge().ask = jest.fn().mockResolvedValueOnce(response);
 
       const res = await connect.getAccountData();
 
-      expect(context.getBridge().ask).toBeCalledWith({
-        method: METHODS.GET_SETTINGS,
-      });
+      expect(context.getBridge().ask).toBeCalledWith(METHODS.GET_SETTINGS);
 
       expect(res).toEqual({
-        activeAccount: response.lastActiveAccount,
-        activeNet: response.net,
+        activeAccount: settings.lastActiveAccount,
+        activeNet: settings.net,
       });
     });
 
-    it('should throw error is request status is falsy', async () => {
+    it('should throw error is request account status is falsy', async () => {
       expect.assertions(1);
 
       context.getBridge().ask = jest.fn().mockResolvedValueOnce({
@@ -161,34 +166,35 @@ describe('Connect class', () => {
   });
 
   describe('openAccount', () => {
-    let dialog;
+    let bridge;
 
     beforeEach(() => {
-      dialog = {
+      bridge = {
         ask: jest.fn(),
-        close: jest.fn(),
+        closeDialog: jest.fn(),
+        openDialog: jest.fn(),
       };
-      context.dialog = dialog;
-      context.openApp = jest.fn();
+      context.bridge = bridge;
       connect.setProviderSettings = jest.fn();
     });
 
     it('should open connect application and awaits any signals from it', async () => {
       expect.assertions(3);
 
-      dialog.ask.mockResolvedValueOnce({
-        type: 'foo',
+      bridge.ask.mockResolvedValueOnce({
         status: true,
+        payload: {
+          type: 'foo',
+        },
       });
 
       const res = await connect.openAccount();
 
-      expect(context.dialog.ask).toBeCalledWith({
-        method: METHODS.ACCOUNT,
-      });
-      expect(context.dialog.close).toBeCalled();
+      expect(context.bridge.ask).toBeCalledWith(METHODS.ACCOUNT, undefined);
+      expect(context.bridge.closeDialog).toBeCalled();
       expect(res).toEqual({
         type: 'foo',
+        settings: undefined,
       });
     });
 
@@ -196,11 +202,12 @@ describe('Connect class', () => {
       expect.assertions(1);
 
       const payload = {
-        foo: 'bar',
+        wrongField: 'wrongField',
+        type: 'update',
+        settings: 'settings',
       };
 
-      dialog.ask.mockResolvedValueOnce({
-        type: 'update',
+      bridge.ask.mockResolvedValueOnce({
         status: true,
         payload,
       });
@@ -209,12 +216,12 @@ describe('Connect class', () => {
 
       expect(res).toEqual({
         type: 'update',
-        payload,
+        settings: 'settings',
       });
     });
 
     it('should throw error if request status is falsy', () => {
-      dialog.ask.mockResolvedValueOnce({
+      bridge.ask.mockResolvedValueOnce({
         status: false,
       });
 

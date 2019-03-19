@@ -1,6 +1,6 @@
 import Web3HttpProvider from 'web3-providers-http';
-import requestProviderSwitchActual from '@/middleware/requestProviderSwitchActual';
 import { Network } from '@endpass/class';
+import requestProviderSwitchActual from '@/middleware/requestProviderSwitchActual';
 
 jest.mock('web3-providers-http', () =>
   jest.fn(host => ({

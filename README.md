@@ -118,7 +118,7 @@ connect.openAccount().then(res => {
     // User have logout here
   } else if (res.type === 'update') {
     // Account settings was updated by user
-    console.log(res); // { activeAccount: "0x0", activeNet: 1 }
+    console.log(res.settings); // { activeAccount: "0x0", activeNet: 1 }
   }
 });
 ```

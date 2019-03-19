@@ -5,7 +5,7 @@ import { UserSettings } from '@/types/UserSettings';
 
 type ItemState = $Values<typeof itemStates>;
 
-export declare type QueueAction = {
+declare type QueueAction = {
   request: RpcRequest,
   state: ItemState,
   payload?: RpcResponse,

@@ -1,6 +1,5 @@
-import omit from 'lodash.omit';
-
 import { METHODS, INPAGE_EVENTS, DAPP_WHITELISTED_METHODS } from '@/constants';
+import Dialog from '@/class/Dialog';
 
 export default class RequestProcess {
   constructor({ context, request, settings = {} }) {
@@ -86,23 +85,23 @@ export default class RequestProcess {
    */
   async sign() {
     const { context } = this;
-    await context.openApp('sign');
-
     const { activeAccount, activeNet } = this.settings;
-    const dialog = context.getDialog();
-    const res = await dialog.ask({
+
+    const params = Dialog.createParams({
       method: METHODS.SIGN,
-      url: window.location.origin,
-      address: activeAccount,
-      net: activeNet,
-      request: this.currentRequest,
+      payload: {
+        url: window.location.origin,
+        address: activeAccount,
+        net: activeNet,
+        request: this.currentRequest,
+      },
     });
 
-    dialog.close();
+    const res = await context.askDialog(params);
 
-    if (!res.status) throw new Error(res.message || 'Sign error!');
+    if (!res.status) throw new Error(res.error || 'Sign error!');
 
-    return omit(res, ['status']);
+    return res.payload;
   }
 
   /**
@@ -114,15 +113,14 @@ export default class RequestProcess {
   async recover() {
     const { context } = this;
     const { activeAccount, activeNet } = this.settings;
-    const res = await context.getBridge().ask({
-      method: METHODS.RECOVER,
+    const res = await context.getBridge().ask(METHODS.RECOVER, {
       address: activeAccount,
       net: activeNet,
       request: this.currentRequest,
     });
 
-    if (!res.status) throw new Error(res.message || 'Recovery error!');
+    if (!res.status) throw new Error(res.error || 'Recovery error!');
 
-    return omit(res, ['status']);
+    return res.payload;
   }
 }

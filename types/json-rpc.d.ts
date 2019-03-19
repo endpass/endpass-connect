@@ -9,7 +9,7 @@ declare type RpcRequestExt = {
   id: RpcId,
 };
 
-export declare type RpcRequest = Overwrite<JsonRPCRequest, RpcRequestExt>;
+declare type RpcRequest = Overwrite<JsonRPCRequest, RpcRequestExt>;
 
 declare type RpcSuccessResponse = {
   jsonrpc: RpcVersion,
@@ -33,7 +33,7 @@ declare type RpcSubscriptionResponse = {
   },
 };
 
-export declare type RpcResponse =
+declare type RpcResponse =
   | RpcSuccessResponse
   | RpcErrorResponse
   | RpcSubscriptionResponse
