@@ -1,9 +1,9 @@
 import Connect from '@/Connect';
-import Context from '@/Context';
 import Queue from '@/Queue';
 import privateFields from '@/privateFields';
 import { InpageProvider, ProviderFactory } from '@/class';
 import { INPAGE_EVENTS, METHODS, DEFAULT_AUTH_URL } from '@/constants';
+import pkg from '@/../package';
 
 describe('Connect class', () => {
   let connect;
@@ -47,7 +47,7 @@ describe('Connect class', () => {
     it('should be created without authUrl parameter', () => {
       connect = new Connect();
       context = connect[privateFields.context];
-      expect(context.authUrl).toBe(DEFAULT_AUTH_URL);
+      expect(context.authUrl).toBe(`${DEFAULT_AUTH_URL}/v${pkg.authVersion}`);
     });
 
     it('should return Inpage provider from given parameters', () => {
