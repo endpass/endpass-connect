@@ -3,6 +3,7 @@ import Context from '@/Context';
 import privateFields from '@/privateFields';
 import { METHODS } from '@/constants';
 import { CrossWindowMessenger } from '@endpass/class';
+import pkg from '@/../package';
 
 describe('Context class', () => {
   let connect;
@@ -22,7 +23,7 @@ describe('Context class', () => {
 
   describe('getConnectUrl', () => {
     it('should return url to auth on connect application', () => {
-      expect(context.getConnectUrl('foo')).toBe(`${authUrl}/foo`);
+      expect(context.getConnectUrl('foo')).toBe(`${authUrl}/v${pkg.authVersion}/foo`);
     });
   });
 
