@@ -7,7 +7,6 @@ import {
   DIRECTION,
 } from '@/constants';
 import Dialog from './class/Dialog';
-import pkg from '../package.json';
 
 export default class Context {
   /**
@@ -19,7 +18,7 @@ export default class Context {
   constructor(options = {}) {
     const authUrl = options.authUrl || DEFAULT_AUTH_URL;
 
-    this.authUrl = `${authUrl}/v${pkg.authVersion}`;
+    this.authUrl = `${authUrl}${ENV.authVersion}`;
 
     this.namespace = options.namespace;
 
