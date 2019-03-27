@@ -1,5 +1,5 @@
 import requestProviderCheck from '@/middleware/requestProviderCheck';
-import { Network } from '@endpass/class';
+import Network from '@endpass/class/Network';
 
 describe('requestProviderCheck middleware', () => {
   const mainUrl = Network.NETWORK_URL_HTTP[Network.NET_ID.MAIN][0];

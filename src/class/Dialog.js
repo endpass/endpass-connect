@@ -54,22 +54,7 @@ const propsIframeShow = {
   opacity: 1,
 };
 
-const methodToRoute = {
-  [METHODS.SIGN]: 'sign',
-  [METHODS.ACCOUNT]: '',
-  [METHODS.AUTH]: 'auth',
-};
-
 export default class Dialog {
-  static createParams(params) {
-    const route = methodToRoute[params.method] || '';
-    return {
-      method: params.method,
-      route,
-      payload: params.payload,
-    };
-  }
-
   /**
    * @param {Context} options.context Context
    * @param {String} options.url Context
@@ -82,6 +67,7 @@ export default class Dialog {
     this.overlay = null;
     this.wrapper = null;
     this.frame = null;
+    this.isShown = false;
     this.frameStyles = inlineStylesState(propsIframe);
 
     this.mount();
@@ -110,49 +96,28 @@ export default class Dialog {
     this.wrapper = document.body.querySelector('[data-endpass="wrapper"]');
     this.frame = document.body.querySelector('[data-endpass="frame"]');
 
-    this.context.getMessenger().setTarget(this.frame.contentWindow);
+    const messenger = this.context.getMessenger();
 
-    this.context
-      .getMessenger()
-      .subscribe(METHODS.DIALOG_RESIZE, ({ offsetHeight }) => {
-        this.frame.style = this.frameStyles({
-          'min-height': `${offsetHeight || 0}px`,
-        });
+    messenger.setTarget(this.frame.contentWindow);
+
+    messenger.subscribe(METHODS.DIALOG_RESIZE, ({ offsetHeight }) => {
+      this.frame.style = this.frameStyles({
+        'min-height': `${offsetHeight || 0}px`,
       });
-  }
+    });
 
-  /**
-   * Open dialog and process result
-   * @param {{}} params for dialog
-   * @return {Promise<void>}
-   */
-  async open(params) {
-    this.overlay.style = stylesOverlayShow;
+    messenger.subscribe(METHODS.DIALOG_CLOSE, () => {
+      this.isShown = false;
+      this.overlay.style = stylesOverlayHide;
+      this.frame.style = this.frameStyles(propsIframeHide);
+      this.wrapper.style = stylesWrapperHide;
+    });
 
-    const res = await this.context
-      .getMessenger()
-      .sendAndWaitResponse(METHODS.DIALOG_OPEN, params);
-
-    this.wrapper.style = stylesWrapperShow;
-
-    this.frame.style = this.frameStyles(propsIframeShow);
-
-    if (!res.status) {
-      this.close();
-      throw new Error(
-        res.error ||
-          'Dialog was not opened due unexpected error! Please, try again',
-      );
-    }
-  }
-
-  /**
-   * Hide dialog
-   */
-  close() {
-    this.overlay.style = stylesOverlayHide;
-    this.frame.style = this.frameStyles(propsIframeHide);
-    this.wrapper.style = stylesWrapperHide;
-    this.context.getMessenger().send(METHODS.DIALOG_CLOSE);
+    messenger.subscribe(METHODS.DIALOG_OPEN, () => {
+      this.isShown = true;
+      this.frame.style = this.frameStyles(propsIframeShow);
+      this.overlay.style = stylesOverlayShow;
+      this.wrapper.style = stylesWrapperShow;
+    });
   }
 }

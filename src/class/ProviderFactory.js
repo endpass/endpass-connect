@@ -6,7 +6,7 @@ import { $Values } from 'utility-types';
 
 import Web3HttpProvider from 'web3-providers-http';
 
-import { Network } from '@endpass/class';
+import Network from '@endpass/class/Network';
 
 export default class ProviderFactory {
   /**

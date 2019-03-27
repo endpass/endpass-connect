@@ -1,6 +1,8 @@
 // @ts-check
 import { INPAGE_EVENTS } from '@/constants';
-import { AsyncQueue } from '@/class';
+
+// @ts-ignore
+import QueueAsync from '@endpass/class/QueueAsync';
 import itemStates from './itemStates';
 
 // eslint-disable-next-line no-unused-vars
@@ -18,7 +20,7 @@ export default class Queue {
     this.handleRequest = this.handleRequest.bind(this);
 
     // Setup net requests queue
-    this.queue = new AsyncQueue();
+    this.queue = new QueueAsync();
 
     // start queue
     this.setupEventEmitter();

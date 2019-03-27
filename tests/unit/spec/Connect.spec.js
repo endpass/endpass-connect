@@ -153,7 +153,7 @@ describe('Connect class', () => {
         status: false,
       });
 
-      const err = new Error('User not autorized!');
+      const err = new Error('User not authorized!');
       let check;
       try {
         await connect.getAccountData();
@@ -171,15 +171,13 @@ describe('Connect class', () => {
     beforeEach(() => {
       bridge = {
         ask: jest.fn(),
-        closeDialog: jest.fn(),
-        openDialog: jest.fn(),
       };
       context.bridge = bridge;
       connect.setProviderSettings = jest.fn();
     });
 
     it('should open connect application and awaits any signals from it', async () => {
-      expect.assertions(3);
+      expect.assertions(2);
 
       bridge.ask.mockResolvedValueOnce({
         status: true,
@@ -191,7 +189,6 @@ describe('Connect class', () => {
       const res = await connect.openAccount();
 
       expect(context.bridge.ask).toBeCalledWith(METHODS.ACCOUNT, undefined);
-      expect(context.bridge.closeDialog).toBeCalled();
       expect(res).toEqual({
         type: 'foo',
         settings: undefined,

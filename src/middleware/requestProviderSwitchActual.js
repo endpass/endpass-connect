@@ -1,7 +1,7 @@
 import get from 'lodash.get';
 
 import ProviderFactory from '@/class/ProviderFactory';
-import { Network } from '@endpass/class';
+import Network from '@endpass/class/Network';
 
 /** @type {import("@/types/Middleware").Middleware} */
 const middleware = (context, action) => {
