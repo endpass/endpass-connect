@@ -2,7 +2,7 @@ import Connect from '@/Connect';
 import Context from '@/Context';
 import privateFields from '@/privateFields';
 import { METHODS } from '@/constants';
-import { CrossWindowMessenger } from '@endpass/class';
+import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import pkg from '@/../package';
 
 describe('Context class', () => {
@@ -42,7 +42,7 @@ describe('Context class', () => {
     });
 
     it('should auth user through dialog request and returns result', async () => {
-      expect.assertions(3);
+      expect.assertions(2);
 
       const dialogResponse = {
         status: true,
@@ -59,7 +59,6 @@ describe('Context class', () => {
       expect(bridge.ask).toBeCalledWith(METHODS.AUTH, {
         redirectUrl: null,
       });
-      expect(bridge.closeDialog).toBeCalled();
       expect(res).toEqual(dialogResponse);
     });
 

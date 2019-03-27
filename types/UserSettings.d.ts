@@ -1,4 +1,4 @@
-import { Network } from '@endpass/class';
+import Network from '@endpass/class/Network';
 import { $Values } from 'utility-types';
 
 export declare type UserSettings = {

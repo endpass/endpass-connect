@@ -231,8 +231,6 @@ describe('Request process middleware', () => {
         ask: jest.fn().mockResolvedValueOnce({
           status: true,
         }),
-        openDialog: jest.fn(),
-        closeDialog: jest.fn(),
       };
 
       reqProcess.settings = {
@@ -244,7 +242,7 @@ describe('Request process middleware', () => {
     });
 
     it('should requests account data, open sign dialog, await sign message and send message to dialog', async () => {
-      expect.assertions(2);
+      expect.assertions(1);
 
       await reqProcess.sign();
 
@@ -254,7 +252,6 @@ describe('Request process middleware', () => {
         url: expect.any(String),
         request,
       });
-      expect(bridge.closeDialog).toBeCalled();
     });
 
     it('should throw error is sign request status is falsy', async () => {

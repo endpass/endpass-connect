@@ -23,12 +23,13 @@ export default class Bridge {
 
     /** @type Resolvers */
     this.readyResolvers = [];
+    const messenger = this.context.getMessenger();
 
-    this.context.getMessenger().subscribe(METHODS.INITIATE, (payload, req) => {
+    messenger.subscribe(METHODS.INITIATE, (payload, req) => {
       req.answer(this.initialPayload);
     });
 
-    this.context.getMessenger().subscribe(METHODS.READY_STATE_BRIDGE, () => {
+    messenger.subscribe(METHODS.READY_STATE_BRIDGE, () => {
       this.ready = true;
       this.readyResolvers.forEach(item => item(true));
       this.readyResolvers.length = 0;
@@ -50,24 +51,6 @@ export default class Bridge {
 
       this.readyResolvers.push(resolve);
     });
-  }
-
-  /**
-   *
-   * @param {{}} params for dialog
-   * @return {Promise<void>}
-   */
-  async openDialog(params) {
-    await this.checkReadyState();
-
-    await this.dialog.open(params);
-  }
-
-  /**
-   * Close dialog
-   */
-  closeDialog() {
-    this.dialog.close();
   }
 
   /**

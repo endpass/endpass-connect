@@ -87,7 +87,7 @@ export default class RequestProcess {
     const { context } = this;
     const { activeAccount, activeNet } = this.settings;
 
-    const params = Dialog.createParams({
+    const res = await context.askDialog({
       method: METHODS.SIGN,
       payload: {
         url: window.location.origin,
@@ -96,8 +96,6 @@ export default class RequestProcess {
         request: this.currentRequest,
       },
     });
-
-    const res = await context.askDialog(params);
 
     if (!res.status) throw new Error(res.error || 'Sign error!');
 

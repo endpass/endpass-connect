@@ -7,7 +7,7 @@ try {
   local = require('./local');
 } catch (e) {}
 
-const getEnv = (env = 'development') => {
+const getEnv = (env) => {
   switch ((env || '').toLowerCase()) {
     case 'production':
       return prod;

@@ -20,6 +20,7 @@
     "module": "esnext",
     "baseUrl": ".",
     "paths": {
+      "*": ["types/*"],
       "@/*": ["./src/*"],
       "@/types/*": ["./types/*"]
     }

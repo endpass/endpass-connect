@@ -1,4 +1,5 @@
-import { CrossWindowMessenger, Network } from '@endpass/class';
+import Network from '@endpass/class/Network';
+import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import { Emmiter, InpageProvider, Bridge, ProviderFactory } from '@/class';
 import {
   INPAGE_EVENTS,
@@ -6,7 +7,6 @@ import {
   DEFAULT_AUTH_URL,
   DIRECTION,
 } from '@/constants';
-import Dialog from './class/Dialog';
 
 export default class Context {
   /**
@@ -20,7 +20,7 @@ export default class Context {
 
     this.authUrl = `${authUrl}${ENV.authVersion}`;
 
-    this.namespace = options.namespace;
+    this.namespace = options.namespace || '';
 
     this.haveDemoData = !!options.demoData;
 
@@ -66,15 +66,11 @@ export default class Context {
   }
 
   async askDialog(params) {
-    const { method, route, payload } = params;
+    const { method, payload } = params;
 
     const bridge = this.getBridge();
 
-    await bridge.openDialog({ route });
-
     const res = await bridge.ask(method, payload);
-
-    bridge.closeDialog();
 
     return res;
   }
@@ -96,13 +92,12 @@ export default class Context {
    *  know about result
    */
   async auth(redirectUrl) {
-    const params = Dialog.createParams({
+    const res = await this.askDialog({
       method: METHODS.AUTH,
       payload: {
         redirectUrl: redirectUrl || null,
       },
     });
-    const res = await this.askDialog(params);
 
     if (!res.status) throw new Error(res.error || 'Authentificaton error!');
     this.isServerLogin = true;
@@ -155,7 +150,7 @@ export default class Context {
         activeNet: settings.net || Network.NET_ID.MAIN,
       };
     } catch (err) {
-      throw new Error('User not autorized!');
+      throw new Error('User not authorized!');
     }
   }
 

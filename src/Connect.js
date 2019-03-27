@@ -3,7 +3,6 @@ import privateFields from '@/privateFields';
 import Queue from '@/Queue';
 import { METHODS } from '@/constants';
 import middleware from '@/middleware';
-import Dialog from '@/class/Dialog';
 
 import pkg from '../package.json';
 
@@ -94,10 +93,9 @@ export default class Connect {
   async openAccount() {
     const context = this[privateFields.context];
 
-    const params = Dialog.createParams({
+    const res = await context.askDialog({
       method: METHODS.ACCOUNT,
     });
-    const res = await context.askDialog(params);
 
     if (!res.status) throw new Error(res.error || 'Account updating failed!');
     const { type, settings } = res.payload;

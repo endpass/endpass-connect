@@ -1,5 +1,5 @@
 import get from 'lodash.get';
-import { Network } from '@endpass/class';
+import Network from '@endpass/class/Network';
 import Emmiter from './Emmiter';
 import { INPAGE_EVENTS, INPAGE_ID_PREFIX } from '@/constants';
 import processPayload from '@/util/processPayload';
