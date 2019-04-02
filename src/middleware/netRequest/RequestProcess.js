@@ -1,5 +1,4 @@
 import { METHODS, INPAGE_EVENTS, DAPP_WHITELISTED_METHODS } from '@/constants';
-import Dialog from '@/class/Dialog';
 
 export default class RequestProcess {
   constructor({ context, request, settings = {} }) {

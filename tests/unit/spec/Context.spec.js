@@ -23,7 +23,7 @@ describe('Context class', () => {
 
   describe('getConnectUrl', () => {
     it('should return url to auth on connect application', () => {
-      expect(context.getConnectUrl('foo')).toBe(`${authUrl}/v${pkg.authVersion}/foo`);
+      expect(context.getConnectUrl('foo')).toBe(`${authUrl}/foo`);
     });
   });
 

@@ -8,6 +8,10 @@ import {
   DIRECTION,
 } from '@/constants';
 
+import pkg from '../package.json';
+
+const regAuthUrl = new RegExp('://auth(\\.|-)', 'ig');
+
 export default class Context {
   /**
    * @param {String} options.authUrl Url of hosted Endpass Connect Application
@@ -18,7 +22,10 @@ export default class Context {
   constructor(options = {}) {
     const authUrl = options.authUrl || DEFAULT_AUTH_URL;
 
-    this.authUrl = `${authUrl}${ENV.authVersion}`;
+    this.authUrl =
+      authUrl.search(regAuthUrl) === -1
+        ? authUrl
+        : authUrl.replace('://auth', `://auth${pkg.authVersion}`);
 
     this.namespace = options.namespace || '';
 

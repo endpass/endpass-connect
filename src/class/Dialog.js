@@ -70,7 +70,15 @@ export default class Dialog {
     this.isShown = false;
     this.frameStyles = inlineStylesState(propsIframe);
 
-    this.mount();
+    if (document.readyState !== 'complete') {
+      document.addEventListener('readystatechange', () => {
+        if (document.readyState === 'complete') {
+          this.mount();
+        }
+      });
+    } else {
+      this.mount();
+    }
   }
 
   /**

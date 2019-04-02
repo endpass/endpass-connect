@@ -47,7 +47,7 @@ describe('Connect class', () => {
     it('should be created without authUrl parameter', () => {
       connect = new Connect();
       context = connect[privateFields.context];
-      expect(context.authUrl).toBe(`${DEFAULT_AUTH_URL}/v${pkg.authVersion}`);
+      expect(context.authUrl).toBe('https://auth1.endpass.com');
     });
 
     it('should return Inpage provider from given parameters', () => {
