@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.17.1-beta",
+  "version": "0.17.2-beta",
   "authVersion": "1",
   "main": "./dist/endpass-connect.min.js",
   "module": "./dist/endpass-connect.esm.js",
@@ -67,7 +67,7 @@
     }
   },
   "dependencies": {
-    "@endpass/class": "^0.10.0",
+    "@endpass/class": "^0.10.2",
     "lodash.get": "^4.4.2",
     "utility-types": "^3.4.1",
     "web3-providers-http": "1.0.0-beta.33"
