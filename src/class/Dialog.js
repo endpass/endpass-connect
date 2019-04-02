@@ -1,6 +1,8 @@
 import { inlineStyles, inlineStylesState } from '@/util/dom';
 import { METHODS } from '@/constants';
 
+const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
+
 const propsWrapper = {
   'min-width': '320px',
   'max-width': '360px',
@@ -85,6 +87,7 @@ export default class Dialog {
    * Create markup and prepend to <body>
    */
   mount() {
+    const messenger = this.context.getMessenger();
     const nameSpace = this.context.getNamespace();
     const NSmarkup = nameSpace ? `data-endpass-namespace="${nameSpace}"` : '';
 
@@ -104,9 +107,21 @@ export default class Dialog {
     this.wrapper = document.body.querySelector('[data-endpass="wrapper"]');
     this.frame = document.body.querySelector('[data-endpass="frame"]');
 
-    const messenger = this.context.getMessenger();
-
     messenger.setTarget(this.frame.contentWindow);
+
+    let isInited = false;
+    this.frame.addEventListener('load', ev => {
+      setTimeout(() => {
+        if (!isInited) {
+          console.error(
+            `Dialog is not inited, please check auth url ${this.url}`,
+          );
+        }
+      }, INITIAL_TIMEOUT);
+    });
+    messenger.subscribe(METHODS.INITIATE, () => {
+      isInited = true;
+    });
 
     messenger.subscribe(METHODS.DIALOG_RESIZE, ({ offsetHeight }) => {
       this.frame.style = this.frameStyles({
