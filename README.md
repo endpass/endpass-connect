@@ -31,9 +31,7 @@ import Web3 from 'web3';
 import EndpassConnect from '@endpass/connect';
 
 const web3 = new Web3('https://network.url');
-const connect = new EndpassConnect({
-  authUrl: 'http://connect.url',
-});
+const connect = new EndpassConnect();
 ```
 
 Next, you can try to authentificate user.
@@ -76,12 +74,6 @@ web3.setProvider(provider);
 ```
 
 ### API
-
-#### Instance options
-
-| Property  | Type     | Default                    | Description                         |
-| --------- | -------- | -------------------------- | ----------------------------------- |
-| `authUrl` | `string` | `https://auth.endpass.com` | Url of Endpass Connect application. |
 
 #### Instance methods
 
