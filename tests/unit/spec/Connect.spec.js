@@ -2,8 +2,7 @@ import Connect from '@/Connect';
 import Queue from '@/Queue';
 import privateFields from '@/privateFields';
 import { InpageProvider, ProviderFactory } from '@/class';
-import { INPAGE_EVENTS, METHODS, DEFAULT_AUTH_URL } from '@/constants';
-import pkg from '@/../package';
+import { INPAGE_EVENTS, METHODS } from '@/constants';
 
 describe('Connect class', () => {
   let connect;
@@ -47,7 +46,7 @@ describe('Connect class', () => {
     it('should be created without authUrl parameter', () => {
       connect = new Connect();
       context = connect[privateFields.context];
-      expect(context.authUrl).toBe('https://auth1.endpass.com');
+      expect(context.authUrl).toBe('https://auth.endpass.com');
     });
 
     it('should return Inpage provider from given parameters', () => {
