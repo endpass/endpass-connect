@@ -87,7 +87,6 @@ export default class Context {
   /**
    * Open application on auth screen and waits result (success of failure)
    * @public
-   * @throws {Error} If authentification failed
    * @returns {Promise<boolean>} Auth result, check `status` property to
    *  know about result
    */
@@ -99,7 +98,13 @@ export default class Context {
       },
     });
 
-    if (!res.status) throw new Error(res.error || 'Authentificaton error!');
+    if (!res.status) {
+      /* eslint-disable-next-line */
+      console.error(res.error || 'Authentificaton error!');
+
+      return false;
+    }
+
     this.isServerLogin = true;
 
     const result = {
@@ -119,7 +124,13 @@ export default class Context {
   async logout() {
     const res = await this.getBridge().ask(METHODS.LOGOUT);
 
-    if (!res.status) throw new Error(res.error || 'Logout error!');
+    if (!res.status) {
+      /* eslint-disable-next-line */
+      console.error(res.error || 'Logout error!');
+
+      return false;
+    }
+
     this.isServerLogin = false;
 
     return res.status;
@@ -129,8 +140,7 @@ export default class Context {
    * Requests user settings from injected bridge and returns formatted data
    * Settings includes last active account and network id
    * @public
-   * @throws {Error} If settings can not be resolved
-   * @returns {Promise<Object>} Account data
+   * @returns {Promise<Object|null>} Account data. Returns null on fails
    */
   async getAccountData() {
     try {
@@ -139,8 +149,12 @@ export default class Context {
       );
 
       if (!status) {
-        throw new Error(error || 'User settings are not received!');
+        /* eslint-disable-next-line */
+        console.error(error || 'User settings are not received!');
+
+        return null;
       }
+
       this.isServerLogin = true;
 
       const { settings = {} } = payload;
@@ -150,7 +164,10 @@ export default class Context {
         activeNet: settings.net || Network.NET_ID.MAIN,
       };
     } catch (err) {
-      throw new Error('User not authorized!');
+      /* eslint-disable-next-line */
+      console.error('User not authorized!');
+
+      return null;
     }
   }
 

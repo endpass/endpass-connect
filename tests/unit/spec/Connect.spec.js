@@ -147,21 +147,18 @@ describe('Connect class', () => {
     });
 
     it('should throw error is request account status is falsy', async () => {
-      expect.assertions(1);
+      expect.assertions(2);
 
+      jest.spyOn(console, 'error');
       context.getBridge().ask = jest.fn().mockResolvedValueOnce({
         status: false,
       });
 
-      const err = new Error('User not authorized!');
-      let check;
-      try {
-        await connect.getAccountData();
-      } catch (e) {
-        check = e;
-      }
+      const res = await connect.getAccountData();
 
-      expect(check).toEqual(err);
+      expect(res).toBe(null);
+      /* eslint-disable-next-line */
+      expect(console.error).toBeCalledWith('User settings are not received!');
     });
   });
 
