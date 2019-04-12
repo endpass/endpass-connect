@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.17.5-beta",
+  "version": "0.17.6-beta",
   "authVersion": "",
   "main": "./dist/endpass-connect.min.js",
   "module": "./dist/endpass-connect.esm.js",
