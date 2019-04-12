@@ -3,7 +3,6 @@ import Context from '@/Context';
 import privateFields from '@/privateFields';
 import { METHODS } from '@/constants';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
-import pkg from '@/../package';
 
 describe('Context class', () => {
   let connect;
@@ -57,7 +56,7 @@ describe('Context class', () => {
       const res = await context.auth();
 
       expect(bridge.ask).toBeCalledWith(METHODS.AUTH, {
-        redirectUrl: null,
+        redirectUrl: 'http://localhost',
       });
       expect(res).toEqual(dialogResponse);
     });

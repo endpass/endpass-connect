@@ -98,11 +98,11 @@ export default class Context {
    * @returns {Promise<boolean>} Auth result, check `status` property to
    *  know about result
    */
-  async auth(redirectUrl) {
+  async auth(redirectUrl = window.location.origin) {
     const res = await this.askDialog({
       method: METHODS.AUTH,
       payload: {
-        redirectUrl: redirectUrl || null,
+        redirectUrl,
       },
     });
 
