@@ -1,5 +1,6 @@
 import { METHODS } from '@/constants';
 import Dialog from './Dialog';
+import Widget from './Widget';
 
 /**
  * @callback Listener {import('@types/global').Listener}
@@ -19,21 +20,56 @@ export default class Bridge {
     this.context = context;
     this.initialPayload = initialPayload;
     this.dialog = new Dialog({ context, url });
+    this.widget = new Widget({
+      context,
+      // TODO: remove that
+      url: `http://localhost:4000/public/widget`,
+    });
     this.ready = false;
 
     /** @type Resolvers */
     this.readyResolvers = [];
-    const messenger = this.context.getMessenger();
 
-    messenger.subscribe(METHODS.INITIATE, (payload, req) => {
-      req.answer(this.initialPayload);
+    this.initAuthMessenger();
+    this.initWidgetMessenger();
+  }
+
+  initAuthMessenger() {
+    const authMessenger = this.context.getMessenger();
+
+    authMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
+      req.answer({
+        ...this.initialPayload,
+        source: 'dialog',
+      });
     });
-
-    messenger.subscribe(METHODS.READY_STATE_BRIDGE, () => {
+    authMessenger.subscribe(METHODS.READY_STATE_BRIDGE, () => {
       this.ready = true;
       this.readyResolvers.forEach(item => item(true));
       this.readyResolvers.length = 0;
     });
+  }
+
+  initWidgetMessenger() {
+    const widgetMessenger = this.context.getWidgetMessenger();
+
+    widgetMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
+      req.answer({
+        ...this.initialPayload,
+        source: 'widget',
+      });
+    });
+    widgetMessenger.subscribe(METHODS.WIDGET_OPEN, (payload, req) => {
+      this.widget.resize({ height: '100vh' });
+      req.answer();
+    });
+    widgetMessenger.subscribe(METHODS.WIDGET_FIT, ({ height }) => {
+      this.widget.resize({ height: `${height}px` });
+    });
+  }
+
+  mountWidget() {
+    this.widget.mount();
   }
 
   /**
