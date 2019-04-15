@@ -39,7 +39,10 @@ export default class Widget {
     widgetMessenger.setTarget(this.frame.contentWindow);
   }
 
+  /**
+   * @param {String} options.height Height in px or other CSS/HTML friendly unit
+   */
   resize({ height }) {
-    this.frame.style.height = `${height}px`;
+    this.frame.style.height = height;
   }
 }
