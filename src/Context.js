@@ -26,26 +26,29 @@ export default class Context {
       authUrl.search(regAuthUrl) === -1
         ? authUrl
         : authUrl.replace('://auth', `://auth${pkg.authVersion}`);
-
     this.namespace = options.namespace || '';
-
     this.haveDemoData = !!options.demoData;
-
+    this.withWidget = !!options.withWidget;
+    this.isServerLogin = false;
     this.emitter = new Emmiter();
-    const provider = new InpageProvider(this.emitter);
-    this.setInpageProvider(provider);
 
-    this.messenger = new CrossWindowMessenger({
+    const provider = new InpageProvider(this.emitter);
+
+    this.setInpageProvider(provider);
+    this.requestProvider = ProviderFactory.createRequestProvider();
+
+    this.dialogMessenger = new CrossWindowMessenger({
       showLogs: !ENV.isProduction,
       name: `connect-bridge[${this.namespace}]`,
       to: DIRECTION.AUTH,
       from: DIRECTION.CONNECT,
     });
-
-    this.requestProvider = ProviderFactory.createRequestProvider();
-
-    this.isServerLogin = false;
-
+    this.widgetMessenger = new CrossWindowMessenger({
+      showLogs: !ENV.isProduction,
+      name: `connect-bridge[${this.namespace}]`,
+      to: DIRECTION.AUTH,
+      from: DIRECTION.CONNECT,
+    });
     this.bridge = new Bridge({
       context: this,
       url: this.getConnectUrl('bridge'),
@@ -56,6 +59,8 @@ export default class Context {
     });
 
     this.setupLoginEvents();
+
+    if (this.withWidget) this.mountWidgetOnAuth();
   }
 
   setupLoginEvents() {
@@ -88,6 +93,7 @@ export default class Context {
     }
 
     const { activeAccount } = this.getInpageProvider().settings;
+
     return !!(activeAccount && this.isServerLogin);
   }
 
@@ -166,6 +172,7 @@ export default class Context {
 
   async serverAuth() {
     let settings;
+
     try {
       settings = await this.getAccountData();
     } catch (e) {
@@ -197,6 +204,26 @@ export default class Context {
    */
   setProviderSettings(payload) {
     this.getEmitter().emit(INPAGE_EVENTS.SETTINGS, payload);
+  }
+
+  /* eslint-disable-next-line */
+  mountWidgetOnAuth() {
+    return new Promise(res => {
+      const handler = () =>
+        setTimeout(async () => {
+          try {
+            await this.getAccountData();
+
+            this.bridge.mountWidget();
+
+            return res();
+          } catch (err) {
+            handler();
+          }
+        }, 1500);
+
+      handler();
+    });
   }
 
   getInpageProvider() {
@@ -236,7 +263,11 @@ export default class Context {
   }
 
   getMessenger() {
-    return this.messenger;
+    return this.dialogMessenger;
+  }
+
+  getWidgetMessenger() {
+    return this.widgetMessenger;
   }
 
   getNamespace() {

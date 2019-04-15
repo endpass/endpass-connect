@@ -87,6 +87,7 @@ export default class Dialog {
    * Create markup and prepend to <body>
    */
   mount() {
+    // TODO: create another one
     const messenger = this.context.getMessenger();
     const nameSpace = this.context.getNamespace();
     const NSmarkup = nameSpace ? `data-endpass-namespace="${nameSpace}"` : '';
@@ -110,7 +111,8 @@ export default class Dialog {
     messenger.setTarget(this.frame.contentWindow);
 
     let isInited = false;
-    this.frame.addEventListener('load', ev => {
+
+    this.frame.addEventListener('load', () => {
       setTimeout(() => {
         if (!isInited) {
           console.error(
@@ -119,23 +121,21 @@ export default class Dialog {
         }
       }, INITIAL_TIMEOUT);
     });
+
     messenger.subscribe(METHODS.INITIATE, () => {
       isInited = true;
     });
-
     messenger.subscribe(METHODS.DIALOG_RESIZE, ({ offsetHeight }) => {
       this.frame.style = this.frameStyles({
         'min-height': `${offsetHeight || 0}px`,
       });
     });
-
     messenger.subscribe(METHODS.DIALOG_CLOSE, () => {
       this.isShown = false;
       this.overlay.style = stylesOverlayHide;
       this.frame.style = this.frameStyles(propsIframeHide);
       this.wrapper.style = stylesWrapperHide;
     });
-
     messenger.subscribe(METHODS.DIALOG_OPEN, () => {
       this.isShown = true;
       this.frame.style = this.frameStyles(propsIframeShow);

@@ -7,6 +7,7 @@ import middleware from '@/middleware';
 import pkg from '../package.json';
 
 if (ENV.isProduction) {
+  /* eslint-disable-next-line */
   console.info(
     `%cEndpass connect version ${pkg.version} loaded 🔌`,
     'color: #fff; background: #4B0873',
@@ -19,6 +20,7 @@ export default class Connect {
    */
   constructor(options) {
     const context = new Context(options);
+
     this[privateFields.queue] = new Queue(context, { middleware });
     this[privateFields.context] = context;
   }
@@ -65,6 +67,7 @@ export default class Connect {
    */
   async auth(redirectUrl) {
     const res = await this[privateFields.context].auth(redirectUrl);
+
     return {
       ...res.payload,
       status: res.status,
@@ -92,12 +95,12 @@ export default class Connect {
    */
   async openAccount() {
     const context = this[privateFields.context];
-
     const res = await context.askDialog({
       method: METHODS.ACCOUNT,
     });
 
     if (!res.status) throw new Error(res.error || 'Account updating failed!');
+
     const { type, settings } = res.payload;
 
     if (type === 'update') {
