@@ -15,12 +15,19 @@ const regAuthUrl = new RegExp('://auth(\\.|-)', 'ig');
 export default class Context {
   /**
    * @param {String} options.authUrl Url of hosted Endpass Connect Application
-   * @param {String} [options.namespace] namespace for see difference, between two instances
+   * @param {String} options.namespace namespace for see difference, between two instances
    * @param {Boolean} options.isIdentityMode isIdentityMode for define auth like identity
    * @param {Object} options.demoData demoData passed object to auth
+   * @param {Object} options.widget Widget configuration object. If provided widget
+   *  will be mounted automatically
+   * @param {Object} options.widget.position Widget positions. By default
+   *  equals to `bottom right`
    */
   constructor(options = {}) {
     const authUrl = options.authUrl || DEFAULT_AUTH_URL;
+
+    this.inpageProvider = null;
+    this.requestProvider = null;
 
     this.authUrl =
       authUrl.search(regAuthUrl) === -1
@@ -28,7 +35,6 @@ export default class Context {
         : authUrl.replace('://auth', `://auth${pkg.authVersion}`);
     this.namespace = options.namespace || '';
     this.haveDemoData = !!options.demoData;
-    this.withWidget = !!options.withWidget;
     this.isServerLogin = false;
     this.emitter = new Emmiter();
 
@@ -60,7 +66,9 @@ export default class Context {
 
     this.setupLoginEvents();
 
-    if (this.withWidget) this.mountWidgetOnAuth();
+    if (options.widget) {
+      this.mountWidgetOnAuth(options.widget);
+    }
   }
 
   setupLoginEvents() {
@@ -206,15 +214,24 @@ export default class Context {
     this.getEmitter().emit(INPAGE_EVENTS.SETTINGS, payload);
   }
 
+  mountWidget(parameters) {
+    this.bridge.mountWidget(parameters);
+  }
+
+  unmountWidget() {
+    this.bridge.unmountWidget();
+  }
+
   /* eslint-disable-next-line */
-  mountWidgetOnAuth() {
+  mountWidgetOnAuth(parameters) {
     return new Promise(res => {
       const handler = () =>
+        /* eslint-disable-next-line */
         setTimeout(async () => {
           try {
             await this.getAccountData();
 
-            this.bridge.mountWidget();
+            this.mountWidget(parameters);
 
             return res();
           } catch (err) {

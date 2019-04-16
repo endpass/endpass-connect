@@ -21,8 +21,8 @@ export default class Connect {
   constructor(options) {
     const context = new Context(options);
 
-    this[privateFields.queue] = new Queue(context, { middleware });
     this[privateFields.context] = context;
+    this[privateFields.queue] = new Queue(context, { middleware });
   }
 
   /**
@@ -115,5 +115,21 @@ export default class Connect {
     return {
       type,
     };
+  }
+
+  /**
+   * Mounts endpass widget
+   * @param {Object} params Parameters object
+   * @param {String} params.position Position of mounting widget
+   */
+  mountWidget(params) {
+    this[privateFields.context].mountWidget(params);
+  }
+
+  /**
+   * Unmounts endpass widget from DOM
+   */
+  unmountWidget() {
+    this[privateFields.context].unmountWidget();
   }
 }
