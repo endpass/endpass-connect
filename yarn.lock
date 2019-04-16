@@ -921,12 +921,12 @@
   dependencies:
     find-up "^2.1.0"
 
-"@endpass/class@^0.10.3":
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/@endpass/class/-/class-0.10.3.tgz#d92c4d3d37dc1249ecfe815a1d657a7b1162e095"
-  integrity sha512-auJYa340yqY9g8nUPKEIvZ+fySda6R7rO7R4RNkqeSNDHrXEhCoLpjQHnvLhtEnvgQqwOllqIMSWWam95oSISQ==
+"@endpass/class@^0.10.4":
+  version "0.10.4"
+  resolved "https://registry.yarnpkg.com/@endpass/class/-/class-0.10.4.tgz#21b3fae81d0a0b8d24a9aa9bc80589e6810493b9"
+  integrity sha512-Zrn0VmfhSKSNGd80j9BQTOK229jC/Kme15A/IvkDofR0PtxtO1d9skQ/SCrOHVNTgc74KVj54C13+0OV/Zi/Bw==
   dependencies:
-    "@endpass/utils" "^1.2.3"
+    "@endpass/utils" "^1.3.5"
     "@ledgerhq/hw-app-eth" "^4.24.0"
     "@ledgerhq/hw-transport-u2f" "^4.24.0"
     bignumber.js "^7.2.1"
@@ -943,10 +943,10 @@
     web3-providers-ws "1.0.0-beta.33"
     web3-utils "1.0.0-beta.33"
 
-"@endpass/utils@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@endpass/utils/-/utils-1.2.3.tgz#6fa0104b84feab666208f1e016c0f0e23598b672"
-  integrity sha512-h/bVkeAilCF8DIbgKAiEfW4WuoUkaPzTGVUAnutsecwGJ2XQJufOJjJlJVqTmT8DZGcvWuY1nd1jx7stA1a8/g==
+"@endpass/utils@^1.3.5":
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/@endpass/utils/-/utils-1.3.5.tgz#d1f51a734dc347a0d306877475302182c68bb505"
+  integrity sha512-2A+zQV1uk7Q8l2kmw41VZgB82FzWdjmAi2EC0RICHmUqLMj/0e8UdtaExyNOIVWha469u6y5DT6Ox19nmtDdow==
   dependencies:
     bs58check "^2.1.2"
     dayjs "^1.7.8"
