@@ -59,17 +59,33 @@ export default class Bridge {
         source: 'widget',
       });
     });
-    widgetMessenger.subscribe(METHODS.WIDGET_OPEN, (payload, req) => {
+    widgetMessenger.subscribe(METHODS.WIDGET_OPEN, ({ root }, req) => {
       this.widget.resize({ height: '100vh' });
+
+      if (root) this.widget.emitFrameEvent('open');
+
       req.answer();
+    });
+    widgetMessenger.subscribe(METHODS.WIDGET_CLOSE, () => {
+      this.widget.emitFrameEvent('close');
     });
     widgetMessenger.subscribe(METHODS.WIDGET_FIT, ({ height }) => {
       this.widget.resize({ height: `${height}px` });
     });
+    widgetMessenger.subscribe(METHODS.WIDGET_CHANGE_ACCOUNT, payload => {
+      console.log('change account', payload);
+    });
+    widgetMessenger.subscribe(METHODS.LOGOUT, payload => {
+      console.log('logout', payload);
+    });
   }
 
-  mountWidget() {
-    this.widget.mount();
+  mountWidget(parameters) {
+    this.widget.mount(parameters);
+  }
+
+  unmountWidget() {
+    this.widget.unmount();
   }
 
   /**

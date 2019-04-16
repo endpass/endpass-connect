@@ -1,5 +1,6 @@
 // @ts-check
 export const DEFAULT_AUTH_URL = 'https://auth.endpass.com';
+export const CRYPTODATA_API_URL = 'https://cryptodata-dev.endpass.com';
 
 /**
  * Static things
@@ -32,6 +33,7 @@ export const METHODS = Object.freeze({
   DIALOG_OPEN: 'DIALOG_OPEN',
   DIALOG_CLOSE: 'DIALOG_CLOSE',
   WIDGET_OPEN: 'WIDGET_OPEN',
+  WIDGET_CLOSE: 'WIDGET_CLOSE',
   WIDGET_FIT: 'WIDGET_FIT',
   GET_SETTINGS: 'GET_SETTINGS',
   INITIATE: 'INITIATE',
