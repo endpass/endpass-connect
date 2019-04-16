@@ -56,7 +56,7 @@ describe('Context class', () => {
       const res = await context.auth();
 
       expect(bridge.ask).toBeCalledWith(METHODS.AUTH, {
-        redirectUrl: 'http://localhost',
+        redirectUrl: 'http://localhost/',
       });
       expect(res).toEqual(dialogResponse);
     });
