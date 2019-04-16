@@ -1,5 +1,6 @@
 import { inlineStyles } from '@/util/dom';
 
+const FADE_TIMEOUT = 300;
 const getStylesByPosition = position => {
   switch (position) {
     case 'top left':
@@ -35,6 +36,8 @@ const createWidgetIframeStyles = position => {
         height: '70px',
         border: 'none',
         'border-radius': '4px',
+        opacity: 0,
+        transition: `opacity ${FADE_TIMEOUT}ms ease-in`,
       },
       getStylesByPosition(position),
     ),
@@ -74,13 +77,18 @@ export default class Widget {
   }
 
   unmount() {
-    this.emitFrameEvent('destroy');
-    this.frame.removeEventListener('load', this.handleWidgetFrameLoad);
-    this.frame.remove();
+    this.frame.style.opacity = 0;
+
+    setTimeout(() => {
+      this.emitFrameEvent('destroy');
+      this.frame.removeEventListener('load', this.handleWidgetFrameLoad);
+      this.frame.remove();
+    }, FADE_TIMEOUT);
   }
 
   handleWidgetFrameLoad() {
     this.emitFrameEvent('load');
+    this.frame.style.opacity = 1;
   }
 
   emitFrameEvent(event, detail) {
