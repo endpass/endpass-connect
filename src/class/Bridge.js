@@ -106,6 +106,11 @@ export default class Bridge {
         req.answer(updatedSettings);
       },
     );
+    widgetMessenger.subscribe(METHODS.WIDGET_LOGOUT, (payload, req) => {
+      this.unmountWidget();
+      this.widget.emitFrameEvent('logout');
+      req.answer();
+    });
   }
 
   mountWidget(parameters) {
