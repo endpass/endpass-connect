@@ -2,6 +2,9 @@ import { METHODS } from '@/constants';
 import Dialog from './Dialog';
 import Widget from './Widget';
 
+// TODO: move somewhere else
+const MESSAGE_TYPE = 'endpass-cw-msgr';
+
 /**
  * @callback Listener {import('@types/global').Listener}
  */
@@ -30,8 +33,24 @@ export default class Bridge {
     /** @type Resolvers */
     this.readyResolvers = [];
 
+    this.subscribeOnBroadcastMessages();
     this.initAuthMessenger();
     this.initWidgetMessenger();
+  }
+
+  subscribeOnBroadcastMessages() {
+    const authMessenger = this.context.getMessenger();
+    const widgetMessenger = this.context.getWidgetMessenger();
+
+    window.addEventListener('message', ({ data }) => {
+      if (
+        data.messageType === MESSAGE_TYPE &&
+        data.method === METHODS.BROADCAST
+      ) {
+        authMessenger.send(METHODS.BROADCAST, data);
+        widgetMessenger.send(METHODS.BROADCAST, data);
+      }
+    });
   }
 
   initAuthMessenger() {
@@ -59,6 +78,9 @@ export default class Bridge {
         source: 'widget',
       });
     });
+    widgetMessenger.subscribe(METHODS.WIDGET_GET_SETTING, (payload, req) => {
+      req.answer(this.context.inpageProvider.settings);
+    });
     widgetMessenger.subscribe(METHODS.WIDGET_OPEN, ({ root }, req) => {
       this.widget.resize({ height: '100vh' });
 
@@ -72,12 +94,18 @@ export default class Bridge {
     widgetMessenger.subscribe(METHODS.WIDGET_FIT, ({ height }) => {
       this.widget.resize({ height: `${height}px` });
     });
-    widgetMessenger.subscribe(METHODS.WIDGET_CHANGE_ACCOUNT, payload => {
-      console.log('change account', payload);
-    });
-    widgetMessenger.subscribe(METHODS.LOGOUT, payload => {
-      console.log('logout', payload);
-    });
+    widgetMessenger.subscribe(
+      METHODS.WIDGET_CHANGE_ACCOUNT,
+      ({ address }, req) => {
+        this.context.setProviderSettings({
+          activeAccount: address,
+        });
+
+        const updatedSettings = this.context.getProviderSettings();
+
+        req.answer(updatedSettings);
+      },
+    );
   }
 
   mountWidget(parameters) {
@@ -96,6 +124,7 @@ export default class Bridge {
    * @returns {Promise<Boolean>}
    */
   checkReadyState() {
+    /* eslint-disable-next-line */
     return new Promise(async resolve => {
       if (this.ready) {
         return resolve(true);
