@@ -5,6 +5,10 @@
 ## Table of contents
 
 - [Library](#library)
+- [Usage](#usage)
+- [API](#api)
+- [Interactions with current account](#interactions)
+- [Widget](#widget)
 - [Development](#development)
 
 ## Library
@@ -77,14 +81,16 @@ web3.setProvider(provider);
 
 #### Instance methods
 
-| Method                | Params                                           | Returns                                                                             | Description                                                                                                                                                               |
-| --------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `auth`                |                                                  | `Promise<{ status: boolean, message?: string }>`                                    | Open Endpass Connect application for user authorization, return promise, which returns object with auth status. See [Errors handling](#errors-handling) for more details. |
-| `logout`              |                                                  | `Promise<Boolean>`                                                                  | Makes logout request and returns status or throw error                                                                                                                    |
-| `getAccountData`      |                                                  | `Promise<{ activeAccount: string, activeNet: number }>`                             | Returns authorized user active account.                                                                                                                                   |
-| `getProvider`         | `provider: Web3.Provider`                        | `Web3Provider`                                                                      | Creates Web3 provider for injection in Web3 instance.                                                                                                                     |
-| `setProviderSettings` | `{ activeAccount: string`, `activeNet: number }` |                                                                                     | Set user settings to the injected `web3` provider.                                                                                                                        |
-| `openAccount`         |                                                  | `Promise<{ type: string, payload?: { activeAccount: string, activeNet: number } }>` | Open Endpass Connect application for change user active address, network or logout                                                                                        |
+| Method                | Params                                         | Returns                                                                             | Description                                                                                                                                                               |
+| --------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `auth`                |                                                | `Promise<{ status: boolean, message?: string }>`                                    | Open Endpass Connect application for user authorization, return promise, which returns object with auth status. See [Errors handling](#errors-handling) for more details. |
+| `logout`              |                                                | `Promise<Boolean>`                                                                  | Makes logout request and returns status or throw error                                                                                                                    |
+| `getAccountData`      |                                                | `Promise<{ activeAccount: string, activeNet: number }>`                             | Returns authorized user active account.                                                                                                                                   |
+| `getProvider`         | `provider: Web3.Provider`                      | `Web3Provider`                                                                      | Creates Web3 provider for injection in Web3 instance.                                                                                                                     |
+| `setProviderSettings` | `{ activeAccount: string, activeNet: number }` |                                                                                     | Set user settings to the injected `web3` provider.                                                                                                                        |
+| `openAccount`         |                                                | `Promise<{ type: string, payload?: { activeAccount: string, activeNet: number } }>` | Open Endpass Connect application for change user active address, network or logout                                                                                        |
+| `mountWidget`         | `{ position: string }`                         |                                                                                     | Mounts Endpass widget on given position                                                                                                                                   |
+| `unmountWidget`       |                                                |                                                                                     | Removes mounted Endpass widget                                                                                                                                            |
 
 ### Interactions with current account
 
@@ -114,6 +120,87 @@ connect.openAccount().then(res => {
   }
 });
 ```
+
+### Widget
+
+From `0.18.0-beta` version, `@endpass/connect` provides ability to use widget for management accounts, you can also see current account's balance in ether and makes logout.
+
+So, you want to use widget in your dApp. There are two ways to mount it:
+
+1. Widget will automatically mounts on user authorization if you provide `widget` object to connect instance constructor ([see widget configuration](#widget-configuration)).
+
+2. You can mount widget programically with `mountWidget` method and passing parameter.
+
+Example:
+
+```js
+import Connect from '@endpass/connect';
+
+const connect = new Connect({
+  widget: {
+    position: 'top left',
+  },
+});
+```
+
+Code above will mount widget when user will be authorized.
+
+---
+
+```js
+import Connect from '@endpass/connect';
+
+const connect = new Connect();
+
+connect.mountWidget({
+  position: 'top left',
+});
+```
+
+Code above will mount widget only on `mountWidget` method call.
+
+#### Widget configuration
+
+As you can see, widget accepts only one parameter – `position`. It works like
+CSS `backgroud-position` property – if you want to render widget in the
+bottom-left corner of page – just pass `bottom left` value.
+
+There are all possible values:
+
+- `top left`
+- `top right`
+- `bottom left`
+- `bottom right`
+
+#### Widget events
+
+You can also make subscribtion on widget events, like `load`, `open`, `close` etc.
+
+Widget uses HTML Custom Events API and has static `id` and `data-endpass` attributes.
+
+For example, you want to print something in console when widget will be opened:
+
+```js
+import Connect from '@endpass/connect';
+
+const connect = new Connect();
+
+const widget = document.getElementById('endpass-widget'); // or document.querySelector('[data-endpass=widget-frame]')
+
+widget.addEventListener('open', () => {
+  console.log('Widget opened!');
+});
+```
+
+**Don't forget – widget DOM-node available only when widget mounted!**
+
+There are available widget events type which you can use in subscribtions:
+
+- `load` – fires after widget mounting
+- `destroy` – fires before widget unmounting
+- `open` – fires after widget open
+- `close` – fires after widget close
+- `logout` – fires after logout through widget interaction
 
 ## Development
 
