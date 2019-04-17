@@ -211,7 +211,14 @@ export default class Context {
    * @param {String} options.activeNet Active network ID
    */
   setProviderSettings(payload) {
-    this.getEmitter().emit(INPAGE_EVENTS.SETTINGS, payload);
+    this.getEmitter().emit(INPAGE_EVENTS.SETTINGS, {
+      activeAccount: payload.activeAccount,
+      activeNet: payload.activeNet || 1,
+    });
+  }
+
+  getProviderSettings() {
+    return this.inpageProvider.settings;
   }
 
   mountWidget(parameters) {
