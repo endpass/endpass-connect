@@ -66,7 +66,7 @@ export default class Context {
 
     this.setupLoginEvents();
 
-    if (options.widget) {
+    if (options.widget !== false) {
       this.mountWidgetOnAuth(options.widget);
     }
   }
@@ -74,6 +74,7 @@ export default class Context {
   setupLoginEvents() {
     this.emitter.on(INPAGE_EVENTS.LOGIN, async () => {
       let error = null;
+
       if (!this.isLogin()) {
         try {
           await this.serverAuth();
@@ -87,9 +88,7 @@ export default class Context {
 
   async askDialog(params) {
     const { method, payload } = params;
-
     const bridge = this.getBridge();
-
     const res = await bridge.ask(method, payload);
 
     return res;

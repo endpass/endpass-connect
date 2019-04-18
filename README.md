@@ -172,6 +172,18 @@ There are all possible values:
 - `bottom left`
 - `bottom right`
 
+To prevent widget auto-mounting pass `false` to widget params option.
+
+```js
+import Connect from '@endpass/connect';
+
+const connect = new Connect({
+  widget: false,
+});
+
+// Widget will not mount
+```
+
 #### Widget events
 
 You can also make subscribtion on widget events, like `load`, `open`, `close` etc.
