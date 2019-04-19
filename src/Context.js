@@ -27,23 +27,24 @@ export default class Context {
   constructor(options = {}) {
     const authUrl = options.authUrl || DEFAULT_AUTH_URL;
 
+    /**
+     * Independant class properties
+     */
     this.inpageProvider = null;
     this.requestProvider = null;
-
-    this.authUrl =
-      authUrl.search(regAuthUrl) === -1
-        ? authUrl
-        : authUrl.replace('://auth', `://auth${pkg.authVersion}`);
+    this.isServerLogin = false;
+    this.authUrl = !regAuthUrl.test(authUrl)
+      ? authUrl
+      : authUrl.replace('://auth', `://auth${pkg.authVersion}`);
     this.namespace = options.namespace || '';
     this.haveDemoData = !!options.demoData;
-    this.isServerLogin = false;
+
+    /**
+     * Inner abstractions initialization
+     */
     this.emitter = new Emmiter();
-
-    const provider = new InpageProvider(this.emitter);
-
-    this.setInpageProvider(provider);
+    this.inpageProvider = new InpageProvider(this.emitter);
     this.requestProvider = ProviderFactory.createRequestProvider();
-
     this.dialogMessenger = new CrossWindowMessenger({
       showLogs: !ENV.isProduction,
       name: `connect-bridge[${this.namespace}]`,
@@ -94,6 +95,7 @@ export default class Context {
           error = new Error('Request data error');
         }
       }
+
       this.emitter.emit(INPAGE_EVENTS.LOGGED_IN, { error });
     });
   }
@@ -124,9 +126,7 @@ export default class Context {
    *  know about result
    */
   async auth(redirectUrl) {
-    const toPath =
-      redirectUrl || `${window.location.origin}${window.location.pathname}`;
-
+    const toPath = redirectUrl || window.location.href;
     const res = await this.askDialog({
       method: METHODS.AUTH,
       payload: {
@@ -135,14 +135,13 @@ export default class Context {
     });
 
     if (!res.status) throw new Error(res.error || 'Authentificaton error!');
+
     this.isServerLogin = true;
 
-    const result = {
+    return {
       payload: res.payload,
       status: res.status,
     };
-
-    return result;
   }
 
   /**
@@ -155,7 +154,16 @@ export default class Context {
     const res = await this.getBridge().ask(METHODS.LOGOUT);
 
     if (!res.status) throw new Error(res.error || 'Logout error!');
+
     this.isServerLogin = false;
+    // TODO: refactor this moment. All messages must be in one format
+    this.bridgeBroadcaster.send({
+      method: METHODS.BROADCAST,
+      payload: {
+        method: METHODS.BROADCAST,
+        type: 'logout',
+      },
+    });
 
     return res.status;
   }
@@ -176,6 +184,7 @@ export default class Context {
       if (!status) {
         throw new Error(error || 'User settings are not received!');
       }
+
       this.isServerLogin = true;
 
       const { settings = {} } = payload;
@@ -201,10 +210,6 @@ export default class Context {
 
     this.setProviderSettings(settings);
     this.isServerLogin = true;
-  }
-
-  setInpageProvider(provider) {
-    this.inpageProvider = provider;
   }
 
   /**
@@ -248,7 +253,6 @@ export default class Context {
         setTimeout(async () => {
           try {
             await this.getAccountData();
-
             this.mountWidget(parameters);
 
             return res();
@@ -286,6 +290,7 @@ export default class Context {
    */
   getConnectUrl(method) {
     const { authUrl } = this;
+
     return !method ? authUrl : `${authUrl}/${method}`;
   }
 

@@ -22,8 +22,8 @@ export default class Bridge {
     this.dialog = new Dialog({ context, url });
     this.widget = new Widget({
       context,
-      // TODO: remove that
-      url: `http://localhost:4000/public/widget`,
+      // TODO: dirty hack. Needs to be refactored
+      url: this.context.getAuthUrl('public/widget'),
     });
     this.ready = false;
 
