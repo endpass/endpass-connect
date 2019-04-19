@@ -2,9 +2,6 @@ import { METHODS } from '@/constants';
 import Dialog from './Dialog';
 import Widget from './Widget';
 
-// TODO: move somewhere else
-const MESSAGE_TYPE = 'endpass-cw-msgr';
-
 /**
  * @callback Listener {import('@types/global').Listener}
  */
@@ -33,24 +30,8 @@ export default class Bridge {
     /** @type Resolvers */
     this.readyResolvers = [];
 
-    this.subscribeOnBroadcastMessages();
     this.initAuthMessenger();
     this.initWidgetMessenger();
-  }
-
-  subscribeOnBroadcastMessages() {
-    const authMessenger = this.context.getMessenger();
-    const widgetMessenger = this.context.getWidgetMessenger();
-
-    window.addEventListener('message', ({ data }) => {
-      if (
-        data.messageType === MESSAGE_TYPE &&
-        data.method === METHODS.BROADCAST
-      ) {
-        authMessenger.send(METHODS.BROADCAST, data);
-        widgetMessenger.send(METHODS.BROADCAST, data);
-      }
-    });
   }
 
   initAuthMessenger() {
