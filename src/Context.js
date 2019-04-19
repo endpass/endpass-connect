@@ -1,5 +1,6 @@
 import Network from '@endpass/class/Network';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
+import CrossWindowBroadcaster from '@endpass/class/CrossWindowBroadcaster';
 import { Emmiter, InpageProvider, Bridge, ProviderFactory } from '@/class';
 import {
   INPAGE_EVENTS,
@@ -55,6 +56,9 @@ export default class Context {
       to: DIRECTION.AUTH,
       from: DIRECTION.CONNECT,
     });
+    this.bridgeBroadcaster = new CrossWindowBroadcaster({
+      method: [METHODS.BROADCAST],
+    });
     this.bridge = new Bridge({
       context: this,
       url: this.getConnectUrl('bridge'),
@@ -65,10 +69,18 @@ export default class Context {
     });
 
     this.setupLoginEvents();
+    this.initBridgeBroadcaster();
 
     if (options.widget !== false) {
       this.mountWidgetOnAuth(options.widget);
     }
+  }
+
+  initBridgeBroadcaster() {
+    this.bridgeBroadcaster.pushMessengers([
+      this.dialogMessenger,
+      this.widgetMessenger,
+    ]);
   }
 
   setupLoginEvents() {

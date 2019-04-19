@@ -921,10 +921,10 @@
   dependencies:
     find-up "^2.1.0"
 
-"@endpass/class@^0.10.4":
-  version "0.10.4"
-  resolved "https://registry.yarnpkg.com/@endpass/class/-/class-0.10.4.tgz#21b3fae81d0a0b8d24a9aa9bc80589e6810493b9"
-  integrity sha512-Zrn0VmfhSKSNGd80j9BQTOK229jC/Kme15A/IvkDofR0PtxtO1d9skQ/SCrOHVNTgc74KVj54C13+0OV/Zi/Bw==
+"@endpass/class@^0.11.2":
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/@endpass/class/-/class-0.11.2.tgz#339bfae0072b992aa0e78ac61e35a30ffa85a63a"
+  integrity sha512-hZYtixcJcQARt7/+/tjnsXqj5drCvYnKFvkdlZYpjr5Ag/el/W34ds/sqg875JUCdm3TW8u8o0sKXExyW95meg==
   dependencies:
     "@endpass/utils" "^1.3.5"
     "@ledgerhq/hw-app-eth" "^4.24.0"
