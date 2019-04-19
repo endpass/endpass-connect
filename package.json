@@ -26,6 +26,7 @@
     "build:lib": "NODE_ENV=production rollup -c",
     "build:browser": "webpack --mode production",
     "test": "jest",
+    "unit:watch": "jest --watch",
     "format": "prettier --write './src/**/*.{js,json}' && eslint ./src/**/*.{js} --fix",
     "semantic-release": "semantic-release",
     "commit": "git-cz",
@@ -68,7 +69,7 @@
     }
   },
   "dependencies": {
-    "@endpass/class": "^0.11.2",
+    "@endpass/class": "^0.11.3",
     "lodash.get": "^4.4.2",
     "utility-types": "^3.4.1",
     "web3-providers-http": "1.0.0-beta.33"
