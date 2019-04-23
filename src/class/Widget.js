@@ -86,6 +86,19 @@ export default class Widget {
     }, FADE_TIMEOUT);
   }
 
+  getWidget() {
+    return new Promise(resolve => {
+      /* eslint-disable-next-line */
+      const handler = setTimeout(() => {
+        if (this.frame) {
+          return resolve(this.frame);
+        }
+
+        handler();
+      }, 250);
+    });
+  }
+
   handleWidgetFrameLoad() {
     this.emitFrameEvent('load');
     this.frame.style.opacity = 1;

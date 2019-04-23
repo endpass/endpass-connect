@@ -22,8 +22,7 @@ export default class Bridge {
     this.dialog = new Dialog({ context, url });
     this.widget = new Widget({
       context,
-      // TODO: dirty hack. Needs to be refactored
-      url: this.context.getAuthUrl('public/widget'),
+      url: this.context.getConnectUrl('public/widget'),
     });
     this.ready = false;
 
@@ -32,6 +31,40 @@ export default class Bridge {
 
     this.initAuthMessenger();
     this.initWidgetMessenger();
+  }
+
+  async handleLogoutMessage(msg, req) {
+    try {
+      await this.context.logout();
+
+      this.widget.emitFrameEvent('logout');
+      req.answer({
+        status: true,
+      });
+    } catch (err) {
+      req.answer({
+        status: false,
+        err,
+      });
+    }
+  }
+
+  /* eslint-disable-next-line */
+  async handleSettingsChange(msg, req) {
+    try {
+      this.context.setProviderSettings({
+        activeAccount: msg.address,
+      });
+
+      req.answer({
+        status: true,
+      });
+    } catch (err) {
+      req.answer({
+        status: false,
+        err,
+      });
+    }
   }
 
   initAuthMessenger() {
@@ -47,6 +80,12 @@ export default class Bridge {
       this.ready = true;
       this.readyResolvers.forEach(item => item(true));
       this.readyResolvers.length = 0;
+    });
+    authMessenger.subscribe(METHODS.LOGOUT_REQUEST, (msg, req) => {
+      this.handleLogoutMessage(msg, req);
+    });
+    authMessenger.subscribe(METHODS.CHANGE_SETTINGS_REQUEST, (msg, req) => {
+      this.handleSettingsChange(msg, req);
     });
   }
 
@@ -75,22 +114,14 @@ export default class Bridge {
     widgetMessenger.subscribe(METHODS.WIDGET_FIT, ({ height }) => {
       this.widget.resize({ height: `${height}px` });
     });
-    widgetMessenger.subscribe(
-      METHODS.WIDGET_CHANGE_ACCOUNT,
-      ({ address }, req) => {
-        this.context.setProviderSettings({
-          activeAccount: address,
-        });
-
-        const updatedSettings = this.context.getProviderSettings();
-
-        req.answer(updatedSettings);
-      },
-    );
-    widgetMessenger.subscribe(METHODS.WIDGET_LOGOUT, (payload, req) => {
+    widgetMessenger.subscribe(METHODS.WIDGET_UNMOUNT, () => {
       this.unmountWidget();
-      this.widget.emitFrameEvent('logout');
-      req.answer();
+    });
+    widgetMessenger.subscribe(METHODS.LOGOUT_REQUEST, (msg, req) => {
+      this.handleLogoutMessage(msg, req);
+    });
+    widgetMessenger.subscribe(METHODS.CHANGE_SETTINGS_REQUEST, (msg, req) => {
+      this.handleSettingsChange(msg, req);
     });
   }
 

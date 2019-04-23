@@ -156,14 +156,7 @@ export default class Context {
     if (!res.status) throw new Error(res.error || 'Logout error!');
 
     this.isServerLogin = false;
-    // TODO: refactor this moment. All messages must be in one format
-    this.bridgeBroadcaster.send({
-      method: METHODS.BROADCAST,
-      payload: {
-        method: METHODS.BROADCAST,
-        type: 'logout',
-      },
-    });
+    this.bridgeBroadcaster.send(METHODS.LOGOUT_RESPONSE, {});
 
     return res.status;
   }
@@ -231,6 +224,10 @@ export default class Context {
       activeAccount: payload.activeAccount,
       activeNet: payload.activeNet || 1,
     });
+    this.bridgeBroadcaster.send(
+      METHODS.CHANGE_SETTINGS_RESPONSE,
+      this.getProviderSettings(),
+    );
   }
 
   getProviderSettings() {
@@ -308,6 +305,10 @@ export default class Context {
 
   getWidgetMessenger() {
     return this.widgetMessenger;
+  }
+
+  getBroadcaster() {
+    return this.bridgeBroadcaster;
   }
 
   getNamespace() {
