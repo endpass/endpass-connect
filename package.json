@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.17.7-beta",
+  "version": "0.18.0-beta",
   "authVersion": "",
   "main": "./dist/endpass-connect.min.js",
   "module": "./dist/endpass-connect.esm.js",
@@ -22,8 +22,9 @@
   "scripts": {
     "dev": "rollup -c -w",
     "build:dev": "rollup -c",
-    "build": "rimraf ./dist && npm run build:lib",
+    "build": "rimraf ./dist && npm run build:lib && npm run build:browser",
     "build:lib": "NODE_ENV=production rollup -c",
+    "build:browser": "webpack --mode production",
     "test": "jest",
     "format": "prettier --write './src/**/*.{js,json}' && eslint ./src/**/*.{js} --fix",
     "semantic-release": "semantic-release",
@@ -118,6 +119,8 @@
     "rollup-plugin-typescript": "^1.0.1",
     "rollup-plugin-visualizer": "^1.1.0",
     "semantic-release": "^15.13.3",
-    "typescript": "^3.3.3333"
+    "typescript": "^3.3.3333",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1"
   }
 }
