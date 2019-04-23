@@ -1,4 +1,4 @@
-import { METHODS } from '@/constants';
+import { METHODS, DIRECTION, WIDGET_EVENTS } from '@/constants';
 import Dialog from './Dialog';
 import Widget from './Widget';
 
@@ -73,7 +73,7 @@ export default class Bridge {
     authMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
       req.answer({
         ...this.initialPayload,
-        source: 'dialog',
+        source: DIRECTION.AUTH,
       });
     });
     authMessenger.subscribe(METHODS.READY_STATE_BRIDGE, () => {
@@ -95,7 +95,7 @@ export default class Bridge {
     widgetMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
       req.answer({
         ...this.initialPayload,
-        source: 'widget',
+        source: DIRECTION.WIDGET,
       });
     });
     widgetMessenger.subscribe(METHODS.WIDGET_GET_SETTING, (payload, req) => {
