@@ -1,30 +1,14 @@
+import { WIDGET_EVENTS } from '@/constants';
 import { inlineStyles } from '@/util/dom';
 
 const FADE_TIMEOUT = 300;
 const getStylesByPosition = position => {
-  switch (position) {
-    case 'top left':
-      return {
-        top: '15px',
-        left: '15px',
-      };
-    case 'top right':
-      return {
-        top: '15px',
-        right: '15px',
-      };
-    case 'bottom left':
-      return {
-        bottom: '15px',
-        left: '15px',
-      };
-    case 'bottom right':
-    default:
-      return {
-        bottom: '15px',
-        right: '15px',
-      };
-  }
+  return (
+    position || {
+      bottom: '15px',
+      right: '15px',
+    }
+  );
 };
 const createWidgetIframeStyles = position => {
   return inlineStyles(
@@ -80,7 +64,7 @@ export default class Widget {
     this.frame.style.opacity = 0;
 
     setTimeout(() => {
-      this.emitFrameEvent('destroy');
+      this.emitFrameEvent(WIDGET_EVENTS.DESTROY);
       this.frame.removeEventListener('load', this.handleWidgetFrameLoad);
       this.frame.remove();
     }, FADE_TIMEOUT);
@@ -100,7 +84,7 @@ export default class Widget {
   }
 
   handleWidgetFrameLoad() {
-    this.emitFrameEvent('load');
+    this.emitFrameEvent(WIDGET_EVENTS.LOAD);
     this.frame.style.opacity = 1;
   }
 

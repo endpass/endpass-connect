@@ -39,7 +39,7 @@ describe('Widget class', () => {
     });
 
     it('should mount iframe with given parameters', () => {
-      widget.mount({ position: 'top left' });
+      widget.mount({ position: { top: '15px', left: '15px' } });
 
       expect(
         document.body.insertAdjacentHTML.mock.calls[0][1],
@@ -53,7 +53,7 @@ describe('Widget class', () => {
 
       const widget = new Widget({ context, url });
 
-      widget.mount({ position: 'top left' });
+      widget.mount({ position: { top: '15px', left: '15px' } });
       widget.unmount();
 
       widget.emitFrameEvent = jest.fn();

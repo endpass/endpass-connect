@@ -56,3 +56,11 @@ export const DIRECTION = Object.freeze({
   AUTH: 'auth',
   CONNECT: 'connect',
 });
+
+export const WIDGET_EVENTS = {
+  LOAD: 'load',
+  DESTROY: 'destroy',
+  OPEN: 'open',
+  CLOSE: 'close',
+  LOGOUT: 'logout',
+};
