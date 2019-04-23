@@ -161,16 +161,8 @@ Code above will mount widget only on `mountWidget` method call.
 
 #### Widget configuration
 
-As you can see, widget accepts only one parameter – `position`. It works like
-CSS `backgroud-position` property – if you want to render widget in the
-bottom-left corner of page – just pass `bottom left` value.
-
-There are all possible values:
-
-- `top left`
-- `top right`
-- `bottom left`
-- `bottom right`
+As you can see, widget accepts only one parameter – `position`. It takes only
+position properties: `top`, `left`, `bottom`, `right`.
 
 To prevent widget auto-mounting pass `false` to widget params option.
 
@@ -208,7 +200,7 @@ widget.addEventListener('open', () => {
 
 There are available widget events type which you can use in subscribtions:
 
-- `load` – fires after widget mounting
+- `load` – fires after widget full loading
 - `destroy` – fires before widget unmounting
 - `open` – fires after widget open
 - `close` – fires after widget close

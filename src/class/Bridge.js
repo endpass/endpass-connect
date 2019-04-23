@@ -37,7 +37,7 @@ export default class Bridge {
     try {
       await this.context.logout();
 
-      this.widget.emitFrameEvent('logout');
+      this.widget.emitFrameEvent(WIDGET_EVENTS.LOGOUT);
       req.answer({
         status: true,
       });
@@ -68,7 +68,7 @@ export default class Bridge {
   }
 
   initAuthMessenger() {
-    const authMessenger = this.context.getMessenger();
+    const authMessenger = this.context.getDialogMessenger();
 
     authMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
       req.answer({
@@ -104,12 +104,12 @@ export default class Bridge {
     widgetMessenger.subscribe(METHODS.WIDGET_OPEN, ({ root }, req) => {
       this.widget.resize({ height: '100vh' });
 
-      if (root) this.widget.emitFrameEvent('open');
+      if (root) this.widget.emitFrameEvent(WIDGET_EVENTS.OPEN);
 
       req.answer();
     });
     widgetMessenger.subscribe(METHODS.WIDGET_CLOSE, () => {
-      this.widget.emitFrameEvent('close');
+      this.widget.emitFrameEvent(WIDGET_EVENTS.CLOSE);
     });
     widgetMessenger.subscribe(METHODS.WIDGET_FIT, ({ height }) => {
       this.widget.resize({ height: `${height}px` });
@@ -166,7 +166,7 @@ export default class Bridge {
     await this.checkReadyState();
 
     const res = await this.context
-      .getMessenger()
+      .getDialogMessenger()
       .sendAndWaitResponse(method, payload);
 
     return res;

@@ -87,7 +87,7 @@ export default class Dialog {
    * Create markup and prepend to <body>
    */
   mount() {
-    const messenger = this.context.getMessenger();
+    const messenger = this.context.getDialogMessenger();
     const nameSpace = this.context.getNamespace();
     const NSmarkup = nameSpace ? `data-endpass-namespace="${nameSpace}"` : '';
 

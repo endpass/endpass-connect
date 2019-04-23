@@ -114,6 +114,7 @@ describe('Context class', () => {
       expect(req.answer).toBeCalledWith({
         demoData,
         isIdentityMode: false,
+        source: 'widget',
       });
 
       const otherContex = new Context({
@@ -123,6 +124,7 @@ describe('Context class', () => {
 
       expect(req.answer).toBeCalledWith({
         isIdentityMode: true,
+        source: 'dialog',
       });
     });
   });

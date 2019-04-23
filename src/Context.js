@@ -11,12 +11,12 @@ import {
 
 import pkg from '../package.json';
 
-const regAuthUrl = new RegExp('://auth(\\.|-)', 'ig');
+const authUrlRegexp = new RegExp('://auth(\\.|-)', 'ig');
 
 export default class Context {
   /**
    * @param {String} options.authUrl Url of hosted Endpass Connect Application
-   * @param {String} options.namespace namespace for see difference, between two instances
+   * @param {String} [options.namespace] namespace for see difference, between two instances
    * @param {Boolean} options.isIdentityMode isIdentityMode for define auth like identity
    * @param {Object} options.demoData demoData passed object to auth
    * @param {Object} options.widget Widget configuration object. If provided widget
@@ -33,7 +33,7 @@ export default class Context {
     this.inpageProvider = null;
     this.requestProvider = null;
     this.isServerLogin = false;
-    this.authUrl = !regAuthUrl.test(authUrl)
+    this.authUrl = !authUrlRegexp.test(authUrl)
       ? authUrl
       : authUrl.replace('://auth', `://auth${pkg.authVersion}`);
     this.namespace = options.namespace || '';
@@ -222,7 +222,7 @@ export default class Context {
   setProviderSettings(payload) {
     this.getEmitter().emit(INPAGE_EVENTS.SETTINGS, {
       activeAccount: payload.activeAccount,
-      activeNet: payload.activeNet || 1,
+      activeNet: payload.activeNet || Network.NET_ID.MAIN,
     });
     this.bridgeBroadcaster.send(
       METHODS.CHANGE_SETTINGS_RESPONSE,
@@ -299,7 +299,7 @@ export default class Context {
     return this.bridge;
   }
 
-  getMessenger() {
+  getDialogMessenger() {
     return this.dialogMessenger;
   }
 

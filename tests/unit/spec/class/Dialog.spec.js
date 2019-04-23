@@ -13,7 +13,7 @@ describe('Dialog class', () => {
     getNamespace() {
       return 'ns';
     },
-    getMessenger() {
+    getDialogMessenger() {
       return messenger;
     },
   };

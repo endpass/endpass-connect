@@ -17,6 +17,8 @@ if (ENV.isProduction) {
 export default class Connect {
   /**
    * @param {String} options.authUrl Url of hosted Endpass Connect Application
+   * @param {Object|Boolean} [options.widget] Widget parameters. Pass false to
+   *  prevent widget mounting
    */
   constructor(options) {
     const context = new Context(options);
@@ -119,8 +121,8 @@ export default class Connect {
 
   /**
    * Mounts endpass widget
-   * @param {Object} params Parameters object
-   * @param {String} params.position Position of mounting widget
+   * @param {Object} [params] Parameters object
+   * @param {String} [params.position] Position of mounting widget
    */
   mountWidget(params) {
     this[privateFields.context].mountWidget(params);

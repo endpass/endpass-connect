@@ -59,23 +59,34 @@ describe('Connect class', () => {
 
   describe('setProviderSettings', () => {
     let emitter;
+    let broadcaster;
 
     beforeEach(() => {
       emitter = {
         emit: jest.fn(),
       };
+      broadcaster = {
+        send: jest.fn(),
+      };
       context.emitter = emitter;
+      context.bridgeBroadcaster = broadcaster;
     });
 
     it('should emit settings by inner connect emitter', () => {
       const payload = {
-        foo: 'bar',
+        activeAccount: '0x0',
+        activeNet: 2,
       };
 
+      context.getProviderSettings = jest.fn(() => payload);
       connect.setProviderSettings(payload);
 
       expect(context.emitter.emit).toBeCalledWith(
         INPAGE_EVENTS.SETTINGS,
+        payload,
+      );
+      expect(context.bridgeBroadcaster.send).toBeCalledWith(
+        METHODS.CHANGE_SETTINGS_RESPONSE,
         payload,
       );
     });
