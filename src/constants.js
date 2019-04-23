@@ -54,6 +54,7 @@ export const METHODS = Object.freeze({
 
 export const DIRECTION = Object.freeze({
   AUTH: 'auth',
+  WIDGET: 'widget',
   CONNECT: 'connect',
 });
 
