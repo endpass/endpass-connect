@@ -83,7 +83,7 @@ describe('Widget class', () => {
       widget.emitFrameEvent = jest.fn();
       widget.handleWidgetFrameLoad();
 
-      expect(widget.emitFrameEvent).toBeCalledWith('load');
+      expect(widget.emitFrameEvent).toBeCalledWith('mount');
       expect(widget.frame.style.opacity).toBe(1);
     });
   });

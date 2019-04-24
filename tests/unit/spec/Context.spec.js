@@ -1,7 +1,7 @@
 import Connect from '@/Connect';
 import Context from '@/Context';
 import privateFields from '@/privateFields';
-import { METHODS } from '@/constants';
+import { METHODS, DIRECTION } from '@/constants';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 
 describe('Context class', () => {
@@ -114,7 +114,7 @@ describe('Context class', () => {
       expect(req.answer).toBeCalledWith({
         demoData,
         isIdentityMode: false,
-        source: 'widget',
+        source: DIRECTION.WIDGET,
       });
 
       const otherContex = new Context({
@@ -124,7 +124,7 @@ describe('Context class', () => {
 
       expect(req.answer).toBeCalledWith({
         isIdentityMode: true,
-        source: 'dialog',
+        source: DIRECTION.AUTH,
       });
     });
   });

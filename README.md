@@ -200,7 +200,7 @@ widget.addEventListener('open', () => {
 
 There are available widget events type which you can use in subscribtions:
 
-- `load` – fires after widget full loading
+- `mount` – fires after widget full loading
 - `destroy` – fires before widget unmounting
 - `open` – fires after widget open
 - `close` – fires after widget close
