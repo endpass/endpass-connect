@@ -1,5 +1,5 @@
 import { $Values } from 'utility-types';
-import itemStates from '@/Queue/itemStates';
+import itemStates from '@/streams/inpageProvider/actionState';
 import { RpcRequest, RpcResponse } from '@/types/json-rpc';
 import { UserSettings } from '@/types/UserSettings';
 

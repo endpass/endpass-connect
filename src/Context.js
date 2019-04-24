@@ -16,6 +16,7 @@ import {
 } from '@/constants';
 
 import pkg from '../package.json';
+import createStream from '@/streams';
 
 const authUrlRegexp = new RegExp('://auth(\\.|-)', 'ig');
 
@@ -75,6 +76,19 @@ export default class Context {
         showCreateAccount: options.showCreateAccount,
       },
     });
+
+    // TODO: create state
+    // this.state = {
+    //   isPermission: false,
+    //   isLogin: false,
+    // };
+
+    createStream(this);
+
+    const emitter = this.getEmitter();
+    window._emit = request => {
+      emitter.emit(INPAGE_EVENTS.REQUEST, request);
+    };
 
     this.setupLoginEvents();
 
