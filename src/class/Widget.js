@@ -15,7 +15,7 @@ const createWidgetIframeStyles = position => {
     Object.assign(
       {
         position: 'fixed',
-        'z-index': 99999999999999,
+        'z-index': 6000000,
         width: '240px',
         height: '70px',
         border: 'none',
@@ -84,7 +84,7 @@ export default class Widget {
   }
 
   handleWidgetFrameLoad() {
-    this.emitFrameEvent(WIDGET_EVENTS.LOAD);
+    this.emitFrameEvent(WIDGET_EVENTS.MOUNT);
     this.frame.style.opacity = 1;
   }
 

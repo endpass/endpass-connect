@@ -59,7 +59,7 @@ export const DIRECTION = Object.freeze({
 });
 
 export const WIDGET_EVENTS = {
-  LOAD: 'load',
+  MOUNT: 'mount',
   DESTROY: 'destroy',
   OPEN: 'open',
   CLOSE: 'close',
