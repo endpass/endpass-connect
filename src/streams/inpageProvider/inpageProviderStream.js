@@ -11,9 +11,9 @@ import concatMap from 'callbag-concat-map';
 import takeWhile from 'callbag-take-while';
 import fromEmitter from '@/streams/factory/fromEmitter';
 import { INPAGE_EVENTS } from '@/constants';
-// import tap from 'callbag-tap';
+import tap from 'callbag-tap';
+import middleware from '@/streams/inpageProvider/middleware';
 import actionState from './actionState';
-import middleware from './middleware';
 import createAction from './createAction';
 
 const createMiddlewareStream = (context, action) => {
@@ -27,7 +27,8 @@ const createMiddlewareStream = (context, action) => {
         fn(context, action),
         // (async function f() {
         //   console.log('[calling]', fn.name);
-        //   await fn(context, action);
+        //   const res = await fn(context, action);
+        //   console.log('res', res);
         // })(),
       ),
     ),
@@ -45,7 +46,9 @@ export default function createInpageProviderStream(context) {
   return pipe(
     merge(requestPipe, settingsPipe),
     map(request => createAction(request, context.getInpageProviderSettings())),
+    // tap(x => console.log('action', x)),
     filter(x => x && x.request),
+    // tap(x => console.log('req', x)),
     concatMap(action => createMiddlewareStream(context, action)),
     subscribe({
       error: err => console.error(err),
