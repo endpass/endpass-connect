@@ -83,16 +83,11 @@ export default class Context {
     //   isLogin: false,
     // };
 
-    createStream(this);
-
-    const emitter = this.getEmitter();
-    window._emit = request => {
-      emitter.emit(INPAGE_EVENTS.REQUEST, request);
-    };
-
     this.setupLoginEvents();
 
     this.messengerGroup.addMessenger(this.dialogMessenger);
+    
+    createStream(this);
 
     this.setupOnAuth();
   }

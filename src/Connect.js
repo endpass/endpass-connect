@@ -19,8 +19,7 @@ export default class Connect {
    *  prevent widget mounting
    */
   constructor(options) {
-    const context = new Context(options);
-    this[privateFields.context] = context;
+    this[privateFields.context] = new Context(options);
   }
 
   /**
