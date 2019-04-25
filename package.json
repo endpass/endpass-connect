@@ -69,7 +69,7 @@
     }
   },
   "dependencies": {
-    "@endpass/class": "^0.12.0",
+    "@endpass/class": "^0.12.1",
     "lodash.get": "^4.4.2",
     "utility-types": "^3.4.1",
     "web3-providers-http": "1.0.0-beta.33"

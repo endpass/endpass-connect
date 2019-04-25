@@ -1,6 +1,5 @@
 // @ts-check
 export const DEFAULT_AUTH_URL = 'https://auth.endpass.com';
-export const CRYPTODATA_API_URL = 'https://cryptodata-dev.endpass.com';
 
 /**
  * Static things
