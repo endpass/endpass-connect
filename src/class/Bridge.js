@@ -44,7 +44,7 @@ export default class Bridge {
     } catch (err) {
       req.answer({
         status: false,
-        err,
+        error: err,
       });
     }
   }
@@ -52,9 +52,7 @@ export default class Bridge {
   /* eslint-disable-next-line */
   async handleSettingsChange(msg, req) {
     try {
-      this.context.setProviderSettings({
-        activeAccount: msg.address,
-      });
+      this.context.setProviderSettings(msg);
 
       req.answer({
         status: true,
@@ -62,7 +60,7 @@ export default class Bridge {
     } catch (err) {
       req.answer({
         status: false,
-        err,
+        error: err,
       });
     }
   }
