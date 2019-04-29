@@ -33,6 +33,7 @@ export default class Context {
     this.inpageProvider = null;
     this.requestProvider = null;
     this.isServerLogin = false;
+    this.isWidgetMounted = false;
     this.authUrl = !authUrlRegexp.test(authUrl)
       ? authUrl
       : authUrl.replace('://auth', `://auth${pkg.authVersion}`);
@@ -235,10 +236,16 @@ export default class Context {
   }
 
   mountWidget(parameters) {
+    if (this.isWidgetMounted) return;
+
+    this.isWidgetMounted = true;
     this.bridge.mountWidget(parameters);
   }
 
   unmountWidget() {
+    if (!this.isWidgetMounted) return;
+
+    this.isWidgetMounted = false;
     this.bridge.unmountWidget();
   }
 

@@ -5,19 +5,19 @@ import { METHODS, DIRECTION } from '@/constants';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 
 describe('Context class', () => {
+  const authUrl = 'http://test.auth';
   let connect;
   let context;
-  const authUrl = 'http://test.auth';
 
   beforeAll(() => {
     window.open = jest.fn();
     jest.useFakeTimers();
-    connect = new Connect({ authUrl });
-    context = connect[privateFields.context];
   });
 
   beforeEach(() => {
     jest.clearAllMocks();
+    connect = new Connect({ authUrl });
+    context = connect[privateFields.context];
   });
 
   describe('getConnectUrl', () => {
@@ -126,6 +126,48 @@ describe('Context class', () => {
         isIdentityMode: true,
         source: DIRECTION.AUTH,
       });
+    });
+  });
+
+  describe('mountWidget', () => {
+    beforeEach(() => {
+      context.bridge.mountWidget = jest.fn();
+    });
+
+    it('should mount widget', () => {
+      context.mountWidget();
+
+      expect(context.isWidgetMounted).toBe(true);
+      expect(context.bridge.mountWidget).toBeCalled();
+    });
+
+    it('should not do anything if widget is mounted', () => {
+      context.isWidgetMounted = true;
+
+      context.mountWidget();
+
+      expect(context.bridge.mountWidget).not.toBeCalled();
+    });
+  });
+
+  describe('unmountWidget', () => {
+    beforeEach(() => {
+      context.bridge.unmountWidget = jest.fn();
+    });
+
+    it('should unmount widget', () => {
+      context.isWidgetMounted = true;
+
+      context.unmountWidget();
+
+      expect(context.isWidgetMounted).toBe(false);
+      expect(context.bridge.unmountWidget).toBeCalled();
+    });
+
+    it('should not do anything if widget is not mounted', () => {
+      context.unmountWidget();
+
+      expect(context.bridge.unmountWidget).not.toBeCalled();
     });
   });
 });
