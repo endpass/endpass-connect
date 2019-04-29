@@ -138,7 +138,10 @@ import Connect from '@endpass/connect';
 
 const connect = new Connect({
   widget: {
-    position: 'top left',
+    position: {
+      top: '15px',
+      left: '15px',
+    },
   },
 });
 ```
@@ -153,7 +156,10 @@ import Connect from '@endpass/connect';
 const connect = new Connect();
 
 connect.mountWidget({
-  position: 'top left',
+  position: {
+    top: '15px',
+    left: '15px',
+  },
 });
 ```
 
