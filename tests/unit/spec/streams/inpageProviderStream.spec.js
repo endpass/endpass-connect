@@ -14,13 +14,13 @@ describe('inpageProviderStream', () => {
   let context;
   let middleWareMock;
   let middleware;
-  let inpageProviderStream;
+  let createInpageProviderStream;
 
   beforeEach(() => {
     jest.resetModules();
     jest.clearAllMocks();
 
-    inpageProviderStream = require('@/streams/inpageProvider/inpageProviderStream')
+    createInpageProviderStream = require('@/streams/inpageProvider/inpageProviderStream')
       .default;
     middleware = require('@/streams/inpageProvider/middleware');
     [middleWareMock] = middleware;
@@ -31,7 +31,7 @@ describe('inpageProviderStream', () => {
       getInpageProviderSettings: jest.fn(),
     };
 
-    inpageProviderStream(context);
+    createInpageProviderStream(context);
   });
 
   describe('initial', () => {
@@ -41,7 +41,7 @@ describe('inpageProviderStream', () => {
         off: jest.fn(),
       };
 
-      inpageProviderStream({
+      createInpageProviderStream({
         getEmitter: () => emitter,
         getInpageProviderSettings: jest.fn(),
       });

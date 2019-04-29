@@ -1,4 +1,4 @@
-import itemStates from './actionState';
+import actionState from './actionState';
 
 export default function createAction(request, settings) {
   if (!request.id) return null;
@@ -7,11 +7,11 @@ export default function createAction(request, settings) {
   const action = {
     /* eslint-disable-next-line */
     request: /** @type {RpcRequest} */ (request),
-    state: itemStates.INITIAL,
+    state: actionState.INITIAL,
     payload: null,
     settings,
     end() {
-      this.setState(itemStates.END);
+      this.setState(actionState.END);
     },
     setPayload(res) {
       this.payload = res;
