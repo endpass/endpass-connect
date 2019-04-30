@@ -37,7 +37,10 @@ export default class Bridge {
     try {
       await this.context.logout();
 
-      this.widget.emitFrameEvent(WIDGET_EVENTS.LOGOUT);
+      if (this.widget) {
+        this.widget.emitFrameEvent(WIDGET_EVENTS.LOGOUT);
+      }
+
       req.answer({
         status: true,
       });
@@ -98,22 +101,6 @@ export default class Bridge {
     });
     widgetMessenger.subscribe(METHODS.WIDGET_GET_SETTING, (payload, req) => {
       req.answer(this.context.inpageProvider.settings);
-    });
-    widgetMessenger.subscribe(METHODS.WIDGET_OPEN, ({ root }, req) => {
-      this.widget.resize({ height: '100vh' });
-
-      if (root) this.widget.emitFrameEvent(WIDGET_EVENTS.OPEN);
-
-      req.answer();
-    });
-    widgetMessenger.subscribe(METHODS.WIDGET_CLOSE, () => {
-      this.widget.emitFrameEvent(WIDGET_EVENTS.CLOSE);
-    });
-    widgetMessenger.subscribe(METHODS.WIDGET_FIT, ({ height }) => {
-      this.widget.resize({ height: `${height}px` });
-    });
-    widgetMessenger.subscribe(METHODS.WIDGET_UNMOUNT, () => {
-      this.unmountWidget();
     });
     widgetMessenger.subscribe(METHODS.LOGOUT_REQUEST, (msg, req) => {
       this.handleLogoutMessage(msg, req);

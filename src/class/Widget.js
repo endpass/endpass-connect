@@ -1,4 +1,4 @@
-import { WIDGET_EVENTS } from '@/constants';
+import { METHODS, WIDGET_EVENTS } from '@/constants';
 import { inlineStyles } from '@/util/dom';
 
 const FADE_TIMEOUT = 300;
@@ -41,12 +41,34 @@ export default class Widget {
     this.handleWidgetFrameLoad = this.handleWidgetFrameLoad.bind(this);
   }
 
+  subscribe() {
+    const widgetMessenger = this.context.getWidgetMessenger();
+
+    widgetMessenger.setTarget(this.frame.contentWindow);
+
+    widgetMessenger.subscribe(METHODS.WIDGET_OPEN, ({ root }, req) => {
+      this.resize({ height: '100vh' });
+
+      if (root) this.emitFrameEvent(WIDGET_EVENTS.OPEN);
+
+      req.answer();
+    });
+    widgetMessenger.subscribe(METHODS.WIDGET_CLOSE, () => {
+      this.emitFrameEvent(WIDGET_EVENTS.CLOSE);
+    });
+    widgetMessenger.subscribe(METHODS.WIDGET_FIT, ({ height }) => {
+      this.resize({ height: `${height}px` });
+    });
+    widgetMessenger.subscribe(METHODS.WIDGET_UNMOUNT, () => {
+      this.unmount();
+    });
+  }
+
   /**
    * Create markup and prepend to <body>
    */
   mount(parameters = {}) {
     const { url } = this;
-    const widgetMessenger = this.context.getWidgetMessenger();
     const styles = createWidgetIframeStyles(parameters.position);
     const markup = `
       <iframe id="endpass-widget" data-endpass="widget-frame" style="${styles}" src="${url}"></iframe>
@@ -57,7 +79,7 @@ export default class Widget {
     this.frame = document.body.querySelector('[data-endpass="widget-frame"]');
     this.frame.addEventListener('load', this.handleWidgetFrameLoad);
 
-    widgetMessenger.setTarget(this.frame.contentWindow);
+    this.subscribe();
   }
 
   unmount() {
