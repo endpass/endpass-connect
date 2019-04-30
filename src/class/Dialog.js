@@ -83,37 +83,16 @@ export default class Dialog {
     }
   }
 
-  /**
-   * Create markup and prepend to <body>
-   */
-  mount() {
+  subscribe() {
     const messenger = this.context.getDialogMessenger();
-    const nameSpace = this.context.getNamespace();
-    const NSmarkup = nameSpace ? `data-endpass-namespace="${nameSpace}"` : '';
-
-    const markup = `
-      <div data-endpass="overlay" ${NSmarkup} style="${stylesOverlayHide}" >
-        <div data-endpass="wrapper" style="${stylesWrapperHide}">
-          <iframe data-endpass="frame" src="${
-            this.url
-          }" style="${this.frameStyles(propsIframeHide)}"/>
-        </div>
-      </div>
-    `;
-
-    document.body.insertAdjacentHTML('afterBegin', markup);
-
-    this.overlay = document.body.querySelector('[data-endpass="overlay"]');
-    this.wrapper = document.body.querySelector('[data-endpass="wrapper"]');
-    this.frame = document.body.querySelector('[data-endpass="frame"]');
+    let isInited = false;
 
     messenger.setTarget(this.frame.contentWindow);
-
-    let isInited = false;
 
     this.frame.addEventListener('load', () => {
       setTimeout(() => {
         if (!isInited) {
+          /* eslint-disable-next-line */
           console.error(
             `Dialog is not inited, please check auth url ${this.url}`,
           );
@@ -141,5 +120,31 @@ export default class Dialog {
       this.overlay.style = stylesOverlayShow;
       this.wrapper.style = stylesWrapperShow;
     });
+  }
+
+  /**
+   * Create markup and prepend to <body>
+   */
+  mount() {
+    const nameSpace = this.context.getNamespace();
+    const NSmarkup = nameSpace ? `data-endpass-namespace="${nameSpace}"` : '';
+
+    const markup = `
+      <div data-endpass="overlay" ${NSmarkup} style="${stylesOverlayHide}" >
+        <div data-endpass="wrapper" style="${stylesWrapperHide}">
+          <iframe data-endpass="frame" src="${
+            this.url
+          }" style="${this.frameStyles(propsIframeHide)}"/>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('afterBegin', markup);
+
+    this.overlay = document.body.querySelector('[data-endpass="overlay"]');
+    this.wrapper = document.body.querySelector('[data-endpass="wrapper"]');
+    this.frame = document.body.querySelector('[data-endpass="frame"]');
+
+    this.subscribe();
   }
 }

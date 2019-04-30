@@ -1,17 +1,21 @@
 import Widget from '@/class/Widget';
+import { METHODS } from '@/constants';
 
 describe('Widget class', () => {
   const url = 'https://auth.foo.bar/public/widget';
   let messenger;
   let context;
+  let widget;
 
   beforeEach(() => {
     messenger = {
       setTarget: jest.fn(),
+      subscribe: jest.fn(),
     };
     context = {
       getWidgetMessenger: () => messenger,
     };
+    widget = new Widget({ context, url });
   });
 
   afterEach(() => {
@@ -19,11 +23,9 @@ describe('Widget class', () => {
   });
 
   describe('mount', () => {
-    let widget;
-
     beforeEach(() => {
       jest.spyOn(document.body, 'insertAdjacentHTML');
-      widget = new Widget({ context, url });
+      widget.subscribe = jest.fn();
     });
 
     it('should mount iframe for widget', () => {
@@ -35,7 +37,7 @@ describe('Widget class', () => {
       expect(
         document.body.insertAdjacentHTML.mock.calls[0][1],
       ).toMatchSnapshot();
-      expect(messenger.setTarget).toBeCalled();
+      expect(widget.subscribe).toBeCalled();
     });
 
     it('should mount iframe with given parameters', () => {
@@ -48,10 +50,12 @@ describe('Widget class', () => {
   });
 
   describe('unmount', () => {
+    beforeEach(() => {
+      widget.subscribe = jest.fn();
+    });
+
     it('should unmount widget after it faded out', () => {
       jest.useFakeTimers();
-
-      const widget = new Widget({ context, url });
 
       widget.mount({ position: { top: '15px', left: '15px' } });
       widget.unmount();
@@ -73,8 +77,6 @@ describe('Widget class', () => {
 
   describe('handleWidgetFrameLoad', () => {
     it('should emit load event and show widget', () => {
-      const widget = new Widget({ context, url });
-
       widget.frame = {
         style: {
           opacity: 0,
@@ -90,8 +92,6 @@ describe('Widget class', () => {
 
   describe('emitFrameEvent', () => {
     it('should emit frame event through frame element', () => {
-      const widget = new Widget({ context, url });
-
       widget.frame = {
         dispatchEvent: jest.fn(),
       };
@@ -105,8 +105,6 @@ describe('Widget class', () => {
 
   describe('resize', () => {
     it('should resize frame', () => {
-      const widget = new Widget({ context, url });
-
       widget.frame = {
         style: {
           height: 0,
@@ -117,6 +115,35 @@ describe('Widget class', () => {
       });
 
       expect(widget.frame.style.height).toBe(300);
+    });
+  });
+
+  describe('subscribe', () => {
+    it('should subscribe on messenger view-responsible methods', () => {
+      const contentWindow = 'foo';
+
+      widget.frame = {
+        contentWindow,
+      };
+      widget.subscribe();
+
+      expect(messenger.setTarget).toBeCalledWith(contentWindow);
+      expect(messenger.subscribe).toBeCalledWith(
+        METHODS.WIDGET_OPEN,
+        expect.any(Function),
+      );
+      expect(messenger.subscribe).toBeCalledWith(
+        METHODS.WIDGET_CLOSE,
+        expect.any(Function),
+      );
+      expect(messenger.subscribe).toBeCalledWith(
+        METHODS.WIDGET_FIT,
+        expect.any(Function),
+      );
+      expect(messenger.subscribe).toBeCalledWith(
+        METHODS.WIDGET_UNMOUNT,
+        expect.any(Function),
+      );
     });
   });
 });
