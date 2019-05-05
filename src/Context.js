@@ -1,7 +1,13 @@
 import Network from '@endpass/class/Network';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import CrossWindowBroadcaster from '@endpass/class/CrossWindowBroadcaster';
-import { Emmiter, InpageProvider, Bridge, ProviderFactory } from '@/class';
+import {
+  Emmiter,
+  InpageProvider,
+  Bridge,
+  ProviderFactory,
+  Oauth,
+} from '@/class';
 import {
   INPAGE_EVENTS,
   METHODS,
@@ -36,6 +42,8 @@ export default class Context {
      */
     this.inpageProvider = null;
     this.requestProvider = null;
+    this.oauthRequestProvider = null;
+    this.oauthClientId = options.oauthClientId;
     this.isServerLogin = false;
     this.isWidgetMounted = false;
     this.authUrl = !authUrlRegexp.test(authUrl)
@@ -226,6 +234,62 @@ export default class Context {
 
   getProviderSettings() {
     return this.inpageProvider.settings;
+  }
+
+  /**
+   * Fetch user data via oaurh
+   * @param {Object} [params] Parameters object
+   * @param {Number} [params.popupWidth] Oauth popup width
+   * @param {Number} [params.popupHeight] Oauth popup height
+   * @param {String[]} params.scopes - Array of authorization scopes
+   */
+  async loginWithOauth(params) {
+    this.oauthRequestProvider = new Oauth({
+      clientId: this.oauthClientId,
+      ...params,
+    });
+    await this.oauthRequestProvider.init();
+  }
+
+  /**
+   * Makes api request with authorization token
+   * @param {Object} [options] Request parameters object
+   * @param {String} options.url Request url
+   * @param {String} options.method Request http method
+   * @param {Object} [options.params] - Request parameters
+   * @param {Object} [options.headers] - Request headers
+   * @param {Object|string} [options.data] - Request body
+   * @returns {Promise} Request promise
+   */
+  request(options) {
+    if (!this.oauthRequestProvider) {
+      throw new Error('Request fail user is not authorized');
+    }
+    return this.oauthRequestProvider.request(options);
+  }
+  /**
+   * Clears instance scopes and token
+   * @throws {Error} If not authorized yet;
+   */
+  logoutFromOauth() {
+    if (!this.oauthRequestProvider) {
+      throw new Error('Logout failed: not logged in');
+    }
+    this.oauthRequestProvider.logout();
+  }
+
+  /**
+   * Sets oauth popup parameters
+   * @param {Object} params Parameters object
+   * @param {Number} [params.width] Oauth popup width
+   * @param {Number} [params.height] Oauth popup height
+   * @throws {Error} If not authorized yet;
+   */
+  setOauthPopupParams(params) {
+    if (!this.oauthRequestProvider) {
+      throw new Error('Options setup failed: initialize instance first');
+    }
+    this.oauthRequestProvider.setPopupParams(params);
   }
 
   /**
