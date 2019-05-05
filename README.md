@@ -9,6 +9,7 @@
 - [API](#api)
 - [Interactions with current account](#interactions)
 - [Widget](#widget)
+- [Oauth](#oauth)
 - [Development](#development)
 
 ## Library
@@ -77,6 +78,34 @@ window.ethereum = provider;
 web3.setProvider(provider);
 ```
 
+#### Oauth authorization
+
+Connect provides Oauth authorization flow which can be used for user authentication and private API calls.
+
+To implement it you first need to register you application at `endpass-vault` and receive your clientId.
+
+```js
+import Connect from '@endpass/connect';
+
+// Initialize Connect with clientId from vault
+
+const connect = new Connect({
+  oauthClientId: YOUR_CLIENT_ID
+});
+
+// Ask user to authorize, or check presented token validity if present
+await connect.loginWithOauth({
+  scope: [DESIRED_SKOPE, MORE_OPTIONAL_SCOPES]
+});
+
+// Fetch required data, connect handle server authorization
+connect.request({
+  url: 'https://api.endpass.com/v1/user',
+  method: 'GET'
+});
+
+```
+
 ### API
 
 #### Authorization
@@ -107,6 +136,15 @@ web3.setProvider(provider);
 | `getWidgetNode` |                                                                                  | `Promise<Element>` | Returns widget iframe node when it is available.                   |
 | `mountWidget`   | `{ position: { top?: string, bottom?: string, left?: string, right: string? } }` | `Promise<Element>` | Mounts Endpass widget on given position and returns iframe element |
 | `unmountWidget` |                                                                                  |                    | Removes mounted Endpass widget                                     |
+
+#### Oauth
+| Method                | Params                                         | Returns        | Description                                           |
+| --------------------- | ---------------------------------------------- | -------------- | ----------------------------------------------------- |
+| `loginWithOauth`      | {scopes: array<string>, popupHeight: number, popupWidth:number} | `Promise` | Authorizes with oauth flow and prepares for api requests. |
+| `request` | `{ url: string, method: sting, headers: object, params: object, data: sting/object }` | `Promise<HttpResponse>` | Makes and http request with access token  |
+| `logoutFromOauth`      | {scopes: array<string>, popupHeight: number, popupWidth:number} | `Promise` | Authorizes with oauth flow and prepares for api requests. |
+| `setOauthPopupParams`      | {height: number, width:number} |   | Sets authorization popup dimensions. |
+
 
 ### Interactions with current account
 

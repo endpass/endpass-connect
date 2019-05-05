@@ -120,6 +120,47 @@ export default class Connect {
   }
 
   /**
+   * Fetch user data via oauth
+   * @param {Object} params Parameters object
+   * @param {Number} [params.popupWidth] Oauth popup width
+   * @param {Number} [params.popupHeight] Oauth popup height
+   * @param {String[]} params.scopes - Array of authorization scopes
+   */
+  async loginWithOauth(params) {
+    await this[privateFields.context].loginWithOauth(params);
+  }
+
+  logoutFromOauth() {
+    this[privateFields.context].logoutFromOauth();
+  }
+
+  /**
+   * Sets oauth popup parameters
+   * @param {Object} params Parameters object
+   * @param {Number} [params.width] Oauth popup width
+   * @param {Number} [params.height] Oauth popup height
+   * @throws {Error} If not authorized yet;
+   */
+  setOauthPopupParams(params) {
+    this[privateFields.context].setOauthPopupParams(params);
+  }
+
+  /**
+   * Fetch user data via oauth
+   * @param {Object} [options] Request parameters object
+   * @param {String} options.url Request url
+   * @param {String} options.method Request http method
+   * @param {Object} [options.params] - Request parameters
+   * @param {Object} [options.headers] - Request headers
+   * @param {Object|string} [options.data] - Request body
+   * @returns {Promise} Request promise
+   * @throws {Error} If not authorized yet;
+   */
+  request(options) {
+    return this[privateFields.context].request(options);
+  }
+
+  /**
    * Mounts endpass widget
    * @param {Object} [params] Parameters object
    * @param {Object} [params.position] Position of mounting widget
