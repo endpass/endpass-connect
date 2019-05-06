@@ -30,7 +30,6 @@ export default class Bridge {
     this.readyResolvers = [];
 
     this.initAuthMessenger();
-    this.initWidgetMessenger();
   }
 
   async handleLogoutMessage(msg, req) {
@@ -111,6 +110,7 @@ export default class Bridge {
   }
 
   mountWidget(parameters) {
+    this.initWidgetMessenger();
     this.widget.mount(parameters);
   }
 

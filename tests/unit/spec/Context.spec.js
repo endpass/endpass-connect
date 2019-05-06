@@ -114,7 +114,7 @@ describe('Context class', () => {
       expect(req.answer).toBeCalledWith({
         demoData,
         isIdentityMode: false,
-        source: DIRECTION.WIDGET,
+        source: DIRECTION.AUTH,
       });
 
       const otherContex = new Context({
@@ -147,6 +147,17 @@ describe('Context class', () => {
       context.mountWidget();
 
       expect(context.bridge.mountWidget).not.toBeCalled();
+    });
+
+    it('should assign widget messenger on mount and push it to the broadcaster', () => {
+      context.bridgeBroadcaster.pushMessengers = jest.fn();
+
+      expect(context.widgetMessenger).toBeNull();
+
+      context.mountWidget();
+
+      expect(context.bridgeBroadcaster.pushMessengers).toBeCalled();
+      expect(context.widgetMessenger).not.toBeNull();
     });
   });
 

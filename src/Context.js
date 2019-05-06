@@ -52,16 +52,11 @@ export default class Context {
     this.requestProvider = ProviderFactory.createRequestProvider();
     this.dialogMessenger = new CrossWindowMessenger({
       showLogs: !ENV.isProduction,
-      name: `connect-bridge[${this.namespace}]`,
+      name: `connect-bridge-dialog[${this.namespace}]`,
       to: DIRECTION.AUTH,
       from: DIRECTION.CONNECT,
     });
-    this.widgetMessenger = new CrossWindowMessenger({
-      showLogs: !ENV.isProduction,
-      name: `connect-bridge[${this.namespace}]`,
-      to: DIRECTION.AUTH,
-      from: DIRECTION.CONNECT,
-    });
+    this.widgetMessenger = null;
     this.bridgeBroadcaster = new CrossWindowBroadcaster({
       method: [METHODS.BROADCAST],
     });
@@ -76,18 +71,11 @@ export default class Context {
     });
 
     this.setupLoginEvents();
-    this.initBridgeBroadcaster();
+    this.bridgeBroadcaster.pushMessengers(this.dialogMessenger);
 
     if (options.widget !== false) {
       this.mountWidgetOnAuth(options.widget);
     }
-  }
-
-  initBridgeBroadcaster() {
-    this.bridgeBroadcaster.pushMessengers([
-      this.dialogMessenger,
-      this.widgetMessenger,
-    ]);
   }
 
   setupLoginEvents() {
@@ -243,6 +231,13 @@ export default class Context {
   mountWidget(parameters) {
     if (this.isWidgetMounted) return;
 
+    this.widgetMessenger = new CrossWindowMessenger({
+      showLogs: !ENV.isProduction,
+      name: `connect-bridge-widget[${this.namespace}]`,
+      to: DIRECTION.AUTH,
+      from: DIRECTION.CONNECT,
+    });
+    this.bridgeBroadcaster.pushMessengers(this.widgetMessenger);
     this.isWidgetMounted = true;
     this.bridge.mountWidget(parameters);
   }
