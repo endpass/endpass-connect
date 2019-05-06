@@ -15,13 +15,17 @@ const authUrlRegexp = new RegExp('://auth(\\.|-)', 'ig');
 
 export default class Context {
   /**
-   * @param {String} options.authUrl Url of hosted Endpass Connect Application
-   * @param {String} [options.namespace] namespace for see difference, between two instances
-   * @param {Boolean} options.isIdentityMode isIdentityMode for define auth like identity
-   * @param {Object} options.demoData demoData passed object to auth
-   * @param {Object} options.widget Widget configuration object. If provided widget
-   *  will be mounted automatically
-   * @param {Object} options.widget.position Widget positions. By default
+   * @param {String} [options.authUrl] Url of hosted Endpass Connect Application
+   * @param {String} [options.namespace] namespace for see difference,
+   *  between two instances
+   * @param {Boolean} [options.isIdentityMode] isIdentityMode for define auth
+   *  like identity
+   * @param {Object} [options.demoData] demoData passed object to auth
+   * @param {Object} [options.showCreateAccount] show create account form
+   *  in auth dialog
+   * @param {Object} [options.widget] Widget configuration object.
+   *  If provided widget will be mounted automatically
+   * @param {Object} [options.widget.position] Widget positions. By default
    *  equals to `bottom right`
    */
   constructor(options = {}) {
@@ -67,6 +71,7 @@ export default class Context {
       initialPayload: {
         demoData: options.demoData,
         isIdentityMode: options.isIdentityMode || false,
+        showCreateAccount: options.showCreateAccount,
       },
     });
 

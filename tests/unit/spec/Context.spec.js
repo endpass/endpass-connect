@@ -170,4 +170,21 @@ describe('Context class', () => {
       expect(context.bridge.unmountWidget).not.toBeCalled();
     });
   });
+
+  describe('initial payload', () => {
+    it('should pass initial payload', () => {
+      const passPayload = {
+        isIdentityMode: true,
+        demoData: 'demo',
+        showCreateAccount: true,
+      };
+
+      const checkContext = new Context({
+        authUrl,
+        ...passPayload,
+      });
+
+      expect(checkContext.bridge.initialPayload).toEqual(passPayload);
+    });
+  });
 });
