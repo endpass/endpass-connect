@@ -228,11 +228,13 @@ export default class Context {
     return this.inpageProvider.settings;
   }
 
+  /**
+   * @param {Object} [parameters]
+   * @returns {Promise<Element>}
+   */
   async mountWidget(parameters) {
     if (this.isWidgetMounted) {
-      const widgetNode = await this.bridge.getWidgetNode();
-
-      return widgetNode;
+      return this.bridge.getWidgetNode();
     }
 
     this.widgetMessenger = new CrossWindowMessenger({

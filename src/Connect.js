@@ -125,10 +125,8 @@ export default class Connect {
    * @param {String} [params.position] Position of mounting widget
    * @returns {Promise<Element>} Mounted widget iframe element
    */
-  async mountWidget(params) {
-    const res = await this[privateFields.context].mountWidget(params);
-
-    return res;
+  mountWidget(params) {
+    return this[privateFields.context].mountWidget(params);
   }
 
   /**

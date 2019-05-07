@@ -79,19 +79,34 @@ web3.setProvider(provider);
 
 ### API
 
-#### Instance methods
+#### Authorization
 
-| Method                | Params                                         | Returns                                                                             | Description                                                                                                                                                               |
-| --------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `auth`                |                                                | `Promise<{ status: boolean, message?: string }>`                                    | Open Endpass Connect application for user authorization, return promise, which returns object with auth status. See [Errors handling](#errors-handling) for more details. |
-| `logout`              |                                                | `Promise<Boolean>`                                                                  | Makes logout request and returns status or throw error                                                                                                                    |
-| `getAccountData`      |                                                | `Promise<{ activeAccount: string, activeNet: number }>`                             | Returns authorized user active account.                                                                                                                                   |
-| `getProvider`         | `provider: Web3.Provider`                      | `Web3Provider`                                                                      | Creates Web3 provider for injection in Web3 instance.                                                                                                                     |
-| `getWidgetNode`       |                                                | `Promise<Element>`                                                                  | Returns widget iframe node when it is available.                                                                                                                          |
-| `setProviderSettings` | `{ activeAccount: string, activeNet: number }` |                                                                                     | Set user settings to the injected `web3` provider.                                                                                                                        |
-| `openAccount`         |                                                | `Promise<{ type: string, payload?: { activeAccount: string, activeNet: number } }>` | Open Endpass Connect application for change user active address, network or logout                                                                                        |
-| `mountWidget`         | `{ position: string }`                         | `Promise<Element>`                                                                  | Mounts Endpass widget on given position and returns iframe element                                                                                                        |
-| `unmountWidget`       |                                                |                                                                                     | Removes mounted Endpass widget                                                                                                                                            |
+| Method   | Params | Returns                                          | Description                                                                                                                                                               |
+| -------- | ------ | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `auth`   |        | `Promise<{ status: boolean, message?: string }>` | Open Endpass Connect application for user authorization, return promise, which returns object with auth status. See [Errors handling](#errors-handling) for more details. |
+| `logout` |        | `Promise<Boolean>`                               | Makes logout request and returns status or throw error                                                                                                                    |
+
+#### Account
+
+| Method           | Params | Returns                                                                             | Description                                                                        |
+| ---------------- | ------ | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `getAccountData` |        | `Promise<{ activeAccount: string, activeNet: number }>`                             | Returns authorized user active account.                                            |
+| `openAccount`    |        | `Promise<{ type: string, payload?: { activeAccount: string, activeNet: number } }>` | Open Endpass Connect application for change user active address, network or logout |
+
+#### Provider
+
+| Method                | Params                                         | Returns        | Description                                           |
+| --------------------- | ---------------------------------------------- | -------------- | ----------------------------------------------------- |
+| `getProvider`         | `provider: Web3.Provider`                      | `Web3Provider` | Creates Web3 provider for injection in Web3 instance. |
+| `setProviderSettings` | `{ activeAccount: string, activeNet: number }` |                | Set user settings to the injected `web3` provider.    |
+
+#### Widget
+
+| Method          | Params                 | Returns            | Description                                                        |
+| --------------- | ---------------------- | ------------------ | ------------------------------------------------------------------ |
+| `getWidgetNode` |                        | `Promise<Element>` | Returns widget iframe node when it is available.                   |
+| `mountWidget`   | `{ position: string }` | `Promise<Element>` | Mounts Endpass widget on given position and returns iframe element |
+| `unmountWidget` |                        |                    | Removes mounted Endpass widget                                     |
 
 ### Interactions with current account
 
