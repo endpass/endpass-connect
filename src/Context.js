@@ -228,8 +228,12 @@ export default class Context {
     return this.inpageProvider.settings;
   }
 
-  mountWidget(parameters) {
-    if (this.isWidgetMounted) return;
+  async mountWidget(parameters) {
+    if (this.isWidgetMounted) {
+      const widgetNode = await this.bridge.getWidgetNode();
+
+      return widgetNode;
+    }
 
     this.widgetMessenger = new CrossWindowMessenger({
       showLogs: !ENV.isProduction,
@@ -239,7 +243,8 @@ export default class Context {
     });
     this.bridgeBroadcaster.pushMessengers(this.widgetMessenger);
     this.isWidgetMounted = true;
-    this.bridge.mountWidget(parameters);
+
+    return this.bridge.mountWidget(parameters);
   }
 
   unmountWidget() {
@@ -247,6 +252,12 @@ export default class Context {
 
     this.isWidgetMounted = false;
     this.bridge.unmountWidget();
+  }
+
+  async getWidgetNode() {
+    const res = await this.bridge.getWidgetNode();
+
+    return res;
   }
 
   /* eslint-disable-next-line */

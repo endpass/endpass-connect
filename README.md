@@ -87,9 +87,10 @@ web3.setProvider(provider);
 | `logout`              |                                                | `Promise<Boolean>`                                                                  | Makes logout request and returns status or throw error                                                                                                                    |
 | `getAccountData`      |                                                | `Promise<{ activeAccount: string, activeNet: number }>`                             | Returns authorized user active account.                                                                                                                                   |
 | `getProvider`         | `provider: Web3.Provider`                      | `Web3Provider`                                                                      | Creates Web3 provider for injection in Web3 instance.                                                                                                                     |
+| `getWidgetNode`       |                                                | `Promise<Element>`                                                                  | Returns widget iframe node when it is available.                                                                                                                          |
 | `setProviderSettings` | `{ activeAccount: string, activeNet: number }` |                                                                                     | Set user settings to the injected `web3` provider.                                                                                                                        |
 | `openAccount`         |                                                | `Promise<{ type: string, payload?: { activeAccount: string, activeNet: number } }>` | Open Endpass Connect application for change user active address, network or logout                                                                                        |
-| `mountWidget`         | `{ position: string }`                         |                                                                                     | Mounts Endpass widget on given position                                                                                                                                   |
+| `mountWidget`         | `{ position: string }`                         | `Promise<Element>`                                                                  | Mounts Endpass widget on given position and returns iframe element                                                                                                        |
 | `unmountWidget`       |                                                |                                                                                     | Removes mounted Endpass widget                                                                                                                                            |
 
 ### Interactions with current account
@@ -155,12 +156,14 @@ import Connect from '@endpass/connect';
 
 const connect = new Connect();
 
-connect.mountWidget({
-  position: {
-    top: '15px',
-    left: '15px',
-  },
-});
+(async () => {
+  await connect.mountWidget({
+    position: {
+      bottom: '15px',
+      left: '15px',
+    },
+  });
+})();
 ```
 
 Code above will mount widget only on `mountWidget` method call.
@@ -195,14 +198,30 @@ import Connect from '@endpass/connect';
 
 const connect = new Connect();
 
-const widget = document.getElementById('endpass-widget'); // or document.querySelector('[data-endpass=widget-frame]')
+const widget = await connect.getWidgetNode();
 
 widget.addEventListener('open', () => {
   console.log('Widget opened!');
 });
 ```
 
-**Don't forget – widget DOM-node available only when widget mounted!**
+Also, `mountWidget` returns frame element on complete:
+
+```js
+import Connect from '@endpass/connect';
+
+const connect = new Connect({
+  widget: false,
+});
+
+(async () => {
+  const widget = await connect.mountWidget();
+
+  widget.addEventListener('open', () => {
+    console.log('Widget opened!');
+  });
+})();
+```
 
 There are available widget events type which you can use in subscribtions:
 
@@ -211,15 +230,3 @@ There are available widget events type which you can use in subscribtions:
 - `open` – fires after widget open
 - `close` – fires after widget close
 - `logout` – fires after logout through widget interaction
-
-## Development
-
-| Command     | Description                                            |
-| ----------- | ------------------------------------------------------ |
-| `dev`       | Starts library development environment.                |
-| `build:dev` | Builds library for development.                        |
-| `build`     | Builds library for production.                         |
-| `build:lib` | Builds library.                                        |
-| `test`      | Runs unit tests.                                       |
-| `format`    | Formats code of packages with `eslint` and `prettier`. |
-| `commit`    | Use commitizen for commit messages.                    |

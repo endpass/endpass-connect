@@ -109,9 +109,18 @@ export default class Bridge {
     });
   }
 
-  mountWidget(parameters) {
+  async getWidgetNode() {
+    const res = await this.widget.getWidgetNode();
+
+    return res;
+  }
+
+  async mountWidget(parameters) {
     this.initWidgetMessenger();
-    this.widget.mount(parameters);
+
+    const res = await this.widget.mount(parameters);
+
+    return res;
   }
 
   unmountWidget() {
