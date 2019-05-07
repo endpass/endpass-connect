@@ -115,12 +115,14 @@ export default class Bridge {
     return res;
   }
 
-  async mountWidget(parameters) {
+  /**
+   * @param {Object} [parameters]
+   * @returns {Element}
+   */
+  mountWidget(parameters) {
     this.initWidgetMessenger();
 
-    const res = await this.widget.mount(parameters);
-
-    return res;
+    return this.widget.mount(parameters);
   }
 
   unmountWidget() {
