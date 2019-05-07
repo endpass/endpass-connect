@@ -132,32 +132,53 @@ describe('Context class', () => {
   describe('mountWidget', () => {
     beforeEach(() => {
       context.bridge.mountWidget = jest.fn();
+      context.bridge.getWidgetNode = jest.fn();
     });
 
-    it('should mount widget', () => {
-      context.mountWidget();
+    it('should mount widget', async () => {
+      expect.assertions(2);
+
+      await context.mountWidget();
 
       expect(context.isWidgetMounted).toBe(true);
       expect(context.bridge.mountWidget).toBeCalled();
     });
 
-    it('should not do anything if widget is mounted', () => {
-      context.isWidgetMounted = true;
+    it('should not do anything if widget is mounted', async () => {
+      expect.assertions(2);
 
-      context.mountWidget();
+      const widgetNode = {
+        foo: 'bar',
+      };
+
+      context.isWidgetMounted = true;
+      context.bridge.getWidgetNode.mockResolvedValueOnce(widgetNode);
+
+      const res = await context.mountWidget();
 
       expect(context.bridge.mountWidget).not.toBeCalled();
+      expect(res).toEqual(widgetNode);
     });
 
-    it('should assign widget messenger on mount and push it to the broadcaster', () => {
+    it('should assign widget messenger on mount and push it to the broadcaster', async () => {
+      expect.assertions(3);
+
       context.bridgeBroadcaster.pushMessengers = jest.fn();
 
       expect(context.widgetMessenger).toBeNull();
 
-      context.mountWidget();
+      await context.mountWidget();
 
       expect(context.bridgeBroadcaster.pushMessengers).toBeCalled();
       expect(context.widgetMessenger).not.toBeNull();
+    });
+
+    it('should returns mounted widget node', async () => {
+      expect.assertions(1);
+
+      const res = await context.mountWidget();
+
+      expect(res).not.toBeNull();
     });
   });
 

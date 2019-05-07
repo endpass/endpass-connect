@@ -123,9 +123,12 @@ export default class Connect {
    * Mounts endpass widget
    * @param {Object} [params] Parameters object
    * @param {String} [params.position] Position of mounting widget
+   * @returns {Promise<Element>} Mounted widget iframe element
    */
-  mountWidget(params) {
-    this[privateFields.context].mountWidget(params);
+  async mountWidget(params) {
+    const res = await this[privateFields.context].mountWidget(params);
+
+    return res;
   }
 
   /**
@@ -133,5 +136,15 @@ export default class Connect {
    */
   unmountWidget() {
     this[privateFields.context].unmountWidget();
+  }
+
+  /**
+   * Returns widget iframe element when it available
+   * @returns {Promise<Element>} Widget iframe node
+   */
+  async getWidgetNode() {
+    const res = await this[privateFields.context].getWidgetNode();
+
+    return res;
   }
 }

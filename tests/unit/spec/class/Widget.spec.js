@@ -146,4 +146,26 @@ describe('Widget class', () => {
       );
     });
   });
+
+  describe('getWidgetNode', () => {
+    beforeAll(() => {
+      jest.useFakeTimers();
+    });
+
+    it('should returns promise which resolves with widget element node', done => {
+      expect.assertions(1);
+
+      const frameNode = {
+        foo: 'bar',
+      };
+
+      widget.frame = frameNode;
+      widget.getWidgetNode().then(res => {
+        expect(res).toEqual(frameNode);
+        done();
+      });
+
+      jest.advanceTimersByTime(500);
+    });
+  });
 });

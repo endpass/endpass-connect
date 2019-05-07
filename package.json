@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.19.5-beta",
+  "version": "0.20.0-beta",
   "authVersion": "",
   "main": "./dist/endpass-connect.min.js",
   "module": "./dist/endpass-connect.esm.js",
@@ -21,10 +21,10 @@
   "homepage": "https://github.com/endpass/endpass-connect",
   "scripts": {
     "dev": "rollup -c -w",
-    "build:dev": "rollup -c",
     "build": "rimraf ./dist && npm run build:lib && npm run build:browser",
     "build:lib": "NODE_ENV=production rollup -c",
     "build:browser": "webpack --mode production",
+    "build:dev": "rollup -c",
     "test": "jest",
     "unit:watch": "jest --watch",
     "format": "prettier --write './src/**/*.{js,json}' && eslint ./src/**/*.{js} --fix",

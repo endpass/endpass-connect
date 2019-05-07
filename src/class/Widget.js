@@ -80,6 +80,8 @@ export default class Widget {
     this.frame.addEventListener('load', this.handleWidgetFrameLoad);
 
     this.subscribe();
+
+    return this.frame;
   }
 
   unmount() {
@@ -92,7 +94,7 @@ export default class Widget {
     }, FADE_TIMEOUT);
   }
 
-  getWidget() {
+  getWidgetNode() {
     return new Promise(resolve => {
       /* eslint-disable-next-line */
       const handler = setTimeout(() => {
