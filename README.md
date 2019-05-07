@@ -102,11 +102,11 @@ web3.setProvider(provider);
 
 #### Widget
 
-| Method          | Params                 | Returns            | Description                                                        |
-| --------------- | ---------------------- | ------------------ | ------------------------------------------------------------------ |
-| `getWidgetNode` |                        | `Promise<Element>` | Returns widget iframe node when it is available.                   |
-| `mountWidget`   | `{ position: string }` | `Promise<Element>` | Mounts Endpass widget on given position and returns iframe element |
-| `unmountWidget` |                        |                    | Removes mounted Endpass widget                                     |
+| Method          | Params                                                                           | Returns            | Description                                                        |
+| --------------- | -------------------------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------ |
+| `getWidgetNode` |                                                                                  | `Promise<Element>` | Returns widget iframe node when it is available.                   |
+| `mountWidget`   | `{ position: { top?: string, bottom?: string, left?: string, right: string? } }` | `Promise<Element>` | Mounts Endpass widget on given position and returns iframe element |
+| `unmountWidget` |                                                                                  |                    | Removes mounted Endpass widget                                     |
 
 ### Interactions with current account
 

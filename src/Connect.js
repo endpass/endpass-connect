@@ -122,7 +122,11 @@ export default class Connect {
   /**
    * Mounts endpass widget
    * @param {Object} [params] Parameters object
-   * @param {String} [params.position] Position of mounting widget
+   * @param {Object} [params.position] Position of mounting widget
+   * @param {Object} [params.position.left]
+   * @param {Object} [params.position.right]
+   * @param {Object} [params.position.top]
+   * @param {Object} [params.position.bottom]
    * @returns {Promise<Element>} Mounted widget iframe element
    */
   mountWidget(params) {
