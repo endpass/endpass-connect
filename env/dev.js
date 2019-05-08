@@ -9,5 +9,5 @@ const oauthServer = 'https://oauth2-dev.endpass.com:9000/oauth2';
 module.exports = {
   infura,
   isProduction,
-  oauthServer
+  oauthServer,
 };

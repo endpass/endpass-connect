@@ -267,6 +267,7 @@ export default class Context {
     }
     return this.oauthRequestProvider.request(options);
   }
+
   /**
    * Clears instance scopes and token
    * @throws {Error} If not authorized yet;
