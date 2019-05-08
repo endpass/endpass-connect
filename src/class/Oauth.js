@@ -23,8 +23,16 @@ function getRandomState() {
 }
 
 export default class Oauth {
-  constructor({ clientId, scopes, popupHeight, popupWidth, state }) {
+  constructor({
+    clientId,
+    scopes,
+    popupHeight,
+    popupWidth,
+    state,
+    oauthServer,
+  }) {
     this.clientId = clientId;
+    this.oauthServer = oauthServer;
     this.axiosInstance = null;
     this.popupHeight = popupHeight || 1000;
     this.popupWidth = popupWidth || 600;
@@ -77,6 +85,7 @@ export default class Oauth {
         response_type: 'token',
       },
       {
+        oauthServer: this.oauthServer,
         height: this.popupHeight,
         width: this.popupWidth,
       },
@@ -151,7 +160,8 @@ export default class Oauth {
   }
 
   checkTokenValidity() {
-    if (new Date().getTime() >= this.getStoredValue(EXPIRES)) {
+    const expire = this.getStoredValue(EXPIRES) - 0;
+    if (!isNumeric(expire) || new Date().getTime() >= expire) {
       this.clearStoredValue(TOKEN);
       this.clearStoredValue(EXPIRES);
     }

@@ -21,10 +21,11 @@ export default class PopupWindow {
       width: windowOptions.width || 600,
     };
     this.id = 'endpass-oauth-authorize';
-    this.url = mapToQueryString(`${ENV.oauthServer}/auth`, params);
+    const server = windowOptions.oauthServer || ENV.oauthServer;
+    this.url = mapToQueryString(`${server}/auth`, params);
   }
 
-  open() {
+  openPopup() {
     const { url, id, windowOptions } = this;
     this.window = window.open(
       url,
@@ -82,7 +83,7 @@ export default class PopupWindow {
   static open(...args) {
     const popup = new this(...args);
 
-    popup.open();
+    popup.openPopup();
     popup.poll();
 
     return popup;
