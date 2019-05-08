@@ -15,10 +15,11 @@ function hashToMap(path) {
 }
 
 export default class PopupWindow {
-  constructor(params, windowOptions) {
-    this.windowOptions = {};
-    this.windowOptions.height = (windowOptions && windowOptions.height) || 1000;
-    this.windowOptions.width = (windowOptions && windowOptions.width) || 600;
+  constructor(params, windowOptions = {}) {
+    this.windowOptions = {
+      height: windowOptions.height || 1000,
+      width: windowOptions.width || 600,
+    };
     this.id = 'endpass-oauth-authorize';
     this.url = mapToQueryString(`${ENV.oauthServer}/auth`, params);
   }
@@ -28,7 +29,7 @@ export default class PopupWindow {
     this.window = window.open(
       url,
       id,
-      `width=${this.windowOptions.width},height=${this.windowOptions.height}`,
+      `width=${windowOptions.width},height=${windowOptions.height}`,
     );
   }
 
