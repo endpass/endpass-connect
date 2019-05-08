@@ -1,32 +1,65 @@
-import tokenProvider from 'axios-token-interceptor';
 import axios from 'axios';
-import { PopupWindow } from '@/class';
+import tokenProvider from 'axios-token-interceptor';
+import { isNumeric } from '@endpass/utils/numbers';
+import PopupWindow from '@/class/PopupWindow';
+
+export const STORE_KEYS = {
+  TOKEN: 'token',
+  EXPIRES: 'expires',
+  SCOPE: 'scope',
+};
+
+const { TOKEN, EXPIRES, SCOPE } = STORE_KEYS;
+
+function getRandomState() {
+  return (
+    Math.random()
+      .toString(36)
+      .substring(5) +
+    Math.random()
+      .toString(36)
+      .substring(5)
+  );
+}
 
 export default class Oauth {
   constructor({ clientId, scopes, popupHeight, popupWidth, state }) {
     this.clientId = clientId;
-    this.scope = scopes.join(' ');
     this.axiosInstance = null;
     this.popupHeight = popupHeight || 1000;
     this.popupWidth = popupWidth || 600;
-    this.state = state || null;
-    const oldScope = this.getStoredValue('scope');
-    if (oldScope === this.scope) {
-      this.token = this.getStoredValue('token');
-      this.expires = this.getStoredValue('expires')
-        ? parseInt(this.getStoredValue('expires'), 10)
+    this.state = state || getRandomState();
+
+    const scopeValue = scopes.join(' ');
+
+    const oldScope = this.getStoredValue(SCOPE);
+    if (oldScope === scopeValue) {
+      this.setStoredValue({
+        name: TOKEN,
+        value: this.getStoredValue(TOKEN),
+      });
+
+      const expiredValue = this.getStoredValue(EXPIRES)
+        ? parseInt(this.getStoredValue(EXPIRES), 10)
         : null;
+      this.setStoredValue({
+        name: EXPIRES,
+        value: expiredValue,
+      });
     } else {
-      this.setStoredValue('scope', this.scope);
+      this.setStoredValue({
+        name: SCOPE,
+        value: scopeValue,
+      });
     }
     this.checkTokenValidity();
   }
 
   async init() {
-    if (!this.token) {
+    if (!this.getStoredValue(TOKEN)) {
       await this.authorize();
     }
-    this.createAxiousInstance();
+    this.createAxiosInstance();
   }
 
   /**
@@ -34,19 +67,12 @@ export default class Oauth {
    * @private
    */
   async authorize() {
-    const state =
-      this.state ||
-      Math.random()
-        .toString(36)
-        .substring(5) +
-        Math.random()
-          .toString(36)
-          .substring(5);
+    const { state } = this;
 
     const authorizationResult = await PopupWindow.open(
       {
         client_id: this.clientId,
-        scope: this.scope,
+        scope: this.getStoredValue(SCOPE),
         state,
         response_type: 'token',
       },
@@ -59,24 +85,23 @@ export default class Oauth {
       throw new Error('Authorization failed: state check unsuccessful');
     }
     this.setStoredValue({
-      name: 'expires',
+      name: EXPIRES,
       value: new Date().getTime() + authorizationResult.expires_in * 1000,
     });
 
     this.setStoredValue({
-      name: 'token',
+      name: TOKEN,
       value: authorizationResult.access_token,
     });
   }
 
   logout() {
-    this.clearStoredValue('scope');
-    this.clearStoredValue('token');
-    this.clearStoredValue('expires');
+    this.clearStoredValue(SCOPE);
+    this.clearStoredValue(TOKEN);
+    this.clearStoredValue(EXPIRES);
   }
 
   setStoredValue({ name, value }) {
-    this[name] = value;
     localStorage.setItem(`${this.clientId}${name}`, value);
   }
 
@@ -85,7 +110,6 @@ export default class Oauth {
   }
 
   clearStoredValue(name) {
-    this[name] = null;
     localStorage.removeItem(`${this.clientId}${name}`);
   }
 
@@ -96,17 +120,17 @@ export default class Oauth {
    */
   async getToken() {
     this.checkTokenValidity();
-    if (!this.token) {
+    if (!this.getStoredValue(TOKEN)) {
       await this.authorize();
     }
-    return this.token;
+    return this.getStoredValue(TOKEN);
   }
 
   /**
    * Returns axios instance with token providing interceptor
    * @returns {Axios} axios instance
    */
-  createAxiousInstance() {
+  createAxiosInstance() {
     this.axiosInstance = axios.create();
     this.axiosInstance.interceptors.request.use(
       tokenProvider({
@@ -122,14 +146,14 @@ export default class Oauth {
    * @param {Number} [height] Oauth popup height
    */
   setPopupParams({ height, width }) {
-    this.popupWidth = isNumber(width) ? width : this.popupWidth;
-    this.popupHeight = isNumber(height) ? height : this.popupHeight;
+    this.popupWidth = isNumeric(width) ? width : this.popupWidth;
+    this.popupHeight = isNumeric(height) ? height : this.popupHeight;
   }
 
   checkTokenValidity() {
-    if (new Date().getTime() >= this.expires) {
-      this.clearStoredValue('token');
-      this.clearStoredValue('expires');
+    if (new Date().getTime() >= this.getStoredValue(EXPIRES)) {
+      this.clearStoredValue(TOKEN);
+      this.clearStoredValue(EXPIRES);
     }
   }
 
@@ -145,7 +169,7 @@ export default class Oauth {
    */
   async request(options) {
     if (!this.axiosInstance) {
-      await this.createAxiousInstance();
+      await this.createAxiosInstance();
     }
     return this.axiosInstance({
       ...options,
