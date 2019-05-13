@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script type="module" src="./dist/endpass-connect.browser.js"></script>
+  </head>
+  <body>
+    <script type="module" >
+      window.connect = new EndpassConnect({
+        authUrl: 'https://auth-dev.endpass.com',
+        isIdentityMode: true,
+        oauthClientId: '0650f466-7339-4e1c-8d47-bff789df3c0f',
+      })
+    </script>
+  </body>
+</html>
