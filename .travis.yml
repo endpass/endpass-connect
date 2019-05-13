@@ -1,8 +1,13 @@
 language: node_js
 node_js:
 - '10'
+addons:
+  apt:
+    packages:
+    - libgconf-2-4
 cache:
   directories:
+  - "~/.npm"
   - "~/.cache"
 install: yarn install --frozen-lockfile
 stages:
@@ -12,6 +17,10 @@ stages:
 jobs:
   include:
   - stage: test
+    before_script:
+    - npm run build &
+    - yarn setup-e2e &
+    - sleep 600
     script: npm test
   - stage: deploy_npm
     script:

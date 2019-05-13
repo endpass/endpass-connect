@@ -1,0 +1,26 @@
+#!/bin/bash
+
+
+function setupAuth() {
+echo $1 $2
+  git submodule add $1
+  cd endpass-auth
+  git checkout $2
+  yarn install
+  yarn link "@endpass/connect"
+  npm run dev
+}
+
+function setupDemo() {
+  git submodule init
+  git submodule update
+  cd connect-demo
+  git pull origin master
+  yarn install
+  yarn link "@endpass/connect"
+  npm run setup-e2e
+}
+
+yarn link
+setupDemo &
+setupAuth "$@"

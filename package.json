@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.22.0-beta",
+  "version": "0.22.1-beta",
   "authVersion": "",
   "main": "./dist/endpass-connect.min.js",
   "module": "./dist/endpass-connect.esm.js",
@@ -25,7 +25,10 @@
     "build:lib": "NODE_ENV=production rollup -c",
     "build:browser": "webpack --mode production",
     "build:dev": "rollup -c",
-    "test": "jest",
+    "test": "jest && npm run e2e",
+    "setup-e2e": "bash e2e-preloader $npm_package_config_repo $npm_package_config_commit",
+    "e2e": "cypress run",
+    "e2e:open": "cypress open",
     "unit:watch": "jest --watch",
     "format": "prettier --write './src/**/*.{js,json}' && eslint ./src/**/*.{js} --fix",
     "semantic-release": "semantic-release",
@@ -58,6 +61,8 @@
     "tag": "latest"
   },
   "config": {
+    "repo": "https://github.com/endpass/endpass-auth.git",
+    "commit" : "HEAD",
     "commitizen": {
       "path": "node_modules/cz-conventional-changelog"
     }
@@ -73,6 +78,7 @@
     "@endpass/utils": "^1.3.5",
     "axios": "^0.18.0",
     "axios-token-interceptor": "^0.1.0",
+    "cypress": "^3.2.0",
     "lodash.get": "^4.4.2",
     "utility-types": "^3.4.1",
     "web3-providers-http": "1.0.0-beta.33"
