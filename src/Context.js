@@ -1,12 +1,12 @@
 import Network from '@endpass/class/Network';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
-import CrossWindowBroadcaster from '@endpass/class/CrossWindowBroadcaster';
 import {
   Emmiter,
   InpageProvider,
   Bridge,
   ProviderFactory,
   Oauth,
+  MessengerGroup,
 } from '@/class';
 import {
   INPAGE_EVENTS,
@@ -45,12 +45,12 @@ export default class Context {
     this.oauthRequestProvider = null;
     this.oauthClientId = options.oauthClientId;
     this.isServerLogin = false;
-    this.isWidgetMounted = false;
     this.authUrl = !authUrlRegexp.test(authUrl)
       ? authUrl
       : authUrl.replace('://auth', `://auth${pkg.authVersion}`);
     this.namespace = options.namespace || '';
     this.haveDemoData = !!options.demoData;
+    this.widgetOptions = options.widget;
 
     /**
      * Inner abstractions initialization
@@ -58,6 +58,7 @@ export default class Context {
     this.emitter = new Emmiter();
     this.inpageProvider = new InpageProvider(this.emitter);
     this.requestProvider = ProviderFactory.createRequestProvider();
+    this.messengerGroup = new MessengerGroup();
     this.dialogMessenger = new CrossWindowMessenger({
       showLogs: !ENV.isProduction,
       name: `connect-bridge-dialog[${this.namespace}]`,
@@ -65,9 +66,6 @@ export default class Context {
       from: DIRECTION.CONNECT,
     });
     this.widgetMessenger = null;
-    this.bridgeBroadcaster = new CrossWindowBroadcaster({
-      method: [METHODS.BROADCAST],
-    });
     this.bridge = new Bridge({
       context: this,
       url: this.getConnectUrl('bridge'),
@@ -79,11 +77,10 @@ export default class Context {
     });
 
     this.setupLoginEvents();
-    this.bridgeBroadcaster.pushMessengers(this.dialogMessenger);
 
-    if (options.widget !== false) {
-      this.mountWidgetOnAuth(options.widget);
-    }
+    this.messengerGroup.addMessenger(this.dialogMessenger);
+
+    this.setupOnAuth();
   }
 
   setupLoginEvents() {
@@ -158,7 +155,8 @@ export default class Context {
     if (!res.status) throw new Error(res.error || 'Logout error!');
 
     this.isServerLogin = false;
-    this.bridgeBroadcaster.send(METHODS.LOGOUT_RESPONSE, {});
+
+    this.messengerGroup.send(METHODS.LOGOUT_RESPONSE);
 
     return res.status;
   }
@@ -180,31 +178,29 @@ export default class Context {
         throw new Error(error || 'User settings are not received!');
       }
 
-      this.isServerLogin = true;
-
       const { settings = {} } = payload;
 
-      return {
+      const res = {
         activeAccount: settings.lastActiveAccount,
         activeNet: settings.net || Network.NET_ID.MAIN,
       };
+
+      this.isServerLogin = true;
+      this.setProviderSettings(res);
+
+      return res;
     } catch (err) {
       throw new Error('User not authorized!');
     }
   }
 
   async serverAuth() {
-    let settings;
-
     try {
-      settings = await this.getAccountData();
+      await this.getAccountData();
     } catch (e) {
       await this.auth();
-      settings = await this.getAccountData();
+      await this.getAccountData();
     }
-
-    this.setProviderSettings(settings);
-    this.isServerLogin = true;
   }
 
   /**
@@ -226,14 +222,9 @@ export default class Context {
       activeAccount: payload.activeAccount,
       activeNet: payload.activeNet || Network.NET_ID.MAIN,
     });
-    this.bridgeBroadcaster.send(
-      METHODS.CHANGE_SETTINGS_RESPONSE,
-      this.getProviderSettings(),
-    );
-  }
 
-  getProviderSettings() {
-    return this.inpageProvider.settings;
+    const settings = this.getInpageProviderSettings();
+    this.messengerGroup.send(METHODS.CHANGE_SETTINGS_RESPONSE, settings);
   }
 
   /**
@@ -298,9 +289,11 @@ export default class Context {
    * @returns {Promise<Element>}
    */
   async mountWidget(parameters) {
-    if (this.isWidgetMounted) {
+    if (this.bridge.isWidgetMounted()) {
       return this.bridge.getWidgetNode();
     }
+
+    this.widgetOptions = parameters;
 
     this.widgetMessenger = new CrossWindowMessenger({
       showLogs: !ENV.isProduction,
@@ -308,16 +301,16 @@ export default class Context {
       to: DIRECTION.AUTH,
       from: DIRECTION.CONNECT,
     });
-    this.bridgeBroadcaster.pushMessengers(this.widgetMessenger);
-    this.isWidgetMounted = true;
+
+    this.messengerGroup.addMessenger(this.widgetMessenger);
 
     return this.bridge.mountWidget(parameters);
   }
 
   unmountWidget() {
-    if (!this.isWidgetMounted) return;
+    if (!this.bridge.isWidgetMounted()) return;
 
-    this.isWidgetMounted = false;
+    this.messengerGroup.removeMessenger(this.widgetMessenger);
     this.bridge.unmountWidget();
   }
 
@@ -327,24 +320,12 @@ export default class Context {
     return res;
   }
 
-  /* eslint-disable-next-line */
-  mountWidgetOnAuth(parameters) {
-    return new Promise(res => {
-      const handler = () =>
-        /* eslint-disable-next-line */
-        setTimeout(async () => {
-          try {
-            await this.getAccountData();
-            this.mountWidget(parameters);
-
-            return res();
-          } catch (err) {
-            handler();
-          }
-        }, 1500);
-
-      handler();
-    });
+  setupOnAuth() {
+    setInterval(() => {
+      if (this.widgetOptions !== false && this.isLogin()) {
+        this.mountWidget(this.widgetOptions);
+      }
+    }, 1500);
   }
 
   getInpageProvider() {
@@ -390,10 +371,6 @@ export default class Context {
 
   getWidgetMessenger() {
     return this.widgetMessenger;
-  }
-
-  getBroadcaster() {
-    return this.bridgeBroadcaster;
   }
 
   getNamespace() {

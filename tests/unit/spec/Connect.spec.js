@@ -59,17 +59,15 @@ describe('Connect class', () => {
 
   describe('setProviderSettings', () => {
     let emitter;
-    let broadcaster;
 
     beforeEach(() => {
       emitter = {
         emit: jest.fn(),
       };
-      broadcaster = {
+      context.emitter = emitter;
+      context.messengerGroup = {
         send: jest.fn(),
       };
-      context.emitter = emitter;
-      context.bridgeBroadcaster = broadcaster;
     });
 
     it('should emit settings by inner connect emitter', () => {
@@ -78,14 +76,14 @@ describe('Connect class', () => {
         activeNet: 2,
       };
 
-      context.getProviderSettings = jest.fn(() => payload);
+      context.getInpageProviderSettings = jest.fn(() => payload);
       connect.setProviderSettings(payload);
 
       expect(context.emitter.emit).toBeCalledWith(
         INPAGE_EVENTS.SETTINGS,
         payload,
       );
-      expect(context.bridgeBroadcaster.send).toBeCalledWith(
+      expect(context.messengerGroup.send).toBeCalledWith(
         METHODS.CHANGE_SETTINGS_RESPONSE,
         payload,
       );
@@ -118,6 +116,10 @@ describe('Connect class', () => {
           },
         },
       });
+
+      context.messengerGroup = {
+        send: jest.fn(),
+      };
     });
 
     it('should request user settings with private method and returns formatted value', async () => {
@@ -163,15 +165,12 @@ describe('Connect class', () => {
         status: false,
       });
 
-      const err = new Error('User not authorized!');
-      let check;
       try {
         await connect.getAccountData();
       } catch (e) {
-        check = e;
+        const err = new Error('User not authorized!');
+        expect(e).toEqual(err);
       }
-
-      expect(check).toEqual(err);
     });
   });
 
@@ -227,12 +226,19 @@ describe('Connect class', () => {
       });
     });
 
-    it('should throw error if request status is falsy', () => {
+    it('should throw error if request status is falsy', async () => {
+      expect.assertions(1);
+
       bridge.ask.mockResolvedValueOnce({
         status: false,
       });
 
-      expect(connect.openAccount()).rejects.toThrow();
+      try {
+        await connect.openAccount();
+      } catch (e) {
+        const err = new Error('Account updating failed!');
+        expect(e).toEqual(err);
+      }
     });
   });
 

@@ -140,10 +140,6 @@ describe('Widget class', () => {
         METHODS.WIDGET_FIT,
         expect.any(Function),
       );
-      expect(messenger.subscribe).toBeCalledWith(
-        METHODS.WIDGET_UNMOUNT,
-        expect.any(Function),
-      );
     });
   });
 
