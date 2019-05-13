@@ -1,0 +1,6 @@
+[submodule "connect-demo"]
+	path = connect-demo
+	url = https://github.com/endpass/connect-demo.git
+[submodule "endpass-auth"]
+	path = endpass-auth
+	url = https://github.com/endpass/endpass-auth.git
