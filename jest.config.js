@@ -14,6 +14,7 @@ module.exports = {
   },
   testMatch: ['./**/*.spec.(js|jsx|ts|tsx)'],
   setupFiles: ['<rootDir>/tests/unit/setup'],
+  setupFilesAfterEnv: ['<rootDir>/tests/unit/setupTests'],
   globals: {
     ENV,
   },

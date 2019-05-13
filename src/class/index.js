@@ -6,3 +6,4 @@ export { default as ProviderFactory } from './ProviderFactory';
 export { default as Widget } from './Widget';
 export { default as Oauth } from './Oauth';
 export { default as PopupWindow } from './PopupWindow';
+export { default as MessengerGroup } from './MessengerGroup';

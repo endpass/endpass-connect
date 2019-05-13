@@ -29,10 +29,10 @@ export default class Bridge {
     /** @type Resolvers */
     this.readyResolvers = [];
 
-    this.initAuthMessenger();
+    this.initDialogEvents();
   }
 
-  async handleLogoutMessage(msg, req) {
+  async handleLogoutMessage(source, req) {
     try {
       await this.context.logout();
 
@@ -42,6 +42,7 @@ export default class Bridge {
 
       req.answer({
         status: true,
+        source,
       });
     } catch (err) {
       req.answer({
@@ -67,29 +68,29 @@ export default class Bridge {
     }
   }
 
-  initAuthMessenger() {
-    const authMessenger = this.context.getDialogMessenger();
+  initDialogEvents() {
+    const dialogMessenger = this.context.getDialogMessenger();
 
-    authMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
+    dialogMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
       req.answer({
         ...this.initialPayload,
         source: DIRECTION.AUTH,
       });
     });
-    authMessenger.subscribe(METHODS.READY_STATE_BRIDGE, () => {
+    dialogMessenger.subscribe(METHODS.READY_STATE_BRIDGE, () => {
       this.ready = true;
       this.readyResolvers.forEach(item => item(true));
       this.readyResolvers.length = 0;
     });
-    authMessenger.subscribe(METHODS.LOGOUT_REQUEST, (msg, req) => {
-      this.handleLogoutMessage(msg, req);
+    dialogMessenger.subscribe(METHODS.LOGOUT_REQUEST, (msg, req) => {
+      this.handleLogoutMessage(DIRECTION.AUTH, req);
     });
-    authMessenger.subscribe(METHODS.CHANGE_SETTINGS_REQUEST, (msg, req) => {
+    dialogMessenger.subscribe(METHODS.CHANGE_SETTINGS_REQUEST, (msg, req) => {
       this.handleSettingsChange(msg, req);
     });
   }
 
-  initWidgetMessenger() {
+  initWidgetEvents() {
     const widgetMessenger = this.context.getWidgetMessenger();
 
     widgetMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
@@ -102,10 +103,13 @@ export default class Bridge {
       req.answer(this.context.inpageProvider.settings);
     });
     widgetMessenger.subscribe(METHODS.LOGOUT_REQUEST, (msg, req) => {
-      this.handleLogoutMessage(msg, req);
+      this.handleLogoutMessage(DIRECTION.WIDGET, req);
     });
     widgetMessenger.subscribe(METHODS.CHANGE_SETTINGS_REQUEST, (msg, req) => {
       this.handleSettingsChange(msg, req);
+    });
+    widgetMessenger.subscribe(METHODS.WIDGET_UNMOUNT, () => {
+      this.context.unmountWidget();
     });
   }
 
@@ -115,17 +119,29 @@ export default class Bridge {
     return res;
   }
 
+  isWidgetMounted() {
+    return this.widget.isWidgetMounted();
+  }
+
   /**
    * @param {Object} [parameters]
    * @returns {Element}
    */
   mountWidget(parameters) {
-    this.initWidgetMessenger();
+    this.initWidgetEvents();
 
     return this.widget.mount(parameters);
   }
 
   unmountWidget() {
+    const widgetMessenger = this.context.getWidgetMessenger();
+
+    widgetMessenger.unsubscribe(METHODS.INITIATE);
+    widgetMessenger.unsubscribe(METHODS.WIDGET_GET_SETTING);
+    widgetMessenger.unsubscribe(METHODS.LOGOUT_REQUEST);
+    widgetMessenger.unsubscribe(METHODS.CHANGE_SETTINGS_REQUEST);
+    widgetMessenger.unsubscribe(METHODS.WIDGET_UNMOUNT);
+
     this.widget.unmount();
   }
 

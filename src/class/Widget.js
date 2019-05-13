@@ -37,6 +37,7 @@ export default class Widget {
     this.context = context;
     this.url = url;
     this.frame = null;
+    this.isMounted = false;
 
     this.handleWidgetFrameLoad = this.handleWidgetFrameLoad.bind(this);
   }
@@ -59,15 +60,14 @@ export default class Widget {
     widgetMessenger.subscribe(METHODS.WIDGET_FIT, ({ height }) => {
       this.resize({ height: `${height}px` });
     });
-    widgetMessenger.subscribe(METHODS.WIDGET_UNMOUNT, () => {
-      this.unmount();
-    });
   }
 
   /**
    * Create markup and prepend to <body>
    */
   mount(parameters = {}) {
+    this.isMounted = true;
+
     const { url } = this;
     const styles = createWidgetIframeStyles(parameters.position);
     const markup = `
@@ -92,6 +92,8 @@ export default class Widget {
       this.frame.removeEventListener('load', this.handleWidgetFrameLoad);
       this.frame.remove();
     }, FADE_TIMEOUT);
+
+    this.isMounted = false;
   }
 
   getWidgetNode() {
@@ -105,6 +107,10 @@ export default class Widget {
         handler();
       }, 250);
     });
+  }
+
+  isWidgetMounted() {
+    return this.isMounted;
   }
 
   handleWidgetFrameLoad() {
