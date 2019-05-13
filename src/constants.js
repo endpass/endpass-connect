@@ -62,4 +62,5 @@ export const WIDGET_EVENTS = {
   OPEN: 'open',
   CLOSE: 'close',
   LOGOUT: 'logout',
+  UPDATE: 'update',
 };

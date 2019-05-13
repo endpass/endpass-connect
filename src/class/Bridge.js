@@ -57,6 +57,10 @@ export default class Bridge {
     try {
       this.context.setProviderSettings(msg);
 
+      if (this.widget) {
+        this.widget.emitFrameEvent(WIDGET_EVENTS.UPDATE, msg);
+      }
+
       req.answer({
         status: true,
       });

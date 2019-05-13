@@ -99,13 +99,16 @@ export default class Widget {
   getWidgetNode() {
     return new Promise(resolve => {
       /* eslint-disable-next-line */
-      const handler = setTimeout(() => {
-        if (this.frame) {
-          return resolve(this.frame);
-        }
+      const handler = () =>
+        setTimeout(() => {
+          if (this.frame) {
+            return resolve(this.frame);
+          }
 
-        handler();
-      }, 250);
+          handler();
+        }, 250);
+
+      handler();
     });
   }
 
