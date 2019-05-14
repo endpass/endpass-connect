@@ -206,7 +206,9 @@ Code above will mount widget when user will be authorized.
 ```js
 import Connect from '@endpass/connect';
 
-const connect = new Connect();
+const connect = new Connect({
+  widget: false,
+});
 
 (async () => {
   await connect.mountWidget({
@@ -249,7 +251,6 @@ For example, you want to print something in console when widget will be opened:
 import Connect from '@endpass/connect';
 
 const connect = new Connect();
-
 const widget = await connect.getWidgetNode();
 
 widget.addEventListener('open', () => {
