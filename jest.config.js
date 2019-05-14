@@ -12,7 +12,7 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
-  testMatch: ['./**/*.spec.(js|jsx|ts|tsx)'],
+  testMatch: ['<rootDir>/tests/unit/**/*.spec.(js|jsx|ts|tsx)'],
   setupFiles: ['<rootDir>/tests/unit/setup'],
   setupFilesAfterEnv: ['<rootDir>/tests/unit/setupTests'],
   globals: {
