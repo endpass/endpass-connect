@@ -90,20 +90,19 @@ import Connect from '@endpass/connect';
 // Initialize Connect with clientId from vault
 
 const connect = new Connect({
-  oauthClientId: YOUR_CLIENT_ID
+  oauthClientId: YOUR_CLIENT_ID,
 });
 
 // Ask user to authorize, or check presented token validity if present
 await connect.loginWithOauth({
-  scope: [DESIRED_SKOPE, MORE_OPTIONAL_SCOPES]
+  scope: [DESIRED_SKOPE, MORE_OPTIONAL_SCOPES],
 });
 
 // Fetch required data, connect handle server authorization
 connect.request({
   url: 'https://api.endpass.com/v1/user',
-  method: 'GET'
+  method: 'GET',
 });
-
 ```
 
 ### API
@@ -138,13 +137,13 @@ connect.request({
 | `unmountWidget` |                                                                                  |                    | Removes mounted Endpass widget                                     |
 
 #### Oauth
-| Method                | Params                                         | Returns        | Description                                           |
-| --------------------- | ---------------------------------------------- | -------------- | ----------------------------------------------------- |
-| `loginWithOauth`      | {scopes: array<string>, popupHeight: number, popupWidth:number} | `Promise` | Authorizes with oauth flow and prepares for api requests. |
-| `request` | `{ url: string, method: sting, headers: object, params: object, data: sting/object }` | `Promise<HttpResponse>` | Makes and http request with access token  |
-| `logoutFromOauth`      | {scopes: array<string>, popupHeight: number, popupWidth:number} | `Promise` | Authorizes with oauth flow and prepares for api requests. |
-| `setOauthPopupParams`      | {height: number, width:number} |   | Sets authorization popup dimensions. |
 
+| Method                | Params                                                                                | Returns                 | Description                                               |
+| --------------------- | ------------------------------------------------------------------------------------- | ----------------------- | --------------------------------------------------------- |
+| `loginWithOauth`      | {scopes: array<string>, popupHeight: number, popupWidth:number}                       | `Promise`               | Authorizes with oauth flow and prepares for api requests. |
+| `request`             | `{ url: string, method: sting, headers: object, params: object, data: sting/object }` | `Promise<HttpResponse>` | Makes and http request with access token                  |
+| `logoutFromOauth`     | {scopes: array<string>, popupHeight: number, popupWidth:number}                       | `Promise`               | Authorizes with oauth flow and prepares for api requests. |
+| `setOauthPopupParams` | {height: number, width:number}                                                        |                         | Sets authorization popup dimensions.                      |
 
 ### Interactions with current account
 
@@ -283,3 +282,31 @@ There are available widget events type which you can use in subscribtions:
 - `open` – fires after widget open
 - `close` – fires after widget close
 - `logout` – fires after logout through widget interaction
+- `update` – fires after account change
+
+#### Examples
+
+This example will demonstrate you how to update something on widget events firing:
+
+```js
+import { HttpProvider } from 'web3-providers';
+import Connect from '@endpass/connect';
+
+const web3 = new Web3('https://network.url');
+const connect = new Connect();
+const provider = connect.getProvider();
+
+window.ethereum = provider;
+web3.setProvider(provider);
+
+(async () => {
+  const frame = await connect.getWidgetNode();
+
+  frame.addEventListener('update', ({ detail }) => {
+    console.log('Widget data updated: ', detail); // Log on anything update
+  });
+  frame.addEventListener('logout', () => {
+    window.location.reload(); // Reload page on logout
+  });
+})();
+```
