@@ -6,6 +6,7 @@ import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 
 describe('Context class', () => {
   const authUrl = 'http://test.auth';
+  const oauthClientId = 'xxxxxxxxxx';
   let connect;
   let context;
 
@@ -16,7 +17,7 @@ describe('Context class', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    connect = new Connect({ authUrl });
+    connect = new Connect({ authUrl, oauthClientId });
     context = connect[privateFields.context];
   });
 
@@ -30,7 +31,7 @@ describe('Context class', () => {
     let bridge;
 
     beforeEach(() => {
-      connect = new Connect({ authUrl });
+      connect = new Connect({ authUrl, oauthClientId });
       bridge = {
         ask: jest.fn(),
         openDialog: jest.fn(),
@@ -38,6 +39,12 @@ describe('Context class', () => {
       };
       context = connect[privateFields.context];
       context.bridge = bridge;
+    });
+
+    it('throw error without apiKey', () => {
+      expect(
+        () => new Context({ authUrl, oauthClientId: undefined }),
+      ).toThrow();
     });
 
     it('should auth user through dialog request and returns result', async () => {
@@ -89,10 +96,12 @@ describe('Context class', () => {
     it('should pass isLogin with demoData', () => {
       const defaultContext = new Context({
         authUrl,
+        oauthClientId,
       });
 
       const demoContext = new Context({
         authUrl,
+        oauthClientId,
         demoData,
       });
 
@@ -115,6 +124,7 @@ describe('Context class', () => {
 
       const demoContext = new Context({
         authUrl,
+        oauthClientId,
         demoData,
       });
 
@@ -126,6 +136,7 @@ describe('Context class', () => {
 
       const otherContex = new Context({
         authUrl,
+        oauthClientId,
         isIdentityMode: true,
       });
 
@@ -135,7 +146,6 @@ describe('Context class', () => {
       });
     });
   });
-
 
   describe('mountWidget', () => {
     beforeEach(() => {
@@ -201,6 +211,7 @@ describe('Context class', () => {
 
       const checkContext = new Context({
         authUrl,
+        oauthClientId,
         ...passPayload,
       });
 

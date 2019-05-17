@@ -21,6 +21,7 @@ const authUrlRegexp = new RegExp('://auth(\\.|-)', 'ig');
 
 export default class Context {
   /**
+   * @param {String} options.oauthClientId OAuth client id
    * @param {String} [options.authUrl] Url of hosted Endpass Connect Application
    * @param {String} [options.namespace] namespace for see difference,
    *  between two instances
@@ -35,6 +36,9 @@ export default class Context {
    *  equals to `bottom right`
    */
   constructor(options = {}) {
+    if (!options.oauthClientId) {
+      throw new Error('Connect library requires OAuth client id!');
+    }
     const authUrl = options.authUrl || DEFAULT_AUTH_URL;
 
     /**
@@ -236,8 +240,8 @@ export default class Context {
    */
   async loginWithOauth(params) {
     this.oauthRequestProvider = new Oauth({
-      clientId: this.oauthClientId,
       ...params,
+      clientId: this.oauthClientId,
     });
     await this.oauthRequestProvider.init();
   }

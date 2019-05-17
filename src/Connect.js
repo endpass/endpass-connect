@@ -17,6 +17,7 @@ if (ENV.isProduction) {
 export default class Connect {
   /**
    * @param {String} options.authUrl Url of hosted Endpass Connect Application
+   * @param {String} options.oauthClientId OAuth client id
    * @param {Object|Boolean} [options.widget] Widget parameters. Pass false to
    *  prevent widget mounting
    */
