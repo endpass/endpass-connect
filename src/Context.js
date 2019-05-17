@@ -236,8 +236,8 @@ export default class Context {
    */
   async loginWithOauth(params) {
     this.oauthRequestProvider = new Oauth({
-      clientId: this.oauthClientId,
       ...params,
+      clientId: this.oauthClientId,
     });
     await this.oauthRequestProvider.init();
   }

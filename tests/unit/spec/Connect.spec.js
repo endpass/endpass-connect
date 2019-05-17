@@ -8,6 +8,7 @@ describe('Connect class', () => {
   let connect;
   let context;
   const authUrl = 'http://test.auth';
+  const oauthClientId = 'xxxxxxxxxx';
 
   beforeAll(() => {
     window.open = jest.fn();
@@ -16,7 +17,7 @@ describe('Connect class', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    connect = new Connect({ authUrl });
+    connect = new Connect({ authUrl, oauthClientId });
     context = connect[privateFields.context];
   });
 
@@ -26,7 +27,7 @@ describe('Connect class', () => {
     });
 
     it('should create instance of connect if all authUrl present', () => {
-      connect = new Connect({ authUrl });
+      connect = new Connect({ authUrl, oauthClientId });
       expect(connect).toBeInstanceOf(Connect);
     });
 
@@ -34,7 +35,7 @@ describe('Connect class', () => {
       jest.spyOn(Queue.prototype, 'setupEventEmitter');
       jest.spyOn(ProviderFactory, 'createRequestProvider');
 
-      connect = new Connect({ authUrl });
+      connect = new Connect({ authUrl, oauthClientId });
 
       const queue = connect[privateFields.queue];
       context = connect[privateFields.context];
@@ -44,13 +45,13 @@ describe('Connect class', () => {
     });
 
     it('should be created without authUrl parameter', () => {
-      connect = new Connect();
+      connect = new Connect({ oauthClientId });
       context = connect[privateFields.context];
       expect(context.authUrl).toBe('https://auth.endpass.com');
     });
 
     it('should return Inpage provider from given parameters', () => {
-      connect = new Connect({ authUrl });
+      connect = new Connect({ authUrl, oauthClientId });
       const res = connect.getProvider();
 
       expect(res instanceof InpageProvider).toBe(true);
@@ -93,7 +94,7 @@ describe('Connect class', () => {
   describe('getProvider', () => {
     beforeEach(() => {
       jest.clearAllMocks();
-      connect = new Connect({ authUrl });
+      connect = new Connect({ authUrl, oauthClientId });
     });
 
     it('should return Inpage provider from given parameters', () => {
@@ -120,6 +121,12 @@ describe('Connect class', () => {
       context.messengerGroup = {
         send: jest.fn(),
       };
+    });
+
+    it('throw error without apiKey', () => {
+      expect(
+        () => new Connect({ authUrl, oauthClientId: undefined }),
+      ).toThrow();
     });
 
     it('should request user settings with private method and returns formatted value', async () => {

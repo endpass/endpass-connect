@@ -17,10 +17,14 @@ if (ENV.isProduction) {
 export default class Connect {
   /**
    * @param {String} options.authUrl Url of hosted Endpass Connect Application
+   * @param {String} options.oauthClientId OAuth client id
    * @param {Object|Boolean} [options.widget] Widget parameters. Pass false to
    *  prevent widget mounting
    */
   constructor(options) {
+    if (!options || !options.oauthClientId) {
+      throw new Error('Connect library requires OAuth client id!');
+    }
     const context = new Context(options);
 
     this[privateFields.context] = context;

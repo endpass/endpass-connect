@@ -6,6 +6,7 @@ import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 
 describe('Context class', () => {
   const authUrl = 'http://test.auth';
+  const oauthClientId = 'xxxxxxxxxx';
   let connect;
   let context;
 
@@ -16,7 +17,7 @@ describe('Context class', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    connect = new Connect({ authUrl });
+    connect = new Connect({ authUrl, oauthClientId });
     context = connect[privateFields.context];
   });
 
@@ -30,7 +31,7 @@ describe('Context class', () => {
     let bridge;
 
     beforeEach(() => {
-      connect = new Connect({ authUrl });
+      connect = new Connect({ authUrl, oauthClientId });
       bridge = {
         ask: jest.fn(),
         openDialog: jest.fn(),
