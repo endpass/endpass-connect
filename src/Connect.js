@@ -22,9 +22,6 @@ export default class Connect {
    *  prevent widget mounting
    */
   constructor(options) {
-    if (!options || !options.oauthClientId) {
-      throw new Error('Connect library requires OAuth client id!');
-    }
     const context = new Context(options);
 
     this[privateFields.context] = context;

@@ -123,12 +123,6 @@ describe('Connect class', () => {
       };
     });
 
-    it('throw error without apiKey', () => {
-      expect(
-        () => new Connect({ authUrl, oauthClientId: undefined }),
-      ).toThrow();
-    });
-
     it('should request user settings with private method and returns formatted value', async () => {
       expect.assertions(1);
 
