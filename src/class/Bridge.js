@@ -36,9 +36,7 @@ export default class Bridge {
     try {
       await this.context.logout();
 
-      if (this.widget) {
-        this.widget.emitFrameEvent(WIDGET_EVENTS.LOGOUT);
-      }
+      this.widget.emitFrameEvent(WIDGET_EVENTS.LOGOUT);
 
       req.answer({
         status: true,
@@ -57,9 +55,7 @@ export default class Bridge {
     try {
       this.context.setProviderSettings(msg);
 
-      if (this.widget) {
-        this.widget.emitFrameEvent(WIDGET_EVENTS.UPDATE, msg);
-      }
+      this.widget.emitFrameEvent(WIDGET_EVENTS.UPDATE, msg);
 
       req.answer({
         status: true,

@@ -1,5 +1,5 @@
 import Widget from '@/class/Widget';
-import { METHODS } from '@/constants';
+import { METHODS, WIDGET_EVENTS } from '@/constants';
 
 describe('Widget class', () => {
   const url = 'https://auth.foo.bar/public/widget';
@@ -77,29 +77,32 @@ describe('Widget class', () => {
 
   describe('handleWidgetFrameLoad', () => {
     it('should emit load event and show widget', () => {
-      widget.frame = {
-        style: {
-          opacity: 0,
-        },
-      };
-      widget.emitFrameEvent = jest.fn();
+      widget.mount();
+      const handler = jest.fn();
+      widget.frame.addEventListener(WIDGET_EVENTS.MOUNT, handler);
+
       widget.handleWidgetFrameLoad();
 
-      expect(widget.emitFrameEvent).toBeCalledWith('mount');
-      expect(widget.frame.style.opacity).toBe(1);
+      expect(handler).toBeCalled();
+      expect(widget.frame.style.opacity).toBe('1');
     });
   });
 
   describe('emitFrameEvent', () => {
     it('should emit frame event through frame element', () => {
-      widget.frame = {
-        dispatchEvent: jest.fn(),
-      };
+      widget.mount();
+      const handler = jest.fn();
+      widget.frame.addEventListener('foo', handler);
+
+      const handlerNotCall = jest.fn();
+      widget.frame.addEventListener('bar', handlerNotCall);
+
       widget.emitFrameEvent('foo', {
         bar: 'baz',
       });
 
-      expect(widget.frame.dispatchEvent).toBeCalledWith(expect.any(Object));
+      expect(handler).toBeCalledWith(expect.any(Object));
+      expect(handlerNotCall).not.toBeCalled();
     });
   });
 
