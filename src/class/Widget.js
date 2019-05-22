@@ -122,6 +122,10 @@ export default class Widget {
   }
 
   emitFrameEvent(event, detail) {
+    if (!this.frame) {
+      return;
+    }
+
     const frameEvent = new CustomEvent(event, {
       detail,
     });
