@@ -1,7 +1,7 @@
 import Network from '@endpass/class/Network';
 
 /** @type {import("@/types/Middleware").Middleware} */
-const middleware = (context, action) => {
+const requestProviderCheck = async (context, action) => {
   const { activeNet } = action.settings;
   const isNetIdAllowed = Object.values(Network.NET_ID)
     .map(id => String(id))
@@ -18,4 +18,4 @@ const middleware = (context, action) => {
   action.end();
 };
 
-export default middleware;
+export default requestProviderCheck;

@@ -1,4 +1,4 @@
-import requestProviderCheck from '@/middleware/requestProviderCheck';
+import requestProviderCheck from '@/streams/inpageProvider/middleware/requestProviderCheck';
 import Network from '@endpass/class/Network';
 
 describe('requestProviderCheck middleware', () => {

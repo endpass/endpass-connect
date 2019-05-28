@@ -18,6 +18,7 @@ import {
 } from '@/constants';
 
 import pkg from '../package.json';
+import createStream from '@/streams';
 
 const { ERRORS } = ConnectError;
 
@@ -84,9 +85,17 @@ export default class Context {
       },
     });
 
+    // TODO: create state
+    // this.state = {
+    //   isPermission: false,
+    //   isLogin: false,
+    // };
+
     this.setupLoginEvents();
 
     this.messengerGroup.addMessenger(this.dialogMessenger);
+    
+    createStream(this);
 
     this.setupOnAuth();
   }

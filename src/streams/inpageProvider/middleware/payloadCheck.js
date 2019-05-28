@@ -1,7 +1,7 @@
 import { INPAGE_EVENTS } from '@/constants';
 
 /** @type {import("@/types/Middleware").Middleware} */
-export default function(context, action) {
+export default async function(context, action) {
   const { payload } = action;
 
   if (payload && payload.result) {
