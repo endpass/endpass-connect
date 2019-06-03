@@ -8,7 +8,7 @@ echo $1 $2
   git checkout $2
   yarn install
   yarn link "@endpass/connect"
-  npm run dev
+  npm run serve:test
 }
 
 function setupDemo() {
@@ -21,6 +21,7 @@ function setupDemo() {
   npm run setup-e2e
 }
 
+yarn build
 yarn link
 setupDemo &
 setupAuth "$@"
