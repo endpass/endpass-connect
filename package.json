@@ -25,9 +25,9 @@
     "build:lib": "NODE_ENV=production rollup -c",
     "build:browser": "webpack --mode production",
     "build:dev": "rollup -c",
-    "test": "jest",
-    "setup-e2e": "bash e2e-preloader $npm_package_config_repo $npm_package_config_commit",
+    "test": "jest && npm run e2e",
     "e2e": "cypress run",
+    "e2e:setup": "bash ./script/e2e-preloader $npm_package_config_repo $npm_package_config_commit",
     "e2e:open": "cypress open",
     "unit:watch": "jest --watch",
     "format": "prettier --write './src/**/*.{js,json}' && eslint ./src/**/*.{js} --fix",
@@ -74,8 +74,7 @@
     }
   },
   "dependencies": {
-    "@endpass/class": "^0.14.5",
-    "@endpass/utils": "^1.7.0",
+
     "axios": "^0.19.0",
     "axios-token-interceptor": "^0.1.0",
     "lodash.get": "^4.4.2",
@@ -131,6 +130,7 @@
     "rollup-plugin-typescript": "^1.0.1",
     "rollup-plugin-visualizer": "^1.1.1",
     "semantic-release": "^15.13.12",
+    "serve": "^11.0.1",
     "typescript": "^3.5.1",
     "webpack": "^4.33.0",
     "webpack-cli": "^3.3.4"
