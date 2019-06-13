@@ -1,5 +1,6 @@
 import Network from '@endpass/class/Network';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
+import OauthPkceStrategy from '@/class/Oauth/OauthPkceStrategy';
 import {
   Emmiter,
   InpageProvider,
@@ -242,6 +243,7 @@ export default class Context {
     this.oauthRequestProvider = new Oauth({
       ...params,
       clientId: this.oauthClientId,
+      strategy: OauthPkceStrategy,
     });
     await this.oauthRequestProvider.init();
   }

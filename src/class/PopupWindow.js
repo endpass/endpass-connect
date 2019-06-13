@@ -1,27 +1,15 @@
 import mapToQueryString from '@endpass/utils/mapToQueryString';
-
-function hashToMap(path) {
-  const lines = path.replace(/^\#\/?/, '').split('&');
-  const query = lines.reduce((map, line) => {
-    const values = line.split('=');
-    const key = values[0];
-    if (key) {
-      // eslint-disable-next-line
-      map[key] = values[1];
-    }
-    return map;
-  }, {});
-  return query;
-}
+import queryStringToMap from '@endpass/utils/queryStringToMap';
 
 export default class PopupWindow {
-  constructor(params, windowOptions = {}) {
+  constructor(oauthServer, params, windowOptions = {}) {
     this.windowOptions = {
       height: windowOptions.height || 1000,
       width: windowOptions.width || 600,
     };
     this.id = 'endpass-oauth-authorize';
-    const server = windowOptions.oauthServer || ENV.oauthServer;
+
+    const server = oauthServer || ENV.oauthServer;
     this.url = mapToQueryString(`${server}/auth`, params);
   }
 
@@ -55,17 +43,18 @@ export default class PopupWindow {
             return;
           }
 
-          const params = hashToMap(popup.location.hash);
+          const query = (popup.location.hash || popup.location.search).replace(
+            /^\#\/?/,
+            '',
+          );
+
+          const params = queryStringToMap(query);
 
           resolve(params);
           this.close();
         } catch (error) {}
       }, 500);
     });
-  }
-
-  then(...args) {
-    return this.promise.then(...args);
   }
 
   cancel() {
@@ -86,6 +75,6 @@ export default class PopupWindow {
     popup.openPopup();
     popup.poll();
 
-    return popup;
+    return popup.promise;
   }
 }

@@ -1,13 +1,8 @@
-const infura = {
-  key: 'zU4GTAQ0LjJNKddbyztc',
-};
-
 const isProduction = true;
 
-const oauthServer = 'https://oauth2.endpass.com:9000/oauth2';
+const oauthServer = 'https://identity.endpass.com/api/v1.1/oauth';
 
 module.exports = {
-  infura,
   isProduction,
   oauthServer,
 };
