@@ -13,7 +13,7 @@ import Widget from './Widget';
 export default class Bridge {
   /**
    * @param InstanceType<{import('@Context')} options.context Context link
-   * @param {String} options.url Url for open dialog
+   * @param {string} options.url Url for open dialog
    * @param {any} options.initialPayload initial data for Auth
    */
   constructor({ context, url, initialPayload }) {
@@ -124,7 +124,7 @@ export default class Bridge {
   }
 
   /**
-   * @param {Object} [parameters]
+   * @param {object} [parameters]
    * @returns {Element}
    */
   mountWidget(parameters) {
@@ -150,7 +150,7 @@ export default class Bridge {
    * Ask messenger before til it give any answer and resolve promise
    * Also, it is caches ready state and in the next time just resolve returned
    * promise
-   * @returns {Promise<Boolean>}
+   * @returns {Promise<boolean>}
    */
   checkReadyState() {
     /* eslint-disable-next-line */
