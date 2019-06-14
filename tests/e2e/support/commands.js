@@ -23,3 +23,27 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('finishSetup', () => {
+  // Explicitly waiting of e2eBridge injection
+  cy.wait(5000);
+  cy.window().then(win => {
+    cy.log(win);
+    win.e2eBridge.finishSetup();
+  });
+});
+Cypress.Commands.add('mockRoute', payload => {
+  cy.window().then(win => {
+    win.e2eBridge.mockRoute(payload);
+  });
+});
+Cypress.Commands.add('mockRouteOnce', payload => {
+  cy.window().then(win => {
+    win.e2eBridge.mockRouteOnce(payload);
+  });
+});
+Cypress.Commands.add('clearMocks', () => {
+  cy.window().then(win => {
+    win.e2eBridge.clearMocks();
+  });
+});

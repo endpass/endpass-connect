@@ -25,11 +25,13 @@
     "build:lib": "NODE_ENV=production rollup -c",
     "build:browser": "webpack --mode production",
     "build:dev": "rollup -c",
-    "test": "jest && npm run e2e",
-    "e2e": "cypress run",
-    "e2e:setup": "bash ./script/e2e-preloader $npm_package_config_repo $npm_package_config_commit",
-    "e2e:open": "cypress open",
-    "unit:watch": "jest --watch",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "jest",
+    "test:unit:watch": "jest --watch",
+    "test:e2e": "npm run test:e2e:serve & cypress run",
+    "test:e2e:open": "npm run test:e2e:serve & cypress open",
+    "test:e2e:setup": "./scripts/build-e2e-apps.sh",
+    "test:e2e:serve": "./scripts/start-e2e-apps.sh",
     "format": "prettier --write './src/**/*.{js,json}' && eslint ./src/**/*.{js} --fix",
     "semantic-release": "semantic-release",
     "commit": "git-cz",
@@ -74,7 +76,8 @@
     }
   },
   "dependencies": {
-
+    "@endpass/class": "^0.14.5",
+    "@endpass/utils": "^1.7.0",
     "axios": "^0.19.0",
     "axios-token-interceptor": "^0.1.0",
     "lodash.get": "^4.4.2",
