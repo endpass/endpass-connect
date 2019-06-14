@@ -1,28 +1,54 @@
 // @ts-check
-
-import axios from 'axios';
 import PopupWindow from '@/class/PopupWindow';
 import pkce from '@/class/Oauth/pkce';
+import { METHODS } from '@/constants';
+
+// eslint-disable-next-line
+import Bridge from '@/class/Bridge';
 
 /** @type {OauthStrategy} */
 export default class OauthPkceStrategy {
   /**
    *
+   * @param {object} options
+   * @param {InstanceType<typeof Bridge>} options.bridge
+   */
+  constructor({ bridge }) {
+    this.bridge = bridge;
+  }
+
+  // TODO: after implement public api use this method and drop bridge
+  // /**
+  //  *
+  //  * @private
+  //  * @param {string} oauthServer
+  //  * @param {object} fields
+  //  * @return {Promise<object>}
+  //  */
+  // static async exchangeCodeToToken(oauthServer, fields) {
+  //   const formData = Object.keys(fields).reduce((form, key) => {
+  //     form.append(key, fields[key]);
+  //     return form;
+  //   }, new FormData());
+  //
+  //   const url = `${oauthServer}/token`;
+  //
+  //   const { data } = await axios.post(url, formData);
+  //   return data;
+  // }
+
+  /**
+   *
    * @private
-   * @param {string} oauthServer
    * @param {object} fields
    * @return {Promise<object>}
    */
-  static async exchangeCodeToToken(oauthServer, fields) {
-    const formData = Object.keys(fields).reduce((form, key) => {
-      form.append(key, fields[key]);
-      return form;
-    }, new FormData());
-
-    const url = `${oauthServer}/token`;
-
-    const { data } = await axios.post(url, formData);
-    return data;
+  async exchangeCodeToToken(fields) {
+    const { payload } = await this.bridge.ask(
+      METHODS.EXCHANGE_TOKEN_REQUEST,
+      fields,
+    );
+    return payload;
   }
 
   /**
@@ -33,7 +59,7 @@ export default class OauthPkceStrategy {
    * @param {object=} [options] options for popup
    * @return {Promise<TokenObject>}
    */
-  static async getTokenObject(oauthServer, params, options) {
+  async getTokenObject(oauthServer, params, options) {
     // Create and store a random "state" value
     const state = pkce.generateRandomString();
     // Create and store a new PKCE code_verifier (the plaintext random secret)
@@ -61,15 +87,12 @@ export default class OauthPkceStrategy {
       throw new Error(`Authorization failed: ${popupResult.error}`);
     }
 
-    const tokenResult = await OauthPkceStrategy.exchangeCodeToToken(
-      oauthServer,
-      {
-        grant_type: 'authorization_code',
-        code: popupResult.code,
-        client_id: params.client_id,
-        code_verifier: codeVerifier,
-      },
-    );
+    const tokenResult = await this.exchangeCodeToToken({
+      grant_type: 'authorization_code',
+      code: popupResult.code,
+      client_id: params.client_id,
+      code_verifier: codeVerifier,
+    });
 
     return {
       token: tokenResult.access_token,

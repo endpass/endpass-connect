@@ -240,10 +240,14 @@ export default class Context {
    * @param {String[]} params.scopes - Array of authorization scopes
    */
   async loginWithOauth(params) {
+    const strategy = new OauthPkceStrategy({
+      bridge: this.getBridge(),
+    });
+
     this.oauthRequestProvider = new Oauth({
       ...params,
       clientId: this.oauthClientId,
-      strategy: OauthPkceStrategy,
+      strategy,
     });
     await this.oauthRequestProvider.init();
   }
