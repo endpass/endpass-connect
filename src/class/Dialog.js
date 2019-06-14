@@ -109,12 +109,14 @@ export default class Dialog {
       });
     });
     messenger.subscribe(METHODS.DIALOG_CLOSE, () => {
+      this.wrapper.dataset.visible = 'false';
       this.isShown = false;
       this.overlay.style = stylesOverlayHide;
       this.frame.style = this.frameStyles(propsIframeHide);
       this.wrapper.style = stylesWrapperHide;
     });
     messenger.subscribe(METHODS.DIALOG_OPEN, () => {
+      this.wrapper.dataset.visible = 'true';
       this.isShown = true;
       this.frame.style = this.frameStyles(propsIframeShow);
       this.overlay.style = stylesOverlayShow;
@@ -131,7 +133,7 @@ export default class Dialog {
 
     const markup = `
       <div data-endpass="overlay" ${NSmarkup} style="${stylesOverlayHide}" >
-        <div data-endpass="wrapper" style="${stylesWrapperHide}">
+        <div data-endpass="wrapper" data-visible="false" style="${stylesWrapperHide}">
           <iframe data-endpass="frame" src="${
             this.url
           }" style="${this.frameStyles(propsIframeHide)}"/>

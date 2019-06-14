@@ -175,6 +175,7 @@ export default class Context {
    */
   async getAccountData() {
     try {
+      // FIXME: problem with e2e initialization here!
       const { payload, status, error } = await this.getBridge().ask(
         METHODS.GET_SETTINGS,
       );
@@ -184,7 +185,6 @@ export default class Context {
       }
 
       const { settings = {} } = payload;
-
       const res = {
         activeAccount: settings.lastActiveAccount,
         activeNet: settings.net || Network.NET_ID.MAIN,

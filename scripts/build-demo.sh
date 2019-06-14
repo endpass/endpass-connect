@@ -6,9 +6,6 @@ rm -rf ./e2e-apps/demo
 git submodule init
 git submodule update
 
-# Linking local connect version
-yarn link
-
 # Building auth-application artifact
 cd connect-demo
 yarn link @endpass/connect

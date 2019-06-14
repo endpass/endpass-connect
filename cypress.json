@@ -1,5 +1,5 @@
 {
-  "baseUrl": "http://localhost:4000",
+  "baseUrl": "http://localhost:4444",
   "fixturesFolder": "tests/fixtures",
   "integrationFolder": "tests/e2e/specs",
   "pluginsFile": "tests/e2e/plugins/index.js",
@@ -8,5 +8,7 @@
   "video": false,
   "videosFolder": "tests/e2e/videos",
   "viewportWidth": 1200,
-  "viewportHeight": 1000
+  "viewportHeight": 1000,
+  "defaultCommandTimeout": 10000,
+  "chromeWebSecurity": false
 }

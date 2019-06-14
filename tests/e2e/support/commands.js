@@ -25,8 +25,7 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('finishSetup', () => {
-  // Explicitly waiting of e2eBridge injection
-  cy.wait(2500);
+  cy.wait(250);
   cy.window().then(win => {
     cy.log(win);
     win.e2eBridge.finishSetup();
