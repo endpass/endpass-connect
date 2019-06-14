@@ -1,5 +1,3 @@
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import Oauth, { OauthPkceStrategy } from '@/class/Oauth';
 import PopupWindow from '@/class/PopupWindow';
 
@@ -19,8 +17,7 @@ jest.mock('@/class/Oauth/pkce', () => {
 });
 
 describe('Oauth class', () => {
-  let axiosMock;
-
+  let bridge;
   let oauth;
   const scopes = ['chpok'];
   const clientId = 'kek';
@@ -45,19 +42,27 @@ describe('Oauth class', () => {
     };
   });
 
-  function mockOauthTokenResult(result = {}, status = 200) {
-    axiosMock.onPost(`${oauthServer}/token`).reply(() => {
-      return [status, result];
+  function mockOauthTokenResult(result = {}, status = true) {
+    bridge.ask.mockResolvedValue({
+      payload: result,
+      status,
     });
   }
 
   beforeEach(() => {
     jest.clearAllMocks();
-    axiosMock = new MockAdapter(axios);
+    bridge = {
+      ask: jest.fn(),
+    };
+
+    const strategy = new OauthPkceStrategy({
+      bridge,
+    });
+
     oauth = new Oauth({
       scopes,
       clientId,
-      strategy: OauthPkceStrategy,
+      strategy,
     });
   });
 
@@ -206,7 +211,7 @@ describe('Oauth class', () => {
       expect(oauth.getTokenObjectFromStore()).not.toBe(null);
       expect(oauth.getTokenObjectFromStore().token).toBe(token);
 
-      mockOauthTokenResult({}, 404);
+      mockOauthTokenResult(null, false);
       try {
         await oauth.getToken();
       } catch (e) {}
