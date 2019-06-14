@@ -1,3 +1,4 @@
+#!/bin/sh
 # Clearing up past demo artifact
 rm -rf ./e2e-apps/demo
 

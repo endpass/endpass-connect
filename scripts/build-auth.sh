@@ -1,3 +1,4 @@
+#!/bin/sh
 # Clearing up past auth artifact
 rm -rf ./e2e-apps/auth
 

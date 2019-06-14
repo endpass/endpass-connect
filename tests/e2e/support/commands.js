@@ -26,7 +26,7 @@
 
 Cypress.Commands.add('finishSetup', () => {
   // Explicitly waiting of e2eBridge injection
-  cy.wait(5000);
+  cy.wait(500);
   cy.window().then(win => {
     cy.log(win);
     win.e2eBridge.finishSetup();
