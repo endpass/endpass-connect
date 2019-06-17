@@ -1,6 +1,8 @@
 import mapToQueryString from '@endpass/utils/mapToQueryString';
 import queryStringToMap from '@endpass/utils/queryStringToMap';
 
+const replaceReg = /^\#\/?/;
+
 export default class PopupWindow {
   constructor(oauthServer, params, windowOptions = {}) {
     this.windowOptions = {
@@ -43,12 +45,10 @@ export default class PopupWindow {
             return;
           }
 
-          const query = (popup.location.hash || popup.location.search).replace(
-            /^\#\/?/,
-            '',
-          );
+          const popupHash = popup.location.hash.replace(replaceReg, '');
+          const popupSearch = popup.location.search.replace(replaceReg, '');
 
-          const params = queryStringToMap(query);
+          const params = queryStringToMap(popupHash || popupSearch);
 
           if (Object.keys(params).length === 0) {
             return;
