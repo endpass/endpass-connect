@@ -303,6 +303,7 @@ export default class Context {
       return this.bridge.getWidgetNode();
     }
 
+    clearInterval(this.widgetAutoMountTimerId);
     this.widgetOptions = parameters;
 
     this.widgetMessenger = new CrossWindowMessenger({
@@ -331,7 +332,7 @@ export default class Context {
   }
 
   setupOnAuth() {
-    setInterval(() => {
+    this.widgetAutoMountTimerId = setInterval(() => {
       if (this.widgetOptions !== false && this.isLogin()) {
         this.mountWidget(this.widgetOptions);
       }

@@ -50,6 +50,10 @@ export default class PopupWindow {
 
           const params = queryStringToMap(query);
 
+          if (Object.keys(params).length === 0) {
+            return;
+          }
+
           resolve(params);
           this.close();
         } catch (error) {}
