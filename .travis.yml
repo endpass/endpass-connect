@@ -1,34 +1,33 @@
 language: node_js
 node_js:
-- '10'
+  - '10'
 addons:
   apt:
     packages:
-    - libgconf-2-4
+      - libgconf-2-4
 cache:
   directories:
-  - "~/.npm"
-  - "~/.cache"
+    - '~/.npm'
+    - '~/.cache'
 install: yarn install --frozen-lockfile
 stages:
-- name: test
-- name: deploy_npm
-  if: branch = release
+  - name: test
+  - name: deploy_npm
+    if: branch = release
 jobs:
   include:
-  - stage: test
-    before_script:
-    - npm run build &
-    - yarn setup-e2e &
-    - sleep 600
-    script: npm test
-  - stage: deploy_npm
-    script:
-    - if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then npm run build && npm run semantic-release
-      fi
+    - stage: test
+      before_script:
+        - npm run build
+        - npm run test:e2e:setup
+      script: npm test
+    - stage: deploy_npm
+      script:
+        - if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then npm run build && npm run semantic-release
+          fi
 branches:
   except:
-  - "/^v\\d+\\.\\d+\\.\\d+$/"
+    - "/^v\\d+\\.\\d+\\.\\d+$/"
 notifications:
   slack:
     secure: tT+25w+Ziv3Fh2uM3DiOb8rfWrPoqaIlbSf//gc1coxPtdpXZb+g0HDfZ8MkFapsOHR2V5/IY/zTcBNCU5IJglWx4HgVazmL8P5Lg6PA2C+P2YFdGETRB4yUJnAlw/1sXu+XiN9NSY9Y1TVnSgTFD18s34j9yk37hHokWBdZSxjWft8JPCu5Yd1Re05ounDYNUYre/uN31MCGaA3Ri9dvpSSJ/6xQm35si0S3GfBjdd9z2c/UQ5mVXI7Y1bI3guod6EPuuMIJJl/o6eMsmAP15n2V9C+YnlMvpp8D5QYutt3SaAkvzdXTq0Z0Qg2Ad+CN5I3vCvw/UEXzPhhE5U8wceDieKLfWP0U6rb0l7avrgsxS70Zu/5DJY31k3O21Ka71HdqDiZHWfL5awMeSYKGDd+IqNULAVi/3CqiBePomKE3lQhEvZb9aNctKrrnhecxKvwylehuVHhijL5vSV1LW9ioOHw1xglEfTOkg/Pu9ZE1FGbLLlSL8LNbv6b7Wdfbqs2Ehux23lsP6MvHiInZIMuyBD5hoFXUd7jTViDv15qNIpfESni+KXs6xJftiKhWDf+KXcc0AJFFr5t8mI284uWrU9jCfqldq/xykbt1ePxb3Jq9EfxRxZ58zzbGtM9vCTjHQGqtuPxG2goLPtYYXwcIiPRYQY2OlX6e9l9U24=
