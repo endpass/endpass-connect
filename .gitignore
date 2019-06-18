@@ -23,3 +23,6 @@ yarn-error.log*
 *.sw*
 stats.html
 tests/e2e/screenshots/
+
+# e2e apps
+e2e-apps
