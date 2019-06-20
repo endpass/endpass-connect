@@ -1,10 +1,14 @@
 // @ts-check
+// @ts-ignore
+import ConnectError from '@endpass/class/ConnectError';
 import PopupWindow from '@/class/PopupWindow';
 import pkce from '@/class/Oauth/pkce';
 import { METHODS } from '@/constants';
 
 // eslint-disable-next-line
 import Bridge from '@/class/Bridge';
+
+const { ERRORS } = ConnectError;
 
 /** @type {OauthStrategy} */
 export default class OauthPkceStrategy {
@@ -44,10 +48,13 @@ export default class OauthPkceStrategy {
    * @return {Promise<object>}
    */
   async exchangeCodeToToken(fields) {
-    const { payload } = await this.bridge.ask(
+    const { payload, status, error } = await this.bridge.ask(
       METHODS.EXCHANGE_TOKEN_REQUEST,
       fields,
     );
+    if (!status) {
+      throw ConnectError.create(error || ERRORS.OAUTH_AUTHORIZE);
+    }
     return payload;
   }
 
@@ -80,11 +87,14 @@ export default class OauthPkceStrategy {
     );
 
     if (popupResult.state !== state) {
-      throw new Error('Authorization failed: state check unsuccessful');
+      throw ConnectError.create(ERRORS.OAUTH_AUTHORIZE_STATE);
     }
 
     if (popupResult.error) {
-      throw new Error(`Authorization failed: ${popupResult.error}`);
+      throw ConnectError.create(
+        ERRORS.OAUTH_AUTHORIZE_STATE,
+        `Authorization failed: ${popupResult.error}`,
+      );
     }
 
     const tokenResult = await this.exchangeCodeToToken({

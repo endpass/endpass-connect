@@ -1,6 +1,9 @@
+import ConnectError from '@endpass/class/ConnectError';
 import { METHODS, DIRECTION, WIDGET_EVENTS } from '@/constants';
 import Dialog from './Dialog';
 import Widget from './Widget';
+
+const { ERRORS } = ConnectError;
 
 /**
  * @callback Listener {import('@types/global').Listener}
@@ -46,6 +49,7 @@ export default class Bridge {
       req.answer({
         status: false,
         error: err,
+        code: (err && err.code) || ERRORS.AUTH_LOGOUT,
       });
     }
   }
@@ -64,6 +68,7 @@ export default class Bridge {
       req.answer({
         status: false,
         error: err,
+        code: (err && err.code) || ERRORS.ACCOUNT_UPDATE,
       });
     }
   }
@@ -172,7 +177,7 @@ export default class Bridge {
    */
   async ask(method, payload) {
     if (!method) {
-      throw new Error('You should provide method into you question to bridge!');
+      throw ConnectError.create(ERRORS.BRIDGE_PROVIDE_METHOD);
     }
 
     await this.checkReadyState();

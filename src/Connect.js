@@ -1,3 +1,4 @@
+import ConnectError from '@endpass/class/ConnectError';
 import Context from '@/Context';
 import privateFields from '@/privateFields';
 import Queue from '@/Queue';
@@ -5,6 +6,8 @@ import { METHODS } from '@/constants';
 import middleware from '@/middleware';
 
 import pkg from '../package.json';
+
+const { ERRORS } = ConnectError;
 
 if (ENV.isProduction) {
   /* eslint-disable-next-line */
@@ -102,7 +105,9 @@ export default class Connect {
       method: METHODS.ACCOUNT,
     });
 
-    if (!res.status) throw new Error(res.error || 'Account updating failed!');
+    if (!res.status) {
+      throw ConnectError.create(res.code || ERRORS.ACCOUNT_UPDATE);
+    }
 
     const { type, settings } = res.payload;
 

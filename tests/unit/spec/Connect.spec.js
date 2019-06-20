@@ -1,8 +1,11 @@
+import ConnectError from '@endpass/class/ConnectError';
 import Connect from '@/Connect';
 import Queue from '@/Queue';
 import privateFields from '@/privateFields';
 import { InpageProvider, ProviderFactory } from '@/class';
 import { INPAGE_EVENTS, METHODS } from '@/constants';
+
+const { ERRORS } = ConnectError;
 
 describe('Connect class', () => {
   let connect;
@@ -160,10 +163,11 @@ describe('Connect class', () => {
     });
 
     it('should throw error is request account status is falsy', async () => {
-      expect.assertions(1);
+      expect.assertions(2);
 
       context.getBridge().ask = jest.fn().mockResolvedValueOnce({
         status: false,
+        code: ERRORS.USER_NOT_AUTHORIZED,
       });
 
       try {
@@ -171,6 +175,7 @@ describe('Connect class', () => {
       } catch (e) {
         const err = new Error('User not authorized!');
         expect(e).toEqual(err);
+        expect(e.code).toBe(ERRORS.USER_NOT_AUTHORIZED);
       }
     });
   });

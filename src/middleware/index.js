@@ -5,9 +5,12 @@ import payloadCheck from './payloadCheck';
 import auth from './auth';
 import requestProviderCheck from './requestProviderCheck';
 import requestProviderSwitchActual from './requestProviderSwitchActual';
+import settings from './settings';
 
 export default [
   auth,
+
+  settings,
 
   requestProviderCheck,
   requestProviderSwitchActual,

@@ -1,4 +1,7 @@
+import ConnectError from '@endpass/class/ConnectError';
 import { METHODS, INPAGE_EVENTS, DAPP_WHITELISTED_METHODS } from '@/constants';
+
+const { ERRORS } = ConnectError;
 
 export default class RequestProcess {
   constructor({ context, request, settings = {} }) {
@@ -96,7 +99,9 @@ export default class RequestProcess {
       },
     });
 
-    if (!res.status) throw new Error(res.error || 'Sign error!');
+    if (!res.status) {
+      throw ConnectError.create(res.error || ERRORS.SIGN);
+    }
 
     return res.payload;
   }
@@ -116,7 +121,9 @@ export default class RequestProcess {
       request: this.currentRequest,
     });
 
-    if (!res.status) throw new Error(res.error || 'Recovery error!');
+    if (!res.status) {
+      throw ConnectError.create(res.error || ERRORS.RECOVERY);
+    }
 
     return res.payload;
   }

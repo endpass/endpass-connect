@@ -1,3 +1,4 @@
+import ConnectError from '@endpass/class/ConnectError';
 import Network from '@endpass/class/Network';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import OauthPkceStrategy from '@/class/Oauth/OauthPkceStrategy';
@@ -17,6 +18,8 @@ import {
 } from '@/constants';
 
 import pkg from '../package.json';
+
+const { ERRORS } = ConnectError;
 
 const authUrlRegexp = new RegExp('://auth(\\.|-)', 'ig');
 
@@ -38,7 +41,7 @@ export default class Context {
    */
   constructor(options = {}) {
     if (!options.oauthClientId) {
-      throw new Error('Connect library requires OAuth client id!');
+      throw ConnectError.create(ERRORS.OAUTH_REQUIRE_ID);
     }
     const authUrl = options.authUrl || DEFAULT_AUTH_URL;
 
@@ -96,7 +99,10 @@ export default class Context {
         try {
           await this.serverAuth();
         } catch (e) {
-          error = new Error('Request data error');
+          error =
+            e.code === ERRORS.AUTH_CANCELED_BY_USER
+              ? e
+              : ConnectError.create(ERRORS.REQUEST_DATA);
         }
       }
 
@@ -138,7 +144,9 @@ export default class Context {
       },
     });
 
-    if (!res.status) throw new Error(res.error || 'Authentificaton error!');
+    if (!res.status) {
+      throw ConnectError.create(res.code || ERRORS.AUTH);
+    }
 
     this.isServerLogin = true;
 
@@ -157,7 +165,9 @@ export default class Context {
   async logout() {
     const res = await this.getBridge().ask(METHODS.LOGOUT);
 
-    if (!res.status) throw new Error(res.error || 'Logout error!');
+    if (!res.status) {
+      throw ConnectError.create(res.code || ERRORS.AUTH_LOGOUT);
+    }
 
     this.isServerLogin = false;
 
@@ -176,12 +186,12 @@ export default class Context {
   async getAccountData() {
     try {
       // FIXME: problem with e2e initialization here!
-      const { payload, status, error } = await this.getBridge().ask(
+      const { payload, status, code } = await this.getBridge().ask(
         METHODS.GET_SETTINGS,
       );
 
       if (!status) {
-        throw new Error(error || 'User settings are not received!');
+        throw ConnectError.create(code || ERRORS.AUTH);
       }
 
       const { settings = {} } = payload;
@@ -196,7 +206,7 @@ export default class Context {
 
       return res;
     } catch (err) {
-      throw new Error('User not authorized!');
+      throw ConnectError.create(err.code || ERRORS.USER_NOT_AUTHORIZED);
     }
   }
 
@@ -204,6 +214,9 @@ export default class Context {
     try {
       await this.getAccountData();
     } catch (e) {
+      if (e.code === ERRORS.AUTH_CANCELED_BY_USER) {
+        throw ConnectError.create(ERRORS.AUTH_CANCELED_BY_USER);
+      }
       await this.auth();
       await this.getAccountData();
     }
@@ -265,7 +278,7 @@ export default class Context {
    */
   request(options) {
     if (!this.oauthRequestProvider) {
-      throw new Error('Request fail user is not authorized');
+      throw ConnectError.create(ERRORS.OAUTH_REQUIRE_AUTHORIZE);
     }
     return this.oauthRequestProvider.request(options);
   }
@@ -276,7 +289,7 @@ export default class Context {
    */
   logoutFromOauth() {
     if (!this.oauthRequestProvider) {
-      throw new Error('Logout failed: not logged in');
+      throw ConnectError.create(ERRORS.OAUTH_NOT_LOGGED_IN);
     }
     this.oauthRequestProvider.logout();
   }
@@ -290,7 +303,7 @@ export default class Context {
    */
   setOauthPopupParams(params) {
     if (!this.oauthRequestProvider) {
-      throw new Error('Options setup failed: initialize instance first');
+      throw ConnectError.create(ERRORS.OAUTH_INITIALIZE_INSTANCE);
     }
     this.oauthRequestProvider.setPopupParams(params);
   }

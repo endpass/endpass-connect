@@ -11,16 +11,19 @@ cache:
     - '~/.cache'
 install: yarn install --frozen-lockfile
 stages:
-  - name: test
+  - name: test_unit
+  - name: test_e2e
   - name: deploy_npm
     if: branch = release
 jobs:
   include:
-    - stage: test
+    - stage: test_unit
+      script: npm run test:unit
+    - stage: test_e2e
       before_script:
         - npm run build
         - npm run test:e2e:setup
-      script: npm test
+      script: npm run test:e2e
     - stage: deploy_npm
       script:
         - if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then npm run build && npm run semantic-release
