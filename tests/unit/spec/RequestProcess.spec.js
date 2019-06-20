@@ -1,7 +1,10 @@
+import ConnectError from '@endpass/class/ConnectError';
 import Connect from '@/Connect';
 import { INPAGE_EVENTS, METHODS } from '@/constants';
 import privateFields from '@/privateFields';
 import RequestProcess from '@/middleware/netRequest/RequestProcess';
+
+const { ERRORS } = ConnectError;
 
 describe('Request process middleware', () => {
   let reqProcess;
@@ -258,13 +261,13 @@ describe('Request process middleware', () => {
     });
 
     it('should throw error is sign request status is falsy', async () => {
-      expect.assertions(1);
+      expect.assertions(2);
 
       bridge.ask = jest.fn().mockResolvedValueOnce({
         status: false,
       });
 
-      const err = new Error('Sign error!');
+      const err = new Error('Sign Error!');
       let check;
       try {
         await reqProcess.sign();
@@ -273,6 +276,7 @@ describe('Request process middleware', () => {
       }
 
       expect(check).toEqual(err);
+      expect(check.code).toEqual(ERRORS.SIGN);
     });
   });
 });

@@ -1,8 +1,11 @@
+import ConnectError from '@endpass/class/ConnectError';
 import Connect from '@/Connect';
 import Context from '@/Context';
 import privateFields from '@/privateFields';
 import { METHODS, DIRECTION } from '@/constants';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
+
+const { ERRORS } = ConnectError;
 
 describe('Context class', () => {
   const authUrl = 'http://test.auth';
@@ -69,17 +72,19 @@ describe('Context class', () => {
     });
 
     it('should throw error if auth status is falsy', async () => {
-      expect.assertions(1);
+      expect.assertions(2);
 
       bridge.ask.mockResolvedValueOnce({
         status: false,
+        code: ERRORS.AUTH,
       });
 
       try {
         await context.auth();
       } catch (e) {
-        const err = new Error('Authentificaton error!');
+        const err = new Error('Authentication Error!');
         expect(e).toEqual(err);
+        expect(e.code).toBe(ERRORS.AUTH);
       }
     });
   });
@@ -216,6 +221,42 @@ describe('Context class', () => {
       });
 
       expect(checkContext.bridge.initialPayload).toEqual(passPayload);
+    });
+  });
+
+  describe('serverAuth', () => {
+    let checkContext;
+    let bridge;
+    beforeEach(() => {
+      checkContext = new Context({
+        authUrl,
+        oauthClientId,
+      });
+
+      bridge = {
+        ask: jest.fn(),
+        openDialog: jest.fn(),
+        closeDialog: jest.fn(),
+      };
+      checkContext.bridge = bridge;
+    });
+
+    it('should call only once getAccountData', async () => {
+      expect.assertions(2);
+
+      bridge.ask.mockResolvedValueOnce({
+        status: false,
+        code: ERRORS.AUTH_CANCELED_BY_USER,
+      });
+      checkContext.auth = jest.fn();
+
+      try {
+        await checkContext.serverAuth();
+      } catch (e) {
+        expect(e.code).toBe(ERRORS.AUTH_CANCELED_BY_USER);
+      }
+
+      expect(checkContext.auth).not.toBeCalled();
     });
   });
 });

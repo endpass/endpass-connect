@@ -1,6 +1,8 @@
+import ConnectError from '@endpass/class/ConnectError';
 import mapToQueryString from '@endpass/utils/mapToQueryString';
 import queryStringToMap from '@endpass/utils/queryStringToMap';
 
+const { ERRORS } = ConnectError;
 const replaceReg = /^\#\/?/;
 
 export default class PopupWindow {
@@ -33,7 +35,7 @@ export default class PopupWindow {
           if (!popup || popup.closed !== false) {
             this.close();
 
-            reject(new Error('The popup was closed'));
+            reject(ConnectError.create(ERRORS.POPUP_CLOSED));
 
             return;
           }
