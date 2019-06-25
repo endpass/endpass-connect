@@ -64,7 +64,7 @@ export default {
   output: [
     {
       ...outputConf,
-      file: resolveFile(pkg.main),
+      file: resolveFile(pkg.umd),
       name: pkg.name,
       format: 'umd',
     },

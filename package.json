@@ -1,9 +1,10 @@
 {
   "name": "@endpass/connect",
-  "version": "0.24.1-beta",
+  "version": "0.24.2-beta",
   "authVersion": "",
   "main": "./dist/endpass-connect.min.js",
   "module": "./dist/endpass-connect.esm.js",
+  "umd": "./dist/endpass-connect.umd.js",
   "description": "",
   "repository": {
     "type": "git",
