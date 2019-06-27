@@ -5,7 +5,7 @@ const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
 
 const propsWrapper = {
   'min-width': '320px',
-  'max-width': '360px',
+  'max-width': '442px',
   margin: '50px auto',
 };
 const stylesWrapperShow = inlineStyles({
