@@ -19,6 +19,7 @@ const INITIAL_FRAME_STYLES = {
 };
 const FRAME_DESKTOP_STYLES = {
   ...BASE_FRAME_STYLES,
+  width: '240px',
   bottom: '15px',
   right: '15px',
 };
@@ -53,8 +54,8 @@ export default class Widget {
 
     this.handleWidgetFrameLoad = this.handleWidgetFrameLoad.bind(this);
     this.handleDocumentClick = this.handleDocumentClick.bind(this);
-    // this.handleScreenResize = this.handleScreenResize.bind(this);
-    // this.debouncedHandleScreenResize = debounce(this.handleScreenResize, 100);
+    this.handleScreenResize = this.handleScreenResize.bind(this);
+    this.debouncedHandleScreenResize = debounce(this.handleScreenResize, 100);
   }
 
   /* eslint-disable-next-line */
@@ -102,8 +103,6 @@ export default class Widget {
     const widgetMessenger = this.context.getWidgetMessenger();
 
     document.body.removeEventListener('click', this.handleDocumentClick);
-    // this.resize({ width: `${COLLAPSED_MOBILE_FRAME_WIDTH}px` });
-
     widgetMessenger.send(METHODS.WIDGET_COLLAPSE_RESPONSE);
   }
 
@@ -145,7 +144,7 @@ export default class Widget {
 
     this.frame = document.body.querySelector('[data-endpass="widget-frame"]');
     this.frame.addEventListener('load', this.handleWidgetFrameLoad);
-    // window.addEventListener('resize', this.debouncedHandleScreenResize);
+    window.addEventListener('resize', this.debouncedHandleScreenResize);
 
     this.subscribe();
 
@@ -166,7 +165,7 @@ export default class Widget {
     widgetMessenger.unsubscribe(METHODS.WIDGET_FIT);
 
     this.frame.removeEventListener('load', this.handleWidgetFrameLoad);
-    // window.removeEventListener('resize', this.debouncedHandleScreenResize);
+    window.removeEventListener('resize', this.debouncedHandleScreenResize);
 
     // Awaiting application animation ending
     setTimeout(() => {
@@ -178,27 +177,24 @@ export default class Widget {
   handleWidgetFrameLoad() {
     this.emitFrameEvent(WIDGET_EVENTS.MOUNT);
     this.isLoaded = true;
-
-    console.log('load event', this.getWidgetFrameInlineStyles());
-
     this.frame.style = this.getWidgetFrameInlineStyles();
   }
 
-  // handleScreenResize() {
-  //   console.log('resize', this);
-  // }
+  handleScreenResize() {
+    const widgetMessenger = this.context.getWidgetMessenger();
+
+    widgetMessenger.send(METHODS.WIDGET_CHANGE_MOBILE_MODE, {
+      isMobile: this.isMobile,
+    });
+    this.frame.style = this.getWidgetFrameInlineStyles();
+  }
 
   /**
    * @param {String} options.height Height in px or other CSS/HTML friendly unit
-   * @param {String} options.width Width in px or other CSS/HTML friendly unit
    */
-  resize({ height, width }) {
+  resize({ height }) {
     if (height) {
       this.frame.style.height = height;
-    }
-
-    if (width) {
-      this.frame.style.width = width;
     }
   }
 
