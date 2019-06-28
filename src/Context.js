@@ -318,8 +318,8 @@ export default class Context {
     }
 
     clearInterval(this.widgetAutoMountTimerId);
-    this.widgetOptions = parameters;
 
+    this.widgetOptions = parameters;
     this.widgetMessenger = new CrossWindowMessenger({
       showLogs: !ENV.isProduction,
       name: `connect-bridge-widget[${this.namespace}]`,
