@@ -219,7 +219,7 @@ export default class Widget {
    * @returns {object}
    */
   getWidgetFrameStylesObject() {
-    const { isMobile, isExpanded, isLoaded } = this;
+    const { position = {}, isMobile, isExpanded, isLoaded } = this;
 
     switch (true) {
       case isMobile && isLoaded && isExpanded:
@@ -234,7 +234,7 @@ export default class Widget {
         };
       case isLoaded:
         return {
-          ...(this.position || {}),
+          ...position,
           ...FRAME_DESKTOP_STYLES,
           opacity: Number(this.isLoaded),
         };
