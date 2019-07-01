@@ -178,4 +178,49 @@ describe('Widget class', () => {
       jest.advanceTimersByTime(500);
     });
   });
+
+  describe('getWidgetFrameStylesObject', () => {
+    const position = {
+      top: '15px',
+      right: '15px',
+    };
+
+    it('should styles object with opacity 0 if widget is not loaded', () => {
+      widget.isLoaded = false;
+
+      const styles = widget.getWidgetFrameStylesObject();
+
+      expect(styles.opacity).toBe(0);
+    });
+
+    it('should styles object with opacity 1 if widget is loaded', () => {
+      widget.isLoaded = true;
+
+      const styles = widget.getWidgetFrameStylesObject();
+
+      expect(styles.opacity).toBe(1);
+    });
+
+    it('should includes position styles if it is defined in the instance', () => {
+      widget.isLoaded = true;
+      widget.position = position;
+
+      const styles = widget.getWidgetFrameStylesObject();
+
+      expect(styles.top).toBe(position.top);
+      expect(styles.right).toBe(position.right);
+    });
+  });
+
+  describe('getWidgetFrameInlineStyles', () => {
+    it('should returns styles with current height if widget is mounted', () => {
+      widget.frame = {
+        clientHeight: 400,
+      };
+
+      const inlineStyles = widget.getWidgetFrameInlineStyles();
+
+      expect(inlineStyles).toContain('height: 400px');
+    });
+  });
 });
