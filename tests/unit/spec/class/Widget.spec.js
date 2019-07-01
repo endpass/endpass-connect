@@ -11,6 +11,7 @@ describe('Widget class', () => {
     messenger = {
       setTarget: jest.fn(),
       subscribe: jest.fn(),
+      unsubscribe: jest.fn(),
     };
     context = {
       getWidgetMessenger: () => messenger,
@@ -28,7 +29,7 @@ describe('Widget class', () => {
       widget.subscribe = jest.fn();
     });
 
-    it('should mount iframe for widget', () => {
+    it('should mount iframe for widget with initial styles', () => {
       widget.mount();
 
       expect(document.body.insertAdjacentHTML.mock.calls[0][0]).toBe(
@@ -40,12 +41,15 @@ describe('Widget class', () => {
       expect(widget.subscribe).toBeCalled();
     });
 
-    it('should mount iframe with given parameters', () => {
-      widget.mount({ position: { top: '15px', left: '15px' } });
+    it('should mount iframe for widget with initial styles and cahce position to instance', () => {
+      const params = { position: { top: '15px', left: '15px' } };
+
+      widget.mount(params);
 
       expect(
         document.body.insertAdjacentHTML.mock.calls[0][1],
       ).toMatchSnapshot();
+      expect(widget.position).toEqual(params.position);
     });
   });
 
@@ -55,14 +59,16 @@ describe('Widget class', () => {
     });
 
     it('should unmount widget after it faded out', () => {
+      jest.spyOn(window, 'removeEventListener');
       jest.useFakeTimers();
 
       widget.mount({ position: { top: '15px', left: '15px' } });
-      widget.unmount();
 
       widget.emitFrameEvent = jest.fn();
       widget.frame.removeEventListener = jest.fn();
       widget.frame.remove = jest.fn();
+
+      widget.unmount();
 
       jest.advanceTimersByTime(300);
 
@@ -71,7 +77,12 @@ describe('Widget class', () => {
         'load',
         expect.any(Function),
       );
+      expect(window.removeEventListener).toBeCalledWith(
+        'resize',
+        expect.any(Function),
+      );
       expect(widget.frame.remove).toBeCalled();
+      expect(messenger.unsubscribe).toBeCalledTimes(5);
     });
   });
 

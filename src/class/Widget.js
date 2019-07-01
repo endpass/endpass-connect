@@ -4,7 +4,7 @@ import { inlineStyles } from '@/util/dom';
 
 const MOBILE_BREAKPOINT = 1024;
 const FADE_TIMEOUT = 300;
-const BASE_FRAME_HEIGHT = 70;
+const BASE_FRAME_HEIGHT = 80;
 const BASE_FRAME_STYLES = {
   position: 'fixed',
   'z-index': 6000000,
@@ -19,14 +19,14 @@ const INITIAL_FRAME_STYLES = {
 };
 const FRAME_DESKTOP_STYLES = {
   ...BASE_FRAME_STYLES,
-  width: '240px',
-  bottom: '15px',
+  width: '260px',
+  bottom: '5px',
   right: '15px',
 };
 const FRAME_MOBILE_STYLES = {
   ...BASE_FRAME_STYLES,
   right: '24px',
-  bottom: '24px',
+  bottom: '14px',
 };
 const FRAME_MOBILE_COLLAPSED_STYLES = {
   ...FRAME_MOBILE_STYLES,
