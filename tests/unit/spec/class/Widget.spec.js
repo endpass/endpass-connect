@@ -223,4 +223,10 @@ describe('Widget class', () => {
       expect(inlineStyles).toContain('height: 400px');
     });
   });
+
+  // describe('getWidgetFramePositionStylesObject', () => {
+  //   it('should returns ', () => {
+  //     expect(1 + 1).toBe(2)
+  //   })
+  // })
 });
