@@ -20,8 +20,6 @@ const INITIAL_FRAME_STYLES = {
 const FRAME_DESKTOP_STYLES = {
   ...BASE_FRAME_STYLES,
   width: '240px',
-  bottom: '5px',
-  right: '15px',
 };
 const FRAME_MOBILE_STYLES = {
   ...BASE_FRAME_STYLES,
@@ -216,11 +214,8 @@ export default class Widget {
     });
   }
 
-  /**
-   * @returns {object}
-   */
-  getWidgetFrameStylesObject() {
-    const { position, isMobile, isExpanded, isLoaded } = this;
+  getWidgetFrameDesktopPositionStylesObject() {
+    const { position = {} } = this;
     const actualPosition = {
       left: 'auto',
       right: 'auto',
@@ -228,6 +223,27 @@ export default class Widget {
       bottom: 'auto',
       ...position,
     };
+
+    if (actualPosition.left === 'auto' && actualPosition.right === 'auto') {
+      Object.assign(actualPosition, {
+        right: '15px',
+      });
+    }
+
+    if (actualPosition.top === 'auto' && actualPosition.bottom === 'auto') {
+      Object.assign(actualPosition, {
+        bottom: '5px',
+      });
+    }
+
+    return actualPosition;
+  }
+
+  /**
+   * @returns {object}
+   */
+  getWidgetFrameStylesObject() {
+    const { isMobile, isExpanded, isLoaded } = this;
 
     switch (true) {
       case isMobile && isLoaded && isExpanded:
@@ -243,7 +259,7 @@ export default class Widget {
       case isLoaded:
         return {
           ...FRAME_DESKTOP_STYLES,
-          ...actualPosition,
+          ...this.getWidgetFrameDesktopPositionStylesObject(),
           opacity: Number(this.isLoaded),
         };
       default:
