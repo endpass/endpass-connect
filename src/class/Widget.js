@@ -19,7 +19,7 @@ const INITIAL_FRAME_STYLES = {
 };
 const FRAME_DESKTOP_STYLES = {
   ...BASE_FRAME_STYLES,
-  width: '260px',
+  width: '240px',
   bottom: '5px',
   right: '15px',
 };
@@ -69,6 +69,7 @@ export default class Widget {
     widgetMessenger.setTarget(this.frame.contentWindow);
     widgetMessenger.subscribe(METHODS.WIDGET_INIT, (payload, req) => {
       req.answer({
+        position: this.position,
         isMobile: this.isMobile,
       });
     });
@@ -219,7 +220,14 @@ export default class Widget {
    * @returns {object}
    */
   getWidgetFrameStylesObject() {
-    const { position = {}, isMobile, isExpanded, isLoaded } = this;
+    const { position, isMobile, isExpanded, isLoaded } = this;
+    const actualPosition = {
+      left: 'auto',
+      right: 'auto',
+      top: 'auto',
+      bottom: 'auto',
+      ...position,
+    };
 
     switch (true) {
       case isMobile && isLoaded && isExpanded:
@@ -234,8 +242,8 @@ export default class Widget {
         };
       case isLoaded:
         return {
-          ...position,
           ...FRAME_DESKTOP_STYLES,
+          ...actualPosition,
           opacity: Number(this.isLoaded),
         };
       default:
