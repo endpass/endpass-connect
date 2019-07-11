@@ -70,6 +70,7 @@ export default class Dialog {
     this.wrapper = null;
     this.frame = null;
     this.isShown = false;
+    this.isInited = false;
     this.frameStyles = inlineStylesState(propsIframe);
 
     if (document.readyState !== 'complete') {
@@ -85,13 +86,12 @@ export default class Dialog {
 
   subscribe() {
     const messenger = this.context.getDialogMessenger();
-    let isInited = false;
 
     messenger.setTarget(this.frame.contentWindow);
 
     this.frame.addEventListener('load', () => {
       setTimeout(() => {
-        if (!isInited) {
+        if (!this.isInited) {
           /* eslint-disable-next-line */
           console.error(
             `Dialog is not inited, please check auth url ${this.url}`,
@@ -101,7 +101,7 @@ export default class Dialog {
     });
 
     messenger.subscribe(METHODS.INITIATE, () => {
-      isInited = true;
+      this.isInited = true;
     });
     messenger.subscribe(METHODS.DIALOG_RESIZE, ({ offsetHeight }) => {
       this.frame.style = this.frameStyles({

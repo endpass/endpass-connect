@@ -70,9 +70,6 @@ describe('Widget class', () => {
 
       widget.unmount();
 
-      jest.advanceTimersByTime(300);
-
-      expect(widget.emitFrameEvent).toBeCalledWith('destroy');
       expect(widget.frame.removeEventListener).toBeCalledWith(
         'load',
         expect.any(Function),
@@ -81,8 +78,12 @@ describe('Widget class', () => {
         'resize',
         expect.any(Function),
       );
-      expect(widget.frame.remove).toBeCalled();
       expect(messenger.unsubscribe).toBeCalledTimes(5);
+
+      jest.advanceTimersByTime(300);
+
+      expect(widget.emitFrameEvent).toBeCalledWith('destroy');
+      expect(widget.frame).toBeNull();
     });
   });
 
@@ -223,10 +224,4 @@ describe('Widget class', () => {
       expect(inlineStyles).toContain('height: 400px');
     });
   });
-
-  // describe('getWidgetFramePositionStylesObject', () => {
-  //   it('should returns ', () => {
-  //     expect(1 + 1).toBe(2)
-  //   })
-  // })
 });
