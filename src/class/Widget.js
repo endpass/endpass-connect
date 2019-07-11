@@ -170,6 +170,7 @@ export default class Widget {
     setTimeout(() => {
       this.emitFrameEvent(WIDGET_EVENTS.DESTROY);
       this.frame.remove();
+      this.frame = null;
     }, FADE_TIMEOUT);
   }
 

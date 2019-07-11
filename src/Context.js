@@ -195,7 +195,6 @@ export default class Context {
       }
 
       const { settings = {} } = payload;
-
       const res = {
         activeAccount: settings.lastActiveAccount,
         activeNet: settings.net || Network.NET_ID.MAIN,
@@ -217,6 +216,7 @@ export default class Context {
       if (e.code === ERRORS.AUTH_CANCELED_BY_USER) {
         throw ConnectError.create(ERRORS.AUTH_CANCELED_BY_USER);
       }
+
       await this.auth();
       await this.getAccountData();
     }
@@ -305,6 +305,7 @@ export default class Context {
     if (!this.oauthRequestProvider) {
       throw ConnectError.create(ERRORS.OAUTH_INITIALIZE_INSTANCE);
     }
+
     this.oauthRequestProvider.setPopupParams(params);
   }
 
@@ -326,7 +327,6 @@ export default class Context {
       to: DIRECTION.AUTH,
       from: DIRECTION.CONNECT,
     });
-
     this.messengerGroup.addMessenger(this.widgetMessenger);
 
     return this.bridge.mountWidget(parameters);
