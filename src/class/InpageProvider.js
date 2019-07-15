@@ -72,11 +72,20 @@ export default class InpageProvider extends Emmiter {
     const requestHandler = get(this.pendingRequestsHandlers, requestId);
 
     if (requestHandler) {
-      requestHandler(error, {
+      let errorMessage;
+      const response = {
         id: parseInt(requestId, 10),
-        result,
         jsonrpc,
-      });
+      };
+
+      if (error) {
+        Object.assign(response, { error });
+        errorMessage = error.message;
+      } else {
+        Object.assign(response, { result });
+      }
+
+      requestHandler(errorMessage, response);
       this.handleDropPending({ id });
     }
   }

@@ -6,8 +6,10 @@ import auth from './auth';
 import requestProviderCheck from './requestProviderCheck';
 import requestProviderSwitchActual from './requestProviderSwitchActual';
 import settings from './settings';
+import filterAvailableMethods from './filterAvailableMethods';
 
 export default [
+  filterAvailableMethods,
   auth,
 
   settings,

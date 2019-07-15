@@ -22,6 +22,16 @@ export const DAPP_WHITELISTED_METHODS = [
   'eth_sendTransaction',
 ];
 
+export const DAPP_BLACKLISTED_METHODS = [
+  'personal_listAccounts',
+  'personal_newAccount',
+  'personal_unlockAccount',
+  'personal_lockAccount',
+  'personal_signTransaction',
+  'eth_signTransaction',
+  'personal_sendTransaction',
+];
+
 export const METHODS = Object.freeze({
   SIGN: 'SIGN',
   ACCOUNT: 'ACCOUNT',
