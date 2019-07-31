@@ -19,7 +19,7 @@ const INITIAL_FRAME_STYLES = {
 };
 const FRAME_DESKTOP_STYLES = {
   ...BASE_FRAME_STYLES,
-  width: '240px',
+  width: '280px',
 };
 const FRAME_MOBILE_STYLES = {
   ...BASE_FRAME_STYLES,
