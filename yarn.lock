@@ -1024,10 +1024,10 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
-"@endpass/class@^0.16.1":
-  version "0.16.1"
-  resolved "https://registry.yarnpkg.com/@endpass/class/-/class-0.16.1.tgz#74e9cd7f0ab81a4a45be301c45f5a2cef2e1209f"
-  integrity sha512-OBZGXUDmazTmA/NTkalu5XgAd6FjcfOy2ijIkLzTcmy/fmhFJWbTDT1rjGOTyFbXvW2sZ3PoObQgDAt8h4o0nQ==
+"@endpass/class@^0.17.0":
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/@endpass/class/-/class-0.17.0.tgz#49f55ad21b427519b08b4f4ab6fad540a74284cc"
+  integrity sha512-U4OTmRADHLdSr8eAL8OVjrnlt9Uu1jtNoI7Yd+Buq3JiRlX+FZ+A+mThI0yD5nRmVozyhL7iw1rX9ufX9qnGUg==
   dependencies:
     "@endpass/utils" "^1.8.2"
     "@ledgerhq/hw-app-eth" "^4.24.0"
