@@ -3,6 +3,8 @@ Cypress.Commands.add('startAuthBridge', () => {
   return cy.window().then(win => {
     cy.log(win);
 
-    return win.e2eBridge.awaitSetupFinish();
+    return win.e2eBridge.awaitSetupFinish().then(() => {
+      cy.clearMocks();
+    });
   });
 });
