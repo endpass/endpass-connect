@@ -1,9 +1,8 @@
 import accounts from '../../../fixtures/identity/account/accounts';
 import settings from '../../../fixtures/identity/settings';
 import { cryptodataAPIUrl, identityAPIUrl } from '../config';
-import { hdv3, hdv3Info } from '../../../fixtures/account/v3';
+import { v3, v3Info, hdv3, hdv3Info } from '../../../fixtures/account/v3';
 import balanceEmpty from '../../../fixtures/cryptodata/balanceEmpty';
-
 
 Cypress.Commands.add('mockLogin', () => {
   cy.mockRoute({
@@ -39,6 +38,20 @@ Cypress.Commands.add('mockLogin', () => {
     method: 'GET',
     status: 200,
     response: hdv3Info,
+  });
+
+  cy.mockRoute({
+    url: `${identityAPIUrl}/account/${v3.address}`,
+    method: 'GET',
+    status: 200,
+    response: v3,
+  });
+
+  cy.mockRoute({
+    url: `${identityAPIUrl}/account/${v3Info.address}/info`,
+    method: 'GET',
+    status: 200,
+    response: v3Info,
   });
 
   cy.mockRoute({

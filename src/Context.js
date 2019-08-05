@@ -185,7 +185,6 @@ export default class Context {
    */
   async getAccountData() {
     try {
-      // FIXME: problem with e2e initialization here!
       const { payload, status, code } = await this.getBridge().ask(
         METHODS.GET_SETTINGS,
       );

@@ -1,5 +1,5 @@
 // Account address
-export const address = '0x31ea8795ee32d782c8ff41a5c68dcbf0f5b27f6d';
+export const address = '0x31ea8795EE32D782C8ff41a5C68Dcbf0F5B27f6d';
 export const addressHdChild = '0xC2013cAf34b224572B66F4d44313E73D437EB6E3';
 export const checksumAddress = '0x31ea8795EE32D782C8ff41a5C68Dcbf0F5B27f6d';
 
@@ -26,10 +26,6 @@ export const v3 = {
   version: 3,
   address: '0x31ea8795EE32D782C8ff41a5C68Dcbf0F5B27f6d',
 };
-
-// mnemonic for hdv3
-export const mnemonic =
-  'seed sock milk update focus rotate barely fade car face mechanic mercy';
 
 // Encrypted keystore for an hd account
 export const hdv3 = {
@@ -59,6 +55,14 @@ export const hdv3Info = {
     'xpub6DojZ5fC8cSLRwc95PFfzUDWUSRod2jSWSbhGKEWFJhoTDiJgRva4am9m7ex1Fm1Ege8MDQ7PNEFqkzdgsRS6UooRfDZpgHkD8vNHiMP3zq',
   hidden: false,
   type: 'HDMainAccount',
+  index: 0,
+  label: '',
+};
+
+export const v3Info = {
+  address: '0x31ea8795EE32D782C8ff41a5C68Dcbf0F5B27f6d',
+  hidden: false,
+  type: 'StandardAccount',
   index: 0,
   label: '',
 };

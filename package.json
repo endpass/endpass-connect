@@ -33,6 +33,7 @@
     "test:e2e:cy:open": "cypress open",
     "test:e2e": "node ./scripts/e2e-run.js",
     "test:e2e:open": "node ./scripts/e2e-open.js",
+    "test:e2e:dev": "node ./scripts/e2e-dev.js",
     "test:e2e:setup": "node ./scripts/e2e-setup.js",
     "test:e2e:serve": "node ./scripts/e2e-serve.js",
     "format": "prettier --write './src/**/*.{js,json}' && eslint ./src/**/*.{js} --fix",
