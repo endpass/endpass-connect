@@ -1,6 +1,6 @@
 {
   "code": 403,
-  "error": "permission cookie bad or not set",
-  "id": "identity-dev-000000-000-000",
+  "error": "e2e-test just forbidden",
+  "id": "e2e-identity-test-000000-000-000",
   "message": "Forbidden"
 }
