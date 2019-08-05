@@ -5,6 +5,11 @@ export const checksumAddress = '0x31ea8795EE32D782C8ff41a5C68Dcbf0F5B27f6d';
 
 export const v3password = 'password123';
 
+export const accountList = [
+  address,
+  'xpub6DojZ5fC8cSLRwc95PFfzUDWUSRod2jSWSbhGKEWFJhoTDiJgRva4am9m7ex1Fm1Ege8MDQ7PNEFqkzdgsRS6UooRfDZpgHkD8vNHiMP3zq',
+];
+
 // Encrypted keystore for a normal account
 export const v3 = {
   crypto: {

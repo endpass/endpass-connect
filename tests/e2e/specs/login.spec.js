@@ -1,7 +1,6 @@
 import { identityAPIUrl } from '../support/config';
-import check403 from '../../fixtures/identity/auth/check-403';
-import { address } from '../../fixtures/identity/account/v3';
-import success from '../../fixtures/identity/success';
+import { address } from '../../fixtures/identity/accounts';
+import { responseSuccess } from '../../fixtures/response';
 
 describe('login', function() {
   describe('connect login features', () => {
@@ -16,7 +15,7 @@ describe('login', function() {
         url: `${identityAPIUrl}/auth/check`,
         method: 'GET',
         status: 403,
-        response: check403,
+        response: {},
       });
 
       cy.authBridgeFinish().then(() => {
@@ -67,7 +66,7 @@ describe('login', function() {
         url: `${identityAPIUrl}/logout`,
         method: 'POST',
         status: 200,
-        response: success,
+        response: responseSuccess,
       });
 
       cy.authBridgeFinish().then(() => {
