@@ -1,7 +1,7 @@
 import accounts from '../../../fixtures/identity/account/accounts';
 import settings from '../../../fixtures/identity/settings';
 import { cryptodataAPIUrl, identityAPIUrl } from '../config';
-import { v3, v3Info, hdv3, hdv3Info } from '../../../fixtures/account/v3';
+import { v3, v3Info, hdv3, hdv3Info } from '../../../fixtures/identity/account/v3';
 import balanceEmpty from '../../../fixtures/cryptodata/balanceEmpty';
 
 Cypress.Commands.add('mockLogin', () => {

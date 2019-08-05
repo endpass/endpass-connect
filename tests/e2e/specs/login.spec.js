@@ -1,6 +1,7 @@
 import { identityAPIUrl } from '../support/config';
 import check403 from '../../fixtures/identity/auth/check-403';
-import { address } from '../../fixtures/account/v3';
+import { address } from '../../fixtures/identity/account/v3';
+import success from '../../fixtures/identity/success';
 
 describe('login', function() {
   describe('connect login features', () => {
@@ -10,15 +11,13 @@ describe('login', function() {
       return cy.authBridgeStart().then(cy.clearMocks);
     });
 
-    it.skip('should show apply password form', () => {
+    it('should show apply password form', () => {
       cy.mockRoute({
         url: `${identityAPIUrl}/auth/check`,
         method: 'GET',
         status: 403,
         response: check403,
       });
-
-      cy.wait(100);
 
       cy.authBridgeFinish().then(() => {
         cy.get('[data-test=endpass-app-loader]').should('exist');
@@ -30,7 +29,7 @@ describe('login', function() {
       });
     });
 
-    it.skip('should cancel login on dialog close', () => {
+    it('should cancel login on dialog close', () => {
       cy.mockRoute({
         url: `${identityAPIUrl}/auth/check`,
         method: 'GET',
@@ -51,8 +50,6 @@ describe('login', function() {
     });
 
     it('should login to system', () => {
-      cy.wait(250);
-
       cy.mockLogin();
 
       cy.authBridgeFinish().then(() => {
@@ -61,6 +58,22 @@ describe('login', function() {
         cy.get('[data-test=endpass-form]')
           .get('.tag').eq(1)
           .should('contain.text', address);
+      });
+    });
+
+    it('should logout from system', () => {
+      cy.mockLogin();
+      cy.mockRoute({
+        url: `${identityAPIUrl}/logout`,
+        method: 'POST',
+        status: 200,
+        response: success,
+      });
+
+      cy.authBridgeFinish().then(() => {
+        cy.get('[data-test=endpass-app-loader]').should('not.exist');
+        cy.get('[data-test=endpass-form-sign-out-button]').click();
+        cy.get('[data-test=endpass-sign-in-button]').should('exist');
       });
     });
   });
