@@ -41,7 +41,7 @@ describe('login', function() {
         cy.getAuthFrame().should('exist');
 
         cy.getAuthFrame()
-          .getIframeElement('.v-modal-card-close')
+          .getIframeElement('[data-test=modal-card-button-close]')
           .click();
 
         cy.authWrapperHidden().should('exist');
@@ -54,10 +54,10 @@ describe('login', function() {
       cy.authBridgeFinish().then(() => {
         cy.get('[data-test=endpass-app-loader]').should('not.exist');
         cy.authWrapperHidden().should('exist');
-        cy.get('[data-test=endpass-form]')
-          .get('.tag')
-          .eq(1)
-          .should('contain.text', address);
+        cy.get('[data-test=endpass-form-basic-active-account]').should(
+          'contain.text',
+          address,
+        );
       });
     });
 
@@ -72,7 +72,10 @@ describe('login', function() {
 
       cy.authBridgeFinish().then(() => {
         cy.get('[data-test=endpass-app-loader]').should('not.exist');
+        cy.get('[data-test=endpass-sign-in-button]').should('not.exist');
+
         cy.get('[data-test=endpass-form-sign-out-button]').click();
+
         cy.get('[data-test=endpass-sign-in-button]').should('exist');
       });
     });

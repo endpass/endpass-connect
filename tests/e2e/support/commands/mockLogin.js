@@ -60,7 +60,7 @@ Cypress.Commands.add('mockLogin', () => {
   });
 
   cy.mockRoute({
-    url: `${cryptodataAPIUrl}/1/balance/${hdv3.address}`,
+    url: `${cryptodataAPIUrl}/1/balance/${v3.address}`,
     method: 'GET',
     status: 200,
     response: balanceEmpty,

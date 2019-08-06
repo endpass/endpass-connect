@@ -8,5 +8,5 @@ Cypress.Commands.add('authWrapperHidden', () => {
 
 Cypress.Commands.add('getAuthFrame', () => {
   cy.authWrapperVisible();
-  return cy.get('[data-test=dialog-iframe]').iframe();
+  return cy.get('[data-test=dialog-iframe]');
 });
