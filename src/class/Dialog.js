@@ -133,8 +133,8 @@ export default class Dialog {
 
     const markup = `
       <div data-endpass="overlay" ${NSmarkup} style="${stylesOverlayHide}" >
-        <div data-endpass="wrapper" data-visible="false" style="${stylesWrapperHide}">
-          <iframe data-endpass="frame" src="${
+        <div data-test="dialog-wrapper" data-endpass="wrapper" data-visible="false" style="${stylesWrapperHide}">
+          <iframe data-test="dialog-iframe" data-endpass="frame" src="${
             this.url
           }" style="${this.frameStyles(propsIframeHide)}"/>
         </div>

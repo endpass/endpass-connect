@@ -53,7 +53,7 @@ Cypress.Commands.add('mockLogin', () => {
   });
 
   cy.mockRoute({
-    url: `${identityAPIUrl}/account/${v3Info.address}/info`,
+    url: `${identityAPIUrl}/account/${v3.address}/info`,
     method: 'GET',
     status: 200,
     response: v3Info,

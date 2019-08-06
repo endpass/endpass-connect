@@ -23,7 +23,7 @@ describe('login', function() {
         cy.getAuthFrame().should('exist');
 
         cy.getAuthFrame()
-          .iframe('[data-test=sign-form]')
+          .getIframeElement('[data-test=sign-form]')
           .should('exist');
       });
     });
@@ -41,10 +41,10 @@ describe('login', function() {
         cy.getAuthFrame().should('exist');
 
         cy.getAuthFrame()
-          .iframe('.v-modal-card-close')
+          .getIframeElement('.v-modal-card-close')
           .click();
 
-        cy.get('[data-endpass=wrapper][data-visible=false]').should('exist');
+        cy.authWrapperHidden().should('exist');
       });
     });
 
@@ -53,9 +53,10 @@ describe('login', function() {
 
       cy.authBridgeFinish().then(() => {
         cy.get('[data-test=endpass-app-loader]').should('not.exist');
-        cy.get('[data-endpass=wrapper][data-visible=false]').should('exist');
+        cy.authWrapperHidden().should('exist');
         cy.get('[data-test=endpass-form]')
-          .get('.tag').eq(1)
+          .get('.tag')
+          .eq(1)
           .should('contain.text', address);
       });
     });

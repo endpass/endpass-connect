@@ -1,9 +1,9 @@
 Cypress.Commands.add(
-  'iframe',
+  'getIframeElement',
   { prevSubject: 'element' },
   ($iframe, selector) => {
     Cypress.log({
-      name: 'iframe',
+      name: 'getIframeElement',
       consoleProps() {
         return {
           iframe: $iframe,
@@ -11,7 +11,6 @@ Cypress.Commands.add(
       },
     });
     return new Cypress.Promise(resolve => {
-      const el = $iframe.contents().find(selector);
       resolve($iframe.contents().find(selector));
     });
   },
