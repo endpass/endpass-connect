@@ -3,6 +3,6 @@ Cypress.Commands.add('authBridgeStart', () => {
   return cy.window().then(win => {
     cy.log(win);
 
-    return win.e2eBridge.awaitSetupStart();
+    return win.e2eBridge.awaitClientPaused();
   });
 });

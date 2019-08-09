@@ -1,5 +1,5 @@
 import { identityAPIUrl } from '../support/config';
-import { address } from '../../fixtures/identity/accounts';
+import { accountList, address } from '../../fixtures/identity/accounts';
 import { responseSuccess } from '../../fixtures/response';
 
 describe('login', function() {
@@ -16,6 +16,13 @@ describe('login', function() {
         method: 'GET',
         status: 403,
         response: {},
+      });
+
+      cy.mockRoute({
+        url: `${identityAPIUrl}/accounts`,
+        method: 'GET',
+        status: 200,
+        response: accountList,
       });
 
       cy.authBridgeFinish().then(() => {

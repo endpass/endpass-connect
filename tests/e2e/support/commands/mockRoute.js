@@ -10,7 +10,6 @@ Cypress.Commands.add('mockRouteOnce', payload => {
 });
 Cypress.Commands.add('clearMocks', () => {
   return cy.window().then(win => {
-    win.e2eBridge.clearMocks();
-    cy.wait(250);
+    return win.e2eBridge.clearMocks();
   });
 });

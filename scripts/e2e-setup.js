@@ -4,3 +4,5 @@ const executor = require('./executor');
 executor('node ./scripts/build-connect.js');
 executor('node ./scripts/build-auth.js');
 executor('node ./scripts/build-demo.js');
+
+executor.exit();

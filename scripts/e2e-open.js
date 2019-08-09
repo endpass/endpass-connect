@@ -1,7 +1,6 @@
 const executor = require('./executor');
-
-require('./e2e-serve');
+require('./e2e-serve.js');
 
 executor('cypress open');
 
-process.exit(0);
+executor.exit();

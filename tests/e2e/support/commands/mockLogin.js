@@ -65,6 +65,4 @@ Cypress.Commands.add('mockLogin', () => {
     status: 200,
     response: balanceEmpty,
   });
-
-  cy.wait(250);
 });
