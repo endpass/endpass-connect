@@ -59,12 +59,7 @@ describe('login', function() {
       cy.mockLogin();
 
       cy.authBridgeFinish().then(() => {
-        cy.get('[data-test=endpass-app-loader]').should('not.exist');
-        cy.authWrapperHidden().should('exist');
-        cy.get('[data-test=endpass-form-basic-active-account]').should(
-          'contain.text',
-          address,
-        );
+        cy.shouldLoggedIn();
       });
     });
 
