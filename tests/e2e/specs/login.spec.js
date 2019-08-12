@@ -1,30 +1,21 @@
 import { identityAPIUrl } from '../support/config';
-import { accountList, v3, v3password } from '../../fixtures/identity/accounts';
-import { responseSuccess } from '../../fixtures/response';
+import { v3password } from '../../fixtures/identity/accounts';
 
 describe('login', function() {
   describe('connect login features', () => {
     beforeEach(() => {
-      cy.visit('http://localhost:4444/#/basic');
-      cy.wait(100);
-      return cy.authBridgeStart().then(cy.clearMocks);
+      return cy.beforePrepares();
     });
 
     it('should logout from system', () => {
-      cy.mockLogin();
+      cy.mockInitialData();
 
-      cy.mockRoute({
-        url: `${identityAPIUrl}/logout`,
-        method: 'POST',
-        status: 200,
-        response: responseSuccess,
-      });
-
-      cy.authBridgeFinish();
+      cy.authFrameContinueRun();
 
       cy.get('[data-test=endpass-app-loader]').should('not.exist');
       cy.get('[data-test=endpass-sign-in-button]').should('not.exist');
 
+      cy.mockRouteLogout();
       cy.get('[data-test=endpass-form-sign-out-button]').click();
 
       cy.get('[data-test=endpass-sign-in-button]').should('exist');
@@ -35,45 +26,20 @@ describe('login', function() {
       cy.mockAuthCheckOnce(403);
       cy.mockAuthCheckOnce(403);
 
-      cy.mockRouteOnce({
-        url: `${identityAPIUrl}/accounts`,
-        method: 'GET',
-        status: 200,
-        response: accountList,
-      });
+      cy.mockAccounts();
 
-      cy.mockRouteOnce({
-        url: `${identityAPIUrl}/auth/permission`,
-        method: 'GET',
-        status: 200,
-        response: {
-          keystore: v3,
-        },
-      });
+      cy.authFrameContinueRun();
 
-      cy.mockRouteOnce({
-        url: `${identityAPIUrl}/auth/permission`,
-        method: 'POST',
-        status: 200,
-        response: responseSuccess,
-      });
-
-      cy.authBridgeFinish();
-
-      cy.mockLogin();
+      cy.mockInitialData();
 
       cy.get('[data-test=endpass-app-loader]').should('exist');
-      cy.getAuthFrame().should('exist');
+      cy.authFrameIframe().should('exist');
 
-      cy.getAuthFrame()
-        .getIframeElement('[data-test=sign-form]')
-        .should('exist');
+      cy.authFrame('[data-test=sign-form]').should('exist');
 
-      cy.getAuthFrame()
-        .getIframeElement('input[data-test=password-input]')
-        .type(v3password);
+      cy.authFrame('input[data-test=password-input]').type(v3password);
 
-      cy.mockButtonSubmit();
+      cy.authFrame('[data-test=submit-button]').click();
 
       cy.shouldLoggedIn();
     });
@@ -81,71 +47,75 @@ describe('login', function() {
     it('should cancel login and close dialog', () => {
       cy.mockAuthCheckOnce(401);
 
-      cy.authBridgeFinish();
+      cy.authFrameContinueRun();
 
       cy.checkMocks();
 
       cy.get('[data-test=endpass-app-loader]').should('exist');
-      cy.getAuthFrame().should('exist');
+      cy.authFrameIframe().should('exist');
 
-      cy.getAuthFrame()
-        .getIframeElement('[data-test=modal-card-button-close]')
-        .click();
+      cy.authFrame('[data-test=modal-card-button-close]').click();
 
-      cy.authWrapperHidden().should('exist');
+      cy.authFrameWrapperHidden().should('exist');
     });
 
     it('should login to system', () => {
-      cy.mockLogin();
+      cy.mockInitialData();
 
-      cy.authBridgeFinish();
+      cy.authFrameContinueRun();
 
       cy.shouldLoggedIn();
     });
 
     it('should create new account', () => {
-      cy.mockCreateWallet();
+      cy.mockAuthCheckOnce(401);
+      cy.mockAuthCheckOnce(401);
+      cy.mockAuthUser('emailLink');
+      cy.mockAuthCheckOnce(403);
 
-      cy.authBridgeFinish();
+      cy.mockRouteOnce({
+        url: `${identityAPIUrl}/accounts`,
+        method: 'GET',
+        status: 200,
+        response: [],
+      });
 
-      cy.get('[data-test=endpass-app-loader]').should('exist');
+      cy.mockUserSeed();
+      cy.mockSettings();
+      cy.mockRouteOnce({
+        url: `${identityAPIUrl}/account`,
+        method: 'POST',
+        status: 403,
+        response: {},
+      });
 
-      cy.getAuthFrame().should('exist');
+      // seed phrase dialog
+      cy.mockAccounts();
 
-      // open email form
-      cy.getAuthFrame()
-        .getIframeElement('[data-test=email-input]')
-        .type('dev+e2e_email@endpass.com');
+      cy.mockAuthCheckOnce(403);
 
-      cy.mockButtonSubmit('[data-test=submit-button-auth]');
-
-      // create new password form
-      cy.getAuthFrame()
-        .getIframeElement('[data-test=password-main]')
-        .type(v3password);
-
-      cy.getAuthFrame()
-        .getIframeElement('[data-test=password-confirm]')
-        .type(v3password);
-
-      cy.mockButtonSubmit('[data-test=submit-button-create-wallet]');
-
-      cy.mockLogin();
+      cy.mockInitialData();
       cy.checkMocks();
 
-      cy.getAuthFrame()
-        .getIframeElement('input[type="checkbox"]')
-        .click({ force: true });
+      cy.authFrameContinueRun();
 
-      cy.getAuthFrame()
-        .getIframeElement('[data-test=continue-button]')
-        .click();
+      cy.get('[data-test=endpass-app-loader]').should('exist');
+      cy.authFrameIframe().should('exist');
 
-      cy.getAuthFrame()
-        .getIframeElement('input[data-test=password-input]')
-        .type(v3password);
+      // open email form
+      cy.authFrame('[data-test=email-input]').type('dev+e2e_email@endpass.com');
+      cy.authFrame('[data-test=submit-button-auth]').click();
 
-      cy.mockButtonSubmit();
+      // create new password form
+      cy.authFrame('[data-test=password-main]').type(v3password);
+      cy.authFrame('[data-test=password-confirm]').type(v3password);
+      cy.authFrame('[data-test=submit-button-create-wallet]').click();
+
+      cy.authFrame('input[type="checkbox"]').click({ force: true });
+      cy.authFrame('[data-test=continue-button]').click();
+
+      cy.authFrame('input[data-test=password-input]').type(v3password);
+      cy.authFrame('[data-test=submit-button]').click();
 
       cy.shouldLoggedIn();
     });
@@ -154,76 +124,30 @@ describe('login', function() {
       cy.mockAuthCheckOnce(401);
       cy.mockAuthCheckOnce(401);
 
-      cy.mockRouteOnce({
-        url: `${identityAPIUrl}/auth?redirect_uri=http%3A%2F%2Flocalhost%3A4444%2F%23%2Fbasic`,
-        method: 'POST',
-        status: 200,
-        response: { success: true, challenge: { challengeType: 'otp' } },
-      });
-
-      cy.mockRouteOnce({
-        url: `${identityAPIUrl}/auth/token`,
-        method: 'POST',
-        status: 200,
-        response: responseSuccess,
-      });
+      cy.mockAuthUser('otp');
 
       cy.mockAuthCheckOnce(403);
       cy.mockAuthCheckOnce(403);
-
-      cy.mockRouteOnce({
-        url: `${identityAPIUrl}/accounts`,
-        method: 'GET',
-        status: 200,
-        response: accountList,
-      });
-      cy.mockRouteOnce({
-        url: `${identityAPIUrl}/accounts`,
-        method: 'GET',
-        status: 200,
-        response: accountList,
-      });
-
       cy.mockAuthCheckOnce(403);
 
-      cy.mockRouteOnce({
-        url: `${identityAPIUrl}/auth/permission`,
-        method: 'GET',
-        status: 200,
-        response: {
-          keystore: v3,
-        },
-      });
+      cy.mockAccounts();
 
-      cy.mockRouteOnce({
-        url: `${identityAPIUrl}/auth/permission`,
-        method: 'POST',
-        status: 200,
-        response: responseSuccess,
-      });
+      cy.authFrameContinueRun();
 
-      cy.authBridgeFinish();
-
-      cy.mockLogin();
+      cy.mockInitialData();
       cy.checkMocks();
 
-      cy.getAuthFrame()
-        .getIframeElement('[data-test=email-input]')
-        .type('dev+e2e_email@endpass.com');
+      cy.authFrame('[data-test=email-input]').type('dev+e2e_email@endpass.com');
 
-      cy.mockButtonSubmit('[data-test=submit-button-auth]');
+      cy.authFrame('[data-test=submit-button-auth]').click();
 
-      cy.getAuthFrame()
-        .getIframeElement('[data-test=email-input]')
-        .type('123456');
+      cy.authFrame('[data-test=email-input]').type('123456');
 
-      cy.mockButtonSubmit();
+      cy.authFrame('[data-test=submit-button]').click();
 
-      cy.getAuthFrame()
-        .getIframeElement('input[data-test=password-input]')
-        .type(v3password);
+      cy.authFrame('input[data-test=password-input]').type(v3password);
 
-      cy.mockButtonSubmit();
+      cy.authFrame('[data-test=submit-button]').click();
       cy.shouldLoggedIn();
     });
 
@@ -233,61 +157,25 @@ describe('login', function() {
       cy.mockAuthCheckOnce(401);
       cy.mockAuthCheckOnce(403);
 
-      cy.mockRouteOnce({
-        url: `${identityAPIUrl}/auth?redirect_uri=http%3A%2F%2Flocalhost%3A4444%2F%23%2Fbasic`,
-        method: 'POST',
-        status: 200,
-        response: { success: true, challenge: { challengeType: 'emailLink' } },
-      });
+      cy.mockAuthUser('emailLink');
 
       cy.mockAuthCheckOnce(403);
       cy.mockAuthCheckOnce(403);
 
-      cy.mockRouteOnce({
-        url: `${identityAPIUrl}/accounts`,
-        method: 'GET',
-        status: 200,
-        response: accountList,
-      });
-      cy.mockRouteOnce({
-        url: `${identityAPIUrl}/accounts`,
-        method: 'GET',
-        status: 200,
-        response: accountList,
-      });
+      cy.mockAccounts();
 
-      cy.mockRouteOnce({
-        url: `${identityAPIUrl}/auth/permission`,
-        method: 'GET',
-        status: 200,
-        response: {
-          keystore: v3,
-        },
-      });
+      cy.authFrameContinueRun();
 
-      cy.mockRouteOnce({
-        url: `${identityAPIUrl}/auth/permission`,
-        method: 'POST',
-        status: 200,
-        response: responseSuccess,
-      });
-
-      cy.authBridgeFinish();
-
-      cy.mockLogin();
+      cy.mockInitialData();
       cy.checkMocks();
 
-      cy.getAuthFrame()
-        .getIframeElement('[data-test=email-input]')
-        .type('dev+e2e_email@endpass.com');
+      cy.authFrame('[data-test=email-input]').type('dev+e2e_email@endpass.com');
 
-      cy.mockButtonSubmit('[data-test=submit-button-auth]');
+      cy.authFrame('[data-test=submit-button-auth]').click();
 
-      cy.getAuthFrame()
-        .getIframeElement('input[data-test=password-input]')
-        .type(v3password);
+      cy.authFrame('input[data-test=password-input]').type(v3password);
 
-      cy.mockButtonSubmit();
+      cy.authFrame('[data-test=submit-button]').click();
       cy.shouldLoggedIn();
     });
   });

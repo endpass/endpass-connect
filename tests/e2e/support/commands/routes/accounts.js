@@ -1,22 +1,13 @@
+import { identityAPIUrl } from '../../config';
 import {
   accountList,
-  v3,
-  v3Info,
   hdv3,
   hdv3Info,
-} from '../../../fixtures/identity/accounts';
-import settings from '../../../fixtures/identity/settings';
-import { cryptodataAPIUrl, identityAPIUrl } from '../config';
-import { balanceEmpty } from '../../../fixtures/cryptodata/balance';
+  v3,
+  v3Info,
+} from '../../../../fixtures/identity/accounts';
 
-Cypress.Commands.add('mockLogin', () => {
-  cy.mockRoute({
-    url: `${identityAPIUrl}/auth/check`,
-    method: 'GET',
-    status: 200,
-    response: {},
-  });
-
+Cypress.Commands.add('mockAccounts', () => {
   cy.mockRoute({
     url: `${identityAPIUrl}/accounts`,
     method: 'GET',
@@ -25,10 +16,10 @@ Cypress.Commands.add('mockLogin', () => {
   });
 
   cy.mockRoute({
-    url: `${identityAPIUrl}/settings`,
-    method: 'GET',
+    url: `${identityAPIUrl}/account/**`,
+    method: 'POST',
     status: 200,
-    response: settings,
+    response: { success: true, message: 'Account updated' },
   });
 
   cy.mockRoute({
@@ -57,12 +48,5 @@ Cypress.Commands.add('mockLogin', () => {
     method: 'GET',
     status: 200,
     response: v3Info,
-  });
-
-  cy.mockRoute({
-    url: `${cryptodataAPIUrl}/1/balance/${v3.address}`,
-    method: 'GET',
-    status: 200,
-    response: balanceEmpty,
   });
 });

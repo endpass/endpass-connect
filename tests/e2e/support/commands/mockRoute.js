@@ -1,4 +1,4 @@
-import { identityAPIUrl } from '../config';
+import { identityAPIUrl, cryptodataAPIUrl } from '../config';
 
 Cypress.Commands.add('mockRoute', payload => {
   cy.window().then(win => {
@@ -22,7 +22,16 @@ Cypress.Commands.add('checkMocks', () => {
     method: 'GET',
     status: 400,
     response: {
-      message: 'mock all request from server!!!!',
+      message: 'Mock all request from server!',
+    },
+  });
+
+  cy.mockRoute({
+    url: `${cryptodataAPIUrl}/**`,
+    method: 'GET',
+    status: 400,
+    response: {
+      message: 'Mock all request from server!',
     },
   });
 });
