@@ -6,4 +6,5 @@ import './authBridgeFinish';
 import './authFrame';
 import './mockLogin';
 import './mockCreateWallet';
+import './mockButton';
 import './shouldLoggedIn';
