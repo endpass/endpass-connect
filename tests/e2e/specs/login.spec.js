@@ -1,5 +1,5 @@
 import { identityAPIUrl } from '../support/config';
-import { accountList, v3password } from '../../fixtures/identity/accounts';
+import { accountList, v3, v3password } from '../../fixtures/identity/accounts';
 import { responseSuccess } from '../../fixtures/response';
 
 describe('login', function() {
@@ -10,22 +10,37 @@ describe('login', function() {
       return cy.authBridgeStart().then(cy.clearMocks);
     });
 
-    it('should show apply password form', () => {
-      cy.mockRoute({
-        url: `${identityAPIUrl}/auth/check`,
-        method: 'GET',
-        status: 403,
-        response: {},
-      });
+    it('should pass apply form, when already logged in', () => {
+      cy.mockAuthCheckOnce(403);
+      cy.mockAuthCheckOnce(403);
+      cy.mockAuthCheckOnce(403);
 
-      cy.mockRoute({
+      cy.mockRouteOnce({
         url: `${identityAPIUrl}/accounts`,
         method: 'GET',
         status: 200,
         response: accountList,
       });
 
+      cy.mockRouteOnce({
+        url: `${identityAPIUrl}/auth/permission`,
+        method: 'GET',
+        status: 200,
+        response: {
+          keystore: v3,
+        },
+      });
+
+      cy.mockRouteOnce({
+        url: `${identityAPIUrl}/auth/permission`,
+        method: 'POST',
+        status: 200,
+        response: responseSuccess,
+      });
+
       cy.authBridgeFinish();
+
+      cy.mockLogin();
 
       cy.get('[data-test=endpass-app-loader]').should('exist');
       cy.getAuthFrame().should('exist');
@@ -33,16 +48,24 @@ describe('login', function() {
       cy.getAuthFrame()
         .getIframeElement('[data-test=sign-form]')
         .should('exist');
+
+      cy.getAuthFrame()
+        .getIframeElement('input[data-test=password-input]')
+        .type(v3password);
+
+      cy.getAuthFrame()
+        .getIframeElement('[data-test=submit-button]')
+        .click();
+
+      cy.shouldLoggedIn();
     });
 
     it('should cancel login on dialog close', () => {
-      cy.mockRoute({
-        url: `${identityAPIUrl}/auth/check`,
-        method: 'GET',
-        status: 401,
-        response: {},
-      });
+      cy.mockAuthCheckOnce(401);
+
       cy.authBridgeFinish();
+
+      cy.checkMocks();
 
       cy.get('[data-test=endpass-app-loader]').should('exist');
       cy.getAuthFrame().should('exist');
@@ -117,6 +140,7 @@ describe('login', function() {
         .click();
 
       cy.mockLogin();
+      cy.checkMocks();
 
       cy.getAuthFrame()
         .getIframeElement('input[type="checkbox"]')

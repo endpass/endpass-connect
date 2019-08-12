@@ -1,5 +1,6 @@
 import './iframe';
 import './mockRoute';
+import './mockAuth';
 import './authBridgeStart';
 import './authBridgeFinish';
 import './authFrame';

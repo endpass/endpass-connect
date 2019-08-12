@@ -3,19 +3,9 @@ import { responseSuccess } from '../../../fixtures/response';
 import { accountList, v3 } from '../../../fixtures/identity/accounts';
 
 Cypress.Commands.add('mockCreateWallet', () => {
-  cy.mockRouteOnce({
-    url: `${identityAPIUrl}/auth/check`,
-    method: 'GET',
-    status: 401,
-    response: {},
-  });
+  cy.mockAuthCheckOnce(401);
 
-  cy.mockRouteOnce({
-    url: `${identityAPIUrl}/auth/check`,
-    method: 'GET',
-    status: 401,
-    response: {},
-  });
+  cy.mockAuthCheckOnce(401);
 
   cy.mockRouteOnce({
     url: `${identityAPIUrl}/auth?redirect_uri=http%3A%2F%2Flocalhost%3A4444%2F%23%2Fbasic`,
@@ -24,12 +14,7 @@ Cypress.Commands.add('mockCreateWallet', () => {
     response: { success: true, challenge: { challengeType: 'emailLink' } },
   });
 
-  cy.mockRouteOnce({
-    url: `${identityAPIUrl}/auth/check`,
-    method: 'GET',
-    status: 403,
-    response: {},
-  });
+  cy.mockAuthCheckOnce(403);
 
   cy.mockRouteOnce({
     url: `${identityAPIUrl}/accounts`,
@@ -82,12 +67,7 @@ Cypress.Commands.add('mockCreateWallet', () => {
     response: [accountList],
   });
 
-  cy.mockRouteOnce({
-    url: `${identityAPIUrl}/auth/check`,
-    method: 'GET',
-    status: 403,
-    response: {},
-  });
+  cy.mockAuthCheckOnce(403);
 
   // apply password and login form
   cy.mockRouteOnce({
