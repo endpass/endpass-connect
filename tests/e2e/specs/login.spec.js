@@ -30,15 +30,12 @@ describe('login', function() {
 
       cy.authFrameContinueRun();
 
-      cy.mockInitialData();
-
       cy.get('[data-test=endpass-app-loader]').should('exist');
       cy.authFrameIframe().should('exist');
-
       cy.authFrame('[data-test=sign-form]').should('exist');
 
+      cy.mockInitialData();
       cy.authFrame('input[data-test=password-input]').type(v3password);
-
       cy.authFrame('[data-test=submit-button]').click();
 
       cy.shouldLoggedIn();
@@ -70,8 +67,11 @@ describe('login', function() {
     it('should create new account', () => {
       cy.mockAuthCheckOnce(401);
       cy.mockAuthCheckOnce(401);
-      cy.mockAuthUser('emailLink');
+
       cy.mockAuthCheckOnce(403);
+      cy.mockAuthCheckOnce(403);
+
+      cy.mockAuthUser('emailLink');
 
       cy.mockRouteOnce({
         url: `${identityAPIUrl}/accounts`,
@@ -81,18 +81,6 @@ describe('login', function() {
       });
 
       cy.mockUserSeed();
-      cy.mockSettings();
-      cy.mockRouteOnce({
-        url: `${identityAPIUrl}/account`,
-        method: 'POST',
-        status: 403,
-        response: {},
-      });
-
-      // seed phrase dialog
-      cy.mockAccounts();
-
-      cy.mockAuthCheckOnce(403);
 
       cy.mockInitialData();
       cy.checkMocks();
@@ -124,30 +112,26 @@ describe('login', function() {
       cy.mockAuthCheckOnce(401);
       cy.mockAuthCheckOnce(401);
 
+      cy.mockAuthCheckOnce(403);
+      cy.mockAuthCheckOnce(403);
+      cy.mockAuthCheckOnce(403);
+
       cy.mockAuthUser('otp');
-
-      cy.mockAuthCheckOnce(403);
-      cy.mockAuthCheckOnce(403);
-      cy.mockAuthCheckOnce(403);
-
-      cy.mockAccounts();
-
-      cy.authFrameContinueRun();
 
       cy.mockInitialData();
       cy.checkMocks();
 
-      cy.authFrame('[data-test=email-input]').type('dev+e2e_email@endpass.com');
+      cy.authFrameContinueRun();
 
+      cy.authFrame('[data-test=email-input]').type('dev+e2e_email@endpass.com');
       cy.authFrame('[data-test=submit-button-auth]').click();
 
       cy.authFrame('[data-test=email-input]').type('123456');
-
       cy.authFrame('[data-test=submit-button]').click();
 
       cy.authFrame('input[data-test=password-input]').type(v3password);
-
       cy.authFrame('[data-test=submit-button]').click();
+
       cy.shouldLoggedIn();
     });
 
@@ -155,27 +139,24 @@ describe('login', function() {
       cy.mockAuthCheckOnce(401);
       cy.mockAuthCheckOnce(401);
       cy.mockAuthCheckOnce(401);
+
+      cy.mockAuthCheckOnce(403);
+      cy.mockAuthCheckOnce(403);
       cy.mockAuthCheckOnce(403);
 
       cy.mockAuthUser('emailLink');
 
-      cy.mockAuthCheckOnce(403);
-      cy.mockAuthCheckOnce(403);
-
-      cy.mockAccounts();
-
-      cy.authFrameContinueRun();
-
       cy.mockInitialData();
       cy.checkMocks();
 
-      cy.authFrame('[data-test=email-input]').type('dev+e2e_email@endpass.com');
+      cy.authFrameContinueRun();
 
+      cy.authFrame('[data-test=email-input]').type('dev+e2e_email@endpass.com');
       cy.authFrame('[data-test=submit-button-auth]').click();
 
       cy.authFrame('input[data-test=password-input]').type(v3password);
-
       cy.authFrame('[data-test=submit-button]').click();
+
       cy.shouldLoggedIn();
     });
   });
