@@ -3541,11 +3541,6 @@ cyclist@~0.2.2:
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-0.2.2.tgz#1b33792e11e914a2fd6d6ed6447464444e5fa640"
   integrity sha1-GzN5LhHpFKL9bW7WRHRkRE5fpkA=
 
-cypress-promise@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/cypress-promise/-/cypress-promise-1.0.2.tgz#68833e896ef665c32191cb028604605015f17c7d"
-  integrity sha512-+F10DLa2O/NjPmWtHBq2p73lA6YpkJMJKQHgcMJpVax7tYAB8suP+k7ExYzQ4JornPR1CYpyk3Nd9LvHPnmKOg==
-
 cypress@^3.4.1:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-3.4.1.tgz#ca2e4e9864679da686c6a6189603efd409664c30"

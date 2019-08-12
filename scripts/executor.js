@@ -23,6 +23,7 @@ function executor(cmd) {
     } catch (e) {
       console.error(e);
       clearProcessChilds();
+      process.exit(1);
       throw new Error('execution fail');
     }
     console.log('-- [cmd end]', cmdItem, '\n');

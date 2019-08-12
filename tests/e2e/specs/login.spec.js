@@ -224,6 +224,7 @@ describe('login', function() {
         .type(v3password);
 
       cy.mockButtonSubmit();
+      cy.shouldLoggedIn();
     });
 
     it('should login throw email', () => {
@@ -287,6 +288,7 @@ describe('login', function() {
         .type(v3password);
 
       cy.mockButtonSubmit();
+      cy.shouldLoggedIn();
     });
   });
 });
