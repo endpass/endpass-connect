@@ -1,6 +1,12 @@
-import './iframe';
-import './mockRoute';
-import './authBridgeStart';
-import './authBridgeFinish';
+import './dom';
 import './authFrame';
-import './mockLogin';
+import './mockRoute';
+import './shouldLoggedIn';
+import './routes/user';
+import './routes/balance';
+import './routes/mockInitialData';
+import './routes/mockLogout';
+import './routes/auth';
+import './routes/accounts';
+import './routes/settings';
+import './beforePrepares';
