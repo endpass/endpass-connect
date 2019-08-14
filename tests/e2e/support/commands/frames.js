@@ -1,6 +1,9 @@
 Cypress.Commands.add('authFrameContinueRun', () => {
   return cy.window().then(win => {
     cy.log(win);
+    win.document
+      .querySelector('[data-test=dialog-iframe]')
+      .contentWindow.localStorage.clear();
     return win.e2eBridge.resumeClient();
   });
 });
@@ -21,7 +24,7 @@ Cypress.Commands.add('authFrameWrapperHidden', () => {
   return cy.get('[data-test=dialog-wrapper][data-visible=false]');
 });
 
-Cypress.Commands.add('getElementFromAuth', (selector) => {
+Cypress.Commands.add('getElementFromAuth', selector => {
   cy.authFrameWrapperVisible();
   return cy.get('[data-test=dialog-iframe]').getIframeElement(selector);
 });
