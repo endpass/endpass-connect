@@ -92,6 +92,7 @@ describe('login', function() {
       cy.mockAccounts();
       cy.mockUserSeed();
       cy.mockSettings();
+      cy.mockBalance();
       cy.authFrame('input[type="checkbox"]').click({ force: true });
       cy.authFrame('[data-test=continue-button]').click();
 
@@ -115,13 +116,14 @@ describe('login', function() {
       cy.authFrame('[data-test=submit-button-auth]').click();
 
       cy.mockAuthCheck(403);
+      cy.mockAccounts();
       cy.authFrame('[data-test=email-input]').type('123456');
       cy.authFrame('[data-test=submit-button]').click();
 
       cy.mockAuthCheck(403);
-      cy.mockAccounts();
       cy.mockSettings();
       cy.mockAuthPermission();
+      cy.mockBalance();
       cy.authFrame('input[data-test=password-input]').type(v3password);
       cy.authFrame('[data-test=submit-button]').click();
 
@@ -143,6 +145,7 @@ describe('login', function() {
       cy.mockAccounts();
       cy.mockSettings();
       cy.mockAuthPermission();
+      cy.mockBalance();
       cy.authFrame('input[data-test=password-input]').type(v3password);
       cy.authFrame('[data-test=submit-button]').click();
 
