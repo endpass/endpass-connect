@@ -7,7 +7,7 @@ import {
   v3Info,
 } from '../../../../fixtures/identity/accounts';
 
-Cypress.Commands.add('mockAccountsList', list => {
+Cypress.Commands.add('mockAccountsList', (list = accountList) => {
   cy.route({
     method: 'GET',
     url: `${identityAPIUrl}/accounts`,
@@ -25,12 +25,7 @@ Cypress.Commands.add('mockAccountUpdate', () => {
   });
 });
 
-
-Cypress.Commands.add('mockAccounts', () => {
-  cy.mockAccountsList(accountList);
-
-  cy.mockAccountUpdate();
-
+Cypress.Commands.add('mockAccountsV3', () => {
   cy.route({
     url: `${identityAPIUrl}/account/${hdv3.address}`,
     method: 'GET',

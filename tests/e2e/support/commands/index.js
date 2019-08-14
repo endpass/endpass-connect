@@ -1,13 +1,9 @@
 import './dom';
-import './authFrame';
-import './widgetFrame';
-import './mockRoute';
-import './shouldLoggedIn';
-import './routes/user';
+import './frames';
+import './should';
 import './routes/balance';
-import './routes/mockInitialData';
-import './routes/mockLogout';
+import './routes/composite';
 import './routes/auth';
 import './routes/accounts';
 import './routes/settings';
-import './beforePrepares';
+import './prepares';

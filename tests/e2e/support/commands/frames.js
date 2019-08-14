@@ -21,11 +21,16 @@ Cypress.Commands.add('authFrameWrapperHidden', () => {
   return cy.get('[data-test=dialog-wrapper][data-visible=false]');
 });
 
-Cypress.Commands.add('authFrameIframe', () => {
+Cypress.Commands.add('getElementFromAuth', (selector) => {
   cy.authFrameWrapperVisible();
-  return cy.get('[data-test=dialog-iframe]');
+  return cy.get('[data-test=dialog-iframe]').getIframeElement(selector);
 });
 
-Cypress.Commands.add('authFrame', (selector) => {
-  return cy.authFrameIframe().getIframeElement(selector);
+Cypress.Commands.add('widgetFrameIframe', () => {
+  return cy.get('[data-test=widget-frame]');
+});
+
+Cypress.Commands.add('getElementFromWidget', selector => {
+  cy.widgetFrameIframe().getIframeElement('[data-test=widget-container]');
+  return cy.widgetFrameIframe().getIframeElement(selector);
 });
