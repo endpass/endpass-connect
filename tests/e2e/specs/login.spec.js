@@ -1,4 +1,4 @@
-import { v3password } from '../../fixtures/identity/accounts';
+import { v3password } from '@fixtures/identity/accounts';
 
 describe('login', function() {
   describe('connect login features', () => {

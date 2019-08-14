@@ -1,6 +1,6 @@
-import { identityAPIUrl } from '../../config';
-import { responseSuccess } from '../../../../fixtures/response';
-import settings from '../../../../fixtures/identity/settings';
+import { identityAPIUrl } from '@config';
+import { responseSuccess } from '@fixtures/response';
+import settings from '@fixtures/identity/settings';
 
 Cypress.Commands.add('mockSettings', () => {
   cy.route({

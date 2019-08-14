@@ -1,11 +1,11 @@
-import { identityAPIUrl } from '../../config';
+import { identityAPIUrl } from '@config';
 import {
   accountList,
   hdv3,
   hdv3Info,
   v3,
   v3Info,
-} from '../../../../fixtures/identity/accounts';
+} from '@fixtures/identity/accounts';
 
 Cypress.Commands.add('mockAccountsList', (list = accountList) => {
   cy.route({
