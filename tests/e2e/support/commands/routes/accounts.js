@@ -7,43 +7,52 @@ import {
   v3Info,
 } from '../../../../fixtures/identity/accounts';
 
-Cypress.Commands.add('mockAccounts', () => {
-  cy.mockRoute({
-    url: `${identityAPIUrl}/accounts`,
+Cypress.Commands.add('mockAccountsList', list => {
+  cy.route({
     method: 'GET',
+    url: `${identityAPIUrl}/accounts`,
     status: 200,
-    response: accountList,
+    response: list,
   });
+});
 
-  cy.mockRoute({
+Cypress.Commands.add('mockAccountUpdate', () => {
+  cy.route({
     url: `${identityAPIUrl}/account/**`,
     method: 'POST',
     status: 200,
     response: { success: true, message: 'Account updated' },
   });
+});
 
-  cy.mockRoute({
+
+Cypress.Commands.add('mockAccounts', () => {
+  cy.mockAccountsList(accountList);
+
+  cy.mockAccountUpdate();
+
+  cy.route({
     url: `${identityAPIUrl}/account/${hdv3.address}`,
     method: 'GET',
     status: 200,
     response: hdv3,
   });
 
-  cy.mockRoute({
+  cy.route({
     url: `${identityAPIUrl}/account/${hdv3.address}/info`,
     method: 'GET',
     status: 200,
     response: hdv3Info,
   });
 
-  cy.mockRoute({
+  cy.route({
     url: `${identityAPIUrl}/account/${v3.address}`,
     method: 'GET',
     status: 200,
     response: v3,
   });
 
-  cy.mockRoute({
+  cy.route({
     url: `${identityAPIUrl}/account/${v3.address}/info`,
     method: 'GET',
     status: 200,

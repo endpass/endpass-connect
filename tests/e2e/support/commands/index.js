@@ -1,5 +1,6 @@
 import './dom';
 import './authFrame';
+import './widgetFrame';
 import './mockRoute';
 import './shouldLoggedIn';
 import './routes/user';

@@ -3,7 +3,7 @@ When develop e2e test for connect, you can misreading some of the flows and othe
 
 ### Sub modules
 - `connect-demo` - only like a proxy for call methods from `endpass-connect` e2e test and pass payload to `endpass-auth` and wait result, if needed
-- `endpass-auth` - is working with serviceWorker for mock xhr/fetch requests 
+- `endpass-auth` - is working with redefine xhr/fetch requests from parent window 
 
 they both are working in `e2e-connect` mode
 
@@ -18,22 +18,3 @@ they both are working in `e2e-connect` mode
 3. e2e tests mocking requests and other stuff.
 
 4. e2eBridge.resumeClient() - continue run `auth` and start tests.
-
-
-### Mock Routes flow
-
-```
-e2e connect test
-||
-host (demo)
-||
-client (auth)
-||
-serviceWorker
-||
-client (auth)
-||
-host (demo)
-||
-e2e connect test
-```

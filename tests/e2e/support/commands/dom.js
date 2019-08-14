@@ -24,7 +24,7 @@ Cypress.Commands.add(
       }
       setTimeout(() => {
         const res = node.find(select);
-        if (res.length !== 0){
+        if (res.length !== 0) {
           resolve(res);
         } else {
           checkExist(node, select, resolve, timeout);

@@ -9,7 +9,7 @@
   "videosFolder": "tests/e2e/videos",
   "viewportWidth": 1200,
   "viewportHeight": 1000,
-  "defaultCommandTimeout": 60000,
-  "pageLoadTimeout": 60000,
+  "defaultCommandTimeout": 100000,
+  "pageLoadTimeout": 100000,
   "chromeWebSecurity": false
 }

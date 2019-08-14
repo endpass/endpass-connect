@@ -6,7 +6,6 @@ Cypress.Commands.add('authFrameContinueRun', () => {
 });
 
 Cypress.Commands.add('authFramePrepare', () => {
-  cy.wait(250);
   return cy.window().then(win => {
     cy.log(win);
 

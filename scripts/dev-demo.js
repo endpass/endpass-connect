@@ -1,5 +1,6 @@
 const executor = require('./executor');
 // prepare demo
+
 // # Building demo-application artifact
 process.chdir('./connect-demo');
 console.log(`current directory: ${process.cwd()}`);
@@ -13,4 +14,3 @@ executor([
 // # Returning to working dir
 process.chdir('../');
 console.log(`current directory: ${process.cwd()}`);
-
