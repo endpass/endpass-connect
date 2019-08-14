@@ -132,7 +132,6 @@ describe('login', function() {
       cy.authFrameContinueRun();
 
       cy.mockAuthLogin('otp');
-      cy.mockAuthRecover(email);
       cy.getElementFromAuth('[data-test=email-input]').type(email);
       cy.getElementFromAuth('[data-test=submit-button-auth]').click();
 

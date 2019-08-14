@@ -36,10 +36,10 @@ Cypress.Commands.add('mockAuthLogin', (challengeType = 'emailLink') => {
   });
 });
 
-Cypress.Commands.add('mockAuthRecover', email => {
+Cypress.Commands.add('mockAuthRecover', () => {
   cy.route({
-    url: `${identityAPIUrl}/auth/recover?email=${email}`,
-    method: 'get',
+    url: `${identityAPIUrl}/auth/recover?email=**`,
+    method: 'GET',
     status: 200,
     response: {
       success: true,
