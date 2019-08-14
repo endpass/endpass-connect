@@ -1,4 +1,4 @@
-import { v3password } from '@fixtures/identity/accounts';
+import { email, v3password, mnemonic } from '@fixtures/identity/accounts';
 
 describe('login', function() {
   describe('connect login features', () => {
@@ -62,9 +62,7 @@ describe('login', function() {
       cy.get('[data-test=endpass-app-loader]').should('exist');
 
       // open email form
-      cy.getElementFromAuth('[data-test=email-input]').type(
-        'dev+e2e_email@endpass.com',
-      );
+      cy.getElementFromAuth('[data-test=email-input]').type(email);
       cy.getElementFromAuth('[data-test=submit-button-auth]').click();
 
       // create new password form
@@ -95,13 +93,11 @@ describe('login', function() {
       cy.authFrameContinueRun();
 
       cy.mockAuthLogin('otp');
-      cy.getElementFromAuth('[data-test=email-input]').type(
-        'dev+e2e_email@endpass.com',
-      );
+      cy.getElementFromAuth('[data-test=email-input]').type(email);
       cy.getElementFromAuth('[data-test=submit-button-auth]').click();
 
       cy.mockAuthCheck(403);
-      cy.getElementFromAuth('[data-test=email-input]').type('123456');
+      cy.getElementFromAuth('[data-test=code-input]').type('123456');
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
       cy.mockAuthCheck(403);
@@ -118,9 +114,7 @@ describe('login', function() {
 
       cy.authFrameContinueRun();
 
-      cy.getElementFromAuth('[data-test=email-input]').type(
-        'dev+e2e_email@endpass.com',
-      );
+      cy.getElementFromAuth('[data-test=email-input]').type(email);
       cy.getElementFromAuth('[data-test=submit-button-auth]').click();
 
       cy.mockAuthCheck(403);
@@ -128,6 +122,29 @@ describe('login', function() {
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
       cy.mockAuthCheck(200);
+
+      cy.shouldLoggedIn();
+    });
+
+    it('should recovery account', () => {
+      cy.mockAuthCheck(401);
+
+      cy.authFrameContinueRun();
+
+      cy.mockAuthLogin('otp');
+      cy.mockAuthRecover(email);
+      cy.getElementFromAuth('[data-test=email-input]').type(email);
+      cy.getElementFromAuth('[data-test=submit-button-auth]').click();
+
+      cy.mockAuthCheck(401);
+      cy.getElementFromAuth('[data-test=recovery-link]').click();
+      cy.getElementFromAuth('input[data-test=seed-phrase]').type(mnemonic);
+      cy.getElementFromAuth('[data-test=submit-button]').click();
+
+      cy.getElementFromAuth('[data-test=cancel-button]').click();
+
+      cy.mockAuthCheck(200);
+      cy.get('[data-test=endpass-sign-in-button]').click();
 
       cy.shouldLoggedIn();
     });

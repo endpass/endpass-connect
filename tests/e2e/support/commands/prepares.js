@@ -1,8 +1,8 @@
-import { visitUrl } from '@config';
+import { visitUrl, visitBlockBasic } from '@config';
 
-Cypress.Commands.add('waitPageLoad', () => {
+Cypress.Commands.add('waitPageLoad', (block = visitBlockBasic) => {
   cy.server();
-  cy.visit(visitUrl);
+  cy.visit(`${visitUrl}${block}`);
   cy.authFramePrepare();
   cy.mockInitialData();
 });
