@@ -16,4 +16,11 @@ Cypress.Commands.add('mockSettings', () => {
     status: 200,
     response: settings,
   });
+
+  cy.route({
+    url: `${identityAPIUrl}/user/seed`,
+    method: 'POST',
+    status: 200,
+    response: responseSuccess,
+  });
 });

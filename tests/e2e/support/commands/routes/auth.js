@@ -1,4 +1,4 @@
-import { identityAPIUrl } from '../../config';
+import { identityAPIUrl, visitUrl } from '../../config';
 import { v3 } from '../../../../fixtures/identity/accounts';
 import { responseSuccess } from '../../../../fixtures/response';
 
@@ -20,9 +20,9 @@ Cypress.Commands.add('mockAuthPermission', () => {
   });
 });
 
-Cypress.Commands.add('mockAuthUser', (challengeType) => {
+Cypress.Commands.add('mockAuthLogin', (challengeType = 'emailLink') => {
   cy.route({
-    url: `${identityAPIUrl}/auth?redirect_uri=http://localhost:4444/#/basic`,
+    url: `${identityAPIUrl}/auth?redirect_uri=${visitUrl}`,
     method: 'POST',
     status: 200,
     response: { success: true, challenge: { challengeType } },
@@ -45,12 +45,11 @@ Cypress.Commands.add('mockAuthCheck', status => {
   });
 });
 
-Cypress.Commands.add('mockAuth', () => {
+Cypress.Commands.add('mockAuthLogout', () => {
   cy.route({
-    url: `${identityAPIUrl}/auth/check`,
-    method: 'GET',
+    url: `${identityAPIUrl}/logout`,
+    method: 'POST',
     status: 200,
-    response: {},
+    response: responseSuccess,
   });
-  cy.mockAuthPermission();
 });
