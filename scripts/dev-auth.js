@@ -1,11 +1,5 @@
-const fs = require('fs-extra');
 const executor = require('./executor');
 // prepare auth
-
-// # Copying service worker
-fs.copySync('./tests/e2e/workers/auth.js', './endpass-auth/public/sw-e2e.js', {
-  dereference: true,
-});
 
 // # Building demo-application artifact
 process.chdir('./endpass-auth');

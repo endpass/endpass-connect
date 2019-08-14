@@ -32,6 +32,3 @@ fs.copySync('./endpass-auth/dist/app', './e2e-apps/auth', {
 fs.copySync('./endpass-auth/dist/app', './e2e-apps/auth/bridge', {
   dereference: true,
 });
-
-// # Installing auth service worker
-executor('node ./scripts/install-auth-sw.js');

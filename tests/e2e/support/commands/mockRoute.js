@@ -17,7 +17,7 @@ Cypress.Commands.add('clearMocks', () => {
 });
 
 Cypress.Commands.add('checkMocks', () => {
-  cy.mockRoute({
+  cy.route({
     url: `${identityAPIUrl}/**`,
     method: 'GET',
     status: 400,
@@ -26,7 +26,7 @@ Cypress.Commands.add('checkMocks', () => {
     },
   });
 
-  cy.mockRoute({
+  cy.route({
     url: `${cryptodataAPIUrl}/**`,
     method: 'GET',
     status: 400,

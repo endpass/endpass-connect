@@ -3,14 +3,14 @@ import { responseSuccess } from '../../../../fixtures/response';
 import settings from '../../../../fixtures/identity/settings';
 
 Cypress.Commands.add('mockSettings', () => {
-  cy.mockRoute({
+  cy.route({
     url: `${identityAPIUrl}/settings`,
     method: 'POST',
     status: 200,
     response: responseSuccess,
   });
 
-  cy.mockRoute({
+  cy.route({
     url: `${identityAPIUrl}/settings`,
     method: 'GET',
     status: 200,

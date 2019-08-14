@@ -136,7 +136,7 @@ export default class Widget {
 
     const styles = this.getWidgetFrameInlineStyles();
     const markup = `
-      <iframe id="endpass-widget" data-endpass="widget-frame" style="${styles}" src="${url}"></iframe>
+      <iframe id="endpass-widget" data-test="widget-frame" data-endpass="widget-frame" style="${styles}" src="${url}"></iframe>
     `;
 
     document.body.insertAdjacentHTML('afterBegin', markup);

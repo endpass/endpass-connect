@@ -2,12 +2,12 @@
 
 exports[`Widget class mount should mount iframe for widget with initial styles 1`] = `
 "
-      <iframe id=\\"endpass-widget\\" data-endpass=\\"widget-frame\\" style=\\"position: fixed;z-index: 6000000;height: 80px;border: none;border-radius: 4px;transition: opacity 300ms ease-in;opacity: 0;\\" src=\\"https://auth.foo.bar/public/widget\\"></iframe>
+      <iframe id=\\"endpass-widget\\" data-test=\\"widget-frame\\" data-endpass=\\"widget-frame\\" style=\\"position: fixed;z-index: 6000000;height: 80px;border: none;border-radius: 4px;transition: opacity 300ms ease-in;opacity: 0;\\" src=\\"https://auth.foo.bar/public/widget\\"></iframe>
     "
 `;
 
 exports[`Widget class mount should mount iframe for widget with initial styles and cahce position to instance 1`] = `
 "
-      <iframe id=\\"endpass-widget\\" data-endpass=\\"widget-frame\\" style=\\"position: fixed;z-index: 6000000;height: 80px;border: none;border-radius: 4px;transition: opacity 300ms ease-in;opacity: 0;\\" src=\\"https://auth.foo.bar/public/widget\\"></iframe>
+      <iframe id=\\"endpass-widget\\" data-test=\\"widget-frame\\" data-endpass=\\"widget-frame\\" style=\\"position: fixed;z-index: 6000000;height: 80px;border: none;border-radius: 4px;transition: opacity 300ms ease-in;opacity: 0;\\" src=\\"https://auth.foo.bar/public/widget\\"></iframe>
     "
 `;
