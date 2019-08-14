@@ -1,4 +1,4 @@
-import { visitUrl } from '../config';
+import { visitUrl } from '@config';
 
 Cypress.Commands.add('waitPageLoad', () => {
   cy.server();
