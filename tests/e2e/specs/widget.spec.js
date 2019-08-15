@@ -24,10 +24,10 @@ describe('widget', function() {
     it('should logout from widget', () => {
       cy.authFrameContinueRun();
       cy.shouldLoggedIn();
-
+      cy.get('@e2eLogout').should('not.be.called');
       cy.getElementFromWidget('[data-test=widget-header]').click();
       cy.getElementFromWidget('[data-test=logout-button]').click();
-      cy.get('[data-test=endpass-app-loader]').should('exist');
+      cy.get('@e2eLogout').should('be.called');
     });
 
     it('should create new account and switch between these ones', () => {

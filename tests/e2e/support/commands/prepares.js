@@ -7,6 +7,12 @@ Cypress.Commands.add('preparePage', () => {
 });
 
 Cypress.Commands.add('waitPageLoad', () => {
-  cy.visit(`${visitUrl}${visitBlockBasic}`);
+  cy.visit(`${visitUrl}${visitBlockBasic}`, {
+    onBeforeLoad(win) {
+      // eslint-disable-next-line no-param-reassign
+      win.e2eLogout = function() {};
+      cy.stub(win, 'e2eLogout').as('e2eLogout');
+    },
+  });
   cy.preparePage();
 });

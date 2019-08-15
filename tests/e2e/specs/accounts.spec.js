@@ -9,20 +9,12 @@ describe('accounts', function() {
   it('should logout from accounts', () => {
     cy.authFrameContinueRun();
     cy.shouldLoggedIn();
-
+    cy.get('@e2eLogout').should('not.be.called');
     cy.get('[data-test=endpass-form-open-account]').click();
 
     cy.getElementFromAuth('[data-test=logout-button]').click();
 
-    cy.wait(100);
-
-    cy.get('[data-test=endpass-app-loader]').should('exist');
-
-    cy.waitPageLoad();
-    cy.authFrameContinueRun();
-    cy.mockAuthCheck(401);
-
-    cy.getElementFromAuth('[data-test=submit-button-auth]').should('exist');
+    cy.get('@e2eLogout').should('be.called');
   });
 
   it('should switch active network', () => {
