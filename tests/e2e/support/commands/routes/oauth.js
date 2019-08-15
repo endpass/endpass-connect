@@ -32,23 +32,23 @@ Cypress.Commands.add(
   },
 );
 
-Cypress.Commands.add(
-  'mockOauthConsent',
-  (redirect = 'consent', response = {}) => {
-    cy.route({
-      url: `${identityAPIUrl}/oauth/consent/**`,
-      method: 'GET',
-      status: 200,
-      response,
-    });
+Cypress.Commands.add('mockOauthConsent', (redirect = 'consent', response) => {
+  cy.route({
+    url: `${identityAPIUrl}/oauth/consent/**`,
+    method: 'GET',
+    status: 200,
+    response: response || {
+      skip: false,
+      requested_scope: ['wallet:accounts:read'],
+    },
+  });
 
-    cy.route({
-      url: `${identityAPIUrl}/oauth/consent`,
-      method: 'POST',
-      status: 200,
-      response: {
-        redirect,
-      },
-    });
-  },
-);
+  cy.route({
+    url: `${identityAPIUrl}/oauth/consent`,
+    method: 'POST',
+    status: 200,
+    response: {
+      redirect,
+    },
+  });
+});

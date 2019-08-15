@@ -24,11 +24,7 @@ describe('oauth', function() {
       cy.get('[data-test=submit-button]').click();
 
       cy.mockAuthCheck(200);
-      cy.mockOauthConsent(consentUrl, {
-        skip: false,
-        request_url: '',
-        requested_scope: ['wallet:accounts:read'],
-      });
+      cy.mockOauthConsent(consentUrl);
       cy.get('input[data-test=password-input]').type(v3password);
       cy.get('[data-test=submit-button]').click();
 
