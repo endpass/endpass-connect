@@ -20,21 +20,36 @@ Cypress.Commands.add('mockAuthPermission', () => {
   });
 });
 
-Cypress.Commands.add('mockAuthLogin', (challengeType = 'emailLink') => {
-  cy.route({
-    url: `${identityAPIUrl}/auth?redirect_uri=${visitUrl}${visitBlockBasic}`,
-    method: 'POST',
-    status: 200,
-    response: { success: true, challenge: { challengeType } },
-  });
+Cypress.Commands.add(
+  'mockAuthLogin',
+  (
+    challengeType = 'emailLink',
+    redirectUri = `${visitUrl}${visitBlockBasic}`,
+  ) => {
+    const response = { success: true, challenge: { challengeType } };
 
-  cy.route({
-    url: `${identityAPIUrl}/auth/token`,
-    method: 'POST',
-    status: 200,
-    response: responseSuccess,
-  });
-});
+    cy.route({
+      url: `${identityAPIUrl}/auth?redirect_uri=${redirectUri}`,
+      method: 'POST',
+      status: 200,
+      response,
+    });
+
+    cy.route({
+      url: `${identityAPIUrl}/auth`,
+      method: 'POST',
+      status: 200,
+      response,
+    });
+
+    cy.route({
+      url: `${identityAPIUrl}/auth/token`,
+      method: 'POST',
+      status: 200,
+      response: responseSuccess,
+    });
+  },
+);
 
 Cypress.Commands.add('mockAuthRecover', () => {
   cy.route({

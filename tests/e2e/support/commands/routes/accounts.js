@@ -5,12 +5,19 @@ import {
   v3,
   v3Info,
 } from '@fixtures/identity/accounts';
-import { identityAPIUrl } from '@config';
+import { identityAPIUrl, publicAPIUrl } from '@config';
 
 Cypress.Commands.add('mockAccountsList', (list = accountList) => {
   cy.route({
     method: 'GET',
     url: `${identityAPIUrl}/accounts`,
+    status: 200,
+    response: list,
+  });
+
+  cy.route({
+    method: 'GET',
+    url: `${publicAPIUrl}/accounts`,
     status: 200,
     response: list,
   });
