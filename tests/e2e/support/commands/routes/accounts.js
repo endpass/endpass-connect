@@ -61,3 +61,12 @@ Cypress.Commands.add('mockAccountsV3', () => {
     response: v3Info,
   });
 });
+
+Cypress.Commands.add('mockRopstenFaucet', () => {
+  cy.route({
+    url: 'https://faucet.ropsten.be/donate/**',
+    method: 'GET',
+    status: 200,
+    response: {},
+  });
+});
