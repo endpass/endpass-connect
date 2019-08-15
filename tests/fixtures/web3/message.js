@@ -1,0 +1,7 @@
+export const messageToSign = 'foo bar baz';
+
+export const messageSignature =
+  '0xc18810fd0665ce084139b68cf5ab253edcd586193a391fd412701b57192232680104d2d4181419b46210170be9b177226a6ac5e620aff93ed00f4ee565c166c81b';
+
+export const messagePersonalSignature =
+  '0xf2c6baf0d6e460ba63160837e8db8adb16d2ab2188181e1397c1384ed5474ae81e77023100c297e520a4789657fedc3cc5c8a928ebce322c894700b7275ce17b1b';
