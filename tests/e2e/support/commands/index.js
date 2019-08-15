@@ -1,6 +1,7 @@
 import './dom';
 import './frames';
 import './should';
+import './routes/price';
 import './routes/balance';
 import './routes/composite';
 import './routes/auth';

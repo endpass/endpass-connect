@@ -12,5 +12,6 @@ Cypress.Commands.add('mockInitialData', () => {
 
   cy.mockSettings();
 
+  cy.mockEtherPrices();
   cy.mockBalance();
 });

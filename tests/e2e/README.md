@@ -1,20 +1,51 @@
 # E2E testing
-When develop e2e test for connect, you can misreading some of the flows and other `magic` happens, when you are trying to make tests working.
 
-### Sub modules
-- `connect-demo` - only like a proxy for call methods from `endpass-connect` e2e test and pass payload to `endpass-auth` and wait result, if needed
-- `endpass-auth` - is working with redefine xhr/fetch requests from parent window 
+During E2E tests developing for `endpass-connect` package, you can met with some
+underwater stones and spent a lot of time for solving "normal effects".
 
-they both are working in `e2e-connect` mode
+Read some information below to prevent potential problems.
+
+## Running tests on local machine
+
+There are some semantic npm-scripts for convenience purposes.
+
+- `yarn test:setup` – initializes all required infrastructure for E2E tests development and
+  running.
+- `yarn test:e2e` – starts E2E tests in headless mode.
+- `yarn test:e2e:open` – starts E2E tests with Cypress gui-app. It is very usefull for tests development.
+- `yarn test:e2e:dev` – starts E2E tests with Cypress gui-app and also starts applications from submodules
+  in dev mode. It is required if you want change something in applications sources for testing purposes.
+
+## Core concepts
+
+### Git submodules
+
+- `connect-demo` - uses as potentially application with `endpass-connect` under the hood. It makes
+  requests to local `endpass-auth` application instance and awaits some results. In E2E testing flow
+  it is "payload-sender" to `endpass-connect` library.
+- `endpass-auth` - uses as authorizarion application and API-requests bridge. It redefines `xhr/fetch`
+  requests from parent window and returns stubbed responses.
+
+They both modules works in `e2e-connect` mode which provide some "workarounds" for better developer
+experience.
 
 ### Communication with `e2e-utils`
 
-#### e2e setup and run flow:
+### E2E setup and run flow
 
-1. e2eBridge.awaitClientPaused() - e2e test wait, until `auth` will be paused.
+Below this paragraph – described E2E tests infrastructure setup process. All steps executes one by one.
 
-2. auth.awaitClientResume() - `auth` paused own run. In this point `auth` is ready for mocks. Any xhr/fetch request is not send and app is not render.
+**`e2eBridge.awaitClientPaused()`**:
 
-3. e2e tests mocking requests and other stuff.
+E2E test waits until `auth` application will be paused.
 
-4. e2eBridge.resumeClient() - continue run `auth` and start tests.
+**`auth.awaitClientResume()`**:
+
+Suspends `auth` application. In this point when `auth` application is ready for mocking
+remote API request. Before this step completion – neither one `xhr/fetch` requests would
+not be sended away. There is you can mock requests and other things which coming from
+`auth` application to the client side.
+
+**`e2eBridge.resumeClient()`**:
+
+Resumes `auth` application and continues E2E tests execution.
