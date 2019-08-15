@@ -1,5 +1,4 @@
-import e2eBrdige from '@endpass/e2e-utils';
-import { address, email } from '@fixtures/identity/accounts';
+import { address, email, v3password } from '@fixtures/identity/accounts';
 import { authUrl, visitUrl, visitBlockOauth } from '@config';
 
 describe('oauth', function() {
@@ -7,14 +6,38 @@ describe('oauth', function() {
     beforeEach(() => {
       cy.server();
       cy.mockAuthCheck(401);
-      cy.visit(`${authUrl}public/auth`);
+    });
+
+    it('should login by oauth flow', () => {
+      const consentUrl = 'login?login_challenge=login_challenge';
+      const url = `public/${consentUrl}`;
+
+      cy.visit(`${authUrl}${url}`);
       cy.mockInitialData();
+      cy.mockAuthLogin('otp', `${authUrl}${url}`);
+
+      cy.get('[data-test=email-input]').type(email);
+      cy.get('[data-test=submit-button-auth]').click();
+
+      cy.mockAuthCheck(403);
+      cy.get('[data-test=code-input]').type('123456');
+      cy.get('[data-test=submit-button]').click();
+
+      cy.mockAuthCheck(200);
+      cy.mockOauthConsent(consentUrl, {
+        skip: false,
+        request_url: '',
+        requested_scope: ['wallet:accounts:read'],
+      });
+      cy.get('input[data-test=password-input]').type(v3password);
+      cy.get('[data-test=submit-button]').click();
+
+      cy.get('[data-test=scopes-tree]').should('exist');
+      cy.mockAuthCheck(401);
+      cy.get('[data-test=submit-button]').click();
+
+      cy.get('[data-test=submit-button-auth]').should('exist');
     });
-
-    it.only('should open public login', () => {
-
-    });
-
   });
 
   describe('oauth login and get data', () => {
