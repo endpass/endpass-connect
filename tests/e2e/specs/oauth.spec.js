@@ -1,7 +1,22 @@
+import e2eBrdige from '@endpass/e2e-utils';
 import { address, email } from '@fixtures/identity/accounts';
-import { visitUrl, visitBlockOauth } from '@config';
+import { authUrl, visitUrl, visitBlockOauth } from '@config';
 
 describe('oauth', function() {
+  describe('oauth popup window', () => {
+    beforeEach(() => {
+      cy.server();
+      cy.mockAuthCheck(401);
+      cy.visit(`${authUrl}public/auth`);
+      cy.mockInitialData();
+    });
+
+    it.only('should open public login', () => {
+
+    });
+
+  });
+
   describe('oauth login and get data', () => {
     beforeEach(() => {
       cy.visit(`${visitUrl}${visitBlockOauth}`, {
