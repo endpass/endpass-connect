@@ -34,6 +34,13 @@ Cypress.Commands.add('mockAuthLogin', (challengeType = 'emailLink') => {
     status: 200,
     response: responseSuccess,
   });
+
+  cy.route({
+    url: `${identityAPIUrl}/oauth/token`,
+    method: 'POST',
+    status: 200,
+    response: responseSuccess,
+  });
 });
 
 Cypress.Commands.add('mockAuthRecover', () => {
