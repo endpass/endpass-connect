@@ -95,5 +95,25 @@ describe('oauth', function() {
         email,
       );
     });
+
+    it('should clean token', () => {
+      cy.authFrameContinueRun();
+
+      cy.get('[data-test=endpass-oauth-get-email-button]').click();
+
+      cy.window()
+        .its('open')
+        .should('be.called');
+
+      cy.get('[data-test=endpass-app-loader]').should('not.exist');
+      cy.authFrameWrapperHidden().should('exist');
+      cy.get('[data-test=endpass-oauth-user-email]').should(
+        'contain.text',
+        email,
+      );
+
+      cy.get('[data-test=endpass-oauth-clear-token-button]').click();
+      cy.get('[data-test=endpass-oauth-get-email-button]').should('exist');
+    });
   });
 });
