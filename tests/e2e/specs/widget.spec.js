@@ -37,7 +37,7 @@ describe('widget', function() {
       cy.getElementFromWidget('[data-test=widget-header]').click();
       cy.getElementFromWidget('[data-test=account-button]')
         .its('length')
-        .should('eq', 1);
+        .should('eq', 2);
       cy.getElementFromWidget('[data-test=new-account-button]').click();
       cy.getElementFromWidget('[data-test=new-account-password-input]').type(
         v3password,
@@ -45,7 +45,7 @@ describe('widget', function() {
       cy.getElementFromWidget('[data-test=new-account-submit-button]').click();
       cy.getElementFromWidget('[data-test=account-button]')
         .its('length')
-        .should('eq', 2);
+        .should('eq', 3);
       cy.get('[data-test=endpass-form-basic-active-account]').should(
         'not.eq',
         address,
