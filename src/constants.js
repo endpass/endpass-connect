@@ -20,6 +20,7 @@ export const DAPP_WHITELISTED_METHODS = [
   'eth_personalSign',
   'eth_signTypedData',
   'eth_sendTransaction',
+  'eth_signTransaction',
 ];
 
 export const DAPP_BLACKLISTED_METHODS = [
