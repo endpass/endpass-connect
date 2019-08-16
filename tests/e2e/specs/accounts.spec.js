@@ -8,13 +8,18 @@ describe('accounts', function() {
 
   it('should logout from accounts', () => {
     cy.authFrameContinueRun();
+
     cy.shouldLoggedIn();
+
+    // widget initialize reload page, soo need wait until widget loaded
+    cy.getElementFromWidget('[data-test=widget-header]');
+
     cy.get('@e2eLogout').should('not.be.called');
     cy.get('[data-test=endpass-form-open-account]').click();
 
     cy.getElementFromAuth('[data-test=logout-button]').click();
 
-    cy.get('@e2eLogout').should('be.called');
+    cy.shouldLogout();
   });
 
   it('should switch active network', () => {
@@ -59,20 +64,14 @@ describe('accounts', function() {
     cy.getElementFromAuth('[data-test=faucet-button]').click();
     cy.getElementFromAuth('[data-test=submit-button]').click();
 
-    cy.getElementFromWidget('[data-test=balance-label]').should(
-      'contain.text',
-      '345.000',
-    );
+    cy.getElementFromWidget('[data-test=balance-label]').contains('345.000');
 
     cy.get('[data-test=endpass-form-open-account]').click();
     cy.getElementFromAuth('[data-test=active-network-select]').select(
       `${Network.NET_ID.MAIN}`,
     );
     cy.getElementFromAuth('[data-test=submit-button]').click();
-    cy.getElementFromWidget('[data-test=balance-label]').should(
-      'contain.text',
-      '1.00000',
-    );
+    cy.getElementFromWidget('[data-test=balance-label]').contains('1.00000');
   });
 
   it('should switch accounts', () => {

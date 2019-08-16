@@ -27,7 +27,8 @@ describe('widget', function() {
       cy.get('@e2eLogout').should('not.be.called');
       cy.getElementFromWidget('[data-test=widget-header]').click();
       cy.getElementFromWidget('[data-test=logout-button]').click();
-      cy.get('@e2eLogout').should('be.called');
+
+      cy.shouldLogout();
     });
 
     it('should create new account and switch between these ones', () => {
