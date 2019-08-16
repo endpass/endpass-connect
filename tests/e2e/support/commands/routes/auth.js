@@ -84,5 +84,5 @@ Cypress.Commands.add('mockAuthLogout', () => {
     method: 'POST',
     status: 200,
     response: responseSuccess,
-  });
+  }).as('routeAuthLogout');
 });

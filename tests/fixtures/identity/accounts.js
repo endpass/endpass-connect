@@ -8,11 +8,32 @@ export const checksumAddress = '0x31ea8795EE32D782C8ff41a5C68Dcbf0F5B27f6d';
 export const v3password = 'password123';
 export const email = 'user@example.com';
 
-export const accountList = [address, addressXpub];
+export const accountList = [address, addressXpub, addressHdChild];
 
 // mnemonic for hdv3
 export const mnemonic =
   'seed sock milk update focus rotate barely fade car face mechanic mercy';
+
+export const v3Child = {
+  version: 3,
+  id: '92859312-69c4-4db9-b607-4070b7261295',
+  address: addressHdChild,
+  crypto: {
+    ciphertext:
+      '2974a8843fd16d66d21f082cd22a9c285a7345cb2ce7bc0099758a0940739919',
+    cipherparams: { iv: 'b70af6f17247fe6dce518277fbd20b9f' },
+    cipher: 'aes-128-ctr',
+    kdf: 'scrypt',
+    kdfparams: {
+      dklen: 32,
+      salt: '238f976dcbc3c6200f223c3985de4f1922ced0d4bfa957459122d208d44fd7ea',
+      n: 1024,
+      r: 8,
+      p: 1,
+    },
+    mac: 'e8a8102051cf80316289bc16ae66bb67a7eb27532e1f816f34bc5b98621f4fd1',
+  },
+};
 
 // Encrypted keystore for a normal account
 export const v3 = {
@@ -73,6 +94,16 @@ export const v3Info = {
   index: 0,
   label: '',
 };
+
+export const v3InfoChild = {
+  address: addressHdChild,
+  hidden: false,
+  type: 'StandardAccount',
+  index: 0,
+  label: '',
+};
+
+// 0xc551A996fE68A4347df54747488ECEF50DD2ACf9
 
 // Private key buffer for v3
 export const privateKey =

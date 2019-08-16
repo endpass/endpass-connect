@@ -16,6 +16,7 @@ Cypress.Commands.add('mockInitialData', () => {
   cy.mockAccountUpdate();
 
   cy.mockSettings();
+  cy.mockRopstenFaucet();
 
   cy.mockEtherPrices();
   cy.mockBalance();

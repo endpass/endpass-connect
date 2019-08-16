@@ -4,6 +4,8 @@ import {
   hdv3Info,
   v3,
   v3Info,
+  v3Child,
+  v3InfoChild,
 } from '@fixtures/identity/accounts';
 import { identityAPIUrl, publicAPIUrl } from '@config';
 
@@ -59,5 +61,28 @@ Cypress.Commands.add('mockAccountsV3', () => {
     method: 'GET',
     status: 200,
     response: v3Info,
+  });
+
+  cy.route({
+    url: `${identityAPIUrl}/account/${v3Child.address}`,
+    method: 'GET',
+    status: 200,
+    response: v3Child,
+  });
+
+  cy.route({
+    url: `${identityAPIUrl}/account/${v3Child.address}/info`,
+    method: 'GET',
+    status: 200,
+    response: v3InfoChild,
+  });
+});
+
+Cypress.Commands.add('mockRopstenFaucet', () => {
+  cy.route({
+    url: 'https://faucet.ropsten.be/donate/**',
+    method: 'GET',
+    status: 200,
+    response: {},
   });
 });
