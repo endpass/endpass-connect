@@ -30,8 +30,9 @@ export default class Connect {
    * Sets settings to current `web3` provider injected to page with `injectWeb3`
    * method
    * @public
-   * @param {String} options.activeAccount Currenct account checksummed address
-   * @param {String} options.activeNet Active network ID
+   * @param {object} payload
+   * @param {string} payload.activeAccount Current account check summed address
+   * @param {string} payload.activeNet Active network ID
    */
   setProviderSettings(payload) {
     this[privateFields.context].setProviderSettings(payload);

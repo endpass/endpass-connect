@@ -4,14 +4,14 @@ export const DEFAULT_AUTH_URL = 'https://auth.endpass.com';
 /**
  * Static things
  */
-export const INPAGE_EVENTS = {
+export const INPAGE_EVENTS = Object.freeze({
   SETTINGS: 'INPAGE_PROVIDER_SETTINGS_EVENT',
   RESPONSE: 'INPAGE_PROVIDER_RESPONSE_EVENT',
   REQUEST: 'INPAGE_PROVIDER_REQUEST_EVENT',
   DROP_PENDING: 'INPAGE_PROVIDER_REQUEST_DROP_PENDING',
   LOGIN: 'INPAGE_PROVIDER_REQUEST_LOGIN',
   LOGGED_IN: 'INPAGE_PROVIDER_REQUEST_LOGGED_IN',
-};
+});
 export const INPAGE_ID_PREFIX = 'ep_';
 export const DAPP_WHITELISTED_METHODS = [
   'eth_sign',
@@ -31,6 +31,13 @@ export const DAPP_BLACKLISTED_METHODS = [
   'eth_signTransaction',
   'personal_sendTransaction',
 ];
+
+export const WEB3_METHODS = Object.freeze({
+  ETH_ACCOUNTS: 'eth_accounts',
+  ETH_COINBASE: 'eth_coinbase',
+  ETH_UNINSTALL_FILTER: 'eth_uninstallFilter',
+  NET_VERSION: 'net_version',
+});
 
 export const METHODS = Object.freeze({
   SIGN: 'SIGN',
