@@ -1,7 +1,5 @@
 import ConnectError from '@endpass/class/ConnectError';
 import { METHODS, DIRECTION, WIDGET_EVENTS } from '@/constants';
-import Dialog from './Dialog';
-import Widget from './Widget';
 
 const { ERRORS } = ConnectError;
 
@@ -16,31 +14,13 @@ export default class Bridge {
    * @param {string} options.url Url for open dialog
    * @param {any} options.initialPayload initial data for Auth
    */
-  constructor({ context, url, initialPayload }) {
+  constructor({ context, widget, dialog, initialPayload }) {
     this.context = context;
     this.initialPayload = initialPayload;
-    const namespace = context.getNamespace();
+    this.widget = widget;
+    this.dialog = dialog;
 
-    this.dialog = new Dialog({
-      namespace,
-      url: this.getConnectUrl(url, 'bridge'),
-    });
-    this.widget = new Widget({
-      namespace,
-      url: this.getConnectUrl(url, 'public/widget'),
-    });
-
-    this.initDialogEvents();
-  }
-
-  /**
-   * Returns connect application url with passed method
-   * @private
-   * @param {String} method Expected method (route)
-   * @returns {String} Completed url to open
-   */
-  getConnectUrl(authUrl, method) {
-    return !method ? authUrl : `${authUrl}/${method}`;
+    this.subscribeDialog();
   }
 
   async handleLogoutMessage(source, req) {
@@ -81,7 +61,7 @@ export default class Bridge {
     }
   }
 
-  initDialogEvents() {
+  subscribeDialog() {
     const dialogMessenger = this.dialog.getDialogMessenger();
 
     dialogMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
@@ -98,7 +78,7 @@ export default class Bridge {
     });
   }
 
-  initWidgetEvents() {
+  subscribeWidget() {
     const widgetMessenger = this.widget.getWidgetMessenger();
 
     widgetMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
@@ -121,28 +101,7 @@ export default class Bridge {
     });
   }
 
-  async getWidgetNode() {
-    const res = await this.widget.getWidgetNode();
-
-    return res;
-  }
-
-  isWidgetMounted() {
-    return this.widget.isWidgetMounted();
-  }
-
-  /**
-   * @param {object} [parameters]
-   * @returns {Element}
-   */
-  mountWidget(parameters) {
-    this.widget.createMessenger();
-    this.initWidgetEvents();
-
-    return this.widget.mount(parameters);
-  }
-
-  unmountWidget() {
+  unsubscribeWidget() {
     const widgetMessenger = this.widget.getWidgetMessenger();
 
     widgetMessenger.unsubscribe(METHODS.INITIATE);
@@ -150,13 +109,5 @@ export default class Bridge {
     widgetMessenger.unsubscribe(METHODS.LOGOUT_REQUEST);
     widgetMessenger.unsubscribe(METHODS.CHANGE_SETTINGS_REQUEST);
     widgetMessenger.unsubscribe(METHODS.WIDGET_UNMOUNT);
-
-    this.widget.unmount();
-  }
-
-  async ask(method, payload) {
-    const res = await this.dialog.ask(method, payload);
-
-    return res;
   }
 }

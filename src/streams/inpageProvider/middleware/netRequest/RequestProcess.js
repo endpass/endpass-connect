@@ -115,7 +115,7 @@ export default class RequestProcess {
   async recover() {
     const { context } = this;
     const { activeAccount, activeNet } = this.settings;
-    const res = await context.getBridge().ask(METHODS.RECOVER, {
+    const res = await context.getDialog().ask(METHODS.RECOVER, {
       address: activeAccount,
       net: activeNet,
       request: this.currentRequest,

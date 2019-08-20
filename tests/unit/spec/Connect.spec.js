@@ -146,11 +146,11 @@ describe('Connect class', () => {
           settings,
         },
       };
-      context.getBridge().ask = jest.fn().mockResolvedValueOnce(response);
+      context.getDialog().ask = jest.fn().mockResolvedValueOnce(response);
 
       const res = await connect.getAccountData();
 
-      expect(context.getBridge().ask).toBeCalledWith(METHODS.GET_SETTINGS);
+      expect(context.getDialog().ask).toBeCalledWith(METHODS.GET_SETTINGS);
 
       expect(res).toEqual({
         activeAccount: settings.lastActiveAccount,
@@ -161,7 +161,7 @@ describe('Connect class', () => {
     it('should throw error is request account status is falsy', async () => {
       expect.assertions(2);
 
-      context.getBridge().ask = jest.fn().mockResolvedValueOnce({
+      context.getDialog().ask = jest.fn().mockResolvedValueOnce({
         status: false,
         code: ERRORS.USER_NOT_AUTHORIZED,
       });

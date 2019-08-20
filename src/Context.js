@@ -1,6 +1,5 @@
 import ConnectError from '@endpass/class/ConnectError';
 import Network from '@endpass/class/Network';
-import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import OauthPkceStrategy from '@/class/Oauth/OauthPkceStrategy';
 import {
   Emmiter,
@@ -14,10 +13,14 @@ import { INPAGE_EVENTS, METHODS, DEFAULT_AUTH_URL } from '@/constants';
 
 import pkg from '../package.json';
 import createStream from '@/streams';
+import Dialog from '@/class/Dialog';
+import Widget from '@/class/Widget';
 
 const { ERRORS } = ConnectError;
 
 const authUrlRegexp = new RegExp('://auth(\\.|-)', 'ig');
+
+const WIDGET_AUTH_TIMEOUT = 1500;
 
 export default class Context {
   /**
@@ -39,7 +42,7 @@ export default class Context {
     if (!options.oauthClientId) {
       throw ConnectError.create(ERRORS.OAUTH_REQUIRE_ID);
     }
-    const authUrl = options.authUrl || DEFAULT_AUTH_URL;
+    const authUrlRaw = options.authUrl || DEFAULT_AUTH_URL;
 
     /**
      * Independant class properties
@@ -49,12 +52,13 @@ export default class Context {
     this.oauthRequestProvider = null;
     this.oauthClientId = options.oauthClientId;
     this.isServerLogin = false;
-    this.authUrl = !authUrlRegexp.test(authUrl)
-      ? authUrl
-      : authUrl.replace('://auth', `://auth${pkg.authVersion}`);
-    this.namespace = options.namespace || '';
+    const authUrl = !authUrlRegexp.test(authUrlRaw)
+      ? authUrlRaw
+      : authUrlRaw.replace('://auth', `://auth${pkg.authVersion}`);
     this.haveDemoData = !!options.demoData;
     this.widgetOptions = options.widget;
+
+    const namespace = options.namespace || '';
 
     /**
      * Inner abstractions initialization
@@ -64,15 +68,26 @@ export default class Context {
     this.requestProvider = ProviderFactory.createRequestProvider();
     this.messengerGroup = new MessengerGroup();
 
+    this.dialog = new Dialog({
+      namespace,
+      url: this.getConnectUrl(authUrl, 'bridge'),
+    });
+    this.widget = new Widget({
+      namespace,
+      url: this.getConnectUrl(authUrl, 'public/widget'),
+    });
+
     this.bridge = new Bridge({
       context: this,
-      url: this.authUrl,
+      dialog: this.dialog,
+      widget: this.widget,
       initialPayload: {
         demoData: options.demoData,
         isIdentityMode: options.isIdentityMode || false,
         showCreateAccount: options.showCreateAccount,
       },
     });
+    this.bridge.subscribeDialog();
 
     // TODO: create state
     // this.state = {
@@ -87,6 +102,16 @@ export default class Context {
     createStream(this);
 
     this.setupOnAuth();
+  }
+
+  /**
+   * Returns connect application url with passed method
+   * @private
+   * @param {String} method Expected method (route)
+   * @returns {String} Completed url to open
+   */
+  getConnectUrl(authUrl, method) {
+    return !method ? authUrl : `${authUrl}/${method}`;
   }
 
   setupLoginEvents() {
@@ -110,8 +135,8 @@ export default class Context {
 
   async askDialog(params) {
     const { method, payload } = params;
-    const bridge = this.getBridge();
-    const res = await bridge.ask(method, payload);
+    const dialog = this.getDialog();
+    const res = await dialog.ask(method, payload);
 
     return res;
   }
@@ -161,7 +186,7 @@ export default class Context {
    * @returns {Promise<Boolean>}
    */
   async logout() {
-    const res = await this.getBridge().ask(METHODS.LOGOUT);
+    const res = await this.getDialog().ask(METHODS.LOGOUT);
 
     if (!res.status) {
       throw ConnectError.create(res.code || ERRORS.AUTH_LOGOUT);
@@ -183,7 +208,7 @@ export default class Context {
    */
   async getAccountData() {
     try {
-      const { payload, status, code } = await this.getBridge().ask(
+      const { payload, status, code } = await this.getDialog().ask(
         METHODS.GET_SETTINGS,
       );
 
@@ -252,7 +277,7 @@ export default class Context {
    */
   async loginWithOauth(params) {
     const strategy = new OauthPkceStrategy({
-      bridge: this.getBridge(),
+      dialog: this.dialog,
     });
 
     this.oauthRequestProvider = new Oauth({
@@ -311,31 +336,32 @@ export default class Context {
    * @returns {Promise<Element>}
    */
   async mountWidget(parameters) {
-    if (this.bridge.isWidgetMounted()) {
-      return this.bridge.getWidgetNode();
+    if (this.widget.isWidgetMounted()) {
+      return this.widget.getWidgetNode();
     }
 
     clearInterval(this.widgetAutoMountTimerId);
 
     this.widgetOptions = parameters;
-    const frame = this.bridge.mountWidget(parameters);
+    this.widget.createMessenger();
+    this.bridge.subscribeWidget();
+    const frame = this.widget.mount(parameters);
 
-    this.messengerGroup.addMessenger(this.bridge.widget.getWidgetMessenger());
+    this.messengerGroup.addMessenger(this.widget.getWidgetMessenger());
 
     return frame;
   }
 
   unmountWidget() {
-    if (!this.bridge.isWidgetMounted()) return;
+    if (!this.widget.isWidgetMounted()) return;
 
-    this.messengerGroup.removeMessenger(
-      this.bridge.widget.getWidgetMessenger(),
-    );
-    this.bridge.unmountWidget();
+    this.messengerGroup.removeMessenger(this.widget.getWidgetMessenger());
+    this.bridge.unsubscribeWidget();
+    this.widget.unmount();
   }
 
   async getWidgetNode() {
-    const res = await this.bridge.getWidgetNode();
+    const res = await this.widget.getWidgetNode();
 
     return res;
   }
@@ -345,7 +371,7 @@ export default class Context {
       if (this.widgetOptions !== false && this.isLogin()) {
         this.mountWidget(this.widgetOptions);
       }
-    }, 1500);
+    }, WIDGET_AUTH_TIMEOUT);
   }
 
   getInpageProvider() {
@@ -369,11 +395,7 @@ export default class Context {
     return this.emitter;
   }
 
-  getBridge() {
-    return this.bridge;
-  }
-
-  getNamespace() {
-    return this.namespace;
+  getDialog() {
+    return this.dialog;
   }
 }

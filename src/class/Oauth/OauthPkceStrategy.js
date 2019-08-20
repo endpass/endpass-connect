@@ -6,7 +6,7 @@ import pkce from '@/class/Oauth/pkce';
 import { METHODS } from '@/constants';
 
 // eslint-disable-next-line
-import Bridge from '@/class/Bridge';
+import Dialog from '@/class/Dialog';
 
 const { ERRORS } = ConnectError;
 
@@ -15,13 +15,13 @@ export default class OauthPkceStrategy {
   /**
    *
    * @param {object} options
-   * @param {InstanceType<typeof Bridge>} options.bridge
+   * @param {InstanceType<typeof Dialog>} options.dialog
    */
-  constructor({ bridge }) {
-    this.bridge = bridge;
+  constructor({ dialog }) {
+    this.dialog = dialog;
   }
 
-  // TODO: after implement public api use this method and drop bridge
+  // TODO: after implement public api use this method and drop dialog
   // /**
   //  *
   //  * @private
@@ -48,7 +48,7 @@ export default class OauthPkceStrategy {
    * @return {Promise<object>}
    */
   async exchangeCodeToToken(fields) {
-    const { payload, status, error } = await this.bridge.ask(
+    const { payload, status, error } = await this.dialog.ask(
       METHODS.EXCHANGE_TOKEN_REQUEST,
       fields,
     );
