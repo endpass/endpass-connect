@@ -10,6 +10,7 @@ import {
   ElementsSubscriber,
   Dialog,
   Widget,
+  Auth,
 } from '@/class';
 import { INPAGE_EVENTS, METHODS, DEFAULT_AUTH_URL } from '@/constants';
 
@@ -51,11 +52,13 @@ export default class Context {
     this.requestProvider = null;
     this.oauthRequestProvider = null;
     this.oauthClientId = options.oauthClientId;
-    this.isServerLogin = false;
+    this.authRequester = new Auth({
+      context: this,
+      haveDemoData: !!options.demoData,
+    });
     const authUrl = !authUrlRegexp.test(authUrlRaw)
       ? authUrlRaw
       : authUrlRaw.replace('://auth', `://auth${pkg.authVersion}`);
-    this.haveDemoData = !!options.demoData;
     this.widgetOptions = options.widget;
 
     const namespace = options.namespace || '';
@@ -146,13 +149,7 @@ export default class Context {
   }
 
   isLogin() {
-    if (this.haveDemoData) {
-      return true;
-    }
-
-    const { activeAccount } = this.getInpageProvider().settings;
-
-    return !!(activeAccount && this.isServerLogin);
+    return this.authRequester.isLogin();
   }
 
   /**
@@ -162,22 +159,8 @@ export default class Context {
    * @returns {Promise<boolean>} Auth result, check `status` property to
    *  know about result
    */
-  async auth(redirectUrl) {
-    const toPath = redirectUrl || window.location.href;
-    const res = await this.askDialog(METHODS.AUTH, {
-      redirectUrl: toPath,
-    });
-
-    if (!res.status) {
-      throw ConnectError.create(res.code || ERRORS.AUTH);
-    }
-
-    this.isServerLogin = true;
-
-    return {
-      payload: res.payload,
-      status: res.status,
-    };
+  auth(redirectUrl) {
+    return this.authRequester.auth(redirectUrl);
   }
 
   /**
@@ -187,17 +170,9 @@ export default class Context {
    * @returns {Promise<Boolean>}
    */
   async logout() {
-    const res = await this.getDialog().ask(METHODS.LOGOUT);
-
-    if (!res.status) {
-      throw ConnectError.create(res.code || ERRORS.AUTH_LOGOUT);
-    }
-
-    this.isServerLogin = false;
-
+    const res = await this.authRequester.logout();
     this.messengerGroup.send(METHODS.LOGOUT_RESPONSE);
-
-    return res.status;
+    return res;
   }
 
   /**
@@ -223,7 +198,7 @@ export default class Context {
         activeNet: settings.net || Network.NET_ID.MAIN,
       };
 
-      this.isServerLogin = true;
+      this.authRequester.isServerLogin = true;
       this.setProviderSettings(res);
 
       return res;
