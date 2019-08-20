@@ -10,12 +10,7 @@ import {
   Oauth,
   MessengerGroup,
 } from '@/class';
-import {
-  INPAGE_EVENTS,
-  METHODS,
-  DEFAULT_AUTH_URL,
-  DIRECTION,
-} from '@/constants';
+import { INPAGE_EVENTS, METHODS, DEFAULT_AUTH_URL } from '@/constants';
 
 import pkg from '../package.json';
 import createStream from '@/streams';
@@ -68,10 +63,10 @@ export default class Context {
     this.inpageProvider = new InpageProvider(this.emitter);
     this.requestProvider = ProviderFactory.createRequestProvider();
     this.messengerGroup = new MessengerGroup();
-    this.widgetMessenger = null;
+
     this.bridge = new Bridge({
       context: this,
-      url: this.getConnectUrl('bridge'),
+      url: this.authUrl,
       initialPayload: {
         demoData: options.demoData,
         isIdentityMode: options.isIdentityMode || false,
@@ -323,21 +318,19 @@ export default class Context {
     clearInterval(this.widgetAutoMountTimerId);
 
     this.widgetOptions = parameters;
-    this.widgetMessenger = new CrossWindowMessenger({
-      showLogs: !ENV.isProduction,
-      name: `connect-bridge-widget[${this.namespace}]`,
-      to: DIRECTION.AUTH,
-      from: DIRECTION.CONNECT,
-    });
-    this.messengerGroup.addMessenger(this.widgetMessenger);
+    const frame = this.bridge.mountWidget(parameters);
 
-    return this.bridge.mountWidget(parameters);
+    this.messengerGroup.addMessenger(this.bridge.widget.getWidgetMessenger());
+
+    return frame;
   }
 
   unmountWidget() {
     if (!this.bridge.isWidgetMounted()) return;
 
-    this.messengerGroup.removeMessenger(this.widgetMessenger);
+    this.messengerGroup.removeMessenger(
+      this.bridge.widget.getWidgetMessenger(),
+    );
     this.bridge.unmountWidget();
   }
 
@@ -372,28 +365,12 @@ export default class Context {
     return { ...this.getInpageProvider().settings };
   }
 
-  /**
-   * Returns connect application url with passed method
-   * @private
-   * @param {String} method Expected method (route)
-   * @returns {String} Completed url to open
-   */
-  getConnectUrl(method) {
-    const { authUrl } = this;
-
-    return !method ? authUrl : `${authUrl}/${method}`;
-  }
-
   getEmitter() {
     return this.emitter;
   }
 
   getBridge() {
     return this.bridge;
-  }
-
-  getWidgetMessenger() {
-    return this.widgetMessenger;
   }
 
   getNamespace() {

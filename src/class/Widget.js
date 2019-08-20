@@ -1,47 +1,24 @@
+import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import debounce from 'lodash.debounce';
-import { METHODS, WIDGET_EVENTS } from '@/constants';
+import { DIRECTION, METHODS, WIDGET_EVENTS } from '@/constants';
 import { inlineStyles } from '@/util/dom';
-
-const MOBILE_BREAKPOINT = 1024;
-const FADE_TIMEOUT = 300;
-const BASE_FRAME_HEIGHT = 80;
-const BASE_FRAME_STYLES = {
-  position: 'fixed',
-  'z-index': 6000000,
-  height: `${BASE_FRAME_HEIGHT}px`,
-  border: 'none',
-  'border-radius': '4px',
-  transition: `opacity ${FADE_TIMEOUT}ms ease-in`,
-};
-const INITIAL_FRAME_STYLES = {
-  ...BASE_FRAME_STYLES,
-  opacity: 0,
-};
-const FRAME_DESKTOP_STYLES = {
-  ...BASE_FRAME_STYLES,
-  width: '280px',
-};
-const FRAME_MOBILE_STYLES = {
-  ...BASE_FRAME_STYLES,
-  right: '24px',
-  bottom: '14px',
-};
-const FRAME_MOBILE_COLLAPSED_STYLES = {
-  ...FRAME_MOBILE_STYLES,
-  width: '64px',
-};
-const FRAME_MOBILE_EXPANDED_STYLES = {
-  ...FRAME_MOBILE_STYLES,
-  width: 'calc(100% - 24px * 2)',
-};
+import {
+  MOBILE_BREAKPOINT,
+  FADE_TIMEOUT,
+  INITIAL_FRAME_STYLES,
+  FRAME_DESKTOP_STYLES,
+  FRAME_MOBILE_COLLAPSED_STYLES,
+  FRAME_MOBILE_EXPANDED_STYLES,
+} from './WidgetStyles';
 
 export default class Widget {
   /**
-   * @param {Context} options.context Context
-   * @param {String} options.url Context
+   * @param {object} options
+   * @param {string} options.namespace Context namespace
+   * @param {string} options.url Context
    */
-  constructor({ context, url }) {
-    this.context = context;
+  constructor({ namespace, url }) {
+    this.namespace = namespace;
     this.url = url;
     this.frame = null;
     this.position = null;
@@ -61,8 +38,21 @@ export default class Widget {
     return window.innerWidth < MOBILE_BREAKPOINT;
   }
 
+  getWidgetMessenger() {
+    return this.widgetMessenger;
+  }
+
+  createMessenger() {
+    this.widgetMessenger = new CrossWindowMessenger({
+      showLogs: !ENV.isProduction,
+      name: `connect-bridge-widget[${this.namespace}]`,
+      to: DIRECTION.AUTH,
+      from: DIRECTION.CONNECT,
+    });
+  }
+
   subscribe() {
-    const widgetMessenger = this.context.getWidgetMessenger();
+    const widgetMessenger = this.getWidgetMessenger();
 
     widgetMessenger.setTarget(this.frame.contentWindow);
     widgetMessenger.subscribe(METHODS.WIDGET_INIT, (payload, req) => {
@@ -99,7 +89,7 @@ export default class Widget {
   }
 
   handleDocumentClick() {
-    const widgetMessenger = this.context.getWidgetMessenger();
+    const widgetMessenger = this.getWidgetMessenger();
 
     document.body.removeEventListener('click', this.handleDocumentClick);
     widgetMessenger.send(METHODS.WIDGET_COLLAPSE_RESPONSE);
@@ -151,7 +141,7 @@ export default class Widget {
   }
 
   unmount() {
-    const widgetMessenger = this.context.getWidgetMessenger();
+    const widgetMessenger = this.getWidgetMessenger();
 
     this.frame.style.opacity = 0;
     this.isLoaded = false;
@@ -165,6 +155,7 @@ export default class Widget {
 
     this.frame.removeEventListener('load', this.handleWidgetFrameLoad);
     window.removeEventListener('resize', this.debouncedHandleScreenResize);
+    this.debouncedHandleScreenResize.cancel();
 
     // Awaiting application animation ending
     setTimeout(() => {
@@ -181,7 +172,7 @@ export default class Widget {
   }
 
   handleScreenResize() {
-    const widgetMessenger = this.context.getWidgetMessenger();
+    const widgetMessenger = this.getWidgetMessenger();
 
     widgetMessenger.send(METHODS.WIDGET_CHANGE_MOBILE_MODE, {
       isMobile: this.isMobile,

@@ -11,6 +11,7 @@ const { ERRORS } = ConnectError;
 
 export default class Bridge {
   /**
+   * @param {object} options
    * @param InstanceType<{import('@Context')} options.context Context link
    * @param {string} options.url Url for open dialog
    * @param {any} options.initialPayload initial data for Auth
@@ -18,13 +19,28 @@ export default class Bridge {
   constructor({ context, url, initialPayload }) {
     this.context = context;
     this.initialPayload = initialPayload;
-    this.dialog = new Dialog({ context, url });
+    const namespace = context.getNamespace();
+
+    this.dialog = new Dialog({
+      namespace,
+      url: this.getConnectUrl(url, 'bridge'),
+    });
     this.widget = new Widget({
-      context,
-      url: this.context.getConnectUrl('public/widget'),
+      namespace,
+      url: this.getConnectUrl(url, 'public/widget'),
     });
 
     this.initDialogEvents();
+  }
+
+  /**
+   * Returns connect application url with passed method
+   * @private
+   * @param {String} method Expected method (route)
+   * @returns {String} Completed url to open
+   */
+  getConnectUrl(authUrl, method) {
+    return !method ? authUrl : `${authUrl}/${method}`;
   }
 
   async handleLogoutMessage(source, req) {
@@ -83,7 +99,7 @@ export default class Bridge {
   }
 
   initWidgetEvents() {
-    const widgetMessenger = this.context.getWidgetMessenger();
+    const widgetMessenger = this.widget.getWidgetMessenger();
 
     widgetMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
       req.answer({
@@ -120,13 +136,14 @@ export default class Bridge {
    * @returns {Element}
    */
   mountWidget(parameters) {
+    this.widget.createMessenger();
     this.initWidgetEvents();
 
     return this.widget.mount(parameters);
   }
 
   unmountWidget() {
-    const widgetMessenger = this.context.getWidgetMessenger();
+    const widgetMessenger = this.widget.getWidgetMessenger();
 
     widgetMessenger.unsubscribe(METHODS.INITIATE);
     widgetMessenger.unsubscribe(METHODS.WIDGET_GET_SETTING);
@@ -138,10 +155,6 @@ export default class Bridge {
   }
 
   async ask(method, payload) {
-    if (!method) {
-      throw ConnectError.create(ERRORS.BRIDGE_PROVIDE_METHOD);
-    }
-
     const res = await this.dialog.ask(method, payload);
 
     return res;
