@@ -68,12 +68,6 @@ export default class Context {
     this.inpageProvider = new InpageProvider(this.emitter);
     this.requestProvider = ProviderFactory.createRequestProvider();
     this.messengerGroup = new MessengerGroup();
-    this.dialogMessenger = new CrossWindowMessenger({
-      showLogs: !ENV.isProduction,
-      name: `connect-bridge-dialog[${this.namespace}]`,
-      to: DIRECTION.AUTH,
-      from: DIRECTION.CONNECT,
-    });
     this.widgetMessenger = null;
     this.bridge = new Bridge({
       context: this,
@@ -93,7 +87,7 @@ export default class Context {
 
     this.setupLoginEvents();
 
-    this.messengerGroup.addMessenger(this.dialogMessenger);
+    this.messengerGroup.addMessenger(this.bridge.dialog.getDialogMessenger());
     
     createStream(this);
 
@@ -396,10 +390,6 @@ export default class Context {
 
   getBridge() {
     return this.bridge;
-  }
-
-  getDialogMessenger() {
-    return this.dialogMessenger;
   }
 
   getWidgetMessenger() {

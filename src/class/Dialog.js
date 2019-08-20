@@ -1,5 +1,6 @@
+import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import { inlineStyles, inlineStylesState } from '@/util/dom';
-import { METHODS } from '@/constants';
+import { DIRECTION, METHODS } from '@/constants';
 
 const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
 
@@ -56,14 +57,31 @@ const propsIframeShow = {
   opacity: 1,
 };
 
+/**
+ * @typedef {Object<string, Array<Listener>>} Resolvers
+ */
+
 export default class Dialog {
   /**
+   * @param {object} options
    * @param {Context} options.context Context
-   * @param {String} options.url Context
+   * @param {string} options.url Context
    */
   constructor({ context, url }) {
     this.context = context;
     this.url = url;
+    this.ready = false;
+
+    this.dialogMessenger = new CrossWindowMessenger({
+      showLogs: !ENV.isProduction,
+      name: `connect-bridge-dialog[]`,
+      to: DIRECTION.AUTH,
+      from: DIRECTION.CONNECT,
+    });
+    this.subscribe();
+
+    /** @type Resolvers */
+    this.readyResolvers = [];
 
     // Dialog elements nodes
     this.overlay = null;
@@ -72,7 +90,6 @@ export default class Dialog {
     this.isShown = false;
     this.isInited = false;
     this.frameStyles = inlineStylesState(propsIframe);
-
     if (document.readyState !== 'complete') {
       document.addEventListener('readystatechange', () => {
         if (document.readyState === 'complete') {
@@ -85,19 +102,12 @@ export default class Dialog {
   }
 
   subscribe() {
-    const messenger = this.context.getDialogMessenger();
+    const messenger = this.dialogMessenger;
 
-    messenger.setTarget(this.frame.contentWindow);
-
-    this.frame.addEventListener('load', () => {
-      setTimeout(() => {
-        if (!this.isInited) {
-          /* eslint-disable-next-line */
-          console.error(
-            `Dialog is not inited, please check auth url ${this.url}`,
-          );
-        }
-      }, INITIAL_TIMEOUT);
+    messenger.subscribe(METHODS.READY_STATE_BRIDGE, () => {
+      this.ready = true;
+      this.readyResolvers.forEach(item => item(true));
+      this.readyResolvers.length = 0;
     });
 
     messenger.subscribe(METHODS.INITIATE, () => {
@@ -124,6 +134,28 @@ export default class Dialog {
     });
   }
 
+  getDialogMessenger() {
+    return this.dialogMessenger;
+  }
+
+  /**
+   * Checks dialog ready state
+   * Ask messenger before til it give any answer and resolve promise
+   * Also, it is caches ready state and in the next time just resolve returned
+   * promise
+   * @returns {Promise<boolean>}
+   */
+  checkReadyState() {
+    /* eslint-disable-next-line */
+    return new Promise(async resolve => {
+      if (this.ready) {
+        return resolve(true);
+      }
+
+      this.readyResolvers.push(resolve);
+    });
+  }
+
   /**
    * Create markup and prepend to <body>
    */
@@ -147,6 +179,31 @@ export default class Dialog {
     this.wrapper = document.body.querySelector('[data-endpass="wrapper"]');
     this.frame = document.body.querySelector('[data-endpass="frame"]');
 
-    this.subscribe();
+    // subscribe
+    this.dialogMessenger.setTarget(this.frame.contentWindow);
+    this.frame.addEventListener('load', () => {
+      setTimeout(() => {
+        if (!this.isInited) {
+          /* eslint-disable-next-line */
+          console.error(
+            `Dialog is not inited, please check auth url ${this.url}`,
+          );
+        }
+      }, INITIAL_TIMEOUT);
+    });
+  }
+
+  /**
+   * Wrapper on sendMessage and awaitMessage methods
+   * Send message with given payload and awaits answer on it
+   * @param {String} method Method name
+   * @param {Object} payload Message payload. Must includes method property
+   * @returns {Promise<any>} Responded message payload
+   */
+  async ask(method, payload) {
+    await this.checkReadyState();
+    const res = await this.dialogMessenger.sendAndWaitResponse(method, payload);
+
+    return res;
   }
 }

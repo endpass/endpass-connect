@@ -9,10 +9,6 @@ const { ERRORS } = ConnectError;
  * @callback Listener {import('@types/global').Listener}
  */
 
-/**
- * @typedef {Object<string, Array<Listener>>} Resolvers
- */
-
 export default class Bridge {
   /**
    * @param InstanceType<{import('@Context')} options.context Context link
@@ -27,10 +23,6 @@ export default class Bridge {
       context,
       url: this.context.getConnectUrl('public/widget'),
     });
-    this.ready = false;
-
-    /** @type Resolvers */
-    this.readyResolvers = [];
 
     this.initDialogEvents();
   }
@@ -74,18 +66,13 @@ export default class Bridge {
   }
 
   initDialogEvents() {
-    const dialogMessenger = this.context.getDialogMessenger();
+    const dialogMessenger = this.dialog.getDialogMessenger();
 
     dialogMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
       req.answer({
         ...this.initialPayload,
         source: DIRECTION.AUTH,
       });
-    });
-    dialogMessenger.subscribe(METHODS.READY_STATE_BRIDGE, () => {
-      this.ready = true;
-      this.readyResolvers.forEach(item => item(true));
-      this.readyResolvers.length = 0;
     });
     dialogMessenger.subscribe(METHODS.LOGOUT_REQUEST, (msg, req) => {
       this.handleLogoutMessage(DIRECTION.AUTH, req);
@@ -150,41 +137,12 @@ export default class Bridge {
     this.widget.unmount();
   }
 
-  /**
-   * Checks bridge ready state
-   * Ask messenger before til it give any answer and resolve promise
-   * Also, it is caches ready state and in the next time just resolve returned
-   * promise
-   * @returns {Promise<boolean>}
-   */
-  checkReadyState() {
-    /* eslint-disable-next-line */
-    return new Promise(async resolve => {
-      if (this.ready) {
-        return resolve(true);
-      }
-
-      this.readyResolvers.push(resolve);
-    });
-  }
-
-  /**
-   * Wrapper on sendMessage and awaitMessage methods
-   * Send message with given payload and awaits answer on it
-   * @param {String} method Method name
-   * @param {Object} payload Message payload. Must includes method property
-   * @returns {Promise<any>} Responded message payload
-   */
   async ask(method, payload) {
     if (!method) {
       throw ConnectError.create(ERRORS.BRIDGE_PROVIDE_METHOD);
     }
 
-    await this.checkReadyState();
-
-    const res = await this.context
-      .getDialogMessenger()
-      .sendAndWaitResponse(method, payload);
+    const res = await this.dialog.ask(method, payload);
 
     return res;
   }
