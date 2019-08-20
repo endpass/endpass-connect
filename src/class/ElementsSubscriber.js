@@ -3,11 +3,7 @@ import { METHODS, DIRECTION, WIDGET_EVENTS } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
-/**
- * @callback Listener {import('@types/global').Listener}
- */
-
-export default class Bridge {
+export default class ElementsSubscriber {
   /**
    * @param {object} options
    * @param InstanceType<{import('@Context')} options.context Context link

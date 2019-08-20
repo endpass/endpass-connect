@@ -14,7 +14,7 @@ export default class Emitter {
   }
 
   /**
-   * @param {String} event - event name
+   * @param {string} event - event name
    * @param {Listener} listener - callback
    */
   on(event, listener) {

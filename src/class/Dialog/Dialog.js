@@ -10,11 +10,15 @@ import {
   stylesOverlayHide,
   stylesWrapperShow,
   stylesWrapperHide,
-} from '@/class/DialogStyles';
+} from '@/class/Dialog/DialogStyles';
 
 const { ERRORS } = ConnectError;
 
 const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
+
+/**
+ * @callback Listener {import('@types/global').Listener}
+ */
 
 /**
  * @typedef {Object<string, Array<Listener>>} Resolvers
@@ -154,8 +158,8 @@ export default class Dialog {
   /**
    * Wrapper on sendMessage and awaitMessage methods
    * Send message with given payload and awaits answer on it
-   * @param {String} method Method name
-   * @param {Object} payload Message payload. Must includes method property
+   * @param {string} method Method name
+   * @param {object} [payload] Message payload. Must includes method property
    * @returns {Promise<any>} Responded message payload
    */
   async ask(method, payload) {

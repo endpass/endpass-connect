@@ -181,7 +181,8 @@ export default class Widget {
   }
 
   /**
-   * @param {String} options.height Height in px or other CSS/HTML friendly unit
+   * @param {object} options
+   * @param {string} options.height Height in px or other CSS/HTML friendly unit
    */
   resize({ height }) {
     if (height) {

@@ -89,14 +89,11 @@ export default class RequestProcess {
     const { context } = this;
     const { activeAccount, activeNet } = this.settings;
 
-    const res = await context.askDialog({
-      method: METHODS.SIGN,
-      payload: {
-        url: window.location.origin,
-        address: activeAccount,
-        net: activeNet,
-        request: this.currentRequest,
-      },
+    const res = await context.askDialog(METHODS.SIGN, {
+      url: window.location.origin,
+      address: activeAccount,
+      net: activeNet,
+      request: this.currentRequest,
     });
 
     if (!res.status) {

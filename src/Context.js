@@ -4,17 +4,17 @@ import OauthPkceStrategy from '@/class/Oauth/OauthPkceStrategy';
 import {
   Emmiter,
   InpageProvider,
-  Bridge,
   ProviderFactory,
   Oauth,
   MessengerGroup,
+  ElementsSubscriber,
+  Dialog,
+  Widget,
 } from '@/class';
 import { INPAGE_EVENTS, METHODS, DEFAULT_AUTH_URL } from '@/constants';
 
 import pkg from '../package.json';
 import createStream from '@/streams';
-import Dialog from '@/class/Dialog';
-import Widget from '@/class/Widget';
 
 const { ERRORS } = ConnectError;
 
@@ -24,18 +24,18 @@ const WIDGET_AUTH_TIMEOUT = 1500;
 
 export default class Context {
   /**
-   * @param {String} options.oauthClientId OAuth client id
-   * @param {String} [options.authUrl] Url of hosted Endpass Connect Application
-   * @param {String} [options.namespace] namespace for see difference,
+   * @param {string} options.oauthClientId OAuth client id
+   * @param {string} [options.authUrl] Url of hosted Endpass Connect Application
+   * @param {string} [options.namespace] namespace for see difference,
    *  between two instances
-   * @param {Boolean} [options.isIdentityMode] isIdentityMode for define auth
+   * @param {boolean} [options.isIdentityMode] isIdentityMode for define auth
    *  like identity
-   * @param {Object} [options.demoData] demoData passed object to auth
-   * @param {Object} [options.showCreateAccount] show create account form
+   * @param {object} [options.demoData] demoData passed object to auth
+   * @param {object} [options.showCreateAccount] show create account form
    *  in auth dialog
-   * @param {Object} [options.widget] Widget configuration object.
+   * @param {object} [options.widget] Widget configuration object.
    *  If provided widget will be mounted automatically
-   * @param {Object} [options.widget.position] Widget positions. By default
+   * @param {object} [options.widget.position] Widget positions. By default
    *  equals to `bottom right`
    */
   constructor(options = {}) {
@@ -77,7 +77,7 @@ export default class Context {
       url: this.getConnectUrl(authUrl, 'public/widget'),
     });
 
-    this.bridge = new Bridge({
+    this.elementsSubscriber = new ElementsSubscriber({
       context: this,
       dialog: this.dialog,
       widget: this.widget,
@@ -87,7 +87,7 @@ export default class Context {
         showCreateAccount: options.showCreateAccount,
       },
     });
-    this.bridge.subscribeDialog();
+    this.elementsSubscriber.subscribeDialog();
 
     // TODO: create state
     // this.state = {
@@ -97,7 +97,7 @@ export default class Context {
 
     this.setupLoginEvents();
 
-    this.messengerGroup.addMessenger(this.bridge.dialog.getDialogMessenger());
+    this.messengerGroup.addMessenger(this.dialog.getDialogMessenger());
     
     createStream(this);
 
@@ -107,8 +107,8 @@ export default class Context {
   /**
    * Returns connect application url with passed method
    * @private
-   * @param {String} method Expected method (route)
-   * @returns {String} Completed url to open
+   * @param {string} method Expected method (route)
+   * @returns {string} Completed url to open
    */
   getConnectUrl(authUrl, method) {
     return !method ? authUrl : `${authUrl}/${method}`;
@@ -133,10 +133,14 @@ export default class Context {
     });
   }
 
-  async askDialog(params) {
-    const { method, payload } = params;
-    const dialog = this.getDialog();
-    const res = await dialog.ask(method, payload);
+  /**
+   *
+   * @param {string} method method call
+   * @param {object=} [payload] payload payload
+   * @return {Promise<any>}
+   */
+  async askDialog(method, payload) {
+    const res = await this.getDialog().ask(method, payload);
 
     return res;
   }
@@ -160,11 +164,8 @@ export default class Context {
    */
   async auth(redirectUrl) {
     const toPath = redirectUrl || window.location.href;
-    const res = await this.askDialog({
-      method: METHODS.AUTH,
-      payload: {
-        redirectUrl: toPath,
-      },
+    const res = await this.askDialog(METHODS.AUTH, {
+      redirectUrl: toPath,
     });
 
     if (!res.status) {
@@ -204,7 +205,7 @@ export default class Context {
    * Settings includes last active account and network id
    * @public
    * @throws {Error} If settings can not be resolved
-   * @returns {Promise<Object>} Account data
+   * @returns {Promise<object>} Account data
    */
   async getAccountData() {
     try {
@@ -255,8 +256,9 @@ export default class Context {
   /**
    * Sets settings to current `web3` provider injected to page with `injectWeb3`
    * method
-   * @param {String} options.activeAccount Currenct account checksummed address
-   * @param {String} options.activeNet Active network ID
+   * @param {object} payload
+   * @param {string} payload.activeAccount Currenct account checksummed address
+   * @param {string} payload.activeNet Active network ID
    */
   setProviderSettings(payload) {
     this.getEmitter().emit(INPAGE_EVENTS.SETTINGS, {
@@ -270,10 +272,10 @@ export default class Context {
 
   /**
    * Fetch user data via oaurh
-   * @param {Object} [params] Parameters object
-   * @param {Number} [params.popupWidth] Oauth popup width
-   * @param {Number} [params.popupHeight] Oauth popup height
-   * @param {String[]} params.scopes - Array of authorization scopes
+   * @param {object} [params] Parameters object
+   * @param {number} [params.popupWidth] Oauth popup width
+   * @param {number} [params.popupHeight] Oauth popup height
+   * @param {string[]} params.scopes - Array of authorization scopes
    */
   async loginWithOauth(params) {
     const strategy = new OauthPkceStrategy({
@@ -290,12 +292,12 @@ export default class Context {
 
   /**
    * Makes api request with authorization token
-   * @param {Object} [options] Request parameters object
-   * @param {String} options.url Request url
-   * @param {String} options.method Request http method
-   * @param {Object} [options.params] - Request parameters
-   * @param {Object} [options.headers] - Request headers
-   * @param {Object|string} [options.data] - Request body
+   * @param {object} [options] Request parameters object
+   * @param {string} options.url Request url
+   * @param {string} options.method Request http method
+   * @param {object} [options.params] - Request parameters
+   * @param {object} [options.headers] - Request headers
+   * @param {object|string} [options.data] - Request body
    * @returns {Promise} Request promise
    */
   request(options) {
@@ -318,9 +320,9 @@ export default class Context {
 
   /**
    * Sets oauth popup parameters
-   * @param {Object} params Parameters object
-   * @param {Number} [params.width] Oauth popup width
-   * @param {Number} [params.height] Oauth popup height
+   * @param {object} params Parameters object
+   * @param {number} [params.width] Oauth popup width
+   * @param {number} [params.height] Oauth popup height
    * @throws {Error} If not authorized yet;
    */
   setOauthPopupParams(params) {
@@ -332,7 +334,7 @@ export default class Context {
   }
 
   /**
-   * @param {Object} [parameters]
+   * @param {object} [parameters]
    * @returns {Promise<Element>}
    */
   async mountWidget(parameters) {
@@ -344,7 +346,7 @@ export default class Context {
 
     this.widgetOptions = parameters;
     this.widget.createMessenger();
-    this.bridge.subscribeWidget();
+    this.elementsSubscriber.subscribeWidget();
     const frame = this.widget.mount(parameters);
 
     this.messengerGroup.addMessenger(this.widget.getWidgetMessenger());
@@ -356,7 +358,7 @@ export default class Context {
     if (!this.widget.isWidgetMounted()) return;
 
     this.messengerGroup.removeMessenger(this.widget.getWidgetMessenger());
-    this.bridge.unsubscribeWidget();
+    this.elementsSubscriber.unsubscribeWidget();
     this.widget.unmount();
   }
 
@@ -385,7 +387,7 @@ export default class Context {
   /**
    * Returns injected provider settings
    * @private
-   * @returns {Object} Current provider settings
+   * @returns {object} Current provider settings
    */
   getInpageProviderSettings() {
     return { ...this.getInpageProvider().settings };

@@ -1,4 +1,4 @@
-import Widget from '@/class/Widget';
+import Widget from '@/class/Widget/Widget';
 import { METHODS, WIDGET_EVENTS } from '@/constants';
 
 describe('Widget class', () => {
