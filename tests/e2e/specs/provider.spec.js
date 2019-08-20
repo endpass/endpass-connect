@@ -1,4 +1,12 @@
+import Network from '@endpass/class/Network';
 import { v3password, address } from '@fixtures/identity/accounts';
+import {
+  getCodeSuccess,
+  getTransactionCountSuccess,
+  getTransactionReceiptSuccess,
+  sendRawTransactionSuccess,
+  subscribeError,
+} from '@fixtures/web3/provider';
 import {
   messageToSign,
   messageSignature,
@@ -8,7 +16,7 @@ import {
 describe('provider', function() {
   describe('web3 provider features', () => {
     beforeEach(() => {
-      cy.waitPageLoad();
+      cy.waitPageLoad(Network.NET_ID.ROPSTEN);
     });
 
     it('web3.eth.sign', () => {
@@ -47,6 +55,31 @@ describe('provider', function() {
       cy.get('[data-test=endpass-form-basic-active-account]').then($el => {
         cy.get('[data-test=app-notification]').contains($el.text());
       });
+    });
+
+    it('web3.eth.sendTransaction', () => {
+      cy.setupWeb3ProviderMocks([
+        getCodeSuccess,
+        getTransactionCountSuccess,
+        getTransactionReceiptSuccess,
+        sendRawTransactionSuccess,
+        subscribeError,
+      ]);
+      cy.authFrameContinueRun();
+      cy.shouldLoggedIn();
+
+      cy.get('[data-test=endpass-form-send-transaction-address]').type(address);
+      cy.get('[data-test=endpass-form-send-transaction-value]')
+        .clear()
+        .type('0.01');
+      cy.get('[data-test=endpass-form-send-transaction-button]').click();
+      cy.getElementFromAuth('[data-test=password-input]').type(v3password);
+      cy.getElementFromAuth('[data-test=advanced-settings-toggle]').click();
+      cy.getElementFromAuth('[data-test=gas-price-input]')
+        .clear()
+        .type('1');
+      cy.getElementFromAuth('[data-test=submit-button]').click();
+      cy.get('[data-test=app-notification]').contains('Transaction sent!');
     });
   });
 });

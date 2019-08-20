@@ -9,3 +9,4 @@ import './routes/accounts';
 import './routes/settings';
 import './routes/composite';
 import './prepares';
+import './web3';
