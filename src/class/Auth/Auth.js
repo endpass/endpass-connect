@@ -27,7 +27,7 @@ export default class Auth {
   async auth(redirectUrl) {
     const toPath = redirectUrl || window.location.href;
 
-    const res = await this.context.dialog.ask(METHODS.AUTH, {
+    const res = await this.context.getDialog().ask(METHODS.AUTH, {
       redirectUrl: toPath,
     });
 

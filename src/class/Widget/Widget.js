@@ -49,7 +49,7 @@ export default class Widget {
   }
 
   subscribe() {
-    const widgetMessenger = this.getWidgetMessenger();
+    const { widgetMessenger } = this;
 
     widgetMessenger.subscribe(METHODS.WIDGET_INIT, (payload, req) => {
       req.answer({
@@ -85,10 +85,8 @@ export default class Widget {
   }
 
   handleDocumentClick() {
-    const widgetMessenger = this.getWidgetMessenger();
-
     document.body.removeEventListener('click', this.handleDocumentClick);
-    widgetMessenger.send(METHODS.WIDGET_COLLAPSE_RESPONSE);
+    this.widgetMessenger.send(METHODS.WIDGET_COLLAPSE_RESPONSE);
   }
 
   handleDocumentClickOnce() {
@@ -131,13 +129,13 @@ export default class Widget {
     this.frame.addEventListener('load', this.handleWidgetFrameLoad);
     window.addEventListener('resize', this.debouncedHandleScreenResize);
 
-    this.getWidgetMessenger().setTarget(this.frame.contentWindow);
+    this.widgetMessenger.setTarget(this.frame.contentWindow);
 
     return this.frame;
   }
 
   unmount() {
-    // const widgetMessenger = this.getWidgetMessenger();
+    // const widgetMessenger = this.widgetMessenger;
 
     this.frame.style.opacity = 0;
     this.isLoaded = false;
@@ -168,9 +166,7 @@ export default class Widget {
   }
 
   handleScreenResize() {
-    const widgetMessenger = this.getWidgetMessenger();
-
-    widgetMessenger.send(METHODS.WIDGET_CHANGE_MOBILE_MODE, {
+    this.widgetMessenger.send(METHODS.WIDGET_CHANGE_MOBILE_MODE, {
       isMobile: this.isMobile,
     });
     this.frame.style = this.getWidgetFrameInlineStyles();

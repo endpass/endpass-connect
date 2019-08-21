@@ -97,7 +97,7 @@ export default class Connect {
    */
   async openAccount() {
     const context = this[privateFields.context];
-    const res = await context.dialog.ask(METHODS.ACCOUNT);
+    const res = await context.getDialog().ask(METHODS.ACCOUNT);
 
     if (!res.status) {
       throw ConnectError.create(res.code || ERRORS.ACCOUNT_UPDATE);

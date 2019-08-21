@@ -4,6 +4,9 @@ export default class MessengerGroup {
   }
 
   addMessenger(messenger) {
+    if (this.messengers.includes(messenger)) {
+      return;
+    }
     this.messengers.push(messenger);
   }
 

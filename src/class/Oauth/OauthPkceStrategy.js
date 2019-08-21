@@ -6,7 +6,7 @@ import pkce from '@/class/Oauth/pkce';
 import { METHODS } from '@/constants';
 
 // eslint-disable-next-line
-import Dialog from '@/class/Dialog';
+import Context from '@/Context';
 
 const { ERRORS } = ConnectError;
 
@@ -15,10 +15,10 @@ export default class OauthPkceStrategy {
   /**
    *
    * @param {object} options
-   * @param {InstanceType<typeof Dialog>} options.dialog
+   * @param {InstanceType<typeof Context>} options.context
    */
-  constructor({ dialog }) {
-    this.dialog = dialog;
+  constructor({ context }) {
+    this.context = context;
   }
 
   // TODO: after implement public api use this method and drop dialog
@@ -48,10 +48,9 @@ export default class OauthPkceStrategy {
    * @return {Promise<object>}
    */
   async exchangeCodeToToken(fields) {
-    const { payload, status, error } = await this.dialog.ask(
-      METHODS.EXCHANGE_TOKEN_REQUEST,
-      fields,
-    );
+    const { payload, status, error } = await this.context
+      .getDialog()
+      .ask(METHODS.EXCHANGE_TOKEN_REQUEST, fields);
     if (!status) {
       throw ConnectError.create(error || ERRORS.OAUTH_AUTHORIZE);
     }

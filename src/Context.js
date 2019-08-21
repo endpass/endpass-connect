@@ -1,19 +1,9 @@
 import ConnectError from '@endpass/class/ConnectError';
 import Network from '@endpass/class/Network';
 import OauthPkceStrategy from '@/class/Oauth/OauthPkceStrategy';
-import {
-  Emmiter,
-  InpageProvider,
-  ProviderFactory,
-  Oauth,
-  MessengerGroup,
-  ElementsSubscriber,
-  Dialog,
-  Widget,
-  Auth,
-} from '@/class';
-import { INPAGE_EVENTS, METHODS, DEFAULT_AUTH_URL } from '@/constants';
-import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
+import { Emmiter, InpageProvider, ProviderFactory, Oauth } from '@/class';
+import { INPAGE_EVENTS, METHODS } from '@/constants';
+import BasicModules from '@/BasicModules';
 import createStream from '@/streams';
 
 const { ERRORS } = ConnectError;
@@ -53,14 +43,9 @@ export default class Context {
     // options.plugins.forEach((Plugin) => {
     //   new Plugin(this);
     // });
+    this.basicModules = new BasicModules(options, this);
 
-    this.authRequester = new Auth({
-      context: this,
-    });
-    const authUrl = getAuthUrl(options.authUrl || DEFAULT_AUTH_URL);
     this.widgetOptions = options.widget;
-
-    const namespace = options.namespace || '';
 
     /**
      * Inner abstractions initialization
@@ -68,31 +53,9 @@ export default class Context {
     this.emitter = new Emmiter();
     this.inpageProvider = new InpageProvider(this.emitter);
     this.requestProvider = ProviderFactory.createRequestProvider();
-    this.messengerGroup = new MessengerGroup();
 
-    this.dialog = new Dialog({
-      namespace,
-      url: getFrameRouteUrl(authUrl, 'bridge'),
-    });
-
-    this.widget = new Widget({
-      namespace,
-      url: getFrameRouteUrl(authUrl, 'public/widget'),
-    });
-
-    this.elementsSubscriber = new ElementsSubscriber({
-      context: this,
-      dialog: this.dialog,
-      widget: this.widget,
-      initialPayload: {
-        demoData: options.demoData,
-        isIdentityMode: options.isIdentityMode || false,
-        showCreateAccount: options.showCreateAccount,
-      },
-    });
-    this.elementsSubscriber.subscribeDialog();
-
-    //this.serviceLocator.getElementsSubscriber().subscribeDialog();
+    const elementsSubscriber = this.basicModules.getElementsSubscriberInstance();
+    elementsSubscriber.subscribeElements();
 
     // TODO: create state
     // this.state = {
@@ -102,10 +65,8 @@ export default class Context {
 
     this.setupLoginEvents();
 
-    this.messengerGroup.addMessenger(this.dialog.getDialogMessenger());
     
     createStream(this);
-
     this.setupOnAuth();
   }
 
@@ -133,7 +94,7 @@ export default class Context {
       return true;
     }
 
-    return this.authRequester.isLogin;
+    return this.getAuthRequester().isLogin;
   }
 
   /**
@@ -144,7 +105,7 @@ export default class Context {
    *  know about result
    */
   auth(redirectUrl) {
-    return this.authRequester.auth(redirectUrl);
+    return this.getAuthRequester().auth(redirectUrl);
   }
 
   /**
@@ -154,8 +115,8 @@ export default class Context {
    * @returns {Promise<Boolean>}
    */
   async logout() {
-    const res = await this.authRequester.logout();
-    this.messengerGroup.send(METHODS.LOGOUT_RESPONSE);
+    const res = await this.getAuthRequester().logout();
+    this.basicModules.getMessengerGroupInstance().send(METHODS.LOGOUT_RESPONSE);
     return res;
   }
 
@@ -168,7 +129,7 @@ export default class Context {
    */
   async getAccountData() {
     try {
-      const { payload, status, code } = await this.dialog.ask(
+      const { payload, status, code } = await this.getDialog().ask(
         METHODS.GET_SETTINGS,
       );
 
@@ -225,7 +186,9 @@ export default class Context {
     });
 
     const settings = this.getInpageProviderSettings();
-    this.messengerGroup.send(METHODS.CHANGE_SETTINGS_RESPONSE, settings);
+    this.basicModules
+      .getMessengerGroupInstance()
+      .send(METHODS.CHANGE_SETTINGS_RESPONSE, settings);
   }
 
   /**
@@ -237,7 +200,7 @@ export default class Context {
    */
   async loginWithOauth(params) {
     const strategy = new OauthPkceStrategy({
-      dialog: this.dialog,
+      context: this,
     });
 
     this.oauthRequestProvider = new Oauth({
@@ -296,31 +259,32 @@ export default class Context {
    * @returns {Promise<Element>}
    */
   async mountWidget(parameters) {
-    if (this.widget.isWidgetMounted()) {
-      return this.widget.getWidgetNode();
+    if (this.getWidget().isWidgetMounted()) {
+      return this.getWidget().getWidgetNode();
     }
 
     clearInterval(this.widgetAutoMountTimerId);
 
     this.widgetOptions = parameters;
-    this.elementsSubscriber.subscribeWidget();
-    const frame = this.widget.mount(parameters);
-
-    this.messengerGroup.addMessenger(this.widget.getWidgetMessenger());
-
+    const frame = this.getWidget().mount(parameters);
+    this.basicModules
+      .getMessengerGroupInstance()
+      .addMessenger(this.getWidget().getWidgetMessenger());
     return frame;
   }
 
   unmountWidget() {
-    if (!this.widget.isWidgetMounted()) return;
+    if (!this.getWidget().isWidgetMounted()) return;
 
-    this.messengerGroup.removeMessenger(this.widget.getWidgetMessenger());
-    this.elementsSubscriber.unsubscribeWidget();
-    this.widget.unmount();
+    this.basicModules
+      .getMessengerGroupInstance()
+      .removeMessenger(this.getWidget().getWidgetMessenger());
+
+    this.getWidget().unmount();
   }
 
   async getWidgetNode() {
-    const res = await this.widget.getWidgetNode();
+    const res = await this.getWidget().getWidgetNode();
 
     return res;
   }
@@ -355,6 +319,14 @@ export default class Context {
   }
 
   getDialog() {
-    return this.dialog;
+    return this.basicModules.getDialogInstance();
+  }
+
+  getWidget() {
+    return this.basicModules.getWidgetInstance();
+  }
+
+  getAuthRequester() {
+    return this.basicModules.getAuthInstance();
   }
 }

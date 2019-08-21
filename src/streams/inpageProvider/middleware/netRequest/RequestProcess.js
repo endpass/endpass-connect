@@ -89,7 +89,7 @@ export default class RequestProcess {
     const { context } = this;
     const { activeAccount, activeNet } = this.settings;
 
-    const res = await context.dialog.ask(METHODS.SIGN, {
+    const res = await context.getDialog().ask(METHODS.SIGN, {
       url: window.location.origin,
       address: activeAccount,
       net: activeNet,
@@ -112,7 +112,7 @@ export default class RequestProcess {
   async recover() {
     const { context } = this;
     const { activeAccount, activeNet } = this.settings;
-    const res = await context.dialog.ask(METHODS.RECOVER, {
+    const res = await context.getDialog().ask(METHODS.RECOVER, {
       address: activeAccount,
       net: activeNet,
       request: this.currentRequest,

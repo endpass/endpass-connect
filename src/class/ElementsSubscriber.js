@@ -10,20 +10,16 @@ export default class ElementsSubscriber {
    * @param {string} options.url Url for open dialog
    * @param {any} options.initialPayload initial data for Auth
    */
-  constructor({ context, widget, dialog, initialPayload }) {
+  constructor({ context, initialPayload }) {
     this.context = context;
     this.initialPayload = initialPayload;
-    this.widget = widget;
-    this.dialog = dialog;
-
-    this.subscribeDialog();
   }
 
   async handleLogoutMessage(source, req) {
     try {
       await this.context.logout();
 
-      this.widget.emitFrameEvent(WIDGET_EVENTS.LOGOUT);
+      this.context.getWidget().emitFrameEvent(WIDGET_EVENTS.LOGOUT);
 
       req.answer({
         status: true,
@@ -43,7 +39,7 @@ export default class ElementsSubscriber {
     try {
       this.context.setProviderSettings(msg);
 
-      this.widget.emitFrameEvent(WIDGET_EVENTS.UPDATE, msg);
+      this.context.getWidget().emitFrameEvent(WIDGET_EVENTS.UPDATE, msg);
 
       req.answer({
         status: true,
@@ -57,11 +53,16 @@ export default class ElementsSubscriber {
     }
   }
 
+  subscribeElements() {
+    this.subscribeDialog();
+    this.subscribeWidget();
+  }
+
   subscribeDialog() {
-    const dialogMessenger = this.dialog.getDialogMessenger();
+    const dialogMessenger = this.context.getDialog().getDialogMessenger();
 
     dialogMessenger.subscribe(METHODS.AUTH_STATUS, (payload, req) => {
-      this.context.authRequester.setLoggedIn(payload);
+      this.context.getAuthRequester().setLoggedIn(payload);
     });
 
     dialogMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
@@ -79,7 +80,7 @@ export default class ElementsSubscriber {
   }
 
   subscribeWidget() {
-    const widgetMessenger = this.widget.getWidgetMessenger();
+    const widgetMessenger = this.context.getWidget().getWidgetMessenger();
 
     widgetMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
       req.answer({
@@ -99,15 +100,5 @@ export default class ElementsSubscriber {
     widgetMessenger.subscribe(METHODS.WIDGET_UNMOUNT, () => {
       this.context.unmountWidget();
     });
-  }
-
-  unsubscribeWidget() {
-    const widgetMessenger = this.widget.getWidgetMessenger();
-
-    widgetMessenger.unsubscribe(METHODS.INITIATE);
-    widgetMessenger.unsubscribe(METHODS.WIDGET_GET_SETTING);
-    widgetMessenger.unsubscribe(METHODS.LOGOUT_REQUEST);
-    widgetMessenger.unsubscribe(METHODS.CHANGE_SETTINGS_REQUEST);
-    widgetMessenger.unsubscribe(METHODS.WIDGET_UNMOUNT);
   }
 }
