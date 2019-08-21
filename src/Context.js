@@ -253,26 +253,13 @@ export default class Context {
    * @returns {Promise<Element>}
    */
   async mountWidget(parameters) {
-    if (this.getWidget().isWidgetMounted()) {
-      return this.getWidget().getWidgetNode();
-    }
-
     clearInterval(this.widgetAutoMountTimerId);
 
-    const frame = this.getWidget().mount(parameters);
-    this.basicModules
-      .getMessengerGroupInstance()
-      .addMessenger(this.getWidget().getWidgetMessenger());
+    const frame = await this.getWidget().mount(parameters);
     return frame;
   }
 
   unmountWidget() {
-    if (!this.getWidget().isWidgetMounted()) return;
-
-    this.basicModules
-      .getMessengerGroupInstance()
-      .removeMessenger(this.getWidget().getWidgetMessenger());
-
     this.getWidget().unmount();
   }
 

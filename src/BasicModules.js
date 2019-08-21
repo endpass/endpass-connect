@@ -15,6 +15,10 @@ export default class BasicModules {
     this.authUrl = getAuthUrl(authUrl || DEFAULT_AUTH_URL);
   }
 
+  init() {
+    this.initElementsSubscriber();
+  }
+
   /**
    *
    * @return {Auth}
@@ -55,6 +59,7 @@ export default class BasicModules {
       this.widget = new Widget({
         namespace: this.namespace,
         url: getFrameRouteUrl(this.authUrl, 'public/widget'),
+        messengerGroup: this.getMessengerGroupInstance(),
       });
     }
     return this.widget;

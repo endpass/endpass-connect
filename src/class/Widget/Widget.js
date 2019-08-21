@@ -5,10 +5,7 @@ import { inlineStyles } from '@/util/dom';
 import {
   MOBILE_BREAKPOINT,
   FADE_TIMEOUT,
-  INITIAL_FRAME_STYLES,
-  FRAME_DESKTOP_STYLES,
-  FRAME_MOBILE_COLLAPSED_STYLES,
-  FRAME_MOBILE_EXPANDED_STYLES,
+  getWidgetFrameStylesObject,
 } from './WidgetStyles';
 
 export default class Widget {
@@ -17,7 +14,8 @@ export default class Widget {
    * @param {string} options.namespace namespace of connect
    * @param {string} options.url frame url
    */
-  constructor({ namespace, url }) {
+  constructor({ namespace, messengerGroup, url }) {
+    this.messengerGroup = messengerGroup;
     this.url = url;
     this.frame = null;
     this.position = null;
@@ -36,6 +34,7 @@ export default class Widget {
       to: DIRECTION.AUTH,
       from: DIRECTION.CONNECT,
     });
+    this.frameResolver = [];
     this.subscribe();
   }
 
@@ -112,15 +111,18 @@ export default class Widget {
   /**
    * Create markup and prepend to <body>
    */
-  mount(parameters = {}) {
-    const { url } = this;
+  async mount(parameters = {}) {
+    if (this.isMounted) {
+      const node = await this.getWidgetNode();
+      return node;
+    }
+    this.isMounted = true;
 
     this.position = parameters.position || null;
-    this.isMounted = true;
 
     const styles = this.getWidgetFrameInlineStyles();
     const markup = `
-      <iframe id="endpass-widget" data-test="widget-frame" data-endpass="widget-frame" style="${styles}" src="${url}"></iframe>
+      <iframe id="endpass-widget" data-test="widget-frame" data-endpass="widget-frame" style="${styles}" src="${this.url}"></iframe>
     `;
 
     document.body.insertAdjacentHTML('afterBegin', markup);
@@ -131,21 +133,23 @@ export default class Widget {
 
     this.widgetMessenger.setTarget(this.frame.contentWindow);
 
+    this.messengerGroup.addMessenger(this.widgetMessenger);
+
+    this.frameResolver.forEach(resolve => resolve(this.frame));
+    this.frameResolver.length = 0;
+
     return this.frame;
   }
 
   unmount() {
-    // const widgetMessenger = this.widgetMessenger;
+    if (!this.isMounted) return;
+
+    this.isMounted = false;
+
+    this.messengerGroup.removeMessenger(this.widgetMessenger);
 
     this.frame.style.opacity = 0;
     this.isLoaded = false;
-    this.isMounted = false;
-
-    // widgetMessenger.unsubscribe(METHODS.WIDGET_INIT);
-    // widgetMessenger.unsubscribe(METHODS.WIDGET_EXPAND_REQUEST);
-    // widgetMessenger.unsubscribe(METHODS.WIDGET_OPEN);
-    // widgetMessenger.unsubscribe(METHODS.WIDGET_CLOSE);
-    // widgetMessenger.unsubscribe(METHODS.WIDGET_FIT);
 
     this.frame.removeEventListener('load', this.handleWidgetFrameLoad);
     window.removeEventListener('resize', this.debouncedHandleScreenResize);
@@ -184,85 +188,28 @@ export default class Widget {
 
   getWidgetNode() {
     return new Promise(resolve => {
-      const handler = cb => {
-        if (this.frame) {
-          cb(this.frame);
-          return true;
-        }
-        setTimeout(() => {
-          handler(cb);
-        }, 250);
-        return false;
-      };
-
-      handler(resolve);
+      if (this.frame) {
+        return resolve(this.frame);
+      }
+      this.frameResolver.push(resolve);
     });
   }
 
-  getWidgetFrameDesktopPositionStylesObject() {
-    const { position = {} } = this;
-    const actualPosition = {
-      left: 'auto',
-      right: 'auto',
-      top: 'auto',
-      bottom: 'auto',
-      ...position,
-    };
-
-    if (actualPosition.left === 'auto' && actualPosition.right === 'auto') {
-      Object.assign(actualPosition, {
-        right: '15px',
-      });
-    }
-
-    if (actualPosition.top === 'auto' && actualPosition.bottom === 'auto') {
-      Object.assign(actualPosition, {
-        bottom: '5px',
-      });
-    }
-
-    return actualPosition;
-  }
-
-  /**
-   * @returns {object}
-   */
-  getWidgetFrameStylesObject() {
-    const { isMobile, isExpanded, isLoaded } = this;
-
-    switch (true) {
-      case isMobile && isLoaded && isExpanded:
-        return {
-          ...FRAME_MOBILE_EXPANDED_STYLES,
-          opacity: Number(this.isLoaded),
-        };
-      case isMobile && isLoaded && !isExpanded:
-        return {
-          ...FRAME_MOBILE_COLLAPSED_STYLES,
-          opacity: Number(this.isLoaded),
-        };
-      case isLoaded:
-        return {
-          ...FRAME_DESKTOP_STYLES,
-          ...this.getWidgetFrameDesktopPositionStylesObject(),
-          opacity: Number(this.isLoaded),
-        };
-      default:
-        return INITIAL_FRAME_STYLES;
-    }
-  }
-
   getWidgetFrameInlineStyles() {
-    const stylesObject = this.getWidgetFrameStylesObject();
+    const { isMobile, isExpanded, isLoaded, position } = this;
+    const stylesObject = getWidgetFrameStylesObject({
+      isMobile,
+      isExpanded,
+      isLoaded,
+      position,
+    });
 
     if (!this.frame) {
       return inlineStyles(stylesObject);
     }
 
-    const { clientHeight } = this.frame;
-
     Object.assign(stylesObject, {
-      height: `${clientHeight}px`,
+      height: `${this.frame.clientHeight}px`,
     });
 
     return inlineStyles(stylesObject);
