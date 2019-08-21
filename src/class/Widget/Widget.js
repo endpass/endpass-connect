@@ -14,11 +14,10 @@ import {
 export default class Widget {
   /**
    * @param {object} options
-   * @param {string} options.namespace Context namespace
-   * @param {string} options.url Context
+   * @param {string} options.namespace namespace of connect
+   * @param {string} options.url frame url
    */
   constructor({ namespace, url }) {
-    this.namespace = namespace;
     this.url = url;
     this.frame = null;
     this.position = null;
@@ -31,6 +30,13 @@ export default class Widget {
     this.handleDocumentClick = this.handleDocumentClick.bind(this);
     this.handleScreenResize = this.handleScreenResize.bind(this);
     this.debouncedHandleScreenResize = debounce(this.handleScreenResize, 100);
+    this.widgetMessenger = new CrossWindowMessenger({
+      showLogs: !ENV.isProduction,
+      name: `connect-bridge-widget[${namespace}]`,
+      to: DIRECTION.AUTH,
+      from: DIRECTION.CONNECT,
+    });
+    this.subscribe();
   }
 
   /* eslint-disable-next-line */
@@ -42,19 +48,9 @@ export default class Widget {
     return this.widgetMessenger;
   }
 
-  createMessenger() {
-    this.widgetMessenger = new CrossWindowMessenger({
-      showLogs: !ENV.isProduction,
-      name: `connect-bridge-widget[${this.namespace}]`,
-      to: DIRECTION.AUTH,
-      from: DIRECTION.CONNECT,
-    });
-  }
-
   subscribe() {
     const widgetMessenger = this.getWidgetMessenger();
 
-    widgetMessenger.setTarget(this.frame.contentWindow);
     widgetMessenger.subscribe(METHODS.WIDGET_INIT, (payload, req) => {
       req.answer({
         position: this.position,
@@ -135,23 +131,23 @@ export default class Widget {
     this.frame.addEventListener('load', this.handleWidgetFrameLoad);
     window.addEventListener('resize', this.debouncedHandleScreenResize);
 
-    this.subscribe();
+    this.getWidgetMessenger().setTarget(this.frame.contentWindow);
 
     return this.frame;
   }
 
   unmount() {
-    const widgetMessenger = this.getWidgetMessenger();
+    // const widgetMessenger = this.getWidgetMessenger();
 
     this.frame.style.opacity = 0;
     this.isLoaded = false;
     this.isMounted = false;
 
-    widgetMessenger.unsubscribe(METHODS.WIDGET_INIT);
-    widgetMessenger.unsubscribe(METHODS.WIDGET_EXPAND_REQUEST);
-    widgetMessenger.unsubscribe(METHODS.WIDGET_OPEN);
-    widgetMessenger.unsubscribe(METHODS.WIDGET_CLOSE);
-    widgetMessenger.unsubscribe(METHODS.WIDGET_FIT);
+    // widgetMessenger.unsubscribe(METHODS.WIDGET_INIT);
+    // widgetMessenger.unsubscribe(METHODS.WIDGET_EXPAND_REQUEST);
+    // widgetMessenger.unsubscribe(METHODS.WIDGET_OPEN);
+    // widgetMessenger.unsubscribe(METHODS.WIDGET_CLOSE);
+    // widgetMessenger.unsubscribe(METHODS.WIDGET_FIT);
 
     this.frame.removeEventListener('load', this.handleWidgetFrameLoad);
     window.removeEventListener('resize', this.debouncedHandleScreenResize);

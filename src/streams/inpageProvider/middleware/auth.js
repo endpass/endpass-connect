@@ -6,7 +6,7 @@ import { WEB3_METHODS } from '@/constants';
 export default async function(context, action) {
   const { request } = action;
 
-  if (request.method === WEB3_METHODS.ETH_ACCOUNTS && !context.isLogin()) {
+  if (request.method === WEB3_METHODS.ETH_ACCOUNTS && !context.isLogin) {
     // AuthClass.auth();
     await context.serverAuth();
   }

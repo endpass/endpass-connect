@@ -110,8 +110,8 @@ describe('Context class', () => {
         demoData,
       });
 
-      expect(demoContext.isLogin()).toBe(true);
-      expect(defaultContext.isLogin()).toBe(false);
+      expect(demoContext.isLogin).toBe(true);
+      expect(defaultContext.isLogin).toBe(false);
     });
 
     it('should pass initial data', () => {

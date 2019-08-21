@@ -27,8 +27,8 @@ const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
 export default class Dialog {
   /**
    * @param {object} options
-   * @param {string} options.namespace Context namespace
-   * @param {string} options.url Context
+   * @param {string} options.namespace namespace of connect
+   * @param {string} options.url frame url
    */
   constructor({ namespace, url }) {
     this.namespace = namespace;

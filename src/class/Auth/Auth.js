@@ -4,32 +4,30 @@ import { METHODS } from '@/constants';
 const { ERRORS } = ConnectError;
 
 export default class Auth {
-  constructor({ context, haveDemoData }) {
+  constructor({ context }) {
     this.context = context;
-    this.haveDemoData = haveDemoData;
     this.isServerLogin = false;
   }
 
-  isLogin() {
-    if (this.haveDemoData) {
-      return true;
-    }
+  get isLogin() {
+    return this.isServerLogin;
+  }
 
-    const { activeAccount } = this.context.getInpageProvider().settings;
-
-    return !!(activeAccount && this.isServerLogin);
+  setLoggedIn(value) {
+    this.isServerLogin = value;
   }
 
   /**
    * Open application on auth screen and waits result (success of failure)
    * @public
-   * @throws {Error} If authentification failed
+   * @throws {Error} If authentication failed
    * @returns {Promise<boolean>} Auth result, check `status` property to
    *  know about result
    */
   async auth(redirectUrl) {
     const toPath = redirectUrl || window.location.href;
-    const res = await this.context.askDialog(METHODS.AUTH, {
+
+    const res = await this.context.dialog.ask(METHODS.AUTH, {
       redirectUrl: toPath,
     });
 

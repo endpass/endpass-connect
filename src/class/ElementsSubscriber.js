@@ -60,6 +60,10 @@ export default class ElementsSubscriber {
   subscribeDialog() {
     const dialogMessenger = this.dialog.getDialogMessenger();
 
+    dialogMessenger.subscribe(METHODS.AUTH_STATUS, (payload, req) => {
+      this.context.authRequester.setLoggedIn(payload);
+    });
+
     dialogMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
       req.answer({
         ...this.initialPayload,

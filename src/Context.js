@@ -13,13 +13,10 @@ import {
   Auth,
 } from '@/class';
 import { INPAGE_EVENTS, METHODS, DEFAULT_AUTH_URL } from '@/constants';
-
-import pkg from '../package.json';
+import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
 import createStream from '@/streams';
 
 const { ERRORS } = ConnectError;
-
-const authUrlRegexp = new RegExp('://auth(\\.|-)', 'ig');
 
 const WIDGET_AUTH_TIMEOUT = 1500;
 
@@ -43,22 +40,24 @@ export default class Context {
     if (!options.oauthClientId) {
       throw ConnectError.create(ERRORS.OAUTH_REQUIRE_ID);
     }
-    const authUrlRaw = options.authUrl || DEFAULT_AUTH_URL;
 
     /**
-     * Independant class properties
+     * Independent class properties
      */
     this.inpageProvider = null;
     this.requestProvider = null;
     this.oauthRequestProvider = null;
     this.oauthClientId = options.oauthClientId;
+    this.haveDemoData = !!options.demoData;
+
+    // options.plugins.forEach((Plugin) => {
+    //   new Plugin(this);
+    // });
+
     this.authRequester = new Auth({
       context: this,
-      haveDemoData: !!options.demoData,
     });
-    const authUrl = !authUrlRegexp.test(authUrlRaw)
-      ? authUrlRaw
-      : authUrlRaw.replace('://auth', `://auth${pkg.authVersion}`);
+    const authUrl = getAuthUrl(options.authUrl || DEFAULT_AUTH_URL);
     this.widgetOptions = options.widget;
 
     const namespace = options.namespace || '';
@@ -73,11 +72,12 @@ export default class Context {
 
     this.dialog = new Dialog({
       namespace,
-      url: this.getConnectUrl(authUrl, 'bridge'),
+      url: getFrameRouteUrl(authUrl, 'bridge'),
     });
+
     this.widget = new Widget({
       namespace,
-      url: this.getConnectUrl(authUrl, 'public/widget'),
+      url: getFrameRouteUrl(authUrl, 'public/widget'),
     });
 
     this.elementsSubscriber = new ElementsSubscriber({
@@ -91,6 +91,8 @@ export default class Context {
       },
     });
     this.elementsSubscriber.subscribeDialog();
+
+    //this.serviceLocator.getElementsSubscriber().subscribeDialog();
 
     // TODO: create state
     // this.state = {
@@ -107,21 +109,11 @@ export default class Context {
     this.setupOnAuth();
   }
 
-  /**
-   * Returns connect application url with passed method
-   * @private
-   * @param {string} method Expected method (route)
-   * @returns {string} Completed url to open
-   */
-  getConnectUrl(authUrl, method) {
-    return !method ? authUrl : `${authUrl}/${method}`;
-  }
-
   setupLoginEvents() {
     this.emitter.on(INPAGE_EVENTS.LOGIN, async () => {
       let error = null;
 
-      if (!this.isLogin()) {
+      if (!this.isLogin) {
         try {
           await this.serverAuth();
         } catch (e) {
@@ -136,20 +128,12 @@ export default class Context {
     });
   }
 
-  /**
-   *
-   * @param {string} method method call
-   * @param {object=} [payload] payload payload
-   * @return {Promise<any>}
-   */
-  async askDialog(method, payload) {
-    const res = await this.getDialog().ask(method, payload);
+  get isLogin() {
+    if (this.haveDemoData) {
+      return true;
+    }
 
-    return res;
-  }
-
-  isLogin() {
-    return this.authRequester.isLogin();
+    return this.authRequester.isLogin;
   }
 
   /**
@@ -184,7 +168,7 @@ export default class Context {
    */
   async getAccountData() {
     try {
-      const { payload, status, code } = await this.getDialog().ask(
+      const { payload, status, code } = await this.dialog.ask(
         METHODS.GET_SETTINGS,
       );
 
@@ -198,7 +182,6 @@ export default class Context {
         activeNet: settings.net || Network.NET_ID.MAIN,
       };
 
-      this.authRequester.isServerLogin = true;
       this.setProviderSettings(res);
 
       return res;
@@ -320,7 +303,6 @@ export default class Context {
     clearInterval(this.widgetAutoMountTimerId);
 
     this.widgetOptions = parameters;
-    this.widget.createMessenger();
     this.elementsSubscriber.subscribeWidget();
     const frame = this.widget.mount(parameters);
 
@@ -345,7 +327,7 @@ export default class Context {
 
   setupOnAuth() {
     this.widgetAutoMountTimerId = setInterval(() => {
-      if (this.widgetOptions !== false && this.isLogin()) {
+      if (this.widgetOptions !== false && this.isLogin) {
         this.mountWidget(this.widgetOptions);
       }
     }, WIDGET_AUTH_TIMEOUT);
