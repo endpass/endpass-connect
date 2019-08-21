@@ -1,12 +1,14 @@
+import Network from '@endpass/class/Network';
 import { visitUrl, visitBlockBasic } from '@config';
 
-Cypress.Commands.add('preparePage', () => {
+Cypress.Commands.add('preparePage', netId => {
   cy.server();
   cy.authFramePrepare();
-  cy.mockInitialData();
+  cy.setupWeb3Provider(netId);
+  cy.mockInitialData(netId);
 });
 
-Cypress.Commands.add('waitPageLoad', () => {
+Cypress.Commands.add('waitPageLoad', (netId = Network.NET_ID.MAIN) => {
   cy.visit(`${visitUrl}${visitBlockBasic}`, {
     onBeforeLoad(win) {
       // eslint-disable-next-line no-param-reassign
@@ -14,5 +16,5 @@ Cypress.Commands.add('waitPageLoad', () => {
       cy.stub(win, 'e2eLogout').as('e2eLogout');
     },
   });
-  cy.preparePage();
+  cy.preparePage(netId);
 });

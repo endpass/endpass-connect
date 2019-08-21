@@ -1,4 +1,4 @@
-import { etherPrices } from '@fixtures/cryptodata/price';
+import { etherPrices, gasPrice } from '@fixtures/cryptodata/price';
 import { cryptodataAPIUrl } from '@config';
 
 Cypress.Commands.add('mockEtherPrices', () => {
@@ -7,5 +7,14 @@ Cypress.Commands.add('mockEtherPrices', () => {
     method: 'GET',
     status: 200,
     response: etherPrices,
+  });
+});
+
+Cypress.Commands.add('mockGasPrices', () => {
+  cy.route({
+    url: `${cryptodataAPIUrl}/*/gas/price`,
+    method: 'GET',
+    status: 200,
+    response: gasPrice,
   });
 });

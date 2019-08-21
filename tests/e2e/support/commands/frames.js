@@ -4,6 +4,7 @@ Cypress.Commands.add('authFrameContinueRun', () => {
     win.document
       .querySelector('[data-test=dialog-iframe]')
       .contentWindow.localStorage.clear();
+
     return win.e2eBridge.resumeClient();
   });
 });

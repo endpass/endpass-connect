@@ -1,9 +1,10 @@
+import Network from '@endpass/class/Network';
 import { responseSuccess } from '@fixtures/response';
 import settings from '@fixtures/identity/settings';
 import { email } from '@fixtures/identity/accounts';
 import { identityAPIUrl, publicAPIUrl } from '@config';
 
-Cypress.Commands.add('mockSettings', () => {
+Cypress.Commands.add('mockSettings', (netId = Network.NET_ID.MAIN) => {
   cy.route({
     url: `${identityAPIUrl}/settings`,
     method: 'POST',
@@ -15,7 +16,10 @@ Cypress.Commands.add('mockSettings', () => {
     url: `${identityAPIUrl}/settings`,
     method: 'GET',
     status: 200,
-    response: settings,
+    response: {
+      ...settings,
+      net: netId,
+    },
   });
 
   cy.route({

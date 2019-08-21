@@ -1,6 +1,6 @@
-import { visitUrl, visitBlockBasic } from '@config';
+import Network from '@endpass/class/Network';
 
-Cypress.Commands.add('mockInitialData', () => {
+Cypress.Commands.add('mockInitialData', (netId = Network.NET_ID.MAIN) => {
   cy.mockAuthCheck(200);
   cy.mockAuthPermission();
   cy.mockOauthLogin();
@@ -15,10 +15,12 @@ Cypress.Commands.add('mockInitialData', () => {
   cy.mockAccountsList();
   cy.mockAccountUpdate();
 
-  cy.mockSettings();
+  cy.mockSettings(netId);
   cy.mockRopstenFaucet();
 
+  cy.mockGasPrices();
   cy.mockEtherPrices();
-  cy.mockBalance();
+  cy.mockBalance({
+    netId,
+  });
 });
-
