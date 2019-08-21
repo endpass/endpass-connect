@@ -7,7 +7,7 @@ import { DEFAULT_AUTH_URL } from '@/constants';
 import { MessengerGroup } from '@/class';
 
 export default class BasicModules {
-  constructor(options, context) {
+  constructor(context, options) {
     const { namespace, authUrl } = options;
     this.context = context;
     this.namespace = namespace || '';
@@ -22,7 +22,7 @@ export default class BasicModules {
   getAuthInstance() {
     if (!this.authRequester) {
       this.authRequester = new Auth({
-        context: this.context,
+        dialog: this.getDialogInstance(),
       });
     }
     return this.authRequester;
@@ -71,23 +71,16 @@ export default class BasicModules {
     return this.messengerGroup;
   }
 
-  /**
-   *
-   * @return {ElementsSubscriber}
-   */
-  getElementsSubscriberInstance() {
-    if (!this.elementsSubscriber) {
-      const { demoData, isIdentityMode, showCreateAccount } = this.options;
-      this.elementsSubscriber = new ElementsSubscriber({
-        context: this.context,
-        initialPayload: {
-          demoData,
-          isIdentityMode: isIdentityMode || false,
-          showCreateAccount,
-        },
-      });
-    }
-
-    return this.elementsSubscriber;
+  initElementsSubscriber() {
+    const { demoData, isIdentityMode, showCreateAccount } = this.options;
+    const elementsSubscriber = new ElementsSubscriber({
+      context: this.context,
+      initialPayload: {
+        demoData,
+        isIdentityMode: isIdentityMode || false,
+        showCreateAccount,
+      },
+    });
+    elementsSubscriber.subscribeElements();
   }
 }

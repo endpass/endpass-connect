@@ -4,8 +4,8 @@ import { METHODS } from '@/constants';
 const { ERRORS } = ConnectError;
 
 export default class Auth {
-  constructor({ context }) {
-    this.context = context;
+  constructor({ dialog }) {
+    this.dialog = dialog;
     this.isServerLogin = false;
   }
 
@@ -27,7 +27,7 @@ export default class Auth {
   async auth(redirectUrl) {
     const toPath = redirectUrl || window.location.href;
 
-    const res = await this.context.getDialog().ask(METHODS.AUTH, {
+    const res = await this.dialog.ask(METHODS.AUTH, {
       redirectUrl: toPath,
     });
 
@@ -50,7 +50,7 @@ export default class Auth {
    * @returns {Promise<Boolean>}
    */
   async logout() {
-    const res = await this.context.getDialog().ask(METHODS.LOGOUT);
+    const res = await this.dialog.ask(METHODS.LOGOUT);
 
     if (!res.status) {
       throw ConnectError.create(res.code || ERRORS.AUTH_LOGOUT);

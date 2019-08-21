@@ -43,19 +43,14 @@ export default class Context {
     // options.plugins.forEach((Plugin) => {
     //   new Plugin(this);
     // });
-    this.basicModules = new BasicModules(options, this);
-
-    this.widgetOptions = options.widget;
-
+    this.basicModules = new BasicModules(this, options);
+    this.basicModules.initElementsSubscriber();
     /**
      * Inner abstractions initialization
      */
     this.emitter = new Emmiter();
     this.inpageProvider = new InpageProvider(this.emitter);
     this.requestProvider = ProviderFactory.createRequestProvider();
-
-    const elementsSubscriber = this.basicModules.getElementsSubscriberInstance();
-    elementsSubscriber.subscribeElements();
 
     // TODO: create state
     // this.state = {
@@ -64,10 +59,9 @@ export default class Context {
     // };
 
     this.setupLoginEvents();
-
+    this.setupWidgetOnAuth(options.widget);
     
     createStream(this);
-    this.setupOnAuth();
   }
 
   setupLoginEvents() {
@@ -200,7 +194,7 @@ export default class Context {
    */
   async loginWithOauth(params) {
     const strategy = new OauthPkceStrategy({
-      context: this,
+      dialog: this.getDialog(),
     });
 
     this.oauthRequestProvider = new Oauth({
@@ -265,7 +259,6 @@ export default class Context {
 
     clearInterval(this.widgetAutoMountTimerId);
 
-    this.widgetOptions = parameters;
     const frame = this.getWidget().mount(parameters);
     this.basicModules
       .getMessengerGroupInstance()
@@ -289,10 +282,14 @@ export default class Context {
     return res;
   }
 
-  setupOnAuth() {
+  setupWidgetOnAuth(options) {
+    if (options === false) {
+      return;
+    }
+
     this.widgetAutoMountTimerId = setInterval(() => {
-      if (this.widgetOptions !== false && this.isLogin) {
-        this.mountWidget(this.widgetOptions);
+      if (this.isLogin) {
+        this.mountWidget(options);
       }
     }, WIDGET_AUTH_TIMEOUT);
   }
