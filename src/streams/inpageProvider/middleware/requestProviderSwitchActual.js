@@ -4,7 +4,7 @@ import ProviderFactory from '@/class/ProviderFactory';
 import Network from '@endpass/class/Network';
 
 /** @type {import("@/types/Middleware").Middleware} */
-const middleware = (context, action) => {
+const requestProviderSwitchActual = async (context, action) => {
   const { activeNet } = action.settings;
   const itemUrl = get(Network.NETWORK_URL_HTTP, `[${activeNet}][0]`);
   const { host } = context.getRequestProvider();
@@ -15,4 +15,4 @@ const middleware = (context, action) => {
   context.setRequestProvider(provider);
 };
 
-export default middleware;
+export default requestProviderSwitchActual;

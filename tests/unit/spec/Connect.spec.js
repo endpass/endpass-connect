@@ -1,6 +1,5 @@
 import ConnectError from '@endpass/class/ConnectError';
 import Connect from '@/Connect';
-import Queue from '@/Queue';
 import privateFields from '@/privateFields';
 import { InpageProvider, ProviderFactory } from '@/class';
 import { INPAGE_EVENTS, METHODS } from '@/constants';
@@ -35,15 +34,12 @@ describe('Connect class', () => {
     });
 
     it('should subscribe on events is subscribe property passed to constructor', () => {
-      jest.spyOn(Queue.prototype, 'setupEventEmitter');
       jest.spyOn(ProviderFactory, 'createRequestProvider');
 
       connect = new Connect({ authUrl, oauthClientId });
 
-      const queue = connect[privateFields.queue];
       context = connect[privateFields.context];
 
-      expect(queue.setupEventEmitter).toBeCalled();
       expect(ProviderFactory.createRequestProvider).toBeCalled();
     });
 

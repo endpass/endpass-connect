@@ -1,9 +1,7 @@
 import ConnectError from '@endpass/class/ConnectError';
 import Context from '@/Context';
 import privateFields from '@/privateFields';
-import Queue from '@/Queue';
 import { METHODS } from '@/constants';
-import middleware from '@/middleware';
 
 import pkg from '../package.json';
 
@@ -25,10 +23,7 @@ export default class Connect {
    *  prevent widget mounting
    */
   constructor(options) {
-    const context = new Context(options);
-
-    this[privateFields.context] = context;
-    this[privateFields.queue] = new Queue(context, { middleware });
+    this[privateFields.context] = new Context(options);
   }
 
   /**

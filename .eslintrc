@@ -61,5 +61,13 @@
         ]
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.spec.js"],
+      "rules": {
+        "global-require": "off",
+      }
+    }
+  ]
 }

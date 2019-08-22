@@ -2,7 +2,7 @@ import ConnectError from '@endpass/class/ConnectError';
 import Connect from '@/Connect';
 import { INPAGE_EVENTS, METHODS } from '@/constants';
 import privateFields from '@/privateFields';
-import RequestProcess from '@/middleware/netRequest/RequestProcess';
+import RequestProcess from '@/streams/inpageProvider/middleware/netRequest/RequestProcess';
 
 const { ERRORS } = ConnectError;
 
