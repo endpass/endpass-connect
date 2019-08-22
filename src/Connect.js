@@ -1,11 +1,7 @@
-import ConnectError from '@endpass/class/ConnectError';
 import Context from '@/Context';
 import privateFields from '@/privateFields';
-import { METHODS } from '@/constants';
 
 import pkg from '../package.json';
-
-const { ERRORS } = ConnectError;
 
 if (ENV.isProduction) {
   /* eslint-disable-next-line */
@@ -17,9 +13,9 @@ if (ENV.isProduction) {
 
 export default class Connect {
   /**
-   * @param {String} options.authUrl Url of hosted Endpass Connect Application
-   * @param {String} options.oauthClientId OAuth client id
-   * @param {Object|Boolean} [options.widget] Widget parameters. Pass false to
+   * @param {string} options.authUrl Url of hosted Endpass Connect Application
+   * @param {string} options.oauthClientId OAuth client id
+   * @param {object|boolean} [options.widget] Widget parameters. Pass false to
    *  prevent widget mounting
    */
   constructor(options) {
@@ -43,7 +39,7 @@ export default class Connect {
    * Settings includes last active account and network id
    * @public
    * @throws {Error} If settings can not be resolved
-   * @returns {Promise<Object>} Account data
+   * @returns {Promise<object>} Account data
    */
   async getAccountData() {
     return this[privateFields.context].getAccountData();
@@ -80,7 +76,7 @@ export default class Connect {
    * Send request to logout through injected bridge bypass application dialog
    * @public
    * @throws {Error} If logout failed
-   * @returns {Promise<Boolean>}
+   * @returns {Promise<boolean>}
    */
   async logout() {
     return this[privateFields.context].logout();
@@ -93,92 +89,78 @@ export default class Connect {
    * be updated and promise will return updated settings
    * @public
    * @throws {Error} If update failed
-   * @returns {Promise<Object>}
+   * @returns {Promise<object>}
    */
   async openAccount() {
-    const context = this[privateFields.context];
-    const res = await context.getDialog().ask(METHODS.ACCOUNT);
-
-    if (!res.status) {
-      throw ConnectError.create(res.code || ERRORS.ACCOUNT_UPDATE);
-    }
-
-    const { type, settings } = res.payload;
-
-    if (type === 'update') {
-      this.setProviderSettings(settings);
-
-      return {
-        type,
-        settings,
-      };
-    }
-
-    return {
-      type,
-    };
+    return this[privateFields.context].plugins.provider.openAccount();
   }
 
   /**
    * Fetch user data via oauth
-   * @param {Object} params Parameters object
-   * @param {Number} [params.popupWidth] Oauth popup width
-   * @param {Number} [params.popupHeight] Oauth popup height
-   * @param {String[]} params.scopes - Array of authorization scopes
+   * @param {object} params Parameters object
+   * @param {number} [params.popupWidth] Oauth popup width
+   * @param {number} [params.popupHeight] Oauth popup height
+   * @param {string[]} params.scopes - Array of authorization scopes
    */
   async loginWithOauth(params) {
-    await this[privateFields.context].loginWithOauth(params);
+    await this[privateFields.context].plugins.oauth.loginWithOauth(params);
   }
 
+  /**
+   * Clears instance scopes and token
+   * @throws {Error} If not authorized yet;
+   */
   logoutFromOauth() {
-    this[privateFields.context].logoutFromOauth();
+    this[privateFields.context].plugins.oauth.logoutFromOauth();
   }
 
   /**
    * Sets oauth popup parameters
-   * @param {Object} params Parameters object
-   * @param {Number} [params.width] Oauth popup width
-   * @param {Number} [params.height] Oauth popup height
+   * @param {object} params Parameters object
+   * @param {number} [params.width] Oauth popup width
+   * @param {number} [params.height] Oauth popup height
    * @throws {Error} If not authorized yet;
    */
   setOauthPopupParams(params) {
-    this[privateFields.context].setOauthPopupParams(params);
+    this[privateFields.context].plugins.oauth.setOauthPopupParams(params);
   }
 
   /**
    * Fetch user data via oauth
-   * @param {Object} [options] Request parameters object
-   * @param {String} options.url Request url
-   * @param {String} options.method Request http method
-   * @param {Object} [options.params] - Request parameters
-   * @param {Object} [options.headers] - Request headers
-   * @param {Object|string} [options.data] - Request body
+   * @param {object} [options] Request parameters object
+   * @param {string} options.url Request url
+   * @param {string} options.method Request http method
+   * @param {object} [options.params] - Request parameters
+   * @param {object} [options.headers] - Request headers
+   * @param {object|string} [options.data] - Request body
    * @returns {Promise} Request promise
    * @throws {Error} If not authorized yet;
    */
   request(options) {
-    return this[privateFields.context].request(options);
+    return this[privateFields.context].plugins.oauth.request(options);
   }
 
   /**
    * Mounts endpass widget
-   * @param {Object} [params] Parameters object
-   * @param {Object} [params.position] Position of mounting widget
-   * @param {Object} [params.position.left]
-   * @param {Object} [params.position.right]
-   * @param {Object} [params.position.top]
-   * @param {Object} [params.position.bottom]
+   * @param {object} [params] Parameters object
+   * @param {object} [params.position] Position of mounting widget
+   * @param {object} [params.position.left]
+   * @param {object} [params.position.right]
+   * @param {object} [params.position.top]
+   * @param {object} [params.position.bottom]
    * @returns {Promise<Element>} Mounted widget iframe element
    */
   mountWidget(params) {
-    return this[privateFields.context].mountWidget(params);
+    return this[privateFields.context].plugins.elements
+      .getWidgetInstance()
+      .mount(params);
   }
 
   /**
    * Unmounts endpass widget from DOM
    */
   unmountWidget() {
-    this[privateFields.context].unmountWidget();
+    this[privateFields.context].plugins.elements.getWidgetInstance().unmount();
   }
 
   /**
@@ -186,7 +168,9 @@ export default class Connect {
    * @returns {Promise<Element>} Widget iframe node
    */
   async getWidgetNode() {
-    const res = await this[privateFields.context].getWidgetNode();
+    const res = await this[privateFields.context].plugins.elements
+      .getWidgetInstance()
+      .getWidgetNode();
 
     return res;
   }

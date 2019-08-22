@@ -36,6 +36,33 @@ export default class ProviderPlugin extends Plugin {
   }
 
   /**
+   *
+   * @return {Promise<object>}
+   */
+  async openAccount() {
+    const res = await this.context.getDialog().ask(METHODS.ACCOUNT);
+
+    if (!res.status) {
+      throw ConnectError.create(res.code || ERRORS.ACCOUNT_UPDATE);
+    }
+
+    const { type, settings } = res.payload;
+
+    if (type === 'update') {
+      this.context.setProviderSettings(settings);
+
+      return {
+        type,
+        settings,
+      };
+    }
+
+    return {
+      type,
+    };
+  }
+
+  /**
    * Requests user settings from injected bridge and returns formatted data
    * Settings includes last active account and network id
    * @public
@@ -58,7 +85,7 @@ export default class ProviderPlugin extends Plugin {
         activeNet: settings.net || Network.NET_ID.MAIN,
       };
 
-      this.setProviderSettings(res);
+      this.context.setProviderSettings(res);
 
       return res;
     } catch (err) {
@@ -89,6 +116,10 @@ export default class ProviderPlugin extends Plugin {
     this.requestProvider = reqProvider;
   }
 
+  /**
+   *
+   * @return {Web3.Provider|Web3HttpProvider}
+   */
   getRequestProvider() {
     if (!this.requestProvider) {
       this.requestProvider = ProviderFactory.createRequestProvider();
@@ -97,6 +128,10 @@ export default class ProviderPlugin extends Plugin {
     return this.requestProvider;
   }
 
+  /**
+   *
+   * @return {InpageProvider}
+   */
   getInpageProvider() {
     if (!this.inpageProvider) {
       this.inpageProvider = new InpageProvider(this.getEmitter());
@@ -105,6 +140,10 @@ export default class ProviderPlugin extends Plugin {
     return this.inpageProvider;
   }
 
+  /**
+   *
+   * @return {Emitter}
+   */
   getEmitter() {
     if (!this.emitter) {
       this.emitter = new Emmiter();

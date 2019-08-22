@@ -30,11 +30,12 @@ export default class Context {
     /**
      * Independent class properties
      */
-
     this.plugins = PluginManager.createPlugins(
-      this,
-      [...defaultPlugins, options.plugins],
-      options,
+      [...defaultPlugins, ...(options.plugins || [])],
+      {
+        options,
+        context: this,
+      },
     );
     PluginManager.init(this.plugins);
 
@@ -122,69 +123,6 @@ export default class Context {
       .send(METHODS.CHANGE_SETTINGS_RESPONSE, settings);
   }
 
-  /**
-   * Fetch user data via oaurh
-   * @param {object} [params] Parameters object
-   * @param {number} [params.popupWidth] Oauth popup width
-   * @param {number} [params.popupHeight] Oauth popup height
-   * @param {string[]} params.scopes - Array of authorization scopes
-   */
-  async loginWithOauth(params) {
-    await this.plugins.oauth.loginWithOauth(params);
-  }
-
-  /**
-   * Makes api request with authorization token
-   * @param {object} [options] Request parameters object
-   * @param {string} options.url Request url
-   * @param {string} options.method Request http method
-   * @param {object} [options.params] - Request parameters
-   * @param {object} [options.headers] - Request headers
-   * @param {object|string} [options.data] - Request body
-   * @returns {Promise} Request promise
-   */
-  request(options) {
-    return this.plugins.oauth.request(options);
-  }
-
-  /**
-   * Clears instance scopes and token
-   * @throws {Error} If not authorized yet;
-   */
-  logoutFromOauth() {
-    this.plugins.oauth.logoutFromOauth();
-  }
-
-  /**
-   * Sets oauth popup parameters
-   * @param {object} params Parameters object
-   * @param {number} [params.width] Oauth popup width
-   * @param {number} [params.height] Oauth popup height
-   * @throws {Error} If not authorized yet;
-   */
-  setOauthPopupParams(params) {
-    this.plugins.oauth.setOauthPopupParams(params);
-  }
-
-  /**
-   * @param {object} [parameters]
-   * @returns {Promise<Element>}
-   */
-  async mountWidget(parameters) {
-    const frame = await this.getWidget().mount(parameters);
-    return frame;
-  }
-
-  unmountWidget() {
-    this.getWidget().unmount();
-  }
-
-  async getWidgetNode() {
-    const res = await this.getWidget().getWidgetNode();
-
-    return res;
-  }
-
   getInpageProvider() {
     return this.plugins.provider.getInpageProvider();
   }
@@ -193,13 +131,8 @@ export default class Context {
     return this.plugins.provider.getRequestProvider();
   }
 
-  /**
-   * Returns injected provider settings
-   * @private
-   * @returns {object} Current provider settings
-   */
   getInpageProviderSettings() {
-    return { ...this.getInpageProvider().settings };
+    return this.plugins.provider.getInpageProviderSettings();
   }
 
   getEmitter() {

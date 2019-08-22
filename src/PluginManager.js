@@ -6,7 +6,7 @@ const AVAILABLE_PLUGINS = {
 };
 
 export default class PluginManager {
-  static createPlugins(context, plugins, options) {
+  static createPlugins(plugins, props) {
     const pluginForCreateMap = plugins.reduce((map, Plugin) => {
       // eslint-disable-next-line no-param-reassign
       const pluginName = Plugin.pluginName();
@@ -37,7 +37,7 @@ export default class PluginManager {
         }
 
         Object.assign(map, {
-          [pluginName]: new Plugin(context, options),
+          [pluginName]: new Plugin(props),
         });
         return map;
       },

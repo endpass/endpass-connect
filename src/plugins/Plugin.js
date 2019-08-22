@@ -1,5 +1,5 @@
 export default class Plugin {
-  constructor(context) {
+  constructor({ context }) {
     this.context = context;
   }
 

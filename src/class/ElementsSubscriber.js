@@ -98,7 +98,7 @@ export default class ElementsSubscriber {
       this.handleSettingsChange(msg, req);
     });
     widgetMessenger.subscribe(METHODS.WIDGET_UNMOUNT, () => {
-      this.context.unmountWidget();
+      this.context.getWidget().unmount();
     });
   }
 }

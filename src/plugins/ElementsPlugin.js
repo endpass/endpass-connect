@@ -9,8 +9,9 @@ import Plugin from '@/plugins/Plugin';
 const WIDGET_AUTH_TIMEOUT = 1500;
 
 export default class ElementsPlugin extends Plugin {
-  constructor(context, options) {
-    super(context);
+  constructor(props) {
+    super(props);
+    const { options } = props;
     const { namespace, authUrl } = options;
     this.namespace = namespace || '';
     this.options = options;

@@ -2,9 +2,9 @@ import Auth from '@/class/Auth';
 import Plugin from '@/plugins/Plugin';
 
 export default class AuthPlugin extends Plugin {
-  constructor(context, options) {
-    super(context);
-    this.options = options;
+  constructor(props) {
+    super(props);
+    this.options = props.options;
   }
 
   static pluginName() {

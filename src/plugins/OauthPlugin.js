@@ -6,8 +6,9 @@ import Oauth from '@/class/Oauth';
 const { ERRORS } = ConnectError;
 
 export default class OauthPlugin extends Plugin {
-  constructor(context, options) {
-    super(context);
+  constructor(props) {
+    super(props);
+    const { options } = props;
     if (!options.oauthClientId) {
       throw ConnectError.create(ERRORS.OAUTH_REQUIRE_ID);
     }
