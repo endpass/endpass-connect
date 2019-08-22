@@ -1,9 +1,5 @@
 import ConnectError from '@endpass/class/ConnectError';
-import Network from '@endpass/class/Network';
-import Emmiter from '@/class/Emmiter';
-import InpageProvider from '@/class/InpageProvider';
-import ProviderFactory from '@/class/ProviderFactory';
-import { INPAGE_EVENTS, METHODS } from '@/constants';
+import { METHODS } from '@/constants';
 import createStream from '@/streams';
 import PluginManager from '@/PluginManager';
 
@@ -36,15 +32,9 @@ export default class Context {
     /**
      * Independent class properties
      */
-    this.inpageProvider = null;
-    this.requestProvider = null;
 
     this.plugins = PluginManager.createPlugins(this, plugins, options);
     PluginManager.init(this.plugins);
-
-    this.emitter = new Emmiter();
-    this.inpageProvider = new InpageProvider(this.emitter);
-    this.requestProvider = ProviderFactory.createRequestProvider();
 
     // TODO: create state
     // this.state = {
@@ -52,28 +42,7 @@ export default class Context {
     //   isLogin: false,
     // };
 
-    this.setupLoginEvents();
-
     createStream(this);
-  }
-
-  setupLoginEvents() {
-    this.emitter.on(INPAGE_EVENTS.LOGIN, async () => {
-      let error = null;
-
-      if (!this.isLogin) {
-        try {
-          await this.serverAuth();
-        } catch (e) {
-          error =
-            e.code === ERRORS.AUTH_CANCELED_BY_USER
-              ? e
-              : ConnectError.create(ERRORS.REQUEST_DATA);
-        }
-      }
-
-      this.emitter.emit(INPAGE_EVENTS.LOGGED_IN, { error });
-    });
   }
 
   get isLogin() {
@@ -113,28 +82,7 @@ export default class Context {
    * @returns {Promise<object>} Account data
    */
   async getAccountData() {
-    try {
-      const { payload, status, code } = await this.getDialog().ask(
-        METHODS.GET_SETTINGS,
-      );
-
-      if (!status) {
-        throw ConnectError.create(code || ERRORS.AUTH);
-      }
-
-      const { settings = {} } = payload;
-      const res = {
-        activeAccount: settings.lastActiveAccount,
-        activeNet: settings.net || Network.NET_ID.MAIN,
-      };
-
-      this.setProviderSettings(res);
-
-      return res;
-    } catch (err) {
-      console.error(err);
-      throw ConnectError.create(err.code || ERRORS.USER_NOT_AUTHORIZED);
-    }
+    return this.plugins.provider.getAccountData();
   }
 
   async serverAuth() {
@@ -155,7 +103,7 @@ export default class Context {
    * @param {Web3.Provider} reqProvider Web3 provider instance
    */
   setRequestProvider(reqProvider) {
-    this.requestProvider = reqProvider;
+    this.plugins.provider.setRequestProvider(reqProvider);
   }
 
   /**
@@ -166,10 +114,7 @@ export default class Context {
    * @param {string} payload.activeNet Active network ID
    */
   setProviderSettings(payload) {
-    this.getEmitter().emit(INPAGE_EVENTS.SETTINGS, {
-      activeAccount: payload.activeAccount,
-      activeNet: payload.activeNet || Network.NET_ID.MAIN,
-    });
+    this.plugins.provider.setProviderSettings(payload);
 
     const settings = this.getInpageProviderSettings();
     this.plugins.elements
@@ -241,11 +186,11 @@ export default class Context {
   }
 
   getInpageProvider() {
-    return this.inpageProvider;
+    return this.plugins.provider.getInpageProvider();
   }
 
   getRequestProvider() {
-    return this.requestProvider;
+    return this.plugins.provider.getRequestProvider();
   }
 
   /**
@@ -258,7 +203,7 @@ export default class Context {
   }
 
   getEmitter() {
-    return this.emitter;
+    return this.plugins.provider.getEmitter();
   }
 
   getDialog() {
