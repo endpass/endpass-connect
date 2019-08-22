@@ -4,17 +4,17 @@ import Emmiter from '@/class/Emmiter';
 import InpageProvider from '@/class/InpageProvider';
 import ProviderFactory from '@/class/ProviderFactory';
 import { INPAGE_EVENTS, METHODS } from '@/constants';
-import BasicModules from '@/plugins/BasicModules';
 import createStream from '@/streams';
-import ProviderModule from '@/plugins/ProviderModule';
-import OauthModule from '@/plugins/OauthModule';
 import PluginManager from '@/PluginManager';
+
+import ElementsPlugin from '@/plugins/ElementsPlugin';
+import ProviderPlugin from '@/plugins/ProviderPlugin';
+import OauthPlugin from '@/plugins/OauthPlugin';
+import AuthPlugin from '@/plugins/AuthPlugin';
 
 const { ERRORS } = ConnectError;
 
-const WIDGET_AUTH_TIMEOUT = 1500;
-
-const plugins = [BasicModules, ProviderModule, OauthModule];
+const plugins = [ElementsPlugin, ProviderPlugin, OauthPlugin, AuthPlugin];
 
 export default class Context {
   /**
@@ -33,17 +33,11 @@ export default class Context {
    *  equals to `bottom right`
    */
   constructor(options = {}) {
-    if (!options.oauthClientId) {
-      throw ConnectError.create(ERRORS.OAUTH_REQUIRE_ID);
-    }
-
     /**
      * Independent class properties
      */
     this.inpageProvider = null;
     this.requestProvider = null;
-    this.oauthClientId = options.oauthClientId;
-    this.haveDemoData = !!options.demoData;
 
     this.plugins = PluginManager.createPlugins(this, plugins, options);
     PluginManager.init(this.plugins);
@@ -59,8 +53,7 @@ export default class Context {
     // };
 
     this.setupLoginEvents();
-    this.setupWidgetOnAuth(options.widget);
-    
+
     createStream(this);
   }
 
@@ -84,10 +77,6 @@ export default class Context {
   }
 
   get isLogin() {
-    if (this.haveDemoData) {
-      return true;
-    }
-
     return this.getAuthRequester().isLogin;
   }
 
@@ -110,7 +99,7 @@ export default class Context {
    */
   async logout() {
     const res = await this.getAuthRequester().logout();
-    this.plugins.basicModules
+    this.plugins.elements
       .getMessengerGroupInstance()
       .send(METHODS.LOGOUT_RESPONSE);
     return res;
@@ -183,7 +172,7 @@ export default class Context {
     });
 
     const settings = this.getInpageProviderSettings();
-    this.plugins.basicModules
+    this.plugins.elements
       .getMessengerGroupInstance()
       .send(METHODS.CHANGE_SETTINGS_RESPONSE, settings);
   }
@@ -237,8 +226,6 @@ export default class Context {
    * @returns {Promise<Element>}
    */
   async mountWidget(parameters) {
-    clearInterval(this.widgetAutoMountTimerId);
-
     const frame = await this.getWidget().mount(parameters);
     return frame;
   }
@@ -251,18 +238,6 @@ export default class Context {
     const res = await this.getWidget().getWidgetNode();
 
     return res;
-  }
-
-  setupWidgetOnAuth(options) {
-    if (options === false) {
-      return;
-    }
-
-    this.widgetAutoMountTimerId = setInterval(() => {
-      if (this.isLogin) {
-        this.mountWidget(options);
-      }
-    }, WIDGET_AUTH_TIMEOUT);
   }
 
   getInpageProvider() {
@@ -287,14 +262,14 @@ export default class Context {
   }
 
   getDialog() {
-    return this.plugins.basicModules.getDialogInstance();
+    return this.plugins.elements.getDialogInstance();
   }
 
   getWidget() {
-    return this.plugins.basicModules.getWidgetInstance();
+    return this.plugins.elements.getWidgetInstance();
   }
 
   getAuthRequester() {
-    return this.plugins.basicModules.getAuthInstance();
+    return this.plugins.auth.getAuthInstance();
   }
 }

@@ -6,7 +6,9 @@ import { DEFAULT_AUTH_URL } from '@/constants';
 import MessengerGroup from '@/class/MessengerGroup';
 import Plugin from '@/plugins/Plugin';
 
-export default class BasicModules extends Plugin {
+const WIDGET_AUTH_TIMEOUT = 1500;
+
+export default class ElementsPlugin extends Plugin {
   constructor(context, options) {
     super(context);
     const { namespace, authUrl } = options;
@@ -16,7 +18,7 @@ export default class BasicModules extends Plugin {
   }
 
   static pluginName() {
-    return 'basicModules';
+    return 'elements';
   }
 
   init() {
@@ -30,6 +32,20 @@ export default class BasicModules extends Plugin {
       },
     });
     elementsSubscriber.subscribeElements();
+    this.setupWidgetOnAuth(this.options);
+  }
+
+  setupWidgetOnAuth(options) {
+    if (options === false) {
+      return;
+    }
+
+    this.widgetAutoMountTimerId = setInterval(() => {
+      if (this.context.isLogin) {
+        clearInterval(this.widgetAutoMountTimerId);
+        this.getWidgetInstance().mount(options);
+      }
+    }, WIDGET_AUTH_TIMEOUT);
   }
 
   /**

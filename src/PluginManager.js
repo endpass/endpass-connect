@@ -1,14 +1,12 @@
-const availablePlugins = {
-  provider: true,
-  oauth: true,
-  basicModules: true,
-};
-
 export default class PluginManager {
   static createPlugins(context, plugins, options) {
     const pluginForCreateMap = plugins.reduce((map, Plugin) => {
       // eslint-disable-next-line no-param-reassign
-      map[Plugin.pluginName()] = Plugin;
+      const pluginName = Plugin.pluginName();
+      if (map[pluginName]) {
+        throw new Error(`plugin '${pluginName}' already defined`);
+      }
+      map[pluginName] = Plugin;
       return map;
     }, {});
 
@@ -17,11 +15,8 @@ export default class PluginManager {
     };
 
     // create all plugins
-    const pluginsInstances = Object.keys(availablePlugins).reduce(
+    const pluginsInstances = Object.keys(pluginForCreateMap).reduce(
       (map, pluginName) => {
-        if (!availablePlugins[pluginName]) {
-          return map;
-        }
         const Plugin = pluginForCreateMap[pluginName];
 
         if (!Plugin) {

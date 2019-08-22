@@ -4,12 +4,17 @@ import { METHODS } from '@/constants';
 const { ERRORS } = ConnectError;
 
 export default class Auth {
-  constructor({ dialog }) {
+  constructor({ dialog, options }) {
     this.dialog = dialog;
     this.isServerLogin = false;
+    this.haveDemoData = !!options.demoData;
   }
 
   get isLogin() {
+    if (this.haveDemoData) {
+      return true;
+    }
+
     return this.isServerLogin;
   }
 
