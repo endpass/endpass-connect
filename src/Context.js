@@ -1,16 +1,14 @@
 import ConnectError from '@endpass/class/ConnectError';
 import { METHODS } from '@/constants';
-import createStream from '@/streams';
 import PluginManager from '@/PluginManager';
 
 import ElementsPlugin from '@/plugins/ElementsPlugin';
-import ProviderPlugin from '@/plugins/ProviderPlugin';
 import OauthPlugin from '@/plugins/OauthPlugin';
 import AuthPlugin from '@/plugins/AuthPlugin';
 
 const { ERRORS } = ConnectError;
 
-const plugins = [ElementsPlugin, ProviderPlugin, OauthPlugin, AuthPlugin];
+const defaultPlugins = [ElementsPlugin, OauthPlugin, AuthPlugin];
 
 export default class Context {
   /**
@@ -33,7 +31,11 @@ export default class Context {
      * Independent class properties
      */
 
-    this.plugins = PluginManager.createPlugins(this, plugins, options);
+    this.plugins = PluginManager.createPlugins(
+      this,
+      [...defaultPlugins, options.plugins],
+      options,
+    );
     PluginManager.init(this.plugins);
 
     // TODO: create state
@@ -41,8 +43,6 @@ export default class Context {
     //   isPermission: false,
     //   isLogin: false,
     // };
-
-    createStream(this);
   }
 
   get isLogin() {

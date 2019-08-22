@@ -5,6 +5,7 @@ import Emmiter from '@/class/Emmiter';
 import InpageProvider from '@/class/InpageProvider';
 import { INPAGE_EVENTS, METHODS } from '@/constants';
 import ProviderFactory from '@/class/ProviderFactory';
+import createInpageProviderStream from '@/streams/inpageProvider/inpageProviderStream';
 
 const { ERRORS } = ConnectError;
 
@@ -14,6 +15,8 @@ export default class ProviderPlugin extends Plugin {
   }
 
   init() {
+    createInpageProviderStream(this.context);
+
     this.getEmitter().on(INPAGE_EVENTS.LOGIN, async () => {
       let error = null;
 

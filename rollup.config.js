@@ -33,8 +33,7 @@ const outputConf = {
   sourcemap: withSourceMaps,
 };
 
-export default {
-  input: resolveFile('./src/index.js'),
+const commonConfig = {
   external: [...Object.keys(pkg.dependencies)],
   plugins: [
     resolve({
@@ -61,17 +60,41 @@ export default {
   watch: {
     exclude: ['node_modules/**'],
   },
-  output: [
-    {
-      ...outputConf,
-      file: resolveFile(pkg.umd),
-      name: pkg.name,
-      format: 'umd',
-    },
-    {
-      ...outputConf,
-      file: resolveFile(pkg.module),
-      format: 'esm',
-    },
-  ],
 };
+
+export default [
+  {
+    input: resolveFile('./src/index.js'),
+    ...commonConfig,
+    output: [
+      {
+        ...outputConf,
+        file: resolveFile(pkg.umd),
+        name: pkg.name,
+        format: 'umd',
+      },
+      {
+        ...outputConf,
+        file: resolveFile(pkg.module),
+        format: 'esm',
+      },
+    ],
+  },
+  {
+    input: resolveFile('./src/plugins/ProviderPlugin.js'),
+    ...commonConfig,
+    output: [
+      {
+        ...outputConf,
+        file: resolveFile('./dist/endpass-connect-provider.umd.js'),
+        name: pkg.name,
+        format: 'umd',
+      },
+      {
+        ...outputConf,
+        file: resolveFile('./dist/endpass-connect-provider.esm.js'),
+        format: 'esm',
+      },
+    ],
+  }
+];

@@ -1,3 +1,10 @@
+const AVAILABLE_PLUGINS = {
+  provider: true,
+  auth: true,
+  oauth: true,
+  elements: true,
+};
+
 export default class PluginManager {
   static createPlugins(context, plugins, options) {
     const pluginForCreateMap = plugins.reduce((map, Plugin) => {
@@ -15,7 +22,7 @@ export default class PluginManager {
     };
 
     // create all plugins
-    const pluginsInstances = Object.keys(pluginForCreateMap).reduce(
+    const pluginsInstances = Object.keys(AVAILABLE_PLUGINS).reduce(
       (map, pluginName) => {
         const Plugin = pluginForCreateMap[pluginName];
 

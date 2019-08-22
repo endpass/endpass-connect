@@ -1,7 +1,5 @@
-import createInpageProviderStream from './inpageProvider/inpageProviderStream';
-
 export default function createStream(context) {
-  createInpageProviderStream(context);
+  //  createInpageProviderStream(context);
 }
 
 // export const createAuthStream = (context) => {
