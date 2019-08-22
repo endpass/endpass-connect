@@ -1,10 +1,11 @@
+const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 const pkg = require('./package.json');
 
 const createConfig = ({ entry, filename, library }) => {
   return {
-    entry,
+    entry: path.resolve(__dirname, 'dist', entry),
     //  devtool: 'source-map',
     output: {
       path: path.resolve(__dirname, 'dist'),
@@ -16,17 +17,46 @@ const createConfig = ({ entry, filename, library }) => {
   };
 };
 
-const defaultConfig = createConfig({
-  entry: pkg.umd,
-  filename: 'endpass-connect.min.js',
-  library: 'EndpassConnect',
-});
+const createConfigs = ({ legacyFilename, ...props }) => {
+  return [
+    createConfig(props),
+    // TODO: for old legacy browser urls, need remove after some time
+    createConfig({
+      ...props,
+      filename: legacyFilename,
+    }),
+  ];
+};
 
-// TODO: for old legacy browser urls, need remove after some time
-const legacyBrowserConfig = createConfig({
-  entry: pkg.umd,
-  filename: 'endpass-connect.browser.js',
-  library: 'EndpassConnect',
-});
+const createList = configs => {
+  const lastConfig = configs[configs.length - 1];
+  lastConfig.plugins = lastConfig.plugins || [];
+  lastConfig.plugins.push(
+    new CopyPlugin([
+      {
+        from: './src',
+        to: './src',
+      },
+      'package.json',
+      'README.md',
+    ]),
+  );
+  return configs;
+};
 
-module.exports = [defaultConfig, legacyBrowserConfig];
+module.exports = createList([
+  ...createConfigs({
+    entry: pkg.umd,
+    filename: pkg.main,
+    legacyFilename: 'endpass-connect.browser.js',
+    library: 'EndpassConnect',
+  }),
+
+  // plugins
+  ...createConfigs({
+    entry: pkg.connectPlugins.provider.umd,
+    filename: pkg.connectPlugins.provider.main,
+    legacyFilename: pkg.connectPlugins.provider.browser,
+    library: 'EndpassProviderPlugin',
+  }),
+]);

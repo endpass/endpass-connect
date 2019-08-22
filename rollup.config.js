@@ -20,8 +20,9 @@ function resolveDir(dir) {
   return path.join(__dirname, '', dir);
 }
 
-function resolveFile(file) {
-  return path.resolve(__dirname, file);
+function resolveFile(...args) {
+  args.splice(0, 0, __dirname);
+  return path.resolve.apply(path, args);
 }
 
 const ENV = getEnv(process.env.NODE_ENV);
@@ -62,39 +63,35 @@ const commonConfig = {
   },
 };
 
+const createConfig = ({ input, umd, module }) => {
+  return {
+    input: resolveFile(input),
+    ...commonConfig,
+    output: [
+      {
+        ...outputConf,
+        file: resolveFile('dist', umd),
+        name: pkg.name,
+        format: 'umd',
+      },
+      {
+        ...outputConf,
+        file: resolveFile('dist', module),
+        format: 'esm',
+      },
+    ],
+  };
+};
+
 export default [
-  {
-    input: resolveFile('./src/index.js'),
-    ...commonConfig,
-    output: [
-      {
-        ...outputConf,
-        file: resolveFile(pkg.umd),
-        name: pkg.name,
-        format: 'umd',
-      },
-      {
-        ...outputConf,
-        file: resolveFile(pkg.module),
-        format: 'esm',
-      },
-    ],
-  },
-  {
-    input: resolveFile('./src/plugins/ProviderPlugin.js'),
-    ...commonConfig,
-    output: [
-      {
-        ...outputConf,
-        file: resolveFile('./dist/endpass-connect-provider.umd.js'),
-        name: pkg.name,
-        format: 'umd',
-      },
-      {
-        ...outputConf,
-        file: resolveFile('./dist/endpass-connect-provider.esm.js'),
-        format: 'esm',
-      },
-    ],
-  }
+  createConfig({
+    input: './src/index.js',
+    umd: pkg.umd,
+    module: pkg.module,
+  }),
+  createConfig({
+    input: './src/plugins/ProviderPlugin.js',
+    umd: pkg.connectPlugins.provider.umd,
+    module: pkg.connectPlugins.provider.module,
+  }),
 ];
