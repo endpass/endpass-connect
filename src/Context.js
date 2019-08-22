@@ -1,16 +1,14 @@
 import ConnectError from '@endpass/class/ConnectError';
 import Network from '@endpass/class/Network';
-import OauthPkceStrategy from '@/class/Oauth/OauthPkceStrategy';
 import Emmiter from '@/class/Emmiter';
 import InpageProvider from '@/class/InpageProvider';
 import ProviderFactory from '@/class/ProviderFactory';
-import Oauth from '@/class/Oauth';
 import { INPAGE_EVENTS, METHODS } from '@/constants';
-import BasicModules from '@/BasicModules';
+import BasicModules from '@/plugins/BasicModules';
 import createStream from '@/streams';
-import ProviderModule from '@/ProviderModule';
-import OauthModule from '@/OauthModule';
-import PluginManager from '@/plugins/PluginManager';
+import ProviderModule from '@/plugins/ProviderModule';
+import OauthModule from '@/plugins/OauthModule';
+import PluginManager from '@/PluginManager';
 
 const { ERRORS } = ConnectError;
 
@@ -44,12 +42,11 @@ export default class Context {
      */
     this.inpageProvider = null;
     this.requestProvider = null;
-    this.oauthRequestProvider = null;
     this.oauthClientId = options.oauthClientId;
     this.haveDemoData = !!options.demoData;
 
-    this.plugins = new PluginManager(this, plugins, options);
-    this.plugins.init();
+    this.plugins = PluginManager.createPlugins(this, plugins, options);
+    PluginManager.init(this.plugins);
 
     this.emitter = new Emmiter();
     this.inpageProvider = new InpageProvider(this.emitter);
@@ -199,16 +196,7 @@ export default class Context {
    * @param {string[]} params.scopes - Array of authorization scopes
    */
   async loginWithOauth(params) {
-    const strategy = new OauthPkceStrategy({
-      dialog: this.getDialog(),
-    });
-
-    this.oauthRequestProvider = new Oauth({
-      ...params,
-      clientId: this.oauthClientId,
-      strategy,
-    });
-    await this.oauthRequestProvider.init();
+    await this.plugins.oauth.loginWithOauth(params);
   }
 
   /**
@@ -222,10 +210,7 @@ export default class Context {
    * @returns {Promise} Request promise
    */
   request(options) {
-    if (!this.oauthRequestProvider) {
-      throw ConnectError.create(ERRORS.OAUTH_REQUIRE_AUTHORIZE);
-    }
-    return this.oauthRequestProvider.request(options);
+    return this.plugins.oauth.request(options);
   }
 
   /**
@@ -233,10 +218,7 @@ export default class Context {
    * @throws {Error} If not authorized yet;
    */
   logoutFromOauth() {
-    if (!this.oauthRequestProvider) {
-      throw ConnectError.create(ERRORS.OAUTH_NOT_LOGGED_IN);
-    }
-    this.oauthRequestProvider.logout();
+    this.plugins.oauth.logoutFromOauth();
   }
 
   /**
@@ -247,11 +229,7 @@ export default class Context {
    * @throws {Error} If not authorized yet;
    */
   setOauthPopupParams(params) {
-    if (!this.oauthRequestProvider) {
-      throw ConnectError.create(ERRORS.OAUTH_INITIALIZE_INSTANCE);
-    }
-
-    this.oauthRequestProvider.setPopupParams(params);
+    this.plugins.oauth.setOauthPopupParams(params);
   }
 
   /**

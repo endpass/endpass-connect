@@ -4,8 +4,9 @@ export default class Plugin {
   }
 
   static pluginName() {
-    return 'PluginName';
+    return 'PleaseDefinePluginNameHere';
   }
 
+  // eslint-disable-next-line class-methods-use-this
   init() {}
 }
