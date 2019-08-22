@@ -1,5 +1,5 @@
 import { INPAGE_EVENTS, DAPP_BLACKLISTED_METHODS } from '@/constants';
-import filterAvailableMethods from '@/middleware/filterAvailableMethods';
+import filterAvailableMethods from '@/streams/inpageProvider/middleware/filterAvailableMethods';
 
 describe('filterAvailableMethods middleware', () => {
   const context = {

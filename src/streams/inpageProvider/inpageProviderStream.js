@@ -9,9 +9,9 @@ import {
 import subscribe from 'callbag-subscribe';
 import concatMap from 'callbag-concat-map';
 import takeWhile from 'callbag-take-while';
+// import tap from 'callbag-tap';
 import fromEmitter from '@/streams/factory/fromEmitter';
 import { INPAGE_EVENTS } from '@/constants';
-// import tap from 'callbag-tap';
 import middleware from '@/streams/inpageProvider/middleware';
 import actionState from './actionState';
 import createAction from './createAction';
