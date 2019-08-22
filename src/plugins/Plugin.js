@@ -3,5 +3,9 @@ export default class Plugin {
     this.context = context;
   }
 
+  static pluginName() {
+    return 'PluginName';
+  }
+
   init() {}
 }

@@ -1,14 +1,22 @@
 import ConnectError from '@endpass/class/ConnectError';
 import Network from '@endpass/class/Network';
 import OauthPkceStrategy from '@/class/Oauth/OauthPkceStrategy';
-import { Emmiter, InpageProvider, ProviderFactory, Oauth } from '@/class';
+import Emmiter from '@/class/Emmiter';
+import InpageProvider from '@/class/InpageProvider';
+import ProviderFactory from '@/class/ProviderFactory';
+import Oauth from '@/class/Oauth';
 import { INPAGE_EVENTS, METHODS } from '@/constants';
 import BasicModules from '@/BasicModules';
 import createStream from '@/streams';
+import ProviderModule from '@/ProviderModule';
+import OauthModule from '@/OauthModule';
+import PluginManager from '@/plugins/PluginManager';
 
 const { ERRORS } = ConnectError;
 
 const WIDGET_AUTH_TIMEOUT = 1500;
+
+const plugins = [BasicModules, ProviderModule, OauthModule];
 
 export default class Context {
   /**
@@ -40,14 +48,9 @@ export default class Context {
     this.oauthClientId = options.oauthClientId;
     this.haveDemoData = !!options.demoData;
 
-    // options.plugins.forEach((Plugin) => {
-    //   new Plugin(this);
-    // });
-    this.basicModules = new BasicModules(this, options);
-    this.basicModules.initElementsSubscriber();
-    /**
-     * Inner abstractions initialization
-     */
+    this.plugins = new PluginManager(this, plugins, options);
+    this.plugins.init();
+
     this.emitter = new Emmiter();
     this.inpageProvider = new InpageProvider(this.emitter);
     this.requestProvider = ProviderFactory.createRequestProvider();
@@ -110,7 +113,9 @@ export default class Context {
    */
   async logout() {
     const res = await this.getAuthRequester().logout();
-    this.basicModules.getMessengerGroupInstance().send(METHODS.LOGOUT_RESPONSE);
+    this.plugins.basicModules
+      .getMessengerGroupInstance()
+      .send(METHODS.LOGOUT_RESPONSE);
     return res;
   }
 
@@ -141,6 +146,7 @@ export default class Context {
 
       return res;
     } catch (err) {
+      console.error(err);
       throw ConnectError.create(err.code || ERRORS.USER_NOT_AUTHORIZED);
     }
   }
@@ -180,7 +186,7 @@ export default class Context {
     });
 
     const settings = this.getInpageProviderSettings();
-    this.basicModules
+    this.plugins.basicModules
       .getMessengerGroupInstance()
       .send(METHODS.CHANGE_SETTINGS_RESPONSE, settings);
   }
@@ -303,14 +309,14 @@ export default class Context {
   }
 
   getDialog() {
-    return this.basicModules.getDialogInstance();
+    return this.plugins.basicModules.getDialogInstance();
   }
 
   getWidget() {
-    return this.basicModules.getWidgetInstance();
+    return this.plugins.basicModules.getWidgetInstance();
   }
 
   getAuthRequester() {
-    return this.basicModules.getAuthInstance();
+    return this.plugins.basicModules.getAuthInstance();
   }
 }

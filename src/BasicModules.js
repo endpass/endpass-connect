@@ -4,19 +4,33 @@ import Dialog from '@/class/Dialog';
 import ElementsSubscriber from '@/class/ElementsSubscriber';
 import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
 import { DEFAULT_AUTH_URL } from '@/constants';
-import { MessengerGroup } from '@/class';
+import MessengerGroup from '@/class/MessengerGroup';
+import Plugin from '@/plugins/Plugin';
 
-export default class BasicModules {
+export default class BasicModules extends Plugin {
   constructor(context, options) {
+    super(context);
     const { namespace, authUrl } = options;
-    this.context = context;
     this.namespace = namespace || '';
     this.options = options;
     this.authUrl = getAuthUrl(authUrl || DEFAULT_AUTH_URL);
   }
 
+  static pluginName() {
+    return 'basicModules';
+  }
+
   init() {
-    this.initElementsSubscriber();
+    const { demoData, isIdentityMode, showCreateAccount } = this.options;
+    const elementsSubscriber = new ElementsSubscriber({
+      context: this.context,
+      initialPayload: {
+        demoData,
+        isIdentityMode: isIdentityMode || false,
+        showCreateAccount,
+      },
+    });
+    elementsSubscriber.subscribeElements();
   }
 
   /**
@@ -74,18 +88,5 @@ export default class BasicModules {
       this.messengerGroup = new MessengerGroup();
     }
     return this.messengerGroup;
-  }
-
-  initElementsSubscriber() {
-    const { demoData, isIdentityMode, showCreateAccount } = this.options;
-    const elementsSubscriber = new ElementsSubscriber({
-      context: this.context,
-      initialPayload: {
-        demoData,
-        isIdentityMode: isIdentityMode || false,
-        showCreateAccount,
-      },
-    });
-    elementsSubscriber.subscribeElements();
   }
 }
