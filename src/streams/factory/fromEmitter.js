@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 const fromEmitter = (emitter, name) => (start, sink) => {
   if (start !== 0) return;
   const handler = ev => sink(1, ev);
