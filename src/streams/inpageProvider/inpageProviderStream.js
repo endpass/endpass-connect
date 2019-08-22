@@ -1,11 +1,5 @@
-import {
-  map,
-  merge,
-  pipe,
-  filter,
-  fromPromise,
-  fromIter,
-} from 'callbag-basics';
+import { map, merge, pipe, filter, fromIter } from 'callbag-basics';
+import fromPromise from 'callbag-from-promise';
 import subscribe from 'callbag-subscribe';
 import concatMap from 'callbag-concat-map';
 import takeWhile from 'callbag-take-while';
