@@ -1,5 +1,4 @@
 import Widget from '@/class/Widget';
-import Auth from '@/class/Auth';
 import Dialog from '@/class/Dialog';
 import ElementsSubscriber from '@/class/ElementsSubscriber';
 import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
@@ -31,19 +30,6 @@ export default class BasicModules extends Plugin {
       },
     });
     elementsSubscriber.subscribeElements();
-  }
-
-  /**
-   *
-   * @return {Auth}
-   */
-  getAuthInstance() {
-    if (!this.authRequester) {
-      this.authRequester = new Auth({
-        dialog: this.getDialogInstance(),
-      });
-    }
-    return this.authRequester;
   }
 
   /**
