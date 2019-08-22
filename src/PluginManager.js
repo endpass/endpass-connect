@@ -24,17 +24,18 @@ export default class PluginManager {
         }
         const Plugin = pluginForCreateMap[pluginName];
 
-        const instance = Plugin ? new Plugin(context, options) : null;
-
-        const getHandler = Plugin
-          ? () => instance
-          : () => {
+        if (!Plugin) {
+          Object.defineProperty(map, pluginName, {
+            get() {
               throw new Error(`Please define '${pluginName}' plugin`);
-            };
+            },
+            set: setHandler,
+          });
+          return map;
+        }
 
-        Object.defineProperty(map, pluginName, {
-          get: getHandler,
-          set: setHandler,
+        Object.assign(map, {
+          [pluginName]: new Plugin(context, options),
         });
         return map;
       },
