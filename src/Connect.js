@@ -42,7 +42,7 @@ export default class Connect {
    * @returns {Promise<object>} Account data
    */
   async getAccountData() {
-    return this[privateFields.context].getAccountData();
+    return this[privateFields.context].plugins.provider.getAccountData();
   }
 
   /**
@@ -53,7 +53,7 @@ export default class Connect {
    *  Web3 instance
    */
   getProvider() {
-    return this[privateFields.context].getInpageProvider();
+    return this[privateFields.context].plugins.provider.getInpageProvider();
   }
 
   /**

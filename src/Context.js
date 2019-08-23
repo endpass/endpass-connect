@@ -73,27 +73,16 @@ export default class Context {
     return res;
   }
 
-  /**
-   * Requests user settings from injected bridge and returns formatted data
-   * Settings includes last active account and network id
-   * @public
-   * @throws {Error} If settings can not be resolved
-   * @returns {Promise<object>} Account data
-   */
-  async getAccountData() {
-    return this.plugins.provider.getAccountData();
-  }
-
   async serverAuth() {
     try {
-      await this.getAccountData();
+      await this.plugins.provider.getAccountData();
     } catch (e) {
       if (e.code === ERRORS.AUTH_CANCELED_BY_USER) {
         throw ConnectError.create(ERRORS.AUTH_CANCELED_BY_USER);
       }
 
       await this.auth();
-      await this.getAccountData();
+      await this.plugins.provider.getAccountData();
     }
   }
 
@@ -119,10 +108,6 @@ export default class Context {
     this.plugins.elements
       .getMessengerGroupInstance()
       .send(METHODS.CHANGE_SETTINGS_RESPONSE, settings);
-  }
-
-  getInpageProvider() {
-    return this.plugins.provider.getInpageProvider();
   }
 
   getRequestProvider() {
