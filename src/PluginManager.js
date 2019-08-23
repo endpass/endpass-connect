@@ -19,10 +19,6 @@ export default class PluginManager {
       return pluginsMap;
     }, {});
 
-    const setHandler = () => {
-      throw new Error(`Please do not call setter for '${pluginName}' plugin`);
-    };
-
     // create all plugins
     const pluginsInstances = Object.keys(AVAILABLE_PLUGINS).reduce(
       (map, pluginName) => {
@@ -33,7 +29,6 @@ export default class PluginManager {
             get() {
               throw new Error(`Please define '${pluginName}' plugin`);
             },
-            set: setHandler,
           });
           return map;
         }
@@ -49,7 +44,7 @@ export default class PluginManager {
     return pluginsInstances;
   }
 
-  static init(plugins) {
+  static initPlugins(plugins) {
     // eslint-disable-next-line
     for (const key in plugins) {
       plugins[key].init();

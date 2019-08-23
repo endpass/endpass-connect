@@ -37,7 +37,7 @@ export default class Context {
         context: this,
       },
     );
-    PluginManager.init(this.plugins);
+    PluginManager.initPlugins(this.plugins);
 
     // TODO: create state
     // this.state = {
