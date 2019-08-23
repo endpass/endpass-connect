@@ -66,6 +66,17 @@ describe('Provider plugin', () => {
 
       expect(res instanceof InpageProvider).toBe(true);
     });
+
+    it('should define request provider by setter', () => {
+      plugin = createPlugin();
+      const provider = {};
+
+      expect(plugin.requestProvider).toBe(undefined);
+
+      plugin.setRequestProvider(provider);
+
+      expect(plugin.getRequestProvider()).toBe(provider);
+    });
   });
 
   describe('getAccountData', () => {
