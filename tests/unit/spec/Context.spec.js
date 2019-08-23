@@ -1,17 +1,26 @@
 import ConnectError from '@endpass/class/ConnectError';
-import Connect from '@/Connect';
 import Context from '@/Context';
-import privateFields from '@/privateFields';
-import { METHODS, DIRECTION } from '@/constants';
-import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
+import { METHODS, INPAGE_EVENTS } from '@/constants';
+import ProviderPlugin from '@/plugins/ProviderPlugin';
 
 const { ERRORS } = ConnectError;
 
 describe('Context class', () => {
   const authUrl = 'http://test.auth';
   const oauthClientId = 'xxxxxxxxxx';
-  let connect;
+  const options = {
+    authUrl,
+    oauthClientId,
+  };
   let context;
+  const dialog = {
+    ask: jest.fn(),
+  };
+  const msgGroup = {
+    send: jest.fn(),
+    addMessenger: jest.fn(),
+    removeMessenger: jest.fn(),
+  };
 
   beforeAll(() => {
     window.open = jest.fn();
@@ -20,243 +29,100 @@ describe('Context class', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    connect = new Connect({ authUrl, oauthClientId });
-    context = connect[privateFields.context];
+    context = new Context(options);
   });
 
-  describe('getConnectUrl', () => {
-    it('should return url to auth on connect application', () => {
-      expect(context.getConnectUrl('foo')).toBe(`${authUrl}/foo`);
+  describe('initiate', () => {
+    it('should create with default plugins', () => {
+      context = new Context(options);
+      expect(Object.keys(context.plugins)).toHaveLength(3);
+    });
+
+    it('should create with provider plugin', () => {
+      context = new Context({ ...options, plugins: [ProviderPlugin] });
+      expect(Object.keys(context.plugins)).toHaveLength(4);
+      expect(context.plugins[ProviderPlugin.getName()]).toBeInstanceOf(
+        ProviderPlugin,
+      );
     });
   });
 
-  describe('auth', () => {
-    let bridge;
-
+  describe('setProviderSettings', () => {
+    let emitter;
     beforeEach(() => {
-      connect = new Connect({ authUrl, oauthClientId });
-      bridge = {
-        ask: jest.fn(),
-        openDialog: jest.fn(),
-        closeDialog: jest.fn(),
+      emitter = {
+        emit: jest.fn(),
       };
-      context = connect[privateFields.context];
-      context.bridge = bridge;
+      context = new Context({ ...options, plugins: [ProviderPlugin] });
+      context.plugins.provider.getEmitter = () => emitter;
+
+      context.plugins.elements.getMessengerGroupInstance = () => msgGroup;
     });
 
-    it('throw error without apiKey', () => {
+    it('should emit settings by inner connect emitter', () => {
+      const payload = {
+        activeAccount: '0x0',
+        activeNet: 2,
+      };
+
+      context.plugins.provider.getInpageProviderSettings = jest.fn(
+        () => payload,
+      );
+      context.setProviderSettings(payload);
+
+      expect(context.getEmitter().emit).toBeCalledWith(
+        INPAGE_EVENTS.SETTINGS,
+        payload,
+      );
       expect(
-        () => new Context({ authUrl, oauthClientId: undefined }),
-      ).toThrow();
-    });
-
-    it('should auth user through dialog request and returns result', async () => {
-      expect.assertions(2);
-
-      const dialogResponse = {
-        status: true,
-        payload: {
-          type: 'local',
-          serverUrl: undefined,
-        },
-      };
-
-      bridge.ask.mockResolvedValueOnce(dialogResponse);
-
-      const res = await context.auth();
-
-      expect(bridge.ask).toBeCalledWith(METHODS.AUTH, {
-        redirectUrl: 'http://localhost/',
-      });
-      expect(res).toEqual(dialogResponse);
-    });
-
-    it('should throw error if auth status is falsy', async () => {
-      expect.assertions(2);
-
-      bridge.ask.mockResolvedValueOnce({
-        status: false,
-        code: ERRORS.AUTH,
-      });
-
-      try {
-        await context.auth();
-      } catch (e) {
-        const err = new Error('Authentication Error!');
-        expect(e).toEqual(err);
-        expect(e.code).toBe(ERRORS.AUTH);
-      }
-    });
-  });
-
-  describe('initial data', () => {
-    const demoData = {
-      v3KeyStore: {
-        address: '0xaddr',
-      },
-      activeNet: 3,
-      password: 12345678,
-    };
-
-    it('should pass isLogin with demoData', () => {
-      const defaultContext = new Context({
-        authUrl,
-        oauthClientId,
-      });
-
-      const demoContext = new Context({
-        authUrl,
-        oauthClientId,
-        demoData,
-      });
-
-      expect(demoContext.isLogin()).toBe(true);
-      expect(defaultContext.isLogin()).toBe(false);
-    });
-
-    it('should pass initial data', () => {
-      const req = {
-        answer: jest.fn(),
-      };
-
-      jest
-        .spyOn(CrossWindowMessenger.prototype, 'subscribe')
-        .mockImplementation((method, cb) => {
-          if (method === METHODS.INITIATE) {
-            cb({}, req);
-          }
-        });
-
-      const demoContext = new Context({
-        authUrl,
-        oauthClientId,
-        demoData,
-      });
-
-      expect(req.answer).toBeCalledWith({
-        demoData,
-        isIdentityMode: false,
-        source: DIRECTION.AUTH,
-      });
-
-      const otherContex = new Context({
-        authUrl,
-        oauthClientId,
-        isIdentityMode: true,
-      });
-
-      expect(req.answer).toBeCalledWith({
-        isIdentityMode: true,
-        source: DIRECTION.AUTH,
-      });
-    });
-  });
-
-  describe('mountWidget', () => {
-    beforeEach(() => {
-      context.bridge.mountWidget = jest.fn();
-      context.bridge.getWidgetNode = jest.fn();
-      context.bridge.isWidgetMounted = jest.fn(false);
-    });
-
-    it('should mount widget', async () => {
-      expect.assertions(1);
-
-      await context.mountWidget();
-
-      expect(context.bridge.mountWidget).toBeCalled();
-    });
-
-    it('should not do anything if widget is mounted', async () => {
-      expect.assertions(2);
-
-      context.bridge.isWidgetMounted.mockResolvedValueOnce(true);
-
-      await context.mountWidget();
-
-      expect(context.bridge.getWidgetNode).toBeCalledTimes(1);
-      expect(context.bridge.mountWidget).not.toBeCalled();
-    });
-
-    it('should assign widget messenger on mount and push it to the broadcaster', async () => {
-      expect.assertions(3);
-
-      context.messengerGroup.addMessenger = jest.fn();
-
-      expect(context.widgetMessenger).toBeNull();
-
-      await context.mountWidget();
-
-      expect(context.messengerGroup.addMessenger).toBeCalledTimes(1);
-      expect(context.widgetMessenger).not.toBeNull();
-    });
-  });
-
-  describe('unmountWidget', () => {
-    it('should unmount widget', async () => {
-      expect.assertions(2);
-
-      await context.mountWidget();
-
-      expect(context.bridge.isWidgetMounted()).toBe(true);
-
-      context.unmountWidget();
-
-      expect(context.bridge.isWidgetMounted()).toBe(false);
-    });
-  });
-
-  describe('initial payload', () => {
-    it('should pass initial payload', () => {
-      const passPayload = {
-        isIdentityMode: true,
-        demoData: 'demo',
-        showCreateAccount: true,
-      };
-
-      const checkContext = new Context({
-        authUrl,
-        oauthClientId,
-        ...passPayload,
-      });
-
-      expect(checkContext.bridge.initialPayload).toEqual(passPayload);
+        context.plugins.elements.getMessengerGroupInstance().send,
+      ).toBeCalledWith(METHODS.CHANGE_SETTINGS_RESPONSE, payload);
     });
   });
 
   describe('serverAuth', () => {
-    let checkContext;
-    let bridge;
     beforeEach(() => {
-      checkContext = new Context({
-        authUrl,
-        oauthClientId,
-      });
-
-      bridge = {
-        ask: jest.fn(),
-        openDialog: jest.fn(),
-        closeDialog: jest.fn(),
-      };
-      checkContext.bridge = bridge;
+      context = new Context({ ...options, plugins: [ProviderPlugin] });
+      context.plugins.elements.getDialogInstance = dialog;
+      context.auth = jest.fn();
+      context.getDialog = () => dialog;
     });
 
     it('should call only once getAccountData', async () => {
       expect.assertions(2);
 
-      bridge.ask.mockResolvedValueOnce({
+      dialog.ask.mockResolvedValueOnce({
         status: false,
         code: ERRORS.AUTH_CANCELED_BY_USER,
       });
-      checkContext.auth = jest.fn();
 
       try {
-        await checkContext.serverAuth();
+        await context.serverAuth();
       } catch (e) {
         expect(e.code).toBe(ERRORS.AUTH_CANCELED_BY_USER);
       }
 
-      expect(checkContext.auth).not.toBeCalled();
+      expect(context.auth).not.toBeCalled();
+    });
+  });
+
+  describe('logout', () => {
+    it('should logout from endpass', async () => {
+      const logoutResult = 'result';
+      context.plugins.auth.getAuthInstance = () => {
+        return {
+          logout() {
+            return logoutResult;
+          },
+        };
+      };
+      context.plugins.elements.getMessengerGroupInstance = () => {
+        return msgGroup;
+      };
+
+      const res = await context.logout();
+      expect(res).toBe(logoutResult);
+      expect(msgGroup.send).toBeCalledWith(METHODS.LOGOUT_RESPONSE);
     });
   });
 });

@@ -1,11 +1,19 @@
-import Widget from '@/class/Widget';
+import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
+import Widget from '@/class/Widget/Widget';
+import { getWidgetFrameStylesObject } from '@/class/Widget/WidgetStyles';
 import { METHODS, WIDGET_EVENTS } from '@/constants';
 
 describe('Widget class', () => {
   const url = 'https://auth.foo.bar/public/widget';
   let messenger;
-  let context;
+  let messengerGroup;
   let widget;
+  const spies = [];
+  function spyMessenger(method, fn) {
+    return jest
+      .spyOn(CrossWindowMessenger.prototype, method)
+      .mockImplementation(fn);
+  }
 
   beforeEach(() => {
     messenger = {
@@ -13,13 +21,37 @@ describe('Widget class', () => {
       subscribe: jest.fn(),
       unsubscribe: jest.fn(),
     };
-    context = {
-      getWidgetMessenger: () => messenger,
+    messengerGroup = {
+      removeMessenger: jest.fn(),
+      addMessenger: jest.fn(),
     };
-    widget = new Widget({ context, url });
+
+    spies.push(
+      spyMessenger('subscribe', (method, cb) => {
+        messenger.subscribe(method, cb);
+      }),
+    );
+
+    spies.push(
+      spyMessenger('setTarget', target => {
+        messenger.setTarget(target);
+      }),
+    );
+
+    spies.push(
+      spyMessenger('unsubscribe', (method, cb) => {
+        messenger.unsubscribe(method, cb);
+      }),
+    );
+
+    widget = new Widget({ messengerGroup, url });
   });
 
   afterEach(() => {
+    spies.forEach(mock => {
+      mock.mockRestore();
+    });
+    spies.length = 0;
     jest.clearAllMocks();
   });
 
@@ -32,13 +64,15 @@ describe('Widget class', () => {
     it('should mount iframe for widget with initial styles', () => {
       widget.mount();
 
+      expect(messenger.setTarget).toBeCalledWith(widget.frame.contentWindow);
+
       expect(document.body.insertAdjacentHTML.mock.calls[0][0]).toBe(
         'afterBegin',
       );
       expect(
         document.body.insertAdjacentHTML.mock.calls[0][1],
       ).toMatchSnapshot();
-      expect(widget.subscribe).toBeCalled();
+      expect(widget.subscribe).not.toBeCalled();
     });
 
     it('should mount iframe for widget with initial styles and cahce position to instance', () => {
@@ -54,10 +88,6 @@ describe('Widget class', () => {
   });
 
   describe('unmount', () => {
-    beforeEach(() => {
-      widget.subscribe = jest.fn();
-    });
-
     it('should unmount widget after it faded out', () => {
       jest.spyOn(window, 'removeEventListener');
       jest.useFakeTimers();
@@ -78,12 +108,41 @@ describe('Widget class', () => {
         'resize',
         expect.any(Function),
       );
-      expect(messenger.unsubscribe).toBeCalledTimes(5);
 
       jest.advanceTimersByTime(300);
 
       expect(widget.emitFrameEvent).toBeCalledWith('destroy');
       expect(widget.frame).toBeNull();
+    });
+
+    it('should unmount widget once', async () => {
+      expect.assertions(4);
+
+      await widget.mount();
+
+      expect(widget.isWidgetMounted()).toBe(true);
+
+      widget.unmount();
+
+      expect(widget.isWidgetMounted()).toBe(false);
+
+      widget.unmount();
+
+      expect(messengerGroup.addMessenger).toBeCalledTimes(1);
+      expect(messengerGroup.removeMessenger).toBeCalledTimes(1);
+    });
+
+    it('should mount widget once', async () => {
+      expect.assertions(3);
+
+      await widget.mount();
+
+      expect(widget.isWidgetMounted()).toBe(true);
+
+      widget.mount();
+
+      expect(messengerGroup.removeMessenger).toBeCalledTimes(0);
+      expect(messengerGroup.addMessenger).toBeCalledTimes(1);
     });
   });
 
@@ -135,14 +194,9 @@ describe('Widget class', () => {
 
   describe('subscribe', () => {
     it('should subscribe on messenger view-responsible methods', () => {
-      const contentWindow = 'foo';
-
-      widget.frame = {
-        contentWindow,
-      };
       widget.subscribe();
 
-      expect(messenger.setTarget).toBeCalledWith(contentWindow);
+      expect(messenger.setTarget).not.toBeCalled();
       expect(messenger.subscribe).toBeCalledWith(
         METHODS.WIDGET_OPEN,
         expect.any(Function),
@@ -189,7 +243,7 @@ describe('Widget class', () => {
     it('should styles object with opacity 0 if widget is not loaded', () => {
       widget.isLoaded = false;
 
-      const styles = widget.getWidgetFrameStylesObject();
+      const styles = getWidgetFrameStylesObject(widget);
 
       expect(styles.opacity).toBe(0);
     });
@@ -197,7 +251,7 @@ describe('Widget class', () => {
     it('should styles object with opacity 1 if widget is loaded', () => {
       widget.isLoaded = true;
 
-      const styles = widget.getWidgetFrameStylesObject();
+      const styles = getWidgetFrameStylesObject(widget);
 
       expect(styles.opacity).toBe(1);
     });
@@ -206,7 +260,7 @@ describe('Widget class', () => {
       widget.isLoaded = true;
       widget.position = position;
 
-      const styles = widget.getWidgetFrameStylesObject();
+      const styles = getWidgetFrameStylesObject(widget);
 
       expect(styles.top).toBe(position.top);
       expect(styles.right).toBe(position.right);

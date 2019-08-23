@@ -1,17 +1,19 @@
+import { WEB3_METHODS } from '@/constants';
+
 export default function(payload, settings) {
   let result = null;
 
   switch (payload.method) {
-    case 'eth_accounts':
+    case WEB3_METHODS.ETH_ACCOUNTS:
       result = settings.activeAccount ? [settings.activeAccount] : [];
       break;
-    case 'eth_coinbase':
+    case WEB3_METHODS.ETH_COINBASE:
       result = settings.activeAccount || null;
       break;
-    case 'eth_uninstallFilter':
+    case WEB3_METHODS.ETH_UNINSTALL_FILTER:
       result = true;
       break;
-    case 'net_version':
+    case WEB3_METHODS.NET_VERSION:
       result = settings.activeNet || null;
       break;
     default:

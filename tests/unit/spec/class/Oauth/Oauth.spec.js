@@ -17,7 +17,7 @@ jest.mock('@/class/Oauth/pkce', () => {
 });
 
 describe('Oauth class', () => {
-  let bridge;
+  let dialog;
   let oauth;
   const scopes = ['chpok'];
   const clientId = 'kek';
@@ -43,7 +43,7 @@ describe('Oauth class', () => {
   });
 
   function mockOauthTokenResult(result = {}, status = true) {
-    bridge.ask.mockResolvedValue({
+    dialog.ask.mockResolvedValue({
       payload: result,
       status,
     });
@@ -51,12 +51,12 @@ describe('Oauth class', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    bridge = {
+    dialog = {
       ask: jest.fn(),
     };
 
     const strategy = new OauthPkceStrategy({
-      bridge,
+      dialog,
     });
 
     oauth = new Oauth({

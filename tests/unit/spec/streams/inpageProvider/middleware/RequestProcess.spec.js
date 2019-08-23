@@ -10,6 +10,9 @@ describe('Request process middleware', () => {
   let reqProcess;
   let connect;
   let context;
+  const emitter = {
+    emit: jest.fn(),
+  };
 
   beforeAll(() => {
     window.open = jest.fn();
@@ -136,10 +139,10 @@ describe('Request process middleware', () => {
         foo: 'bar',
       };
 
-      context.emitter.emit = jest.fn();
+      context.getEmitter = () => emitter;
       reqProcess.sendResponse(payload);
 
-      expect(context.emitter.emit).toBeCalledWith(
+      expect(emitter.emit).toBeCalledWith(
         INPAGE_EVENTS.RESPONSE,
         payload,
       );
@@ -184,31 +187,31 @@ describe('Request process middleware', () => {
       method: 'foo',
       params: [],
     };
-    let bridge;
+    let dialog;
 
     beforeEach(() => {
-      bridge = {
+      dialog = {
         ask: jest.fn(),
       };
       reqProcess.settings = {
         activeAccount: '0x0',
         activeNet: 1,
       };
-      context.bridge = bridge;
+      context.getDialog = () => dialog;
       reqProcess.currentRequest = request;
     });
 
     it('should recover request through bridge messaging', async () => {
       expect.assertions(1);
 
-      context.bridge.ask.mockResolvedValueOnce({
+      dialog.ask.mockResolvedValueOnce({
         status: true,
         result: 'hello',
       });
 
       await reqProcess.recover();
 
-      expect(context.bridge.ask).toBeCalledWith(METHODS.RECOVER, {
+      expect(dialog.ask).toBeCalledWith(METHODS.RECOVER, {
         address: '0x0',
         net: 1,
         request,
@@ -216,7 +219,7 @@ describe('Request process middleware', () => {
     });
 
     it('should throw error is request recover status is falsy', () => {
-      bridge.ask.mockResolvedValueOnce({
+      dialog.ask.mockResolvedValueOnce({
         status: false,
       });
 
@@ -230,10 +233,10 @@ describe('Request process middleware', () => {
       method: 'foo',
       params: [],
     };
-    let bridge;
+    let dialog;
 
     beforeEach(() => {
-      bridge = {
+      dialog = {
         ask: jest.fn().mockResolvedValueOnce({
           status: true,
         }),
@@ -243,7 +246,7 @@ describe('Request process middleware', () => {
         activeAccount: '0x0',
         activeNet: 1,
       };
-      context.bridge = bridge;
+      context.getDialog = () => dialog;
       reqProcess.currentRequest = request;
     });
 
@@ -252,7 +255,7 @@ describe('Request process middleware', () => {
 
       await reqProcess.sign();
 
-      expect(bridge.ask).toBeCalledWith(METHODS.SIGN, {
+      expect(dialog.ask).toBeCalledWith(METHODS.SIGN, {
         address: '0x0',
         net: 1,
         url: expect.any(String),
@@ -263,7 +266,7 @@ describe('Request process middleware', () => {
     it('should throw error is sign request status is falsy', async () => {
       expect.assertions(2);
 
-      bridge.ask = jest.fn().mockResolvedValueOnce({
+      dialog.ask = jest.fn().mockResolvedValueOnce({
         status: false,
       });
 

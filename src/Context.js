@@ -1,140 +1,51 @@
 import ConnectError from '@endpass/class/ConnectError';
-import Network from '@endpass/class/Network';
-import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
-import OauthPkceStrategy from '@/class/Oauth/OauthPkceStrategy';
-import {
-  Emmiter,
-  InpageProvider,
-  Bridge,
-  ProviderFactory,
-  Oauth,
-  MessengerGroup,
-} from '@/class';
-import {
-  INPAGE_EVENTS,
-  METHODS,
-  DEFAULT_AUTH_URL,
-  DIRECTION,
-} from '@/constants';
+import { METHODS } from '@/constants';
+import PluginManager from '@/PluginManager';
 
-import pkg from '../package.json';
-import createStream from '@/streams';
+import ElementsPlugin from '@/plugins/ElementsPlugin';
+import OauthPlugin from '@/plugins/OauthPlugin';
+import AuthPlugin from '@/plugins/AuthPlugin';
 
 const { ERRORS } = ConnectError;
 
-const authUrlRegexp = new RegExp('://auth(\\.|-)', 'ig');
+const DEFAULT_PLUGINS = [ElementsPlugin, OauthPlugin, AuthPlugin];
 
 export default class Context {
   /**
-   * @param {String} options.oauthClientId OAuth client id
-   * @param {String} [options.authUrl] Url of hosted Endpass Connect Application
-   * @param {String} [options.namespace] namespace for see difference,
+   * @param {string} options.oauthClientId OAuth client id
+   * @param {string} [options.authUrl] Url of hosted Endpass Connect Application
+   * @param {string} [options.namespace] namespace for see difference,
    *  between two instances
-   * @param {Boolean} [options.isIdentityMode] isIdentityMode for define auth
+   * @param {boolean} [options.isIdentityMode] isIdentityMode for define auth
    *  like identity
-   * @param {Object} [options.demoData] demoData passed object to auth
-   * @param {Object} [options.showCreateAccount] show create account form
+   * @param {object} [options.demoData] demoData passed object to auth
+   * @param {object} [options.showCreateAccount] show create account form
    *  in auth dialog
-   * @param {Object} [options.widget] Widget configuration object.
+   * @param {object} [options.widget] Widget configuration object.
    *  If provided widget will be mounted automatically
-   * @param {Object} [options.widget.position] Widget positions. By default
+   * @param {object} [options.widget.position] Widget positions. By default
    *  equals to `bottom right`
    */
   constructor(options = {}) {
-    if (!options.oauthClientId) {
-      throw ConnectError.create(ERRORS.OAUTH_REQUIRE_ID);
-    }
-    const authUrl = options.authUrl || DEFAULT_AUTH_URL;
-
-    /**
-     * Independant class properties
-     */
-    this.inpageProvider = null;
-    this.requestProvider = null;
-    this.oauthRequestProvider = null;
-    this.oauthClientId = options.oauthClientId;
-    this.isServerLogin = false;
-    this.authUrl = !authUrlRegexp.test(authUrl)
-      ? authUrl
-      : authUrl.replace('://auth', `://auth${pkg.authVersion}`);
-    this.namespace = options.namespace || '';
-    this.haveDemoData = !!options.demoData;
-    this.widgetOptions = options.widget;
-
-    /**
-     * Inner abstractions initialization
-     */
-    this.emitter = new Emmiter();
-    this.inpageProvider = new InpageProvider(this.emitter);
-    this.requestProvider = ProviderFactory.createRequestProvider();
-    this.messengerGroup = new MessengerGroup();
-    this.dialogMessenger = new CrossWindowMessenger({
-      showLogs: !ENV.isProduction,
-      name: `connect-bridge-dialog[${this.namespace}]`,
-      to: DIRECTION.AUTH,
-      from: DIRECTION.CONNECT,
-    });
-    this.widgetMessenger = null;
-    this.bridge = new Bridge({
-      context: this,
-      url: this.getConnectUrl('bridge'),
-      initialPayload: {
-        demoData: options.demoData,
-        isIdentityMode: options.isIdentityMode || false,
-        showCreateAccount: options.showCreateAccount,
+    const optionPlugins = options.plugins || [];
+    this.plugins = PluginManager.createPlugins(
+      [...DEFAULT_PLUGINS, ...optionPlugins],
+      {
+        options,
+        context: this,
       },
-    });
+    );
+    PluginManager.initPlugins(this.plugins);
 
     // TODO: create state
     // this.state = {
     //   isPermission: false,
     //   isLogin: false,
     // };
-
-    this.setupLoginEvents();
-
-    this.messengerGroup.addMessenger(this.dialogMessenger);
-    
-    createStream(this);
-
-    this.setupOnAuth();
   }
 
-  setupLoginEvents() {
-    this.emitter.on(INPAGE_EVENTS.LOGIN, async () => {
-      let error = null;
-
-      if (!this.isLogin()) {
-        try {
-          await this.serverAuth();
-        } catch (e) {
-          error =
-            e.code === ERRORS.AUTH_CANCELED_BY_USER
-              ? e
-              : ConnectError.create(ERRORS.REQUEST_DATA);
-        }
-      }
-
-      this.emitter.emit(INPAGE_EVENTS.LOGGED_IN, { error });
-    });
-  }
-
-  async askDialog(params) {
-    const { method, payload } = params;
-    const bridge = this.getBridge();
-    const res = await bridge.ask(method, payload);
-
-    return res;
-  }
-
-  isLogin() {
-    if (this.haveDemoData) {
-      return true;
-    }
-
-    const { activeAccount } = this.getInpageProvider().settings;
-
-    return !!(activeAccount && this.isServerLogin);
+  get isLogin() {
+    return this.getAuthRequester().isLogin;
   }
 
   /**
@@ -144,25 +55,8 @@ export default class Context {
    * @returns {Promise<boolean>} Auth result, check `status` property to
    *  know about result
    */
-  async auth(redirectUrl) {
-    const toPath = redirectUrl || window.location.href;
-    const res = await this.askDialog({
-      method: METHODS.AUTH,
-      payload: {
-        redirectUrl: toPath,
-      },
-    });
-
-    if (!res.status) {
-      throw ConnectError.create(res.code || ERRORS.AUTH);
-    }
-
-    this.isServerLogin = true;
-
-    return {
-      payload: res.payload,
-      status: res.status,
-    };
+  auth(redirectUrl) {
+    return this.getAuthRequester().auth(redirectUrl);
   }
 
   /**
@@ -172,61 +66,23 @@ export default class Context {
    * @returns {Promise<Boolean>}
    */
   async logout() {
-    const res = await this.getBridge().ask(METHODS.LOGOUT);
-
-    if (!res.status) {
-      throw ConnectError.create(res.code || ERRORS.AUTH_LOGOUT);
-    }
-
-    this.isServerLogin = false;
-
-    this.messengerGroup.send(METHODS.LOGOUT_RESPONSE);
-
-    return res.status;
-  }
-
-  /**
-   * Requests user settings from injected bridge and returns formatted data
-   * Settings includes last active account and network id
-   * @public
-   * @throws {Error} If settings can not be resolved
-   * @returns {Promise<Object>} Account data
-   */
-  async getAccountData() {
-    try {
-      const { payload, status, code } = await this.getBridge().ask(
-        METHODS.GET_SETTINGS,
-      );
-
-      if (!status) {
-        throw ConnectError.create(code || ERRORS.AUTH);
-      }
-
-      const { settings = {} } = payload;
-      const res = {
-        activeAccount: settings.lastActiveAccount,
-        activeNet: settings.net || Network.NET_ID.MAIN,
-      };
-
-      this.isServerLogin = true;
-      this.setProviderSettings(res);
-
-      return res;
-    } catch (err) {
-      throw ConnectError.create(err.code || ERRORS.USER_NOT_AUTHORIZED);
-    }
+    const res = await this.getAuthRequester().logout();
+    this.plugins.elements
+      .getMessengerGroupInstance()
+      .send(METHODS.LOGOUT_RESPONSE);
+    return res;
   }
 
   async serverAuth() {
     try {
-      await this.getAccountData();
+      await this.plugins.provider.getAccountData();
     } catch (e) {
       if (e.code === ERRORS.AUTH_CANCELED_BY_USER) {
         throw ConnectError.create(ERRORS.AUTH_CANCELED_BY_USER);
       }
 
       await this.auth();
-      await this.getAccountData();
+      await this.plugins.provider.getAccountData();
     }
   }
 
@@ -235,178 +91,46 @@ export default class Context {
    * @param {Web3.Provider} reqProvider Web3 provider instance
    */
   setRequestProvider(reqProvider) {
-    this.requestProvider = reqProvider;
+    this.plugins.provider.setRequestProvider(reqProvider);
   }
 
   /**
    * Sets settings to current `web3` provider injected to page with `injectWeb3`
    * method
-   * @param {String} options.activeAccount Currenct account checksummed address
-   * @param {String} options.activeNet Active network ID
+   * @param {object} payload
+   * @param {string} payload.activeAccount Currenct account checksummed address
+   * @param {string} payload.activeNet Active network ID
    */
   setProviderSettings(payload) {
-    this.getEmitter().emit(INPAGE_EVENTS.SETTINGS, {
-      activeAccount: payload.activeAccount,
-      activeNet: payload.activeNet || Network.NET_ID.MAIN,
-    });
+    this.plugins.provider.setProviderSettings(payload);
 
     const settings = this.getInpageProviderSettings();
-    this.messengerGroup.send(METHODS.CHANGE_SETTINGS_RESPONSE, settings);
-  }
-
-  /**
-   * Fetch user data via oaurh
-   * @param {Object} [params] Parameters object
-   * @param {Number} [params.popupWidth] Oauth popup width
-   * @param {Number} [params.popupHeight] Oauth popup height
-   * @param {String[]} params.scopes - Array of authorization scopes
-   */
-  async loginWithOauth(params) {
-    const strategy = new OauthPkceStrategy({
-      bridge: this.getBridge(),
-    });
-
-    this.oauthRequestProvider = new Oauth({
-      ...params,
-      clientId: this.oauthClientId,
-      strategy,
-    });
-    await this.oauthRequestProvider.init();
-  }
-
-  /**
-   * Makes api request with authorization token
-   * @param {Object} [options] Request parameters object
-   * @param {String} options.url Request url
-   * @param {String} options.method Request http method
-   * @param {Object} [options.params] - Request parameters
-   * @param {Object} [options.headers] - Request headers
-   * @param {Object|string} [options.data] - Request body
-   * @returns {Promise} Request promise
-   */
-  request(options) {
-    if (!this.oauthRequestProvider) {
-      throw ConnectError.create(ERRORS.OAUTH_REQUIRE_AUTHORIZE);
-    }
-    return this.oauthRequestProvider.request(options);
-  }
-
-  /**
-   * Clears instance scopes and token
-   * @throws {Error} If not authorized yet;
-   */
-  logoutFromOauth() {
-    if (!this.oauthRequestProvider) {
-      throw ConnectError.create(ERRORS.OAUTH_NOT_LOGGED_IN);
-    }
-    this.oauthRequestProvider.logout();
-  }
-
-  /**
-   * Sets oauth popup parameters
-   * @param {Object} params Parameters object
-   * @param {Number} [params.width] Oauth popup width
-   * @param {Number} [params.height] Oauth popup height
-   * @throws {Error} If not authorized yet;
-   */
-  setOauthPopupParams(params) {
-    if (!this.oauthRequestProvider) {
-      throw ConnectError.create(ERRORS.OAUTH_INITIALIZE_INSTANCE);
-    }
-
-    this.oauthRequestProvider.setPopupParams(params);
-  }
-
-  /**
-   * @param {Object} [parameters]
-   * @returns {Promise<Element>}
-   */
-  async mountWidget(parameters) {
-    if (this.bridge.isWidgetMounted()) {
-      return this.bridge.getWidgetNode();
-    }
-
-    clearInterval(this.widgetAutoMountTimerId);
-
-    this.widgetOptions = parameters;
-    this.widgetMessenger = new CrossWindowMessenger({
-      showLogs: !ENV.isProduction,
-      name: `connect-bridge-widget[${this.namespace}]`,
-      to: DIRECTION.AUTH,
-      from: DIRECTION.CONNECT,
-    });
-    this.messengerGroup.addMessenger(this.widgetMessenger);
-
-    return this.bridge.mountWidget(parameters);
-  }
-
-  unmountWidget() {
-    if (!this.bridge.isWidgetMounted()) return;
-
-    this.messengerGroup.removeMessenger(this.widgetMessenger);
-    this.bridge.unmountWidget();
-  }
-
-  async getWidgetNode() {
-    const res = await this.bridge.getWidgetNode();
-
-    return res;
-  }
-
-  setupOnAuth() {
-    this.widgetAutoMountTimerId = setInterval(() => {
-      if (this.widgetOptions !== false && this.isLogin()) {
-        this.mountWidget(this.widgetOptions);
-      }
-    }, 1500);
-  }
-
-  getInpageProvider() {
-    return this.inpageProvider;
+    this.plugins.elements
+      .getMessengerGroupInstance()
+      .send(METHODS.CHANGE_SETTINGS_RESPONSE, settings);
   }
 
   getRequestProvider() {
-    return this.requestProvider;
+    return this.plugins.provider.getRequestProvider();
   }
 
-  /**
-   * Returns injected provider settings
-   * @private
-   * @returns {Object} Current provider settings
-   */
   getInpageProviderSettings() {
-    return { ...this.getInpageProvider().settings };
-  }
-
-  /**
-   * Returns connect application url with passed method
-   * @private
-   * @param {String} method Expected method (route)
-   * @returns {String} Completed url to open
-   */
-  getConnectUrl(method) {
-    const { authUrl } = this;
-
-    return !method ? authUrl : `${authUrl}/${method}`;
+    return this.plugins.provider.getInpageProviderSettings();
   }
 
   getEmitter() {
-    return this.emitter;
+    return this.plugins.provider.getEmitter();
   }
 
-  getBridge() {
-    return this.bridge;
+  getDialog() {
+    return this.plugins.elements.getDialogInstance();
   }
 
-  getDialogMessenger() {
-    return this.dialogMessenger;
+  getWidget() {
+    return this.plugins.elements.getWidgetInstance();
   }
 
-  getWidgetMessenger() {
-    return this.widgetMessenger;
-  }
-
-  getNamespace() {
-    return this.namespace;
+  getAuthRequester() {
+    return this.plugins.auth.getAuthInstance();
   }
 }

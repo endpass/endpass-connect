@@ -1,10 +1,13 @@
 // @ts-check
 
+import { WEB3_METHODS } from '@/constants';
+
 /** @type {import("@/types/Middleware").Middleware} */
 export default async function(context, action) {
   const { request } = action;
 
-  if (request.method === 'eth_accounts' && !context.isLogin()) {
+  if (request.method === WEB3_METHODS.ETH_ACCOUNTS && !context.isLogin) {
+    // AuthClass.auth();
     await context.serverAuth();
   }
 }

@@ -11,7 +11,7 @@ describe('widget', function() {
       cy.authFrameContinueRun();
       cy.shouldLoggedIn();
 
-      cy.getElementFromWidget('[data-test=widget-header]').click();
+      cy.openWidget();
       cy.getElementFromWidget('[data-test=new-account-button]').should(
         'be.visible',
       );
@@ -25,7 +25,7 @@ describe('widget', function() {
       cy.authFrameContinueRun();
       cy.shouldLoggedIn();
       cy.get('@e2eLogout').should('not.be.called');
-      cy.getElementFromWidget('[data-test=widget-header]').click();
+      cy.openWidget();
       cy.getElementFromWidget('[data-test=logout-button]').click();
 
       cy.shouldLogout();
@@ -35,7 +35,7 @@ describe('widget', function() {
       cy.authFrameContinueRun();
       cy.shouldLoggedIn();
 
-      cy.getElementFromWidget('[data-test=widget-header]').click();
+      cy.openWidget();
       cy.getElementFromWidget('[data-test=account-button]')
         .its('length')
         .should('eq', 2);

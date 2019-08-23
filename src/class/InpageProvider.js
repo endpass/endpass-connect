@@ -2,7 +2,7 @@ import get from 'lodash.get';
 import Network from '@endpass/class/Network';
 import ConnectError from '@endpass/class/ConnectError';
 import Emmiter from './Emmiter';
-import { INPAGE_EVENTS, INPAGE_ID_PREFIX } from '@/constants';
+import { INPAGE_EVENTS, INPAGE_ID_PREFIX, WEB3_METHODS } from '@/constants';
 import processPayload from '@/util/processPayload';
 
 const { ERRORS } = ConnectError;
@@ -118,7 +118,7 @@ export default class InpageProvider extends Emmiter {
       this.sendAsync(payload, callback);
     } else {
       const res = processPayload(payload, this.settings);
-      if (payload.method === 'eth_uninstallFilter') {
+      if (payload.method === WEB3_METHODS.ETH_UNINSTALL_FILTER) {
         this.sendAsync(payload, () => {});
       }
       return res;

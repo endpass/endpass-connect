@@ -20,8 +20,9 @@ function resolveDir(dir) {
   return path.join(__dirname, '', dir);
 }
 
-function resolveFile(file) {
-  return path.resolve(__dirname, file);
+function resolveFile(...args) {
+  args.splice(0, 0, __dirname);
+  return path.resolve.apply(path, args);
 }
 
 const ENV = getEnv(process.env.NODE_ENV);
@@ -33,8 +34,7 @@ const outputConf = {
   sourcemap: withSourceMaps,
 };
 
-export default {
-  input: resolveFile('./src/index.js'),
+const commonConfig = {
   external: [...Object.keys(pkg.dependencies)],
   plugins: [
     resolve({
@@ -61,17 +61,37 @@ export default {
   watch: {
     exclude: ['node_modules/**'],
   },
-  output: [
-    {
-      ...outputConf,
-      file: resolveFile(pkg.umd),
-      name: pkg.name,
-      format: 'umd',
-    },
-    {
-      ...outputConf,
-      file: resolveFile(pkg.module),
-      format: 'esm',
-    },
-  ],
 };
+
+const createConfig = ({ input, umd, module }) => {
+  return {
+    input: resolveFile(input),
+    ...commonConfig,
+    output: [
+      {
+        ...outputConf,
+        file: resolveFile('dist', umd),
+        name: pkg.name,
+        format: 'umd',
+      },
+      {
+        ...outputConf,
+        file: resolveFile('dist', module),
+        format: 'esm',
+      },
+    ],
+  };
+};
+
+export default [
+  createConfig({
+    input: './src/index.js',
+    umd: pkg.umd,
+    module: pkg.module,
+  }),
+  createConfig({
+    input: './src/plugins/ProviderPlugin.js',
+    umd: pkg.connectPlugins.provider.umd,
+    module: pkg.connectPlugins.provider.module,
+  }),
+];
