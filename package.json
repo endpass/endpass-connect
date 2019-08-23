@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/endpass/endpass-connect",
   "scripts": {
+    "update": "yarn build && npm publish ./dist",
     "dev": "rollup -c -w",
     "build": "rimraf ./dist && npm run build:lib && npm run build:browser",
     "build:lib": "NODE_ENV=production rollup -c",
