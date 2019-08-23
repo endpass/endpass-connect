@@ -1,7 +1,9 @@
 import ConnectError from '@endpass/class/ConnectError';
 import Connect from '@/Connect';
+import ProviderPlugin from '@/plugins/ProviderPlugin';
 import privateFields from '@/privateFields';
-import { InpageProvider, ProviderFactory } from '@/class';
+import ProviderFactory from '@/class/ProviderFactory';
+import InpageProvider from '@/class/InpageProvider';
 import { INPAGE_EVENTS, METHODS } from '@/constants';
 
 const { ERRORS } = ConnectError;
@@ -11,6 +13,7 @@ describe('Connect class', () => {
   let context;
   const authUrl = 'http://test.auth';
   const oauthClientId = 'xxxxxxxxxx';
+  const plugins = [ProviderPlugin];
 
   beforeAll(() => {
     window.open = jest.fn();
@@ -19,7 +22,7 @@ describe('Connect class', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    connect = new Connect({ authUrl, oauthClientId });
+    connect = new Connect({ authUrl, oauthClientId, plugins });
     context = connect[privateFields.context];
   });
 
@@ -36,7 +39,7 @@ describe('Connect class', () => {
     it('should subscribe on events is subscribe property passed to constructor', () => {
       jest.spyOn(ProviderFactory, 'createRequestProvider');
 
-      connect = new Connect({ authUrl, oauthClientId });
+      connect = new Connect({ authUrl, oauthClientId, plugins });
 
       context = connect[privateFields.context];
 
@@ -50,7 +53,7 @@ describe('Connect class', () => {
     });
 
     it('should return Inpage provider from given parameters', () => {
-      connect = new Connect({ authUrl, oauthClientId });
+      connect = new Connect({ authUrl, oauthClientId, plugins });
       const res = connect.getProvider();
 
       expect(res instanceof InpageProvider).toBe(true);
@@ -79,21 +82,20 @@ describe('Connect class', () => {
       context.getInpageProviderSettings = jest.fn(() => payload);
       connect.setProviderSettings(payload);
 
-      expect(context.emitter.emit).toBeCalledWith(
+      expect(context.getEmitter().emit).toBeCalledWith(
         INPAGE_EVENTS.SETTINGS,
         payload,
       );
-      expect(context.messengerGroup.send).toBeCalledWith(
-        METHODS.CHANGE_SETTINGS_RESPONSE,
-        payload,
-      );
+      expect(
+        context.plugins.elements.getMessengerGroupInstance().send,
+      ).toBeCalledWith(METHODS.CHANGE_SETTINGS_RESPONSE, payload);
     });
   });
 
   describe('getProvider', () => {
     beforeEach(() => {
       jest.clearAllMocks();
-      connect = new Connect({ authUrl, oauthClientId });
+      connect = new Connect({ authUrl, oauthClientId, plugins });
     });
 
     it('should return Inpage provider from given parameters', () => {

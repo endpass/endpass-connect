@@ -1,3 +1,4 @@
+import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import Dialog from '@/class/Dialog';
 import { METHODS } from '@/constants';
 
@@ -8,14 +9,6 @@ describe('Dialog class', () => {
     sendAndWaitResponse: jest.fn(),
     setTarget: jest.fn(),
     subscribe: jest.fn(),
-  };
-  const context = {
-    getNamespace() {
-      return 'ns';
-    },
-    getDialogMessenger() {
-      return messenger;
-    },
   };
 
   beforeEach(() => {
@@ -28,7 +21,13 @@ describe('Dialog class', () => {
       cbs[method] = cb;
     };
 
-    const inst = new Dialog({ context, url });
+    jest
+      .spyOn(CrossWindowMessenger.prototype, 'subscribe')
+      .mockImplementation((method, cb) => {
+        cbs[method] = cb;
+      });
+
+    const inst = new Dialog({ url });
 
     expect(inst.isShown).toBe(false);
 

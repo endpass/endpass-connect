@@ -1,9 +1,9 @@
 import ConnectError from '@endpass/class/ConnectError';
+import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import Connect from '@/Connect';
 import Context from '@/Context';
 import privateFields from '@/privateFields';
 import { METHODS, DIRECTION } from '@/constants';
-import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 
 const { ERRORS } = ConnectError;
 

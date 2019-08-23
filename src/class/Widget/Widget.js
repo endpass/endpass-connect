@@ -7,16 +7,20 @@ import {
   FADE_TIMEOUT,
   getWidgetFrameStylesObject,
 } from './WidgetStyles';
+// eslint-disable-next-line no-unused-vars
+import MessengerGroup from '@/class/MessengerGroup';
 
 export default class Widget {
   /**
    * @param {object} options
+   * @param {MessengerGroup} options.messengerGroup messengerGroup for communicate between others
    * @param {string} options.namespace namespace of connect
    * @param {string} options.url frame url
    */
   constructor({ namespace, messengerGroup, url }) {
     this.messengerGroup = messengerGroup;
     this.url = url;
+    /** @type HTMLIFrameElement */
     this.frame = null;
     this.position = null;
 
@@ -34,6 +38,7 @@ export default class Widget {
       to: DIRECTION.AUTH,
       from: DIRECTION.CONNECT,
     });
+    /** @type Array<Promise> */
     this.frameResolver = [];
     this.subscribe();
   }
@@ -96,6 +101,11 @@ export default class Widget {
     return this.isMounted;
   }
 
+  /**
+   *
+   * @param {string} event
+   * @param {any} [detail]
+   */
   emitFrameEvent(event, detail) {
     if (!this.frame) {
       return;
@@ -109,7 +119,9 @@ export default class Widget {
   }
 
   /**
-   * Create markup and prepend to <body>
+   *
+   * @param {object} parameters
+   * @return {Promise<HTMLElement|*>}
    */
   async mount(parameters = {}) {
     if (this.isMounted) {
