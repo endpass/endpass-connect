@@ -4,7 +4,7 @@ import { METHODS } from '@/constants';
 const { ERRORS } = ConnectError;
 
 export default class Auth {
-  constructor({ dialog, options }) {
+  constructor({ dialog, options = {} }) {
     this.dialog = dialog;
     this.isServerLogin = false;
     this.haveDemoData = !!options.demoData;
@@ -18,7 +18,7 @@ export default class Auth {
     return this.isServerLogin;
   }
 
-  setLoggedIn(value) {
+  set isLogin(value) {
     this.isServerLogin = value;
   }
 
@@ -40,7 +40,7 @@ export default class Auth {
       throw ConnectError.create(res.code || ERRORS.AUTH);
     }
 
-    this.isServerLogin = true;
+    this.isLogin = true;
 
     return {
       payload: res.payload,
@@ -61,7 +61,7 @@ export default class Auth {
       throw ConnectError.create(res.code || ERRORS.AUTH_LOGOUT);
     }
 
-    this.isServerLogin = false;
+    this.isLogin = false;
 
     return res.status;
   }

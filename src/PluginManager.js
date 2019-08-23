@@ -7,14 +7,16 @@ const AVAILABLE_PLUGINS = {
 
 export default class PluginManager {
   static createPlugins(plugins, props) {
-    const pluginForCreateMap = plugins.reduce((map, Plugin) => {
+    const pluginForCreateMap = plugins.reduce((pluginsMap, Plugin) => {
       // eslint-disable-next-line no-param-reassign
-      const pluginName = Plugin.pluginName();
-      if (map[pluginName]) {
+      const pluginName = Plugin.getName();
+      if (pluginsMap[pluginName]) {
         throw new Error(`plugin '${pluginName}' already defined`);
       }
-      map[pluginName] = Plugin;
-      return map;
+      Object.assign(pluginsMap, {
+        [pluginName]: Plugin,
+      });
+      return pluginsMap;
     }, {});
 
     const setHandler = () => {

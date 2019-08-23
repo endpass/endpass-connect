@@ -11,14 +11,14 @@ const WIDGET_AUTH_TIMEOUT = 1500;
 export default class ElementsPlugin extends Plugin {
   constructor(props) {
     super(props);
-    const { options } = props;
+    const { options = {} } = props;
     const { namespace, authUrl } = options;
     this.namespace = namespace || '';
     this.options = options;
     this.authUrl = getAuthUrl(authUrl || DEFAULT_AUTH_URL);
   }
 
-  static pluginName() {
+  static getName() {
     return 'elements';
   }
 
@@ -33,7 +33,7 @@ export default class ElementsPlugin extends Plugin {
       },
     });
     elementsSubscriber.subscribeElements();
-    this.setupWidgetOnAuth(this.options);
+    this.setupWidgetOnAuth(this.options.widget);
   }
 
   setupWidgetOnAuth(options) {

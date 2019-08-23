@@ -7,7 +7,7 @@ export default class AuthPlugin extends Plugin {
     this.options = props.options;
   }
 
-  static pluginName() {
+  static getName() {
     return 'auth';
   }
 

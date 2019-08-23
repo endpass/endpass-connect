@@ -3,8 +3,8 @@ export default class Plugin {
     this.context = context;
   }
 
-  static pluginName() {
-    return 'PleaseDefinePluginNameHere';
+  static getName() {
+    throw new Error('Please define plugin name');
   }
 
   // eslint-disable-next-line class-methods-use-this

@@ -4,6 +4,7 @@ import Connect from '@/Connect';
 import Context from '@/Context';
 import privateFields from '@/privateFields';
 import { METHODS, DIRECTION } from '@/constants';
+import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
 
 const { ERRORS } = ConnectError;
 
@@ -24,9 +25,10 @@ describe('Context class', () => {
     context = connect[privateFields.context];
   });
 
-  describe('getConnectUrl', () => {
+  describe('getFrameRouteUrl', () => {
     it('should return url to auth on connect application', () => {
-      expect(context.getConnectUrl('foo')).toBe(`${authUrl}/foo`);
+      const url = getAuthUrl(authUrl);
+      expect(getFrameRouteUrl(url, 'foo')).toBe(`${authUrl}/foo`);
     });
   });
 

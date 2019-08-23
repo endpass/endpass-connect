@@ -10,7 +10,7 @@ import createInpageProviderStream from '@/streams/inpageProvider/inpageProviderS
 const { ERRORS } = ConnectError;
 
 export default class ProviderPlugin extends Plugin {
-  static pluginName() {
+  static getName() {
     return 'provider';
   }
 

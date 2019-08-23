@@ -15,7 +15,7 @@ export default class OauthPlugin extends Plugin {
     this.oauthClientId = options.oauthClientId;
   }
 
-  static pluginName() {
+  static getName() {
     return 'oauth';
   }
 
