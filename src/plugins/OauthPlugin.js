@@ -8,7 +8,7 @@ const { ERRORS } = ConnectError;
 export default class OauthPlugin extends Plugin {
   constructor(props) {
     super(props);
-    const { options } = props;
+    const { options = {} } = props;
     if (!options.oauthClientId) {
       throw ConnectError.create(ERRORS.OAUTH_REQUIRE_ID);
     }
