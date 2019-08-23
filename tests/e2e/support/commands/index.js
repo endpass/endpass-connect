@@ -10,3 +10,4 @@ import './routes/settings';
 import './routes/composite';
 import './prepares';
 import './web3';
+import './widget';
