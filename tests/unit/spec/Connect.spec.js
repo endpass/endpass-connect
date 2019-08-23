@@ -14,6 +14,15 @@ describe('Connect class', () => {
   const authUrl = 'http://test.auth';
   const oauthClientId = 'xxxxxxxxxx';
   const plugins = [ProviderPlugin];
+  const dialog = {
+    ask: jest.fn(),
+  };
+
+  const msgGroup = {
+    send: jest.fn(),
+    addMessenger: jest.fn(),
+    removeMessenger: jest.fn(),
+  };
 
   beforeAll(() => {
     window.open = jest.fn();
@@ -36,20 +45,12 @@ describe('Connect class', () => {
       expect(connect).toBeInstanceOf(Connect);
     });
 
-    it('should subscribe on events is subscribe property passed to constructor', () => {
+    it('should not create request provider until it called', () => {
       jest.spyOn(ProviderFactory, 'createRequestProvider');
 
       connect = new Connect({ authUrl, oauthClientId, plugins });
 
-      context = connect[privateFields.context];
-
-      expect(ProviderFactory.createRequestProvider).toBeCalled();
-    });
-
-    it('should be created without authUrl parameter', () => {
-      connect = new Connect({ oauthClientId });
-      context = connect[privateFields.context];
-      expect(context.authUrl).toBe('https://auth.endpass.com');
+      expect(ProviderFactory.createRequestProvider).not.toBeCalled();
     });
 
     it('should return Inpage provider from given parameters', () => {
@@ -67,9 +68,12 @@ describe('Connect class', () => {
       emitter = {
         emit: jest.fn(),
       };
-      context.emitter = emitter;
-      context.messengerGroup = {
-        send: jest.fn(),
+      context.plugins.provider.getEmitter = () => {
+        return emitter;
+      };
+
+      context.plugins.elements.getMessengerGroupInstance = () => {
+        return msgGroup;
       };
     });
 
@@ -79,7 +83,9 @@ describe('Connect class', () => {
         activeNet: 2,
       };
 
-      context.getInpageProviderSettings = jest.fn(() => payload);
+      context.plugins.provider.getInpageProviderSettings = jest.fn(
+        () => payload,
+      );
       connect.setProviderSettings(payload);
 
       expect(context.getEmitter().emit).toBeCalledWith(
@@ -107,7 +113,10 @@ describe('Connect class', () => {
 
   describe('getAccountData', () => {
     beforeEach(() => {
-      context.bridge.ask = jest.fn().mockResolvedValueOnce({
+      context.getDialog = () => {
+        return dialog;
+      };
+      dialog.ask = jest.fn().mockResolvedValueOnce({
         status: true,
         payload: {
           settings: {
@@ -119,8 +128,8 @@ describe('Connect class', () => {
         },
       });
 
-      context.messengerGroup = {
-        send: jest.fn(),
+      context.plugins.elements.getMessengerGroupInstance = () => {
+        return msgGroup;
       };
     });
 
@@ -148,11 +157,11 @@ describe('Connect class', () => {
           settings,
         },
       };
-      context.getDialog().ask = jest.fn().mockResolvedValueOnce(response);
+      dialog.ask = jest.fn().mockResolvedValueOnce(response);
 
       const res = await connect.getAccountData();
 
-      expect(context.getDialog().ask).toBeCalledWith(METHODS.GET_SETTINGS);
+      expect(dialog.ask).toBeCalledWith(METHODS.GET_SETTINGS);
 
       expect(res).toEqual({
         activeAccount: settings.lastActiveAccount,
@@ -163,7 +172,7 @@ describe('Connect class', () => {
     it('should throw error is request account status is falsy', async () => {
       expect.assertions(2);
 
-      context.getDialog().ask = jest.fn().mockResolvedValueOnce({
+      dialog.ask = jest.fn().mockResolvedValueOnce({
         status: false,
         code: ERRORS.USER_NOT_AUTHORIZED,
       });
@@ -178,77 +187,23 @@ describe('Connect class', () => {
     });
   });
 
-  describe('openAccount', () => {
-    let bridge;
-
-    beforeEach(() => {
-      bridge = {
-        ask: jest.fn(),
-      };
-      context.bridge = bridge;
-      connect.setProviderSettings = jest.fn();
-    });
-
-    it('should open connect application and awaits any signals from it', async () => {
-      expect.assertions(2);
-
-      bridge.ask.mockResolvedValueOnce({
-        status: true,
-        payload: {
-          type: 'foo',
-        },
-      });
-
-      const res = await connect.openAccount();
-
-      expect(context.bridge.ask).toBeCalledWith(METHODS.ACCOUNT, undefined);
-      expect(res).toEqual({
-        type: 'foo',
-        settings: undefined,
-      });
-    });
-
-    it('should open connect application and returns payload if response type is "update"', async () => {
-      expect.assertions(1);
-
-      const payload = {
-        wrongField: 'wrongField',
-        type: 'update',
-        settings: 'settings',
-      };
-
-      bridge.ask.mockResolvedValueOnce({
-        status: true,
-        payload,
-      });
-
-      const res = await connect.openAccount();
-
-      expect(res).toEqual({
-        type: 'update',
-        settings: 'settings',
-      });
-    });
-
-    it('should throw error if request status is falsy', async () => {
-      expect.assertions(1);
-
-      bridge.ask.mockResolvedValueOnce({
-        status: false,
-      });
-
-      try {
-        await connect.openAccount();
-      } catch (e) {
-        const err = new Error('Account updating failed!');
-        expect(e).toEqual(err);
-      }
-    });
-  });
-
   describe('logout', () => {
-    it('should do something', () => {
-      expect(1 + 1).toBe(2);
+    it('should logout from endpass', async () => {
+      const logoutResult = 'result';
+      context.plugins.auth.getAuthInstance = () => {
+        return {
+          logout() {
+            return logoutResult;
+          },
+        };
+      };
+      context.plugins.elements.getMessengerGroupInstance = () => {
+        return msgGroup;
+      };
+
+      const res = await connect.logout();
+      expect(res).toBe(logoutResult);
+      expect(msgGroup.send).toBeCalledWith(METHODS.LOGOUT_RESPONSE);
     });
   });
 });

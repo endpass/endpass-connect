@@ -8,7 +8,7 @@ import AuthPlugin from '@/plugins/AuthPlugin';
 
 const { ERRORS } = ConnectError;
 
-const defaultPlugins = [ElementsPlugin, OauthPlugin, AuthPlugin];
+const DEFAULT_PLUGINS = [ElementsPlugin, OauthPlugin, AuthPlugin];
 
 export default class Context {
   /**
@@ -27,11 +27,9 @@ export default class Context {
    *  equals to `bottom right`
    */
   constructor(options = {}) {
-    /**
-     * Independent class properties
-     */
+    const optionPlugins = options.plugins || [];
     this.plugins = PluginManager.createPlugins(
-      [...defaultPlugins, ...(options.plugins || [])],
+      [...DEFAULT_PLUGINS, ...optionPlugins],
       {
         options,
         context: this,
