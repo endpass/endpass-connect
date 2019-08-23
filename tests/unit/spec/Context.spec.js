@@ -30,6 +30,10 @@ describe('Context class', () => {
       const url = getAuthUrl(authUrl);
       expect(getFrameRouteUrl(url, 'foo')).toBe(`${authUrl}/foo`);
     });
+    it('should return default authUrl', () => {
+      const url = getAuthUrl();
+      expect(url).toBe('https://auth.endpass.com');
+    });
   });
 
   describe('auth', () => {

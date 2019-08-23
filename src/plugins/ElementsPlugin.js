@@ -6,15 +6,22 @@ import { DEFAULT_AUTH_URL } from '@/constants';
 import MessengerGroup from '@/class/MessengerGroup';
 import Plugin from '@/plugins/Plugin';
 
-const WIDGET_AUTH_TIMEOUT = 1500;
+const WIDGET_AUTH_TIMEOUT = 200;
 
 export default class ElementsPlugin extends Plugin {
   constructor(props) {
     super(props);
     const { options = {} } = props;
     const { namespace, authUrl } = options;
+    const { demoData, isIdentityMode, showCreateAccount } = options;
+
     this.namespace = namespace || '';
     this.options = options;
+    this.initialPayload = {
+      demoData,
+      isIdentityMode: isIdentityMode || false,
+      showCreateAccount,
+    };
     this.authUrl = getAuthUrl(authUrl || DEFAULT_AUTH_URL);
   }
 
@@ -23,14 +30,9 @@ export default class ElementsPlugin extends Plugin {
   }
 
   init() {
-    const { demoData, isIdentityMode, showCreateAccount } = this.options;
     const elementsSubscriber = new ElementsSubscriber({
       context: this.context,
-      initialPayload: {
-        demoData,
-        isIdentityMode: isIdentityMode || false,
-        showCreateAccount,
-      },
+      initialPayload: this.initialPayload,
     });
     elementsSubscriber.subscribeElements();
     this.setupWidgetOnAuth(this.options.widget);
@@ -40,13 +42,17 @@ export default class ElementsPlugin extends Plugin {
     if (options === false) {
       return;
     }
+    let timerId;
 
-    this.widgetAutoMountTimerId = setInterval(() => {
+    const handler = () => {
       if (this.context.isLogin) {
-        clearInterval(this.widgetAutoMountTimerId);
+        clearTimeout(timerId);
         this.getWidgetInstance().mount(options);
+        return;
       }
-    }, WIDGET_AUTH_TIMEOUT);
+      timerId = setTimeout(handler, WIDGET_AUTH_TIMEOUT);
+    };
+    handler();
   }
 
   /**

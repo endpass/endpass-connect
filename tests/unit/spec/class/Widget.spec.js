@@ -88,10 +88,6 @@ describe('Widget class', () => {
   });
 
   describe('unmount', () => {
-    beforeEach(() => {
-      widget.subscribe = jest.fn();
-    });
-
     it('should unmount widget after it faded out', () => {
       jest.spyOn(window, 'removeEventListener');
       jest.useFakeTimers();
@@ -117,6 +113,36 @@ describe('Widget class', () => {
 
       expect(widget.emitFrameEvent).toBeCalledWith('destroy');
       expect(widget.frame).toBeNull();
+    });
+
+    it('should unmount widget once', async () => {
+      expect.assertions(4);
+
+      await widget.mount();
+
+      expect(widget.isWidgetMounted()).toBe(true);
+
+      widget.unmount();
+
+      expect(widget.isWidgetMounted()).toBe(false);
+
+      widget.unmount();
+
+      expect(messengerGroup.addMessenger).toBeCalledTimes(1);
+      expect(messengerGroup.removeMessenger).toBeCalledTimes(1);
+    });
+
+    it('should mount widget once', async () => {
+      expect.assertions(3);
+
+      await widget.mount();
+
+      expect(widget.isWidgetMounted()).toBe(true);
+
+      widget.mount();
+
+      expect(messengerGroup.removeMessenger).toBeCalledTimes(0);
+      expect(messengerGroup.addMessenger).toBeCalledTimes(1);
     });
   });
 
