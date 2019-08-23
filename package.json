@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.27.0-beta",
+  "version": "0.27.1-beta",
   "authVersion": "",
   "main": "./endpass-connect.min.js",
   "module": "./endpass-connect.esm.js",
@@ -18,10 +18,6 @@
     "type": "git",
     "url": "git+https://github.com/endpass/endpass-connect.git"
   },
-  "files": [
-    "src",
-    "dist"
-  ],
   "author": "Endpass, Inc",
   "license": "MIT",
   "bugs": {
