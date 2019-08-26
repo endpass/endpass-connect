@@ -42,6 +42,7 @@ export default class Connect {
    * @returns {Promise<object>} Account data
    */
   async getAccountData() {
+    await this.auth();
     return this[privateFields.context].plugins.provider.getAccountData();
   }
 
@@ -58,7 +59,7 @@ export default class Connect {
 
   /**
    * Open application on auth screen and waits result (success of failure)
-   * @public
+   * @private
    * @throws {Error} If authentification failed
    * @returns {Promise<boolean>} Auth result, check `status` property to
    *  know about result
@@ -74,7 +75,7 @@ export default class Connect {
 
   /**
    * Send request to logout through injected bridge bypass application dialog
-   * @public
+   * @private
    * @throws {Error} If logout failed
    * @returns {Promise<boolean>}
    */
@@ -92,6 +93,7 @@ export default class Connect {
    * @returns {Promise<object>}
    */
   async openAccount() {
+    await this.auth();
     return this[privateFields.context].plugins.provider.openAccount();
   }
 
