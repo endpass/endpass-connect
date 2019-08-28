@@ -1,7 +1,7 @@
 import ConnectError from '@endpass/class/ConnectError';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import { inlineStylesState } from '@/util/dom';
-import { DIRECTION, METHODS } from '@/constants';
+import { DIRECTION, METHODS, DIALOG_EVENTS } from '@/constants';
 import {
   propsIframe,
   propsIframeShow,
@@ -28,12 +28,15 @@ export default class Dialog {
   /**
    * @param {object} options
    * @param {string} options.namespace namespace of connect
+   * @param {HTMLElement|string|undefined?} [options.element] render place
    * @param {string} options.url frame url
    */
-  constructor({ namespace, url }) {
+  constructor({ namespace, element, url }) {
     this.namespace = namespace;
     this.url = url;
     this.ready = false;
+    this.element = element;
+    this.isElementMode = !!element;
 
     this.dialogMessenger = new CrossWindowMessenger({
       showLogs: !ENV.isProduction,
@@ -64,6 +67,9 @@ export default class Dialog {
     }
   }
 
+  /**
+   * Subscribe Dialog methods for update style
+   */
   subscribe() {
     const messenger = this.dialogMessenger;
 
@@ -82,23 +88,58 @@ export default class Dialog {
       });
     });
     messenger.subscribe(METHODS.DIALOG_CLOSE, () => {
+      if (!this.isShown) {
+        return;
+      }
       this.wrapper.dataset.visible = 'false';
       this.isShown = false;
-      this.overlay.style = stylesOverlayHide;
+      this.changeOverlayStyle(DIALOG_EVENTS.CLOSE);
       this.frame.style = this.frameStyles(propsIframeHide);
       this.wrapper.style = stylesWrapperHide;
     });
     messenger.subscribe(METHODS.DIALOG_OPEN, () => {
+      if (this.isShown) {
+        return;
+      }
       this.wrapper.dataset.visible = 'true';
       this.isShown = true;
       this.frame.style = this.frameStyles(propsIframeShow);
-      this.overlay.style = stylesOverlayShow;
+      this.changeOverlayStyle(DIALOG_EVENTS.OPEN);
       this.wrapper.style = stylesWrapperShow;
     });
   }
 
+  /**
+   * Return instance of Dialog messenger
+   * @return {CrossWindowMessenger}
+   */
   getDialogMessenger() {
     return this.dialogMessenger;
+  }
+
+  /**
+   * Change overlay style by event
+   * @param event
+   */
+  changeOverlayStyle(event) {
+    if (this.isElementMode) {
+      const frameEvent = new CustomEvent(event, {
+        detail: {},
+      });
+
+      this.overlay.dispatchEvent(frameEvent);
+      return;
+    }
+
+    switch (event) {
+      case DIALOG_EVENTS.OPEN:
+        this.overlay.style = stylesOverlayShow;
+        break;
+      case DIALOG_EVENTS.CLOSE:
+      default:
+        this.overlay.style = stylesOverlayHide;
+        break;
+    }
   }
 
   /**
@@ -120,9 +161,10 @@ export default class Dialog {
   }
 
   /**
-   * Create markup and prepend to <body>
+   * Create default markup for Dialog
+   * @return {HTMLDivElement}
    */
-  mount() {
+  createMarkup() {
     const NSmarkup = this.namespace
       ? `data-endpass-namespace="${this.namespace}"`
       : '';
@@ -136,12 +178,33 @@ export default class Dialog {
         </div>
       </div>
     `;
+    const buffer = document.createElement('div');
+    buffer.insertAdjacentHTML('afterBegin', markup);
+    return buffer;
+  }
 
-    document.body.insertAdjacentHTML('afterBegin', markup);
+  /**
+   * Create markup and prepend to <body>
+   */
+  mount() {
+    const buffer = this.createMarkup();
 
-    this.overlay = document.body.querySelector('[data-endpass="overlay"]');
-    this.wrapper = document.body.querySelector('[data-endpass="wrapper"]');
-    this.frame = document.body.querySelector('[data-endpass="frame"]');
+    this.overlay = buffer.querySelector('[data-endpass="overlay"]');
+    this.wrapper = buffer.querySelector('[data-endpass="wrapper"]');
+    this.frame = buffer.querySelector('[data-endpass="frame"]');
+
+    if (this.isElementMode) {
+      const newOverlay = Dialog.getElement(this.element);
+      if (!newOverlay) {
+        throw new Error(
+          'Not defined "element" from options. Please define "element" option as String or HTMLElement',
+        );
+      }
+      newOverlay.appendChild(this.wrapper);
+      this.overlay = newOverlay;
+    } else {
+      document.body.appendChild(this.overlay);
+    }
 
     // subscribe
     this.dialogMessenger.setTarget(this.frame.contentWindow);
@@ -171,5 +234,17 @@ export default class Dialog {
     const res = await this.dialogMessenger.sendAndWaitResponse(method, payload);
 
     return res;
+  }
+
+  /**
+   * Select html element by selector or just return as is
+   * @param selector
+   * @return {HTMLElement}
+   */
+  static getElement(selector) {
+    if (typeof selector === 'string') {
+      return document.querySelector(selector);
+    }
+    return selector;
   }
 }

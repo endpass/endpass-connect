@@ -1,5 +1,5 @@
 const childProcess = require('child_process');
-const cleanup = require('./cleanup');
+const concurrently = require('concurrently');
 
 const children = [];
 
@@ -19,7 +19,7 @@ function executor(cmd) {
     const cmdItem = cmd[i];
     console.log('-- [cmd start]', cmdItem);
     try {
-      childProcess.execSync(cmdItem, { stdio: 'inherit' });
+      executor.execSync(cmdItem);
     } catch (e) {
       console.error(e);
       clearProcessChilds();
@@ -30,10 +30,24 @@ function executor(cmd) {
   }
 }
 
-executor.fork = function(modulePath, args, options) {
-  const child = childProcess.fork(modulePath, args, options);
-  children.push(child);
-  cleanup(clearProcessChilds);
+executor.execSync = function(cmd) {
+  return childProcess.execSync(cmd, { stdio: 'inherit' });
+};
+
+executor.fork = function(modulePath) {
+  concurrently(modulePath, {
+    prefix: 'name',
+    killOthers: ['failure', 'success'],
+    restartTries: 1,
+    raw: true,
+  }).then(
+    () => {
+      console.log('done');
+    },
+    () => {
+      console.log('fail');
+    },
+  );
 };
 
 executor.exit = function(code) {

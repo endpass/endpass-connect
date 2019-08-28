@@ -1,8 +1,10 @@
 const executor = require('./executor');
 
-executor.fork('./scripts/dev-connect.js');
-executor.fork('./scripts/dev-demo.js');
-executor.fork('./scripts/dev-auth.js');
+executor.fork([
+  'node ./scripts/dev-connect.js',
+  'node ./scripts/dev-demo.js',
+  'node ./scripts/dev-auth.js',
+]);
 executor('cypress open');
 
 executor.exit();
