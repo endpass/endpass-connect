@@ -11,6 +11,8 @@ import {
   stylesWrapperShow,
   stylesWrapperHide,
 } from '@/class/Dialog/DialogStyles';
+import StateClose from '@/class/Dialog/StateClose';
+import StateOpen from '@/class/Dialog/StateOpen';
 
 const { ERRORS } = ConnectError;
 
@@ -28,7 +30,7 @@ export default class Dialog {
   /**
    * @param {object} options
    * @param {string} options.namespace namespace of connect
-   * @param {HTMLElement|string|undefined?} [options.element] render place
+   * @param {HTMLElement|string?} [options.element] render place
    * @param {string} options.url frame url
    */
   constructor({ namespace, element, url }) {
@@ -37,6 +39,7 @@ export default class Dialog {
     this.ready = false;
     this.element = element;
     this.isElementMode = !!element;
+    this.state = new StateClose(this);
 
     this.dialogMessenger = new CrossWindowMessenger({
       showLogs: !ENV.isProduction,
@@ -68,6 +71,7 @@ export default class Dialog {
   }
 
   /**
+   * @private
    * Subscribe Dialog methods for update style
    */
   subscribe() {
@@ -88,29 +92,46 @@ export default class Dialog {
       });
     });
     messenger.subscribe(METHODS.DIALOG_CLOSE, () => {
-      if (!this.isShown) {
-        return;
-      }
-      this.wrapper.dataset.visible = 'false';
-      this.isShown = false;
-      this.changeOverlayStyle(DIALOG_EVENTS.CLOSE);
-      this.frame.style = this.frameStyles(propsIframeHide);
-      this.wrapper.style = stylesWrapperHide;
+      this.state.onClose();
+      this.state = new StateClose(this);
     });
     messenger.subscribe(METHODS.DIALOG_OPEN, () => {
-      if (this.isShown) {
-        return;
-      }
-      this.wrapper.dataset.visible = 'true';
-      this.isShown = true;
-      this.frame.style = this.frameStyles(propsIframeShow);
-      this.changeOverlayStyle(DIALOG_EVENTS.OPEN);
-      this.wrapper.style = stylesWrapperShow;
+      this.state.onOpen();
+      this.state = new StateOpen(this);
     });
+  }
+
+  onClose() {
+    this.isShown = false;
+    this.wrapper.dataset.visible = 'false';
+    this.emitEvent(DIALOG_EVENTS.CLOSE);
+    this.frame.style = this.frameStyles(propsIframeHide);
+    this.wrapper.style = stylesWrapperHide;
+  }
+
+  onOpen() {
+    this.isShown = true;
+    this.wrapper.dataset.visible = 'true';
+    this.frame.style = this.frameStyles(propsIframeShow);
+    this.emitEvent(DIALOG_EVENTS.OPEN);
+    this.wrapper.style = stylesWrapperShow;
+  }
+
+  /**
+   * @private
+   * @param {string} event
+   */
+  emitEvent(event) {
+    const frameEvent = new CustomEvent(event, {
+      detail: {},
+    });
+
+    this.overlay.dispatchEvent(frameEvent);
   }
 
   /**
    * Return instance of Dialog messenger
+   * @public
    * @return {CrossWindowMessenger}
    */
   getDialogMessenger() {
@@ -118,35 +139,11 @@ export default class Dialog {
   }
 
   /**
-   * Change overlay style by event
-   * @param event
-   */
-  changeOverlayStyle(event) {
-    if (this.isElementMode) {
-      const frameEvent = new CustomEvent(event, {
-        detail: {},
-      });
-
-      this.overlay.dispatchEvent(frameEvent);
-      return;
-    }
-
-    switch (event) {
-      case DIALOG_EVENTS.OPEN:
-        this.overlay.style = stylesOverlayShow;
-        break;
-      case DIALOG_EVENTS.CLOSE:
-      default:
-        this.overlay.style = stylesOverlayHide;
-        break;
-    }
-  }
-
-  /**
    * Checks dialog ready state
    * Ask messenger before til it give any answer and resolve promise
    * Also, it is caches ready state and in the next time just resolve returned
    * promise
+   * @private
    * @returns {Promise<boolean>}
    */
   checkReadyState() {
@@ -162,6 +159,7 @@ export default class Dialog {
 
   /**
    * Create default markup for Dialog
+   * @private
    * @return {HTMLDivElement}
    */
   createMarkup() {
@@ -169,7 +167,7 @@ export default class Dialog {
       ? `data-endpass-namespace="${this.namespace}"`
       : '';
 
-    const markup = `
+    const markupTemplate = `
       <div data-endpass="overlay" ${NSmarkup} style="${stylesOverlayHide}" >
         <div data-test="dialog-wrapper" data-endpass="wrapper" data-visible="false" style="${stylesWrapperHide}">
           <iframe data-test="dialog-iframe" data-endpass="frame" src="${
@@ -178,31 +176,32 @@ export default class Dialog {
         </div>
       </div>
     `;
-    const buffer = document.createElement('div');
-    buffer.insertAdjacentHTML('afterBegin', markup);
-    return buffer;
+    const markup = document.createElement('div');
+    markup.insertAdjacentHTML('afterBegin', markupTemplate);
+    return markup;
   }
 
   /**
    * Create markup and prepend to <body>
+   * @private
    */
   mount() {
-    const buffer = this.createMarkup();
+    const markup = this.createMarkup();
 
-    this.overlay = buffer.querySelector('[data-endpass="overlay"]');
-    this.wrapper = buffer.querySelector('[data-endpass="wrapper"]');
-    this.frame = buffer.querySelector('[data-endpass="frame"]');
+    this.overlay = markup.querySelector('[data-endpass="overlay"]');
+    this.wrapper = markup.querySelector('[data-endpass="wrapper"]');
+    this.frame = markup.querySelector('[data-endpass="frame"]');
 
     if (this.isElementMode) {
-      const newOverlay = Dialog.getElement(this.element);
-      if (!newOverlay) {
-        throw new Error(
-          'Not defined "element" from options. Please define "element" option as String or HTMLElement',
-        );
-      }
-      newOverlay.appendChild(this.wrapper);
-      this.overlay = newOverlay;
+      this.overlay = this.selectElement();
+      this.overlay.appendChild(this.wrapper);
     } else {
+      this.overlay.addEventListener(DIALOG_EVENTS.OPEN, () => {
+        this.overlay.style = stylesOverlayShow;
+      });
+      this.overlay.addEventListener(DIALOG_EVENTS.CLOSE, () => {
+        this.overlay.style = stylesOverlayHide;
+      });
       document.body.appendChild(this.overlay);
     }
 
@@ -219,8 +218,27 @@ export default class Dialog {
   }
 
   /**
+   * @private
+   * @return {HTMLElement}
+   */
+  selectElement() {
+    const element =
+      typeof this.element === 'string'
+        ? document.querySelector(this.element)
+        : this.element;
+
+    if (!element) {
+      throw new Error(
+        'Not defined "element" from options. Please define "element" option as String or HTMLElement',
+      );
+    }
+    return element;
+  }
+
+  /**
    * Wrapper on sendMessage and awaitMessage methods
    * Send message with given payload and awaits answer on it
+   * @public
    * @param {string} method Method name
    * @param {object} [payload] Message payload. Must includes method property
    * @returns {Promise<any>} Responded message payload
@@ -234,17 +252,5 @@ export default class Dialog {
     const res = await this.dialogMessenger.sendAndWaitResponse(method, payload);
 
     return res;
-  }
-
-  /**
-   * Select html element by selector or just return as is
-   * @param selector
-   * @return {HTMLElement}
-   */
-  static getElement(selector) {
-    if (typeof selector === 'string') {
-      return document.querySelector(selector);
-    }
-    return selector;
   }
 }

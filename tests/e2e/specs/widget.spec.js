@@ -1,24 +1,48 @@
 import { v3password, address } from '@fixtures/identity/accounts';
 import { etherPrices } from '@fixtures/cryptodata/price';
+import { MOBILE_BREAKPOINT } from '@/class/Widget/WidgetStyles';
 
 describe('widget', function() {
-  describe('widget features', () => {
+  describe('mobile mode', () => {
+    beforeEach(() => {
+      cy.viewport(MOBILE_BREAKPOINT - 10, MOBILE_BREAKPOINT - 10);
+      cy.waitPageLoad();
+    });
+
+    it('should toggle widget on mobile screen', () => {
+      cy.authFrameContinueRun();
+      cy.shouldLoggedIn();
+
+      cy.openWidgetMobile();
+      cy.shouldWidgetBeVisible();
+      cy.getElementFromWidget('[data-test=widget-header]').click();
+      cy.shouldWidgetBeHidden();
+      cy.get('[data-test=endpass-form-network-name]').click();
+
+      cy.openWidgetMobile();
+      cy.shouldWidgetBeVisible();
+      cy.get('[data-test=endpass-form-network-name]').click();
+      cy.shouldWidgetBeHidden();
+    });
+  });
+
+  describe('desktop mode', () => {
     beforeEach(() => {
       cy.waitPageLoad();
     });
 
-    it('should toggle widget', () => {
+    it('should toggle widget more than one times', () => {
       cy.authFrameContinueRun();
       cy.shouldLoggedIn();
 
       cy.openWidget();
-      cy.getElementFromWidget('[data-test=new-account-button]').should(
-        'be.visible',
-      );
+      cy.shouldWidgetBeVisible();
       cy.getElementFromWidget('[data-test=widget-header]').click();
-      cy.getElementFromWidget('[data-test=new-account-button]').should(
-        'not.be.visible',
-      );
+      cy.shouldWidgetBeHidden();
+      cy.getElementFromWidget('[data-test=widget-header]').click();
+      cy.shouldWidgetBeVisible();
+      cy.getElementFromWidget('[data-test=widget-header]').click();
+      cy.shouldWidgetBeHidden();
     });
 
     it('should logout from widget', () => {

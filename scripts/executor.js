@@ -1,14 +1,6 @@
 const childProcess = require('child_process');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const concurrently = require('concurrently');
-
-const children = [];
-
-function clearProcessChilds() {
-  children.forEach(child => {
-    child.kill('SIGINT');
-  });
-  children.length = 0;
-}
 
 function executor(cmd) {
   if (!Array.isArray(cmd)) {
@@ -22,7 +14,6 @@ function executor(cmd) {
       executor.execSync(cmdItem);
     } catch (e) {
       console.error(e);
-      clearProcessChilds();
       process.exit(1);
       throw new Error('execution fail');
     }
@@ -30,11 +21,11 @@ function executor(cmd) {
   }
 }
 
-executor.execSync = function(cmd) {
+executor.execSync = cmd => {
   return childProcess.execSync(cmd, { stdio: 'inherit' });
 };
 
-executor.fork = function(modulePath) {
+executor.fork = modulePath => {
   concurrently(modulePath, {
     prefix: 'name',
     killOthers: ['failure', 'success'],
@@ -50,8 +41,7 @@ executor.fork = function(modulePath) {
   );
 };
 
-executor.exit = function(code) {
-  clearProcessChilds();
+executor.exit = code => {
   process.exit(code || 0);
 };
 

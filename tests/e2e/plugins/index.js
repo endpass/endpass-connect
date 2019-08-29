@@ -24,6 +24,7 @@ module.exports = (on, config) => {
         alias: {
           '@fixtures': path.resolve(__dirname, '../../fixtures'),
           '@config': path.resolve(__dirname, '../support/config'),
+          '@': path.resolve(__dirname, '../../../src'),
         },
       },
     },
