@@ -92,3 +92,8 @@ export const WIDGET_EVENTS = {
   LOGOUT: 'logout',
   UPDATE: 'update',
 };
+
+export const DIALOG_EVENTS = {
+  OPEN: 'open',
+  CLOSE: 'close',
+};

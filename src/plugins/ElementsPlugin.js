@@ -62,6 +62,7 @@ export default class ElementsPlugin extends Plugin {
   getDialogInstance() {
     if (!this.dialog) {
       this.dialog = new Dialog({
+        element: this.options.element,
         namespace: this.namespace,
         url: getFrameRouteUrl(this.authUrl, 'bridge'),
       });

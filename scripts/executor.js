@@ -1,14 +1,6 @@
 const childProcess = require('child_process');
-const cleanup = require('./cleanup');
-
-const children = [];
-
-function clearProcessChilds() {
-  children.forEach(child => {
-    child.kill('SIGINT');
-  });
-  children.length = 0;
-}
+// eslint-disable-next-line import/no-extraneous-dependencies
+const concurrently = require('concurrently');
 
 function executor(cmd) {
   if (!Array.isArray(cmd)) {
@@ -19,10 +11,9 @@ function executor(cmd) {
     const cmdItem = cmd[i];
     console.log('-- [cmd start]', cmdItem);
     try {
-      childProcess.execSync(cmdItem, { stdio: 'inherit' });
+      executor.execSync(cmdItem);
     } catch (e) {
       console.error(e);
-      clearProcessChilds();
       process.exit(1);
       throw new Error('execution fail');
     }
@@ -30,14 +21,27 @@ function executor(cmd) {
   }
 }
 
-executor.fork = function(modulePath, args, options) {
-  const child = childProcess.fork(modulePath, args, options);
-  children.push(child);
-  cleanup(clearProcessChilds);
+executor.execSync = cmd => {
+  return childProcess.execSync(cmd, { stdio: 'inherit' });
 };
 
-executor.exit = function(code) {
-  clearProcessChilds();
+executor.fork = modulePath => {
+  concurrently(modulePath, {
+    prefix: 'name',
+    killOthers: ['failure', 'success'],
+    restartTries: 1,
+    raw: true,
+  }).then(
+    () => {
+      console.log('done');
+    },
+    () => {
+      console.log('fail');
+    },
+  );
+};
+
+executor.exit = code => {
   process.exit(code || 0);
 };
 

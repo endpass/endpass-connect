@@ -7,13 +7,15 @@ import {
   FADE_TIMEOUT,
   getWidgetFrameStylesObject,
 } from './WidgetStyles';
-// eslint-disable-next-line no-unused-vars
-import MessengerGroup from '@/class/MessengerGroup';
+import StateExpand from './StateExpand';
+import StateCollapse from './StateCollapse';
+import StateOpen from './StateOpen';
+import StateClose from './StateClose';
 
 export default class Widget {
   /**
    * @param {object} options
-   * @param {MessengerGroup} options.messengerGroup messengerGroup for communicate between others
+   * @param {import('@/class/MessengerGroup')} options.messengerGroup messengerGroup for communicate between others
    * @param {string} options.namespace namespace of connect
    * @param {string} options.url frame url
    */
@@ -23,6 +25,8 @@ export default class Widget {
     /** @type HTMLIFrameElement */
     this.frame = null;
     this.position = null;
+    this.stateCompact = new StateCollapse(this);
+    this.state = new StateClose(this);
 
     this.isMounted = false;
     this.isLoaded = false;
@@ -63,29 +67,48 @@ export default class Widget {
     });
 
     widgetMessenger.subscribe(METHODS.WIDGET_EXPAND_REQUEST, (payload, req) => {
-      this.isExpanded = true;
-      this.handleDocumentClickOnce();
-      this.frame.style = this.getWidgetFrameInlineStyles();
+      this.stateCompact.onExpand();
+      this.stateCompact = new StateExpand(this);
       req.answer();
     });
     widgetMessenger.subscribe(METHODS.WIDGET_COLLAPSE_REQUEST, () => {
-      this.isExpanded = false;
-      this.frame.style = this.getWidgetFrameInlineStyles();
+      this.stateCompact.onCollapse();
+      this.stateCompact = new StateCollapse(this);
     });
 
     widgetMessenger.subscribe(METHODS.WIDGET_OPEN, ({ root }, req) => {
-      this.resize({ height: '100vh' });
-
-      if (root) this.emitFrameEvent(WIDGET_EVENTS.OPEN);
-
+      this.state.onOpen(root);
+      this.state = new StateOpen(this);
       req.answer();
     });
     widgetMessenger.subscribe(METHODS.WIDGET_CLOSE, () => {
-      this.emitFrameEvent(WIDGET_EVENTS.CLOSE);
+      this.state.onClose();
+      this.state = new StateClose(this);
     });
     widgetMessenger.subscribe(METHODS.WIDGET_FIT, ({ height }) => {
       this.resize({ height: `${height}px` });
     });
+  }
+
+  onClose() {
+    this.emitFrameEvent(WIDGET_EVENTS.CLOSE);
+  }
+
+  onOpen(root) {
+    this.resize({ height: '100vh' });
+
+    if (root) this.emitFrameEvent(WIDGET_EVENTS.OPEN);
+  }
+
+  onCollapse() {
+    this.isExpanded = false;
+    this.frame.style = this.getWidgetFrameInlineStyles();
+  }
+
+  onExpand() {
+    this.isExpanded = true;
+    this.handleDocumentClickOnce();
+    this.frame.style = this.getWidgetFrameInlineStyles();
   }
 
   handleDocumentClick() {
