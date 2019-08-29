@@ -10,9 +10,9 @@ import {
   stylesOverlayHide,
   stylesWrapperShow,
   stylesWrapperHide,
-} from '@/class/Dialog/DialogStyles';
-import StateClose from '@/class/Dialog/StateClose';
-import StateOpen from '@/class/Dialog/StateOpen';
+} from './DialogStyles';
+import StateClose from './StateClose';
+import StateOpen from './StateOpen';
 
 const { ERRORS } = ConnectError;
 
@@ -56,7 +56,6 @@ export default class Dialog {
     this.overlay = null;
     this.wrapper = null;
     this.frame = null;
-    this.isShown = false;
     this.initialTimer = null;
     this.frameStyles = inlineStylesState(propsIframe);
     if (document.readyState !== 'complete') {
@@ -102,7 +101,6 @@ export default class Dialog {
   }
 
   onClose() {
-    this.isShown = false;
     this.wrapper.dataset.visible = 'false';
     this.emitEvent(DIALOG_EVENTS.CLOSE);
     this.frame.style = this.frameStyles(propsIframeHide);
@@ -110,7 +108,6 @@ export default class Dialog {
   }
 
   onOpen() {
-    this.isShown = true;
     this.wrapper.dataset.visible = 'true';
     this.frame.style = this.frameStyles(propsIframeShow);
     this.emitEvent(DIALOG_EVENTS.OPEN);
@@ -193,7 +190,7 @@ export default class Dialog {
     this.frame = markup.querySelector('[data-endpass="frame"]');
 
     if (this.isElementMode) {
-      this.overlay = this.selectElement();
+      this.overlay = this.selectHTMLElement();
       this.overlay.appendChild(this.wrapper);
     } else {
       this.overlay.addEventListener(DIALOG_EVENTS.OPEN, () => {
@@ -221,7 +218,7 @@ export default class Dialog {
    * @private
    * @return {HTMLElement}
    */
-  selectElement() {
+  selectHTMLElement() {
     const element =
       typeof this.element === 'string'
         ? document.querySelector(this.element)

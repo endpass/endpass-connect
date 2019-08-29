@@ -1,11 +1,9 @@
-/* eslint-disable class-methods-use-this */
 // @ts-check
-// eslint-disable-next-line no-unused-vars
 
 export default class State {
   /**
    *
-   * @param {import('./Dialog')} dialog Request parameters object
+   * @param {import('./Dialog')} dialog Dialog instance
    */
   constructor(dialog) {
     this.dialog = dialog;

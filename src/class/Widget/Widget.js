@@ -7,17 +7,15 @@ import {
   FADE_TIMEOUT,
   getWidgetFrameStylesObject,
 } from './WidgetStyles';
-// eslint-disable-next-line no-unused-vars
-import MessengerGroup from '@/class/MessengerGroup';
-import StateExpand from '@/class/Widget/StateExpand';
-import StateCollapse from '@/class/Widget/StateCollapse';
-import StateOpen from '@/class/Widget/StateOpen';
-import StateClose from '@/class/Widget/StateClose';
+import StateExpand from './StateExpand';
+import StateCollapse from './StateCollapse';
+import StateOpen from './StateOpen';
+import StateClose from './StateClose';
 
 export default class Widget {
   /**
    * @param {object} options
-   * @param {MessengerGroup} options.messengerGroup messengerGroup for communicate between others
+   * @param {import('@/class/MessengerGroup')} options.messengerGroup messengerGroup for communicate between others
    * @param {string} options.namespace namespace of connect
    * @param {string} options.url frame url
    */

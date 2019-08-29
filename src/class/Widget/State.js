@@ -1,12 +1,9 @@
-/* eslint-disable class-methods-use-this */
 // @ts-check
-// eslint-disable-next-line no-unused-vars
-import Widget from './Widget';
 
 export default class State {
   /**
    *
-   * @param {Widget} widget
+   * @param {import('./Widget')} widget Widget instance
    */
   constructor(widget) {
     this.widget = widget;

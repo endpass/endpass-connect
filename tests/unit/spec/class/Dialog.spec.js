@@ -1,6 +1,8 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
-import Dialog from '@/class/Dialog';
 import { METHODS } from '@/constants';
+import Dialog from '@/class/Dialog';
+import StateOpen from '@/class/Dialog/StateOpen';
+import StateClose from '@/class/Dialog/StateClose';
 
 describe('Dialog class', () => {
   const url = 'url';
@@ -29,14 +31,14 @@ describe('Dialog class', () => {
 
     const inst = new Dialog({ url });
 
-    expect(inst.isShown).toBe(false);
+    expect(inst.state).toBeInstanceOf(StateClose);
 
     cbs[METHODS.DIALOG_OPEN]();
 
-    expect(inst.isShown).toBe(true);
+    expect(inst.state).toBeInstanceOf(StateOpen);
 
     cbs[METHODS.DIALOG_CLOSE]();
 
-    expect(inst.isShown).toBe(false);
+    expect(inst.state).toBeInstanceOf(StateClose);
   });
 });
