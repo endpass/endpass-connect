@@ -1,6 +1,6 @@
-export default function createStream(context) {
-  //  createInpageProviderStream(context);
-}
+// export default function createStream(context) {
+//  createInpageProviderStream(context);
+// }
 
 // export const createAuthStream = (context) => {
 //   const messenger = context.getMessenger();

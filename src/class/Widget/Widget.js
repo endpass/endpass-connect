@@ -221,10 +221,15 @@ export default class Widget {
     }
   }
 
+  /**
+   *
+   * @return {Promise<HTMLElement>}
+   */
   getWidgetNode() {
     return new Promise(resolve => {
       if (this.frame) {
-        return resolve(this.frame);
+        resolve(this.frame);
+        return;
       }
       this.frameResolver.push(resolve);
     });

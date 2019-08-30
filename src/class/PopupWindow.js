@@ -3,7 +3,7 @@ import mapToQueryString from '@endpass/utils/mapToQueryString';
 import queryStringToMap from '@endpass/utils/queryStringToMap';
 
 const { ERRORS } = ConnectError;
-const replaceReg = /^\#\/?/;
+const replaceReg = /^#\/?/;
 
 export default class PopupWindow {
   constructor(oauthServer, params, windowOptions = {}) {

@@ -1,4 +1,4 @@
-import pkg from '../../package';
+import pkg from '../../package.json';
 
 const authUrlRegexp = new RegExp('://auth(\\.|-)', 'ig');
 
