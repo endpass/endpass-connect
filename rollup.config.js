@@ -89,9 +89,11 @@ export default [
     umd: pkg.umd,
     module: pkg.module,
   }),
-  createConfig({
-    input: './src/plugins/ProviderPlugin.js',
-    umd: pkg.connectPlugins.provider.umd,
-    module: pkg.connectPlugins.provider.module,
+  ...pkg.connectPlugins.map(plugin => {
+    return createConfig({
+      input: plugin.input,
+      umd: plugin.umd,
+      module: plugin.module,
+    })
   }),
 ];
