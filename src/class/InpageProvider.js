@@ -116,13 +116,13 @@ export default class InpageProvider extends Emmiter {
   send(payload, callback) {
     if (callback) {
       this.sendAsync(payload, callback);
-    } else {
-      const res = processPayload(payload, this.settings);
-      if (payload.method === WEB3_METHODS.ETH_UNINSTALL_FILTER) {
-        this.sendAsync(payload, () => {});
-      }
-      return res;
+      return null;
     }
+    const res = processPayload(payload, this.settings);
+    if (payload.method === WEB3_METHODS.ETH_UNINSTALL_FILTER) {
+      this.sendAsync(payload, () => {});
+    }
+    return res;
   }
 
   getEthAccounts() {

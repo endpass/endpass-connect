@@ -3,5 +3,7 @@
 System.config({
   paths: {
     '@/*': './src/*',
+    '@fixtures/*': './tests/fixtures/*',
+    '@config': './tests/e2e/support/config',
   },
 });
