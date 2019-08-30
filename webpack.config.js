@@ -53,10 +53,13 @@ module.exports = createList([
   }),
 
   // plugins
-  ...createConfigs({
-    entry: pkg.connectPlugins.provider.umd,
-    filename: pkg.connectPlugins.provider.main,
-    legacyFilename: pkg.connectPlugins.provider.browser,
-    library: 'EndpassProviderPlugin',
-  }),
+  ...pkg.connectPlugins.reduce((list, plugin) => {
+    const newConfigs = createConfigs({
+      entry: plugin.umd,
+      filename: plugin.main,
+      legacyFilename: plugin.browser,
+      library: plugin.library,
+    });
+    return list.concat(newConfigs);
+  }, []),
 ]);

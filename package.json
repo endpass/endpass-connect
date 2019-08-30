@@ -5,14 +5,16 @@
   "main": "./endpass-connect.min.js",
   "module": "./endpass-connect.esm.js",
   "umd": "./endpass-connect.umd.js",
-  "connectPlugins": {
-    "provider": {
+  "connectPlugins": [
+    {
+      "library": "EndpassProviderPlugin",
+      "input": "./src/plugins/ProviderPlugin.js",
       "main": "./provider.min.js",
       "module": "./provider.js",
       "umd": "./provider.umd.js",
       "browser": "./provider.browser.js"
     }
-  },
+  ],
   "description": "",
   "repository": {
     "type": "git",
