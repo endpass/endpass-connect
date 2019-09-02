@@ -28,18 +28,27 @@ const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
 
 export default class Dialog {
   /**
-   * @param {object} options
-   * @param {string} options.namespace namespace of connect
-   * @param {HTMLElement|string?} [options.element] render place
-   * @param {string} options.url frame url
+   * @param {object} props
+   * @param {string} props.url frame url
+   * @param {string?} props.namespace namespace of connect
+   * @param {HTMLElement|string?} [props.element] render place
+   * @param {object} props.initialPayload initial payload
    */
-  constructor({ namespace, element, url }) {
+  constructor({
+    namespace = '',
+    element,
+    url,
+    initialPayload,
+    elementsSubscriber,
+  }) {
     this.namespace = namespace;
     this.url = url;
     this.ready = false;
     this.element = element;
+    this.elementsSubscriber = elementsSubscriber;
     this.isElementMode = !!element;
     this.state = new StateClose(this);
+    this.initialPayload = initialPayload;
 
     this.dialogMessenger = new CrossWindowMessenger({
       showLogs: !ENV.isProduction,
@@ -74,30 +83,47 @@ export default class Dialog {
    * Subscribe Dialog methods for update style
    */
   subscribe() {
-    const messenger = this.dialogMessenger;
+    const { dialogMessenger } = this;
 
-    messenger.subscribe(METHODS.READY_STATE_BRIDGE, () => {
+    dialogMessenger.subscribe(METHODS.READY_STATE_BRIDGE, () => {
       this.ready = true;
       this.readyResolvers.forEach(item => item(true));
       this.readyResolvers.length = 0;
     });
 
-    messenger.subscribe(METHODS.INITIATE, () => {
+    dialogMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
       clearTimeout(this.initialTimer);
+      req.answer({
+        ...this.initialPayload,
+        source: DIRECTION.AUTH,
+      });
     });
-    messenger.subscribe(METHODS.DIALOG_RESIZE, ({ offsetHeight }) => {
+    dialogMessenger.subscribe(METHODS.DIALOG_RESIZE, ({ offsetHeight }) => {
       this.frame.style = this.frameStyles({
         'min-height': `${offsetHeight || 0}px`,
       });
     });
-    messenger.subscribe(METHODS.DIALOG_CLOSE, () => {
+    dialogMessenger.subscribe(METHODS.DIALOG_CLOSE, () => {
       this.state.onClose();
       this.state = new StateClose(this);
     });
-    messenger.subscribe(METHODS.DIALOG_OPEN, () => {
+    dialogMessenger.subscribe(METHODS.DIALOG_OPEN, () => {
       this.state.onOpen();
       this.state = new StateOpen(this);
     });
+
+    dialogMessenger.subscribe(METHODS.AUTH_STATUS, payload => {
+      this.elementsSubscriber.handleSetAuthStatus(payload);
+    });
+    dialogMessenger.subscribe(METHODS.LOGOUT_REQUEST, (payload, req) => {
+      this.elementsSubscriber.handleLogoutMessage(DIRECTION.AUTH, req);
+    });
+    dialogMessenger.subscribe(
+      METHODS.CHANGE_SETTINGS_REQUEST,
+      (payload, req) => {
+        this.elementsSubscriber.handleSettingsChange(payload, req);
+      },
+    );
   }
 
   onClose() {

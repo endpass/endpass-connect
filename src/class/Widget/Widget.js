@@ -7,21 +7,30 @@ import {
   FADE_TIMEOUT,
   getWidgetFrameStylesObject,
 } from './WidgetStyles';
-import StateExpand from './StateExpand';
-import StateCollapse from './StateCollapse';
-import StateOpen from './StateOpen';
-import StateClose from './StateClose';
+import StateExpand from './states/StateExpand';
+import StateCollapse from './states/StateCollapse';
+import StateOpen from './states/StateOpen';
+import StateClose from './states/StateClose';
 
 export default class Widget {
   /**
-   * @param {object} options
-   * @param {import('@/class/MessengerGroup')} options.messengerGroup messengerGroup for communicate between others
-   * @param {string} options.namespace namespace of connect
-   * @param {string} options.url frame url
+   * @param {object} props
+   * @param {object} props.namespace namespace
+   * @param {import('@/class/MessengerGroup')} props.messengerGroup messengerGroup for communicate between others
+   * @param {string} props.url frame url
+   * @param {object} props.initialPayload initial payload
    */
-  constructor({ namespace, messengerGroup, url }) {
+  constructor({
+    namespace = '',
+    messengerGroup,
+    initialPayload,
+    url,
+    elementsSubscriber,
+  }) {
     this.messengerGroup = messengerGroup;
     this.url = url;
+    this.initialPayload = initialPayload;
+    this.elementsSubscriber = elementsSubscriber;
     /** @type HTMLIFrameElement */
     this.frame = null;
     this.position = null;
@@ -36,6 +45,7 @@ export default class Widget {
     this.handleDocumentClick = this.handleDocumentClick.bind(this);
     this.handleScreenResize = this.handleScreenResize.bind(this);
     this.debouncedHandleScreenResize = debounce(this.handleScreenResize, 100);
+
     this.widgetMessenger = new CrossWindowMessenger({
       showLogs: !ENV.isProduction,
       name: `connect-bridge-widget[${namespace}]`,
@@ -52,12 +62,15 @@ export default class Widget {
     return window.innerWidth < MOBILE_BREAKPOINT;
   }
 
-  getWidgetMessenger() {
-    return this.widgetMessenger;
-  }
-
   subscribe() {
     const { widgetMessenger } = this;
+
+    widgetMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
+      req.answer({
+        ...this.initialPayload,
+        source: DIRECTION.WIDGET,
+      });
+    });
 
     widgetMessenger.subscribe(METHODS.WIDGET_INIT, (payload, req) => {
       req.answer({
@@ -88,16 +101,39 @@ export default class Widget {
     widgetMessenger.subscribe(METHODS.WIDGET_FIT, ({ height }) => {
       this.resize({ height: `${height}px` });
     });
+    widgetMessenger.subscribe(METHODS.WIDGET_UNMOUNT, () => {
+      this.unmount();
+    });
+
+    widgetMessenger.subscribe(METHODS.LOGOUT_REQUEST, (payload, req) => {
+      this.elementsSubscriber.handleLogoutMessage(DIRECTION.WIDGET, req);
+    });
+    widgetMessenger.subscribe(
+      METHODS.CHANGE_SETTINGS_REQUEST,
+      (payload, req) => {
+        this.elementsSubscriber.handleSettingsChange(payload, req);
+      },
+    );
+    widgetMessenger.subscribe(METHODS.WIDGET_GET_SETTING, (payload, req) => {
+      this.elementsSubscriber.handleGetSettings(payload, req);
+    });
+
+    this.elementsSubscriber.emitter.on('logout', () => {
+      this.emitFrameEvent(WIDGET_EVENTS.LOGOUT);
+    });
+    this.elementsSubscriber.emitter.on('set-provider-settings', payload => {
+      this.emitFrameEvent(WIDGET_EVENTS.UPDATE, payload);
+    });
   }
 
   onClose() {
-    this.emitFrameEvent(WIDGET_EVENTS.CLOSE);
+    this.emitFrameEvent(this.frame, WIDGET_EVENTS.CLOSE);
   }
 
   onOpen(root) {
     this.resize({ height: '100vh' });
 
-    if (root) this.emitFrameEvent(WIDGET_EVENTS.OPEN);
+    if (root) this.emitFrameEvent(this.frame, WIDGET_EVENTS.OPEN);
   }
 
   onCollapse() {
@@ -120,17 +156,13 @@ export default class Widget {
     document.body.addEventListener('click', this.handleDocumentClick);
   }
 
-  isWidgetMounted() {
-    return this.isMounted;
-  }
-
   /**
    *
    * @param {string} event
    * @param {any} [detail]
    */
-  emitFrameEvent(event, detail) {
-    if (!this.frame) {
+  emitFrameEvent(frame, event, detail) {
+    if (!frame) {
       return;
     }
 
@@ -138,7 +170,7 @@ export default class Widget {
       detail,
     });
 
-    this.frame.dispatchEvent(frameEvent);
+    frame.dispatchEvent(frameEvent);
   }
 
   /**
@@ -190,16 +222,17 @@ export default class Widget {
     window.removeEventListener('resize', this.debouncedHandleScreenResize);
     this.debouncedHandleScreenResize.cancel();
 
+    const { frame } = this;
+    this.frame = null;
     // Awaiting application animation ending
     setTimeout(() => {
-      this.emitFrameEvent(WIDGET_EVENTS.DESTROY);
-      this.frame.remove();
-      this.frame = null;
+      this.emitFrameEvent(frame, WIDGET_EVENTS.DESTROY);
+      frame.remove();
     }, FADE_TIMEOUT);
   }
 
   handleWidgetFrameLoad() {
-    this.emitFrameEvent(WIDGET_EVENTS.MOUNT);
+    this.emitFrameEvent(this.frame, WIDGET_EVENTS.MOUNT);
     this.isLoaded = true;
     this.frame.style = this.getWidgetFrameInlineStyles();
   }

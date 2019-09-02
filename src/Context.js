@@ -1,14 +1,15 @@
-import ConnectError from '@endpass/class/ConnectError';
-import { METHODS } from '@/constants';
+import { DEFAULT_AUTH_URL, METHODS } from '@/constants';
 import PluginManager from '@/PluginManager';
 
-import ElementsPlugin from '@/plugins/ElementsPlugin';
+import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
+import MessengerGroup from '@/class/MessengerGroup';
+import Dialog from '@/class/Dialog';
+import ElementsSubscriber from '@/class/ElementsSubscriber';
+import Auth from '@/class/Auth';
 import OauthPlugin from '@/plugins/OauthPlugin';
-import AuthPlugin from '@/plugins/AuthPlugin';
+import WidgetPlugin from '@/plugins/WidgetPlugin';
 
-const { ERRORS } = ConnectError;
-
-const DEFAULT_PLUGINS = [ElementsPlugin, OauthPlugin, AuthPlugin];
+const DEFAULT_PLUGINS = [OauthPlugin, WidgetPlugin];
 
 export default class Context {
   /**
@@ -28,6 +29,9 @@ export default class Context {
    */
   constructor(options = {}) {
     const optionPlugins = options.plugins || [];
+    this.options = options;
+    this.authUrl = getAuthUrl(options.authUrl || DEFAULT_AUTH_URL);
+
     this.plugins = PluginManager.createPlugins(
       [...DEFAULT_PLUGINS, ...optionPlugins],
       {
@@ -49,6 +53,27 @@ export default class Context {
   }
 
   /**
+   * @return {object}
+   */
+  getInitialPayload() {
+    const { demoData, isIdentityMode, showCreateAccount } = this.options;
+    return {
+      demoData,
+      isIdentityMode: isIdentityMode || false,
+      showCreateAccount,
+    };
+  }
+
+  getElementsSubscriber() {
+    if (!this.elementsSubscriber) {
+      this.elementsSubscriber = new ElementsSubscriber({
+        context: this,
+      });
+    }
+    return this.elementsSubscriber;
+  }
+
+  /**
    * Open application on auth screen and waits result (success of failure)
    * @public
    * @throws {Error} If authentification failed
@@ -59,6 +84,10 @@ export default class Context {
     return this.getAuthRequester().auth(redirectUrl);
   }
 
+  getAuthUrl() {
+    return this.authUrl;
+  }
+
   /**
    * Send request to logout through injected bridge bypass application dialog
    * @public
@@ -67,23 +96,12 @@ export default class Context {
    */
   async logout() {
     const res = await this.getAuthRequester().logout();
-    this.plugins.elements
-      .getMessengerGroupInstance()
-      .send(METHODS.LOGOUT_RESPONSE);
+    this.getMessengerGroupInstance().send(METHODS.LOGOUT_RESPONSE);
     return res;
   }
 
   async serverAuth() {
-    try {
-      await this.plugins.provider.getAccountData();
-    } catch (e) {
-      if (e.code === ERRORS.AUTH_CANCELED_BY_USER) {
-        throw ConnectError.create(ERRORS.AUTH_CANCELED_BY_USER);
-      }
-
-      await this.auth();
-      await this.plugins.provider.getAccountData();
-    }
+    await this.plugins.provider.serverAuth();
   }
 
   /**
@@ -105,9 +123,10 @@ export default class Context {
     this.plugins.provider.setProviderSettings(payload);
 
     const settings = this.getInpageProviderSettings();
-    this.plugins.elements
-      .getMessengerGroupInstance()
-      .send(METHODS.CHANGE_SETTINGS_RESPONSE, settings);
+    this.getMessengerGroupInstance().send(
+      METHODS.CHANGE_SETTINGS_RESPONSE,
+      settings,
+    );
   }
 
   getRequestProvider() {
@@ -123,14 +142,44 @@ export default class Context {
   }
 
   getDialog() {
-    return this.plugins.elements.getDialogInstance();
+    if (!this.dialog) {
+      this.dialog = new Dialog({
+        element: this.options.element,
+        namespace: this.options.namespace,
+        initialPayload: this.getInitialPayload(),
+        elementsSubscriber: this.getElementsSubscriber(),
+        url: getFrameRouteUrl(this.getAuthUrl(), 'bridge'),
+      });
+      this.getMessengerGroupInstance().addMessenger(
+        this.dialog.getDialogMessenger(),
+      );
+    }
+
+    return this.dialog;
   }
 
   getWidget() {
-    return this.plugins.elements.getWidgetInstance();
+    return this.plugins.widget.getWidgetInstance();
+  }
+
+  /**
+   *
+   * @return {MessengerGroup}
+   */
+  getMessengerGroupInstance() {
+    if (!this.messengerGroup) {
+      this.messengerGroup = new MessengerGroup();
+    }
+    return this.messengerGroup;
   }
 
   getAuthRequester() {
-    return this.plugins.auth.getAuthInstance();
+    if (!this.authRequester) {
+      this.authRequester = new Auth({
+        dialog: this.getDialog(),
+        options: this.options,
+      });
+    }
+    return this.authRequester;
   }
 }

@@ -120,11 +120,11 @@ describe('Widget class', () => {
 
       await widget.mount();
 
-      expect(widget.isWidgetMounted()).toBe(true);
+      expect(widget.isMounted).toBe(true);
 
       widget.unmount();
 
-      expect(widget.isWidgetMounted()).toBe(false);
+      expect(widget.isMounted).toBe(false);
 
       widget.unmount();
 
@@ -137,7 +137,7 @@ describe('Widget class', () => {
 
       await widget.mount();
 
-      expect(widget.isWidgetMounted()).toBe(true);
+      expect(widget.isMounted).toBe(true);
 
       widget.mount();
 

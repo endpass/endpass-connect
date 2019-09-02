@@ -153,7 +153,10 @@ export default class Connect {
    * @returns {Promise<Element>} Mounted widget iframe element
    */
   mountWidget(params) {
-    return this[privateFields.context].plugins.elements
+    $pipe.subscribe('mountWidget', resolve);
+    $pipe.emit('mountWidget');
+
+    return this[privateFields.context].plugins.widget
       .getWidgetInstance()
       .mount(params);
   }
@@ -162,7 +165,7 @@ export default class Connect {
    * Unmounts endpass widget from DOM
    */
   unmountWidget() {
-    this[privateFields.context].plugins.elements.getWidgetInstance().unmount();
+    this[privateFields.context].plugins.widget.getWidgetInstance().unmount();
   }
 
   /**
@@ -170,7 +173,7 @@ export default class Connect {
    * @returns {Promise<Element>} Widget iframe node
    */
   async getWidgetNode() {
-    const res = await this[privateFields.context].plugins.elements
+    const res = await this[privateFields.context].plugins.widget
       .getWidgetInstance()
       .getWidgetNode();
 

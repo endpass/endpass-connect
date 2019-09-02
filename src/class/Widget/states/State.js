@@ -3,7 +3,7 @@
 export default class State {
   /**
    *
-   * @param {import('./Widget')} widget Widget instance
+   * @param {import('../Widget')} widget Widget instance
    */
   constructor(widget) {
     this.widget = widget;

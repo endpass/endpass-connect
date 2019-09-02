@@ -1,49 +1,40 @@
-const AVAILABLE_PLUGINS = {
-  provider: true,
-  auth: true,
-  oauth: true,
-  elements: true,
-};
-
 export default class PluginManager {
-  static createPlugins(plugins, props) {
-    const pluginForCreateMap = plugins.reduce((pluginsMap, Plugin) => {
-      // eslint-disable-next-line no-param-reassign
-      const pluginName = Plugin.getName();
+  /**
+   *
+   * @param {Array<typeof Plugin>} pluginClassesList
+   * @param {object} props
+   * @param {*} props.options
+   * @param {import('./context')} props.context
+   * @return {*}
+   */
+  static createPlugins(pluginClassesList, props) {
+    const targetMap = pluginClassesList.reduce((pluginsMap, PluginClass) => {
+      const pluginName = PluginClass.getName();
       if (pluginsMap[pluginName]) {
         throw new Error(`plugin '${pluginName}' already defined`);
       }
-      Object.assign(pluginsMap, {
-        [pluginName]: Plugin,
+
+      return Object.assign(pluginsMap, {
+        [pluginName]: new PluginClass(props),
       });
-      return pluginsMap;
     }, {});
 
-    // create all plugins
-    const pluginsInstances = Object.keys(AVAILABLE_PLUGINS).reduce(
-      (map, pluginName) => {
-        const Plugin = pluginForCreateMap[pluginName];
-
-        if (!Plugin) {
-          Object.defineProperty(map, pluginName, {
-            get() {
-              throw new Error(`Please define '${pluginName}' plugin`);
-            },
-          });
-          return map;
+    const res = new Proxy(targetMap, {
+      get(target, name) {
+        if (!(name in target)) {
+          throw new Error(`Please define '${name}' plugin`);
         }
-
-        Object.assign(map, {
-          [pluginName]: new Plugin(props),
-        });
-        return map;
+        return target[name];
       },
-      {},
-    );
+    });
 
-    return pluginsInstances;
+    return res;
   }
 
+  /**
+   *
+   * @param {Array<typeof Plugin>} plugins
+   */
   static initPlugins(plugins) {
     // eslint-disable-next-line
     for (const key in plugins) {

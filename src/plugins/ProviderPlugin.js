@@ -10,11 +10,8 @@ import createInpageProviderStream from '@/streams/inpageProvider/inpageProviderS
 const { ERRORS } = ConnectError;
 
 export default class ProviderPlugin extends Plugin {
-  static getName() {
-    return 'provider';
-  }
-
-  init() {
+  constructor(props) {
+    super(props);
     createInpageProviderStream(this.context);
 
     this.getEmitter().on(INPAGE_EVENTS.LOGIN, async () => {
@@ -22,7 +19,7 @@ export default class ProviderPlugin extends Plugin {
 
       if (!this.context.isLogin) {
         try {
-          await this.context.serverAuth();
+          await this.serverAuth();
         } catch (e) {
           error =
             e.code === ERRORS.AUTH_CANCELED_BY_USER
@@ -33,6 +30,10 @@ export default class ProviderPlugin extends Plugin {
 
       this.getEmitter().emit(INPAGE_EVENTS.LOGGED_IN, { error });
     });
+  }
+
+  static getName() {
+    return 'provider';
   }
 
   /**
@@ -158,5 +159,18 @@ export default class ProviderPlugin extends Plugin {
    */
   getInpageProviderSettings() {
     return { ...this.getInpageProvider().settings };
+  }
+
+  async serverAuth() {
+    try {
+      await this.getAccountData();
+    } catch (e) {
+      if (e.code === ERRORS.AUTH_CANCELED_BY_USER) {
+        throw ConnectError.create(ERRORS.AUTH_CANCELED_BY_USER);
+      }
+
+      await this.context.auth();
+      await this.getAccountData();
+    }
   }
 }
