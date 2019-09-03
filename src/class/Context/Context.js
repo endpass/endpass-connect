@@ -50,12 +50,10 @@ export default class Context {
   get subscribeData() {
     const { plugins } = this;
     const basicData = [...this.getDialog().subscribeData];
-    const res = Object
-      .keys(plugins)
-      .reduce((eventsList, pluginKey) => {
-        const plugin = plugins[pluginKey];
-        return eventsList.concat(plugin.subscribeData);
-      }, basicData);
+    const res = Object.keys(plugins).reduce((eventsList, pluginKey) => {
+      const plugin = plugins[pluginKey];
+      return eventsList.concat(plugin.subscribeData);
+    }, basicData);
     return res;
 
     // [[messenger, events], [messenger, events]]
@@ -127,10 +125,7 @@ export default class Context {
     this.plugins.provider.setProviderSettings(payload);
 
     const settings = this.getInpageProviderSettings();
-    this.messengerGroup.send(
-      METHODS.CHANGE_SETTINGS_RESPONSE,
-      settings,
-    );
+    this.messengerGroup.send(METHODS.CHANGE_SETTINGS_RESPONSE, settings);
   }
 
   getRequestProvider() {
@@ -152,30 +147,29 @@ export default class Context {
         namespace: this.options.namespace,
         url: getFrameRouteUrl(this.getAuthUrl(), 'bridge'),
       });
-      this.messengerGroup.addMessenger(
-        this.dialog.getDialogMessenger(),
-      );
+      this.messengerGroup.addMessenger(this.dialog.getDialogMessenger());
     }
 
     return this.dialog;
   }
 
-  handleEvent(payload, req) {
+  async handleEvent(payload, req) {
     try {
       // global methods
       if (contextHandlers[req.method]) {
-        contextHandlers[req.method].apply(this, [payload, req]);
+        await contextHandlers[req.method].apply(this, [payload, req]);
       }
 
-      this.getDialog().handleEvent(payload, req);
+      await this.getDialog().handleEvent(payload, req);
 
-      Object.keys(this.plugins).forEach(pluginKey => {
-        this.plugins[pluginKey].handleEvent(payload, req);
-      });
+      await Object.keys(this.plugins).reduce(async (accumP, pluginKey) => {
+        await this.plugins[pluginKey].handleEvent(payload, req);
+        return accumP;
+      }, Promise.resolve);
     } catch (err) {
       throw ConnectError.create((err && err.code) || ERRORS.NOT_DEFINED);
     }
-  };
+  }
 
   /**
    *
