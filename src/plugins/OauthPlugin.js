@@ -1,21 +1,20 @@
 import ConnectError from '@endpass/class/ConnectError';
-import Plugin from '@/plugins/Plugin';
 import OauthPkceStrategy from '@/class/Oauth/OauthPkceStrategy';
 import Oauth from '@/class/Oauth';
+import PluginBase from './PluginBase';
 
 const { ERRORS } = ConnectError;
 
-export default class OauthPlugin extends Plugin {
-  constructor(props) {
-    super(props);
-    const { options = {} } = props;
+export default class OauthPlugin extends PluginBase {
+  constructor(options) {
+    super(options);
     if (!options.oauthClientId) {
       throw ConnectError.create(ERRORS.OAUTH_REQUIRE_ID);
     }
     this.oauthClientId = options.oauthClientId;
   }
 
-  static getName() {
+  static get pluginName() {
     return 'oauth';
   }
 

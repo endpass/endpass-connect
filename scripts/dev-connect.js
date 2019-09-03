@@ -1,6 +1,7 @@
 const executor = require('./executor');
 
-executor([
+executor.fork([
   //
   'yarn dev',
+  'yarn dev:browser'
 ]);

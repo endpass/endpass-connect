@@ -1,5 +1,5 @@
 import ConnectError from '@endpass/class/ConnectError';
-import Context from '@/Context';
+import Context from '@/class/Context';
 import { METHODS, INPAGE_EVENTS } from '@/constants';
 import ProviderPlugin from '@/plugins/ProviderPlugin';
 
@@ -41,7 +41,7 @@ describe('Context class', () => {
     it('should create with provider plugin', () => {
       context = new Context({ ...options, plugins: [ProviderPlugin] });
       expect(Object.keys(context.plugins)).toHaveLength(4);
-      expect(context.plugins[ProviderPlugin.getName()]).toBeInstanceOf(
+      expect(context.plugins[ProviderPlugin.pluginName]).toBeInstanceOf(
         ProviderPlugin,
       );
     });
@@ -56,7 +56,7 @@ describe('Context class', () => {
       context = new Context({ ...options, plugins: [ProviderPlugin] });
       context.plugins.provider.getEmitter = () => emitter;
 
-      context.plugins.elements.getMessengerGroupInstance = () => msgGroup;
+      context.plugins.elements.messengerGroup = () => msgGroup;
     });
 
     it('should emit settings by inner connect emitter', () => {
@@ -75,7 +75,7 @@ describe('Context class', () => {
         payload,
       );
       expect(
-        context.plugins.elements.getMessengerGroupInstance().send,
+        context.plugins.elements.messengerGroup().send,
       ).toBeCalledWith(METHODS.CHANGE_SETTINGS_RESPONSE, payload);
     });
   });
@@ -116,7 +116,7 @@ describe('Context class', () => {
           },
         };
       };
-      context.plugins.elements.getMessengerGroupInstance = () => {
+      context.plugins.elements.messengerGroup = () => {
         return msgGroup;
       };
 

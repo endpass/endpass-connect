@@ -1,8 +1,8 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import { METHODS } from '@/constants';
 import Dialog from '@/class/Dialog';
-import StateOpen from '@/class/Dialog/StateOpen';
-import StateClose from '@/class/Dialog/StateClose';
+import StateOpen from '@/class/Dialog/states/StateOpen';
+import StateClose from '@/class/Dialog/states/StateClose';
 
 describe('Dialog class', () => {
   const url = 'url';

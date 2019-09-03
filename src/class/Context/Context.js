@@ -1,13 +1,17 @@
+import ConnectError from '@endpass/class/ConnectError';
 import { DEFAULT_AUTH_URL, METHODS } from '@/constants';
-import PluginManager from '@/PluginManager';
+import PluginManager from '@/class/PluginManager';
 
 import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
 import MessengerGroup from '@/class/MessengerGroup';
 import Dialog from '@/class/Dialog';
-import ElementsSubscriber from '@/class/ElementsSubscriber';
 import Auth from '@/class/Auth';
 import OauthPlugin from '@/plugins/OauthPlugin';
 import WidgetPlugin from '@/plugins/WidgetPlugin';
+import EventSubscriber from '@/class/EventSubscriber';
+import contextHandlers from './contextHandlers';
+
+const { ERRORS } = ConnectError;
 
 const DEFAULT_PLUGINS = [OauthPlugin, WidgetPlugin];
 
@@ -28,24 +32,33 @@ export default class Context {
    *  equals to `bottom right`
    */
   constructor(options = {}) {
-    const optionPlugins = options.plugins || [];
+    const passedPlugins = options.plugins || [];
     this.options = options;
     this.authUrl = getAuthUrl(options.authUrl || DEFAULT_AUTH_URL);
 
     this.plugins = PluginManager.createPlugins(
-      [...DEFAULT_PLUGINS, ...optionPlugins],
+      [...DEFAULT_PLUGINS, ...passedPlugins],
       {
-        options,
+        ...options,
         context: this,
       },
     );
-    PluginManager.initPlugins(this.plugins);
 
-    // TODO: create state
-    // this.state = {
-    //   isPermission: false,
-    //   isLogin: false,
-    // };
+    EventSubscriber.subscribe(this);
+  }
+
+  get subscribeData() {
+    const { plugins } = this;
+    const basicData = [...this.getDialog().subscribeData];
+    const res = Object
+      .keys(plugins)
+      .reduce((eventsList, pluginKey) => {
+        const plugin = plugins[pluginKey];
+        return eventsList.concat(plugin.subscribeData);
+      }, basicData);
+    return res;
+
+    // [[messenger, events], [messenger, events]]
   }
 
   get isLogin() {
@@ -55,22 +68,13 @@ export default class Context {
   /**
    * @return {object}
    */
-  getInitialPayload() {
+  get initialPayload() {
     const { demoData, isIdentityMode, showCreateAccount } = this.options;
     return {
       demoData,
       isIdentityMode: isIdentityMode || false,
       showCreateAccount,
     };
-  }
-
-  getElementsSubscriber() {
-    if (!this.elementsSubscriber) {
-      this.elementsSubscriber = new ElementsSubscriber({
-        context: this,
-      });
-    }
-    return this.elementsSubscriber;
   }
 
   /**
@@ -96,7 +100,7 @@ export default class Context {
    */
   async logout() {
     const res = await this.getAuthRequester().logout();
-    this.getMessengerGroupInstance().send(METHODS.LOGOUT_RESPONSE);
+    this.messengerGroup.send(METHODS.DIALOG_CLOSE);
     return res;
   }
 
@@ -123,7 +127,7 @@ export default class Context {
     this.plugins.provider.setProviderSettings(payload);
 
     const settings = this.getInpageProviderSettings();
-    this.getMessengerGroupInstance().send(
+    this.messengerGroup.send(
       METHODS.CHANGE_SETTINGS_RESPONSE,
       settings,
     );
@@ -146,11 +150,9 @@ export default class Context {
       this.dialog = new Dialog({
         element: this.options.element,
         namespace: this.options.namespace,
-        initialPayload: this.getInitialPayload(),
-        elementsSubscriber: this.getElementsSubscriber(),
         url: getFrameRouteUrl(this.getAuthUrl(), 'bridge'),
       });
-      this.getMessengerGroupInstance().addMessenger(
+      this.messengerGroup.addMessenger(
         this.dialog.getDialogMessenger(),
       );
     }
@@ -158,19 +160,32 @@ export default class Context {
     return this.dialog;
   }
 
-  getWidget() {
-    return this.plugins.widget.getWidgetInstance();
-  }
+  handleEvent(payload, req) {
+    try {
+      // global methods
+      if (contextHandlers[req.method]) {
+        contextHandlers[req.method].apply(this, [payload, req]);
+      }
+
+      this.getDialog().handleEvent(payload, req);
+
+      Object.keys(this.plugins).forEach(pluginKey => {
+        this.plugins[pluginKey].handleEvent(payload, req);
+      });
+    } catch (err) {
+      throw ConnectError.create((err && err.code) || ERRORS.NOT_DEFINED);
+    }
+  };
 
   /**
    *
    * @return {MessengerGroup}
    */
-  getMessengerGroupInstance() {
-    if (!this.messengerGroup) {
-      this.messengerGroup = new MessengerGroup();
+  get messengerGroup() {
+    if (!this.messengerGroupPrivate) {
+      this.messengerGroupPrivate = new MessengerGroup();
     }
-    return this.messengerGroup;
+    return this.messengerGroupPrivate;
   }
 
   getAuthRequester() {

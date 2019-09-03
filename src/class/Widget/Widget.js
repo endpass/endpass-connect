@@ -7,9 +7,7 @@ import {
   FADE_TIMEOUT,
   getWidgetFrameStylesObject,
 } from './WidgetStyles';
-import StateExpand from './states/StateExpand';
 import StateCollapse from './states/StateCollapse';
-import StateOpen from './states/StateOpen';
 import StateClose from './states/StateClose';
 
 export default class Widget {
@@ -18,19 +16,10 @@ export default class Widget {
    * @param {object} props.namespace namespace
    * @param {import('@/class/MessengerGroup')} props.messengerGroup messengerGroup for communicate between others
    * @param {string} props.url frame url
-   * @param {object} props.initialPayload initial payload
    */
-  constructor({
-    namespace = '',
-    messengerGroup,
-    initialPayload,
-    url,
-    elementsSubscriber,
-  }) {
+  constructor({ namespace = '', messengerGroup, url }) {
     this.messengerGroup = messengerGroup;
     this.url = url;
-    this.initialPayload = initialPayload;
-    this.elementsSubscriber = elementsSubscriber;
     /** @type HTMLIFrameElement */
     this.frame = null;
     this.position = null;
@@ -47,83 +36,18 @@ export default class Widget {
     this.debouncedHandleScreenResize = debounce(this.handleScreenResize, 100);
 
     this.widgetMessenger = new CrossWindowMessenger({
-      showLogs: !ENV.isProduction,
+      showLogs: false, //!ENV.isProduction,
       name: `connect-bridge-widget[${namespace}]`,
       to: DIRECTION.AUTH,
       from: DIRECTION.CONNECT,
     });
     /** @type Array<Promise> */
     this.frameResolver = [];
-    this.subscribe();
   }
 
   /* eslint-disable-next-line */
   get isMobile() {
     return window.innerWidth < MOBILE_BREAKPOINT;
-  }
-
-  subscribe() {
-    const { widgetMessenger } = this;
-
-    widgetMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
-      req.answer({
-        ...this.initialPayload,
-        source: DIRECTION.WIDGET,
-      });
-    });
-
-    widgetMessenger.subscribe(METHODS.WIDGET_INIT, (payload, req) => {
-      req.answer({
-        position: this.position,
-        isMobile: this.isMobile,
-      });
-    });
-
-    widgetMessenger.subscribe(METHODS.WIDGET_EXPAND_REQUEST, (payload, req) => {
-      this.stateCompact.onExpand();
-      this.stateCompact = new StateExpand(this);
-      req.answer();
-    });
-    widgetMessenger.subscribe(METHODS.WIDGET_COLLAPSE_REQUEST, () => {
-      this.stateCompact.onCollapse();
-      this.stateCompact = new StateCollapse(this);
-    });
-
-    widgetMessenger.subscribe(METHODS.WIDGET_OPEN, ({ root }, req) => {
-      this.state.onOpen(root);
-      this.state = new StateOpen(this);
-      req.answer();
-    });
-    widgetMessenger.subscribe(METHODS.WIDGET_CLOSE, () => {
-      this.state.onClose();
-      this.state = new StateClose(this);
-    });
-    widgetMessenger.subscribe(METHODS.WIDGET_FIT, ({ height }) => {
-      this.resize({ height: `${height}px` });
-    });
-    widgetMessenger.subscribe(METHODS.WIDGET_UNMOUNT, () => {
-      this.unmount();
-    });
-
-    widgetMessenger.subscribe(METHODS.LOGOUT_REQUEST, (payload, req) => {
-      this.elementsSubscriber.handleLogoutMessage(DIRECTION.WIDGET, req);
-    });
-    widgetMessenger.subscribe(
-      METHODS.CHANGE_SETTINGS_REQUEST,
-      (payload, req) => {
-        this.elementsSubscriber.handleSettingsChange(payload, req);
-      },
-    );
-    widgetMessenger.subscribe(METHODS.WIDGET_GET_SETTING, (payload, req) => {
-      this.elementsSubscriber.handleGetSettings(payload, req);
-    });
-
-    this.elementsSubscriber.emitter.on('logout', () => {
-      this.emitFrameEvent(this.frame, WIDGET_EVENTS.LOGOUT);
-    });
-    this.elementsSubscriber.emitter.on('set-provider-settings', payload => {
-      this.emitFrameEvent(this.frame, WIDGET_EVENTS.UPDATE, payload);
-    });
   }
 
   onClose() {

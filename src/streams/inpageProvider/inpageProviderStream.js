@@ -31,9 +31,7 @@ const createMiddlewareStream = (context, action) => {
   return middleWare$;
 };
 
-export default function createInpageProviderStream(context) {
-  const emitter = context.getEmitter();
-
+export default function createInpageProviderStream(emitter, context) {
   const request$ = pipe(fromEmitter(emitter, INPAGE_EVENTS.REQUEST));
   const settings$ = pipe(fromEmitter(emitter, INPAGE_EVENTS.SETTINGS));
 

@@ -1,15 +1,15 @@
 import ConnectError from '@endpass/class/ConnectError';
 import Network from '@endpass/class/Network';
-import Plugin from '@/plugins/Plugin';
 import Emmiter from '@/class/Emmiter';
 import InpageProvider from '@/class/InpageProvider';
 import { INPAGE_EVENTS, METHODS } from '@/constants';
 import ProviderFactory from '@/class/ProviderFactory';
 import createInpageProviderStream from '@/streams/inpageProvider/inpageProviderStream';
+import PluginBase from './PluginBase';
 
 const { ERRORS } = ConnectError;
 
-export default class ProviderPlugin extends Plugin {
+export default class ProviderPlugin extends PluginBase {
   constructor(props) {
     super(props);
 
@@ -29,13 +29,11 @@ export default class ProviderPlugin extends Plugin {
 
       this.getEmitter().emit(INPAGE_EVENTS.LOGGED_IN, { error });
     });
+
+    createInpageProviderStream(this.getEmitter(), this.context);
   }
 
-  init() {
-    createInpageProviderStream(this.context);
-  }
-
-  static getName() {
+  static get pluginName() {
     return 'provider';
   }
 

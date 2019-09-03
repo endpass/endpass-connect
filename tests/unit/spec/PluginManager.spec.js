@@ -1,9 +1,9 @@
-import PluginManager from '@/PluginManager';
-import Plugin from '@/plugins/Plugin';
+import PluginManager from '@/class/PluginManager';
+import PluginBase from '@/plugins/Plugin';
 
 describe('plugin manager', () => {
-  class TestPlugin extends Plugin {
-    static getName() {
+  class TestPlugin extends PluginBase {
+    static get pluginName() {
       // get from available plugins
       return 'auth';
     }
@@ -25,7 +25,7 @@ describe('plugin manager', () => {
 
   it('should create plugins by list', () => {
     const plugins = PluginManager.createPlugins([TestPlugin], { context });
-    expect(plugins[TestPlugin.getName()]).toBeInstanceOf(TestPlugin);
+    expect(plugins[TestPlugin.pluginName]).toBeInstanceOf(TestPlugin);
     expect(plugins.auth.init).not.toBeCalled();
   });
 
@@ -37,7 +37,7 @@ describe('plugin manager', () => {
 
   it('should throw error, if not defined name of plugin', () => {
     try {
-      PluginManager.createPlugins([Plugin], { context });
+      PluginManager.createPlugins([PluginBase], { context });
     } catch (e) {
       const err = new Error('Please define plugin name');
       expect(e).toEqual(err);

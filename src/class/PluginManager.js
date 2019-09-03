@@ -9,7 +9,7 @@ export default class PluginManager {
    */
   static createPlugins(pluginClassesList, props) {
     const targetMap = pluginClassesList.reduce((pluginsMap, PluginClass) => {
-      const pluginName = PluginClass.getName();
+      const { pluginName } = PluginClass;
       if (pluginsMap[pluginName]) {
         throw new Error(`plugin '${pluginName}' already defined`);
       }
@@ -29,16 +29,5 @@ export default class PluginManager {
     });
 
     return res;
-  }
-
-  /**
-   *
-   * @param {Array<typeof Plugin>} plugins
-   */
-  static initPlugins(plugins) {
-    // eslint-disable-next-line
-    for (const key in plugins) {
-      plugins[key].init();
-    }
   }
 }

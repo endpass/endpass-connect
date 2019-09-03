@@ -29,6 +29,7 @@
   "scripts": {
     "update": "yarn build && npm publish ./dist",
     "dev": "rollup -c -w",
+    "dev:browser": "webpack --mode development -w",
     "build": "rimraf ./dist && npm run build:lib && npm run build:browser",
     "build:lib": "NODE_ENV=production rollup -c",
     "build:browser:dev": "rollup -c & webpack --mode development",

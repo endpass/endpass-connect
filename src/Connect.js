@@ -1,4 +1,4 @@
-import Context from '@/Context';
+import Context from '@/class/Context';
 import privateFields from '@/privateFields';
 
 import pkg from '../package.json';
@@ -153,19 +153,14 @@ export default class Connect {
    * @returns {Promise<Element>} Mounted widget iframe element
    */
   mountWidget(params) {
-    $pipe.subscribe('mountWidget', resolve);
-    $pipe.emit('mountWidget');
-
-    return this[privateFields.context].plugins.widget
-      .getWidgetInstance()
-      .mount(params);
+    return this[privateFields.context].plugins.widget.widget.mount(params);
   }
 
   /**
    * Unmounts endpass widget from DOM
    */
   unmountWidget() {
-    this[privateFields.context].plugins.widget.getWidgetInstance().unmount();
+    this[privateFields.context].plugins.widget.widget.unmount();
   }
 
   /**
@@ -173,9 +168,9 @@ export default class Connect {
    * @returns {Promise<Element>} Widget iframe node
    */
   async getWidgetNode() {
-    const res = await this[privateFields.context].plugins.widget
-      .getWidgetInstance()
-      .getWidgetNode();
+    const res = await this[
+      privateFields.context
+    ].plugins.widget.widget.getWidgetNode();
 
     return res;
   }

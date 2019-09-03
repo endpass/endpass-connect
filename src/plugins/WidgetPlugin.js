@@ -1,19 +1,30 @@
 import Widget from '@/class/Widget';
 import { getFrameRouteUrl } from '@/util/url';
-import Plugin from '@/plugins/Plugin';
+import widgetHandlers from '@/class/Widget/widgetHandlers';
+import PluginBase from './PluginBase';
 
 const WIDGET_AUTH_TIMEOUT = 200;
 
-export default class WidgetPlugin extends Plugin {
-  constructor(props) {
-    super(props);
-    const { options = {} } = props;
-
+export default class WidgetPlugin extends PluginBase {
+  constructor(options) {
+    super(options);
     this.options = options;
   }
 
-  static getName() {
+  static get pluginName() {
     return 'widget';
+  }
+
+  handleEvent(payload, req) {
+    if (!widgetHandlers[req.method]) {
+      return;
+    }
+    widgetHandlers[req.method].apply(this.widget, [payload, req]);
+  }
+
+  get subscribeData() {
+    const methodsNamesList = Object.keys(widgetHandlers);
+    return [[this.widget.widgetMessenger, methodsNamesList]];
   }
 
   setupWidgetOnAuth(widget, options) {
@@ -37,18 +48,16 @@ export default class WidgetPlugin extends Plugin {
    *
    * @return {Widget}
    */
-  getWidgetInstance() {
-    if (!this.widget) {
-      this.widget = new Widget({
+  get widget() {
+    if (!this.widgetPrivate) {
+      this.widgetPrivate = new Widget({
         namespace: this.options.namespace,
-        initialPayload: this.context.getInitialPayload(),
-        elementsSubscriber: this.context.getElementsSubscriber(),
         url: getFrameRouteUrl(this.context.getAuthUrl(), 'public/widget'),
-        messengerGroup: this.context.getMessengerGroupInstance(),
+        messengerGroup: this.context.messengerGroup,
       });
+      this.setupWidgetOnAuth(this.widgetPrivate, this.options.widgetPrivate);
     }
 
-    this.setupWidgetOnAuth(this.widget, this.options.widget);
-    return this.widget;
+    return this.widgetPrivate;
   }
 }

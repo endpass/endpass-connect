@@ -1,7 +1,7 @@
 import ConnectError from '@endpass/class/ConnectError';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import { inlineStylesState } from '@/util/dom';
-import { DIRECTION, METHODS, DIALOG_EVENTS } from '@/constants';
+import { DIRECTION, DIALOG_EVENTS } from '@/constants';
 import {
   propsIframe,
   propsIframeShow,
@@ -11,8 +11,8 @@ import {
   stylesWrapperShow,
   stylesWrapperHide,
 } from './DialogStyles';
-import StateClose from './StateClose';
-import StateOpen from './StateOpen';
+import StateClose from './states/StateClose';
+import dialogHandlers from '@/class/Dialog/dialogHandlers';
 
 const { ERRORS } = ConnectError;
 
@@ -32,31 +32,21 @@ export default class Dialog {
    * @param {string} props.url frame url
    * @param {string?} props.namespace namespace of connect
    * @param {HTMLElement|string?} [props.element] render place
-   * @param {object} props.initialPayload initial payload
    */
-  constructor({
-    namespace = '',
-    element,
-    url,
-    initialPayload,
-    elementsSubscriber,
-  }) {
+  constructor({ namespace = '', element, url }) {
     this.namespace = namespace;
     this.url = url;
     this.ready = false;
     this.element = element;
-    this.elementsSubscriber = elementsSubscriber;
     this.isElementMode = !!element;
     this.state = new StateClose(this);
-    this.initialPayload = initialPayload;
 
     this.dialogMessenger = new CrossWindowMessenger({
-      showLogs: !ENV.isProduction,
+      showLogs: false, //!ENV.isProduction,
       name: `connect-bridge-dialog[]`,
       to: DIRECTION.AUTH,
       from: DIRECTION.CONNECT,
     });
-    this.subscribe();
 
     /** @type Resolvers */
     this.readyResolvers = [];
@@ -78,52 +68,17 @@ export default class Dialog {
     }
   }
 
-  /**
-   * @private
-   * Subscribe Dialog methods for update style
-   */
-  subscribe() {
-    const { dialogMessenger } = this;
+  get subscribeData() {
+    const methodsNamesList = Object.keys(dialogHandlers);
+    return [[this.dialogMessenger, methodsNamesList]];
+  }
 
-    dialogMessenger.subscribe(METHODS.READY_STATE_BRIDGE, () => {
-      this.ready = true;
-      this.readyResolvers.forEach(item => item(true));
-      this.readyResolvers.length = 0;
-    });
-
-    dialogMessenger.subscribe(METHODS.INITIATE, (payload, req) => {
-      clearTimeout(this.initialTimer);
-      req.answer({
-        ...this.initialPayload,
-        source: DIRECTION.AUTH,
-      });
-    });
-    dialogMessenger.subscribe(METHODS.DIALOG_RESIZE, ({ offsetHeight }) => {
-      this.frame.style = this.frameStyles({
-        'min-height': `${offsetHeight || 0}px`,
-      });
-    });
-    dialogMessenger.subscribe(METHODS.DIALOG_CLOSE, () => {
-      this.state.onClose();
-      this.state = new StateClose(this);
-    });
-    dialogMessenger.subscribe(METHODS.DIALOG_OPEN, () => {
-      this.state.onOpen();
-      this.state = new StateOpen(this);
-    });
-
-    dialogMessenger.subscribe(METHODS.AUTH_STATUS, payload => {
-      this.elementsSubscriber.handleSetAuthStatus(payload);
-    });
-    dialogMessenger.subscribe(METHODS.LOGOUT_REQUEST, (payload, req) => {
-      this.elementsSubscriber.handleLogoutMessage(DIRECTION.AUTH, req);
-    });
-    dialogMessenger.subscribe(
-      METHODS.CHANGE_SETTINGS_REQUEST,
-      (payload, req) => {
-        this.elementsSubscriber.handleSettingsChange(payload, req);
-      },
-    );
+  handleEvent(payload, req) {
+    if (!dialogHandlers[req.method]) {
+      return;
+    }
+    const method = dialogHandlers[req.method];
+    method.apply(this, [payload, req]);
   }
 
   onClose() {
