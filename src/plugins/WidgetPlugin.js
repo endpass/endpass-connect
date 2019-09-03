@@ -25,7 +25,7 @@ export default class WidgetPlugin extends Plugin {
     const handler = async () => {
       clearTimeout(timerId);
       if (this.context.isLogin) {
-        await this.mount(options);
+        await widget.mount(options);
         return;
       }
       timerId = setTimeout(handler, WIDGET_AUTH_TIMEOUT);

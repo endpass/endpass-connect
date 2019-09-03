@@ -12,7 +12,6 @@ const { ERRORS } = ConnectError;
 export default class ProviderPlugin extends Plugin {
   constructor(props) {
     super(props);
-    createInpageProviderStream(this.context);
 
     this.getEmitter().on(INPAGE_EVENTS.LOGIN, async () => {
       let error = null;
@@ -30,6 +29,10 @@ export default class ProviderPlugin extends Plugin {
 
       this.getEmitter().emit(INPAGE_EVENTS.LOGGED_IN, { error });
     });
+  }
+
+  init() {
+    createInpageProviderStream(this.context);
   }
 
   static getName() {

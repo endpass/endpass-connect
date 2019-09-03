@@ -119,10 +119,10 @@ export default class Widget {
     });
 
     this.elementsSubscriber.emitter.on('logout', () => {
-      this.emitFrameEvent(WIDGET_EVENTS.LOGOUT);
+      this.emitFrameEvent(this.frame, WIDGET_EVENTS.LOGOUT);
     });
     this.elementsSubscriber.emitter.on('set-provider-settings', payload => {
-      this.emitFrameEvent(WIDGET_EVENTS.UPDATE, payload);
+      this.emitFrameEvent(this.frame, WIDGET_EVENTS.UPDATE, payload);
     });
   }
 
