@@ -1,5 +1,7 @@
 import ConnectError from '@endpass/class/ConnectError';
 import { METHODS } from '@/constants';
+import HandlersFactory from '@/class/HandlersFactory';
+import authHandlers from '@/class/Auth/authHandlers';
 
 const { ERRORS } = ConnectError;
 
@@ -8,6 +10,7 @@ export default class Auth {
     this.dialog = dialog;
     this.isServerLogin = false;
     this.haveDemoData = !!options.demoData;
+    this.handleEvent = HandlersFactory.createHandleEvent(this, authHandlers);
   }
 
   get isLogin() {

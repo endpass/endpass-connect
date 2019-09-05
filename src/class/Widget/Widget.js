@@ -1,6 +1,5 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import debounce from 'lodash.debounce';
-import mapValues from 'lodash.mapvalues';
 import { DIRECTION, METHODS, WIDGET_EVENTS } from '@/constants';
 import { inlineStyles } from '@/util/dom';
 import {
@@ -11,6 +10,7 @@ import {
 import StateCollapse from './states/StateCollapse';
 import StateClose from './states/StateClose';
 import widgetHandlers from './widgetHandlers';
+import HandlersFactory from '@/class/HandlersFactory';
 
 export default class Widget {
   /**
@@ -45,7 +45,7 @@ export default class Widget {
     });
     /** @type Array<Promise> */
     this.frameResolver = [];
-    this.widgetHandlers = mapValues(widgetHandlers, method => method(this));
+    this.widgetHandlers = HandlersFactory.createHandlers(this, widgetHandlers);
   }
 
   /* eslint-disable-next-line */

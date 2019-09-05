@@ -7,7 +7,7 @@ import ProviderFactory from '@/class/ProviderFactory';
 import createInpageProviderStream from '@/streams/inpageProvider/inpageProviderStream';
 import PluginBase from './PluginBase';
 import WidgetPlugin from './WidgetPlugin';
-
+import AuthPlugin from './AuthPlugin';
 const { ERRORS } = ConnectError;
 
 export default class ProviderPlugin extends PluginBase {
@@ -35,7 +35,7 @@ export default class ProviderPlugin extends PluginBase {
   }
 
   static get dependencyPlugins() {
-    return [WidgetPlugin];
+    return [AuthPlugin, WidgetPlugin];
   }
 
   static get pluginName() {

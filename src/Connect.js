@@ -5,8 +5,9 @@ import pkg from '../package.json';
 import { METHODS } from '@/constants';
 import OauthPlugin from '@/plugins/OauthPlugin';
 import WidgetPlugin from '@/plugins/WidgetPlugin';
+import AuthPlugin from '@/plugins/AuthPlugin';
 
-const DEFAULT_PLUGINS = [OauthPlugin, WidgetPlugin];
+const DEFAULT_PLUGINS = [AuthPlugin, OauthPlugin, WidgetPlugin];
 
 if (ENV.isProduction) {
   /* eslint-disable-next-line */

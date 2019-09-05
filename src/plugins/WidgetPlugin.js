@@ -48,12 +48,13 @@ export default class WidgetPlugin extends PluginBase {
    */
   get widget() {
     if (!this.widgetPrivate) {
+      const { namespace, authUrl, widget } = this.options;
       this.widgetPrivate = new Widget({
-        namespace: this.options.namespace,
-        url: getFrameRouteUrl(this.context.getAuthUrl(), 'public/widget'),
+        namespace,
+        url: getFrameRouteUrl(authUrl, 'public/widget'),
         messengerGroup: this.context.messengerGroup,
       });
-      this.setupWidgetOnAuth(this.widgetPrivate, this.options.widgetPrivate);
+      this.setupWidgetOnAuth(this.widgetPrivate, widget);
     }
 
     return this.widgetPrivate;

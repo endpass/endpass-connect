@@ -43,7 +43,6 @@ const unmount = widget => () => {
 };
 
 const logout = widget => () => {
-  widget.messengerGroup.send(METHODS.WIDGET_UNMOUNT);
   widget.emitFrameEvent(widget.frame, WIDGET_EVENTS.LOGOUT);
 };
 

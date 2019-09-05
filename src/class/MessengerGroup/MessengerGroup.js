@@ -3,6 +3,8 @@
 // @ts-ignore
 // eslint-disable-next-line no-unused-vars
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
+import HandlersFactory from '@/class/HandlersFactory';
+import messengerGroupHandlers from './messengerGroupHandlers';
 
 /**
  * @callback Listener {import('@types/global').Listener}
@@ -16,6 +18,9 @@ export default class MessengerGroup {
   constructor() {
     /** @type Array<CrossWindowMessenger> */
     this.messengers = [];
+
+    this.handleEvent = HandlersFactory
+      .createHandleEvent(this, messengerGroupHandlers);
   }
 
   /**

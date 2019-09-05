@@ -9,10 +9,6 @@ const initiate = context => (payload, req) => {
   });
 };
 
-const authStatus = context => status => {
-  context.getAuthRequester().isLogin = status;
-};
-
 const changeSettings = context => (payload, req) => {
   try {
     context.setProviderSettings(payload);
@@ -35,25 +31,8 @@ const getSettings = context => (payload, req) => {
   req.answer(context.inpageProvider.settings);
 };
 
-const logout = context => async (payload, req) => {
-  try {
-    const res = await context.getAuthRequester().logout();
-
-    context.messengerGroup.send(METHODS.DIALOG_CLOSE);
-
-    req.answer({
-      status: res,
-    });
-  } catch (error) {
-    const code = (error && error.code) || ERRORS.AUTH_LOGOUT;
-    throw ConnectError.create(code);
-  }
-};
-
 export default {
   [METHODS.INITIATE]: initiate,
-  [METHODS.AUTH_STATUS]: authStatus,
   [METHODS.CHANGE_SETTINGS_REQUEST]: changeSettings,
   [METHODS.WIDGET_GET_SETTING]: getSettings,
-  [METHODS.LOGOUT_REQUEST]: logout,
 };

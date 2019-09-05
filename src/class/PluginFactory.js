@@ -1,4 +1,5 @@
 import mapValues from 'lodash.mapvalues';
+
 export default class PluginFactory {
   /**
    *
@@ -52,7 +53,12 @@ export default class PluginFactory {
         return target[name];
       },
       set(target, name, value) {
-        target[name] = value;
+        if (name in target) {
+          throw new Error(`Plugin '${name}' already define`);
+        }
+        Object.assign(target, {
+          [name]: value,
+        });
         return true;
       },
     });

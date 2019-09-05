@@ -1,6 +1,5 @@
 import ConnectError from '@endpass/class/ConnectError';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
-import mapValues from 'lodash.mapvalues';
 import { inlineStylesState } from '@/util/dom';
 import { DIRECTION, DIALOG_EVENTS } from '@/constants';
 import {
@@ -14,6 +13,7 @@ import {
 } from './DialogStyles';
 import StateClose from './states/StateClose';
 import dialogHandlers from '@/class/Dialog/dialogHandlers';
+import HandlersFactory from '@/class/HandlersFactory';
 
 const { ERRORS } = ConnectError;
 
@@ -67,18 +67,11 @@ export default class Dialog {
     } else {
       this.mount();
     }
-    this.dialogHandlers = mapValues(dialogHandlers, method => method(this));
+    this.handleEvent = HandlersFactory.createHandleEvent(this, dialogHandlers);
   }
 
   get subscribeData() {
     return [[this.dialogMessenger]];
-  }
-
-  handleEvent(payload, req) {
-    if (!this.dialogHandlers[req.method]) {
-      return;
-    }
-    this.dialogHandlers[req.method](payload, req);
   }
 
   onClose() {

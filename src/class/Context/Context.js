@@ -1,14 +1,13 @@
-import mapValues from 'lodash.mapvalues';
 import ConnectError from '@endpass/class/ConnectError';
-import { DEFAULT_AUTH_URL, METHODS } from '@/constants';
+import { METHODS } from '@/constants';
 import PluginFactory from '@/class/PluginFactory';
 
-import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
+import { getFrameRouteUrl } from '@/util/url';
 import MessengerGroup from '@/class/MessengerGroup';
 import Dialog from '@/class/Dialog';
-import Auth from '@/class/Auth';
 import EventSubscriber from '@/class/EventSubscriber';
 import contextHandlers from './contextHandlers';
+import HandlersFactory from '@/class/HandlersFactory';
 
 const { ERRORS } = ConnectError;
 
@@ -16,6 +15,7 @@ const { ERRORS } = ConnectError;
  * @typedef {import('@/plugins/PluginBase')} ConnectPlugin
  */
 
+//TODO: remove context to plugin container, and move near by
 export default class Context {
   /**
    * @param {object} options
@@ -38,8 +38,10 @@ export default class Context {
   constructor(options = {}, singlePlugin) {
     const passedPlugins = options.plugins || [];
     this.options = options;
-    this.authUrl = getAuthUrl(options.authUrl || DEFAULT_AUTH_URL);
-    this.contextHandlers = mapValues(contextHandlers, method => method(this));
+    this.contextHandlers = HandlersFactory.createHandlers(
+      this,
+      contextHandlers,
+    );
 
     this.plugins = PluginFactory.createPlugins(passedPlugins, {
       options,
@@ -66,7 +68,7 @@ export default class Context {
   }
 
   get isLogin() {
-    return this.getAuthRequester().isLogin;
+    return this.plugins.auth.isLogin;
   }
 
   /**
@@ -89,11 +91,7 @@ export default class Context {
    *  know about result
    */
   auth(redirectUrl) {
-    return this.getAuthRequester().auth(redirectUrl);
-  }
-
-  getAuthUrl() {
-    return this.authUrl;
+    return this.plugins.auth.auth(redirectUrl);
   }
 
   async serverAuth() {
@@ -136,10 +134,11 @@ export default class Context {
 
   getDialog() {
     if (!this.dialog) {
+      const { element, namespace, authUrl } = this.options;
       this.dialog = new Dialog({
-        element: this.options.element,
-        namespace: this.options.namespace,
-        url: getFrameRouteUrl(this.getAuthUrl(), 'bridge'),
+        element,
+        namespace,
+        url: getFrameRouteUrl(authUrl, 'bridge'),
       });
       this.messengerGroup.addMessenger(this.dialog.getDialogMessenger());
     }
@@ -161,7 +160,11 @@ export default class Context {
       Object.keys(this.plugins).forEach(pluginKey => {
         this.plugins[pluginKey].handleEvent(payload, req);
       });
+
+      // 4. process messenger group
+      this.messengerGroup.handleEvent(payload, req);
     } catch (error) {
+      console.error('context.handleEvent', error);
       const err = ConnectError.createFromError(error, ERRORS.NOT_DEFINED);
       req.answer({
         status: false,
@@ -199,16 +202,4 @@ export default class Context {
     }
     return this.messengerGroupPrivate;
   }
-
-  getAuthRequester() {
-    if (!this.authRequester) {
-      this.authRequester = new Auth({
-        dialog: this.getDialog(),
-        options: this.options,
-      });
-    }
-    return this.authRequester;
-  }
 }
-
-//TODO: remove context to plugin container, and move near by
