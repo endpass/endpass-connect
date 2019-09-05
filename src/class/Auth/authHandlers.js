@@ -21,7 +21,13 @@ const logout = auth => async (payload, req) => {
   }
 };
 
+const authInternal = auth => async (redirectUrl, req) => {
+  const res = await auth.authMe(redirectUrl);
+  req.answer(res);
+};
+
 export default {
+  [METHODS.INTERNAL_AUTH]: authInternal,
   [METHODS.AUTH_STATUS]: authStatus,
   [METHODS.LOGOUT_REQUEST]: logout,
 };

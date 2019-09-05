@@ -176,43 +176,8 @@ export default class ProviderPlugin extends PluginBase {
         throw ConnectError.create(ERRORS.AUTH_CANCELED_BY_USER);
       }
 
-      await this.context.plugins.auth.auth();
+      await this.auth();
       await this.getAccountData();
     }
-  }
-
-  /**
-   * Mounts endpass widget
-   * @param {object} [params] Parameters object
-   * @param {object} [params.position] Position of mounting widget
-   * @param {object} [params.position.left]
-   * @param {object} [params.position.right]
-   * @param {object} [params.position.top]
-   * @param {object} [params.position.bottom]
-   * @returns {Promise<Element>} Mounted widget iframe element
-   */
-  mountWidget(params) {
-    return this.context.plugins.widget.widget.mount(params);
-  }
-
-  /**
-   * Unmounts endpass widget from DOM
-   */
-  unmountWidget() {
-    this.context.plugins.widget.widget.unmount();
-  }
-
-  /**
-   * Returns widget iframe element when it available
-   * @returns {Promise<Element>} Widget iframe node
-   */
-  async getWidgetNode() {
-    const res = await this.context.plugins.widget.widget.getWidgetNode();
-
-    return res;
-  }
-
-  auth(redirectUrl) {
-    return this.context.plugins.auth.auth(redirectUrl);
   }
 }

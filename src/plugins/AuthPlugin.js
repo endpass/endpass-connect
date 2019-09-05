@@ -15,17 +15,6 @@ export default class AuthPlugin extends PluginBase {
     return this.authRequester.isLogin;
   }
 
-  /**
-   * Open application on auth screen and waits result (success of failure)
-   * @public
-   * @throws {Error} If authentification failed
-   * @returns {Promise<boolean>} Auth result, check `status` property to
-   *  know about result
-   */
-  auth(url) {
-    return this.authRequester.auth(url);
-  }
-
   handleEvent(payload, req) {
     return this.authRequester.handleEvent(payload, req);
   }

@@ -54,7 +54,7 @@ export default class PluginFactory {
       },
       set(target, name, value) {
         if (name in target) {
-          throw new Error(`Plugin '${name}' already define`);
+          throw new Error(`Plugin '${name}' already defined`);
         }
         Object.assign(target, {
           [name]: value,

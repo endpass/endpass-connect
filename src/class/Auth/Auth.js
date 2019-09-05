@@ -32,7 +32,7 @@ export default class Auth {
    * @returns {Promise<boolean>} Auth result, check `status` property to
    *  know about result
    */
-  async auth(redirectUrl) {
+  async authMe(redirectUrl) {
     const toPath = redirectUrl || window.location.href;
 
     const res = await this.dialog.ask(METHODS.AUTH, {
