@@ -47,7 +47,7 @@ export default class ProviderPlugin extends PluginBase {
    *
    * @return {Promise<object>}
    */
-  async openAccount() {
+  async openProviderAccount() {
     const res = await this.context.getDialog().ask(METHODS.ACCOUNT);
 
     if (!res.status) {
@@ -77,7 +77,7 @@ export default class ProviderPlugin extends PluginBase {
    * @throws {Error} If settings can not be resolved
    * @returns {Promise<object>} Account data
    */
-  async getAccountData() {
+  async getProviderAccountData() {
     try {
       const { payload, status, code } = await this.context
         .getDialog()
@@ -109,7 +109,7 @@ export default class ProviderPlugin extends PluginBase {
    * @param {string} payload.activeAccount Currenct account checksummed address
    * @param {string} payload.activeNet Active network ID
    */
-  setProviderSettings(payload) {
+  setInpageProviderSettings(payload) {
     this.getEmitter().emit(INPAGE_EVENTS.SETTINGS, {
       activeAccount: payload.activeAccount,
       activeNet: payload.activeNet || Network.NET_ID.MAIN,
@@ -140,7 +140,7 @@ export default class ProviderPlugin extends PluginBase {
    *
    * @return {InpageProvider}
    */
-  getProvider() {
+  getInpageProvider() {
     if (!this.inpageProvider) {
       this.inpageProvider = new InpageProvider(this.getEmitter());
     }
@@ -170,14 +170,14 @@ export default class ProviderPlugin extends PluginBase {
 
   async serverAuth() {
     try {
-      await this.getAccountData();
+      await this.getProviderAccountData();
     } catch (e) {
       if (e.code === ERRORS.AUTH_CANCELED_BY_USER) {
         throw ConnectError.create(ERRORS.AUTH_CANCELED_BY_USER);
       }
 
       await this.auth();
-      await this.getAccountData();
+      await this.getProviderAccountData();
     }
   }
 }

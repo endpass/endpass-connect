@@ -101,7 +101,7 @@ export default class Context {
    * @param {string} payload.activeNet Active network ID
    */
   setProviderSettings(payload) {
-    this.plugins.provider.setProviderSettings(payload);
+    this.plugins.provider.setInpageProviderSettings(payload);
 
     const settings = this.getInpageProviderSettings();
     this.messengerGroup.send(METHODS.CHANGE_SETTINGS_RESPONSE, settings);

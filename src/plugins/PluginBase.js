@@ -1,5 +1,8 @@
+import ConnectError from '@endpass/class/ConnectError';
 import Context from '@/class/Context';
 import { METHODS } from '@/constants';
+
+const { ERRORS } = ConnectError;
 
 export default class PluginBase {
   constructor(options = {}, context) {
@@ -56,7 +59,7 @@ export default class PluginBase {
    */
   async getAccountData() {
     await this.auth();
-    return this.context.plugins.provider.getAccountData();
+    return this.context.plugins.provider.getProviderAccountData();
   }
 
   /**
@@ -67,12 +70,12 @@ export default class PluginBase {
    *  Web3 instance
    */
   getProvider() {
-    return this.context.plugins.provider.getProvider();
+    return this.context.plugins.provider.getInpageProvider();
   }
 
   /**
    * Open application on auth screen and waits result (success of failure)
-   * @throws {Error} If authentification failed
+   * @throws {Error} If authentication failed
    * @returns {Promise<boolean>} Auth result, check `status` property to
    *  know about result
    */
@@ -110,7 +113,7 @@ export default class PluginBase {
    */
   async openAccount() {
     await this.auth();
-    return this.context.plugins.provider.openAccount();
+    return this.context.plugins.provider.openProviderAccount();
   }
 
   /**
@@ -129,7 +132,12 @@ export default class PluginBase {
    * @throws {Error} If not authorized yet;
    */
   logoutFromOauth() {
-    this.context.plugins.oauth.logoutFromOauth();
+    const { oauth } = this.context.plugins;
+    if (!oauth.oauthRequestProvider) {
+      throw ConnectError.create(ERRORS.OAUTH_NOT_LOGGED_IN);
+    }
+
+    oauth.oauthRequest.logout();
   }
 
   /**
@@ -140,7 +148,7 @@ export default class PluginBase {
    * @throws {Error} If not authorized yet;
    */
   setOauthPopupParams(params) {
-    this.context.plugins.oauth.setOauthPopupParams(params);
+    this.context.plugins.oauth.oauthRequest.setPopupParams(params);
   }
 
   /**
@@ -155,7 +163,7 @@ export default class PluginBase {
    * @throws {Error} If not authorized yet;
    */
   request(options) {
-    return this.context.plugins.oauth.request(options);
+    return this.context.plugins.oauth.oauthRequest.request(options);
   }
 
   /**
