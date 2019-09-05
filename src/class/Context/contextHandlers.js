@@ -4,8 +4,12 @@ import { METHODS } from '@/constants';
 const { ERRORS } = ConnectError;
 
 const initiate = context => (payload, req) => {
+  const { demoData, isIdentityMode, showCreateAccount } = context.options;
+
   req.answer({
-    ...context.initialPayload,
+    demoData,
+    isIdentityMode: isIdentityMode || false,
+    showCreateAccount,
   });
 };
 

@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.27.3-beta",
+  "version": "0.27.4-beta",
   "authVersion": "",
   "main": "./endpass-connect.min.js",
   "module": "./endpass-connect.esm.js",
@@ -13,6 +13,22 @@
       "module": "./provider.js",
       "umd": "./provider.umd.js",
       "browser": "./provider.browser.js"
+    },
+    {
+      "library": "EndpassAuthPlugin",
+      "input": "./src/plugins/AuthPlugin.js",
+      "main": "./auth.min.js",
+      "module": "./auth.js",
+      "umd": "./auth.umd.js",
+      "browser": "./auth.browser.js"
+    },
+    {
+      "library": "EndpassOauthPlugin",
+      "input": "./src/plugins/OauthPlugin.js",
+      "main": "./oauth.min.js",
+      "module": "./oauth.js",
+      "umd": "./oauth.umd.js",
+      "browser": "./oauth.browser.js"
     }
   ],
   "description": "",

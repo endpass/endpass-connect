@@ -8,6 +8,7 @@ import createInpageProviderStream from '@/streams/inpageProvider/inpageProviderS
 import PluginBase from './PluginBase';
 import WidgetPlugin from './WidgetPlugin';
 import AuthPlugin from './AuthPlugin';
+
 const { ERRORS } = ConnectError;
 
 export default class ProviderPlugin extends PluginBase {
@@ -175,7 +176,7 @@ export default class ProviderPlugin extends PluginBase {
         throw ConnectError.create(ERRORS.AUTH_CANCELED_BY_USER);
       }
 
-      await this.context.auth();
+      await this.context.plugins.auth();
       await this.getAccountData();
     }
   }
@@ -212,6 +213,6 @@ export default class ProviderPlugin extends PluginBase {
   }
 
   auth(redirectUrl) {
-    return this.context.auth(redirectUrl);
+    return this.context.plugins.auth(redirectUrl);
   }
 }

@@ -1,21 +1,12 @@
 import Context from '@/class/Context';
 import privateFields from '@/privateFields';
 
-import pkg from '../package.json';
 import { METHODS } from '@/constants';
 import OauthPlugin from '@/plugins/OauthPlugin';
 import WidgetPlugin from '@/plugins/WidgetPlugin';
 import AuthPlugin from '@/plugins/AuthPlugin';
 
 const DEFAULT_PLUGINS = [AuthPlugin, OauthPlugin, WidgetPlugin];
-
-if (ENV.isProduction) {
-  /* eslint-disable-next-line */
-  console.info(
-    `%cEndpass connect version ${pkg.version} loaded 🔌`,
-    'color: #fff; background: #4B0873',
-  );
-}
 
 export default class Connect {
   /**
@@ -75,7 +66,7 @@ export default class Connect {
    *  know about result
    */
   async auth(redirectUrl) {
-    const res = await this[privateFields.context].auth(redirectUrl);
+    const res = await this[privateFields.context].plugins.auth(redirectUrl);
 
     return {
       ...res.payload,

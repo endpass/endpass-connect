@@ -8,8 +8,17 @@ import Dialog from '@/class/Dialog';
 import EventSubscriber from '@/class/EventSubscriber';
 import contextHandlers from './contextHandlers';
 import HandlersFactory from '@/class/HandlersFactory';
+import pkg from '../../../package.json';
 
 const { ERRORS } = ConnectError;
+
+if (ENV.isProduction) {
+  /* eslint-disable-next-line */
+  console.info(
+    `%cEndpass connect version ${pkg.version} loaded 🔌`,
+    'color: #fff; background: #4B0873',
+  );
+}
 
 /**
  * @typedef {import('@/plugins/PluginBase')} ConnectPlugin
@@ -70,29 +79,6 @@ export default class Context {
 
   get isLogin() {
     return this.plugins.auth.isLogin;
-  }
-
-  /**
-   * @return {object}
-   */
-  get initialPayload() {
-    const { demoData, isIdentityMode, showCreateAccount } = this.options;
-    return {
-      demoData,
-      isIdentityMode: isIdentityMode || false,
-      showCreateAccount,
-    };
-  }
-
-  /**
-   * Open application on auth screen and waits result (success of failure)
-   * @public
-   * @throws {Error} If authentification failed
-   * @returns {Promise<boolean>} Auth result, check `status` property to
-   *  know about result
-   */
-  auth(redirectUrl) {
-    return this.plugins.auth.auth(redirectUrl);
   }
 
   async serverAuth() {
