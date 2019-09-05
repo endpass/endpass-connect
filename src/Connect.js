@@ -64,7 +64,7 @@ export default class Connect {
    *  Web3 instance
    */
   getProvider() {
-    return this[privateFields.context].plugins.provider.getInpageProvider();
+    return this[privateFields.context].plugins.provider.getProvider();
   }
 
   /**

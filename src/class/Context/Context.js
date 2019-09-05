@@ -15,7 +15,7 @@ const { ERRORS } = ConnectError;
  * @typedef {import('@/plugins/PluginBase')} ConnectPlugin
  */
 
-//TODO: remove context to plugin container, and move near by
+// TODO: remove context to plugin container, and move near by
 export default class Context {
   /**
    * @param {object} options
@@ -62,6 +62,7 @@ export default class Context {
       const plugin = plugins[pluginKey];
       return eventsList.concat(plugin.subscribeData);
     }, basicData);
+
     return res;
 
     // [[messenger], [messenger]]
@@ -147,6 +148,7 @@ export default class Context {
   }
 
   async handleEvent(payload, req) {
+    console.log('req.method', req.method);
     try {
       // 1. process context methods
       if (this.contextHandlers[req.method]) {
@@ -157,9 +159,10 @@ export default class Context {
       await this.getDialog().handleEvent(payload, req);
 
       // 3. process plugins methods
-      Object.keys(this.plugins).forEach(pluginKey => {
-        this.plugins[pluginKey].handleEvent(payload, req);
-      });
+      await Object.keys(this.plugins).reduce(async (awaiter, pluginKey) => {
+        await awaiter;
+        await this.plugins[pluginKey].handleEvent(payload, req);
+      }, Promise.resolve());
 
       // 4. process messenger group
       this.messengerGroup.handleEvent(payload, req);

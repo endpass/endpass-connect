@@ -9,9 +9,9 @@ export default class HandlersFactory {
     const handlersEvent = HandlersFactory.createHandlers(ctx, handlers);
     return (payload, req) => {
       if (!handlersEvent[req.method]) {
-        return;
+        return null;
       }
-      handlersEvent[req.method](payload, req);
+      return handlersEvent[req.method](payload, req);
     };
   }
 }

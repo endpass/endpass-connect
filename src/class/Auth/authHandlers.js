@@ -5,7 +5,6 @@ const { ERRORS } = ConnectError;
 
 const authStatus = auth => status => {
   // eslint-disable-next-line no-param-reassign
-  console.log('authStatus', status);
   auth.isLogin = status;
 };
 
