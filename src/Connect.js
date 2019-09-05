@@ -66,7 +66,9 @@ export default class Connect {
    *  know about result
    */
   async auth(redirectUrl) {
-    const res = await this[privateFields.context].plugins.auth(redirectUrl);
+    const res = await this[privateFields.context].plugins.auth.auth(
+      redirectUrl,
+    );
 
     return {
       ...res.payload,

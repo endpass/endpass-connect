@@ -176,7 +176,7 @@ export default class ProviderPlugin extends PluginBase {
         throw ConnectError.create(ERRORS.AUTH_CANCELED_BY_USER);
       }
 
-      await this.context.plugins.auth();
+      await this.context.plugins.auth.auth();
       await this.getAccountData();
     }
   }
@@ -213,6 +213,6 @@ export default class ProviderPlugin extends PluginBase {
   }
 
   auth(redirectUrl) {
-    return this.context.plugins.auth(redirectUrl);
+    return this.context.plugins.auth.auth(redirectUrl);
   }
 }
