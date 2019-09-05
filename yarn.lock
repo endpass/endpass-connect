@@ -1036,10 +1036,10 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
-"@endpass/class@^0.17.3":
-  version "0.17.3"
-  resolved "https://registry.yarnpkg.com/@endpass/class/-/class-0.17.3.tgz#7877c816f20333bf5e6890fafca7c6eabe57c571"
-  integrity sha512-RbzHhH+y2sDHjYh75bWS/xwO8XBtt588x+wk0Gu0/klAUTWTPklXPNK8Fo0Rn877F4KI7GI1ozWBMilA+k/SNg==
+"@endpass/class@^0.17.4":
+  version "0.17.4"
+  resolved "https://registry.yarnpkg.com/@endpass/class/-/class-0.17.4.tgz#76cc9c58fe26535d383d664d5b433ff6a85ccafc"
+  integrity sha512-cw6jUshSfyI1Zz4W7Yojmc4GjpIgfsx+tTP3cf7vfV4OK26RGGtbU395e361Usxn3YZPzFSSTPdPEllPWyCF9w==
   dependencies:
     "@endpass/utils" "^1.8.2"
     "@ledgerhq/hw-app-eth" "^4.24.0"
@@ -7622,6 +7622,11 @@ lodash.map@^4.5.1:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.map/-/lodash.map-4.6.0.tgz#771ec7839e3473d9c4cde28b19394c3562f4f6d3"
   integrity sha1-dx7Hg540c9nEzeKLGTlMNWL09tM=
+
+lodash.mapvalues@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.mapvalues/-/lodash.mapvalues-4.6.0.tgz#1bafa5005de9dd6f4f26668c30ca37230cc9689c"
+  integrity sha1-G6+lAF3p3W9PJmaMMMo3IwzJaJw=
 
 lodash.once@^4.1.1:
   version "4.1.1"

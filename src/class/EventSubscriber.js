@@ -4,8 +4,8 @@ export default class EventSubscriber {
     const handler = (payload, req) => {
       context.handleEvent(payload, req);
     };
-    context.subscribeData.forEach(([messenger, events]) => {
-      messenger.subscribe(events, handler);
+    context.subscribeData.forEach(([messenger]) => {
+      messenger.subscribe(handler);
     });
   }
 }

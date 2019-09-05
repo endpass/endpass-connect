@@ -3,20 +3,19 @@ import { METHODS } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
-function initiate(payload, req) {
+const initiate = context => (payload, req) => {
   req.answer({
-    ...this.initialPayload,
+    ...context.initialPayload,
   });
-}
+};
 
-function authStatus(status) {
-  debugger;
-  this.getAuthRequester().isLogin = status;
-}
+const authStatus = context => status => {
+  context.getAuthRequester().isLogin = status;
+};
 
-function changeSettings(payload, req) {
+const changeSettings = context => (payload, req) => {
   try {
-    this.setProviderSettings(payload);
+    context.setProviderSettings(payload);
 
     req.answer({
       status: true,
@@ -30,31 +29,26 @@ function changeSettings(payload, req) {
     });
     throw ConnectError.create(code);
   }
-}
+};
 
-function getSettings(payload, req) {
-  req.answer(this.inpageProvider.settings);
-}
+const getSettings = context => (payload, req) => {
+  req.answer(context.inpageProvider.settings);
+};
 
-async function logout(payload, req) {
+const logout = context => async (payload, req) => {
   try {
-    await this.logout();
+    const res = await context.getAuthRequester().logout();
 
-    this.messengerGroup.send(METHODS.DIALOG_CLOSE);
+    context.messengerGroup.send(METHODS.DIALOG_CLOSE);
 
     req.answer({
-      status: true,
+      status: res,
     });
   } catch (error) {
     const code = (error && error.code) || ERRORS.AUTH_LOGOUT;
-    req.answer({
-      status: false,
-      error,
-      code,
-    });
     throw ConnectError.create(code);
   }
-}
+};
 
 export default {
   [METHODS.INITIATE]: initiate,

@@ -1,5 +1,6 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import debounce from 'lodash.debounce';
+import mapValues from 'lodash.mapvalues';
 import { DIRECTION, METHODS, WIDGET_EVENTS } from '@/constants';
 import { inlineStyles } from '@/util/dom';
 import {
@@ -9,6 +10,7 @@ import {
 } from './WidgetStyles';
 import StateCollapse from './states/StateCollapse';
 import StateClose from './states/StateClose';
+import widgetHandlers from './widgetHandlers';
 
 export default class Widget {
   /**
@@ -36,13 +38,14 @@ export default class Widget {
     this.debouncedHandleScreenResize = debounce(this.handleScreenResize, 100);
 
     this.widgetMessenger = new CrossWindowMessenger({
-      showLogs: false, //!ENV.isProduction,
+      showLogs: false, //! ENV.isProduction,
       name: `connect-bridge-widget[${namespace}]`,
       to: DIRECTION.AUTH,
       from: DIRECTION.CONNECT,
     });
     /** @type Array<Promise> */
     this.frameResolver = [];
+    this.widgetHandlers = mapValues(widgetHandlers, method => method(this));
   }
 
   /* eslint-disable-next-line */

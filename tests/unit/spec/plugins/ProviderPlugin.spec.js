@@ -62,7 +62,7 @@ describe('Provider plugin', () => {
     it('should return Inpage provider from given parameters', () => {
       jest.spyOn(ProviderFactory, 'createRequestProvider');
       plugin = createPlugin();
-      const res = plugin.getInpageProvider();
+      const res = plugin.getProvider();
 
       expect(res instanceof InpageProvider).toBe(true);
     });

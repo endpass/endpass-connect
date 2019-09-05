@@ -1,36 +1,37 @@
+/* eslint-disable no-param-reassign */
 import { METHODS } from '@/constants';
 import StateClose from '@/class/Dialog/states/StateClose';
 import StateOpen from '@/class/Dialog/states/StateOpen';
 
-function readyDialog(payload, req) {
-  if (req.source === this.dialogMessenger.target) {
-    this.ready = true;
-    this.readyResolvers.forEach(item => item(true));
-    this.readyResolvers.length = 0;
+const readyDialog = dialog => (payload, req) => {
+  if (req.source === dialog.dialogMessenger.target) {
+    dialog.ready = true;
+    dialog.readyResolvers.forEach(item => item(true));
+    dialog.readyResolvers.length = 0;
   }
-}
+};
 
-function initiate(payload, req) {
-  if (req.source === this.dialogMessenger.target) {
-    clearTimeout(this.initialTimer);
+const initiate = dialog => (payload, req) => {
+  if (req.source === dialog.dialogMessenger.target) {
+    clearTimeout(dialog.initialTimer);
   }
-}
+};
 
-function resize({ offsetHeight }) {
-  this.frame.style = this.frameStyles({
+const resize = dialog => ({ offsetHeight }) => {
+  dialog.frame.style = dialog.frameStyles({
     'min-height': `${offsetHeight || 0}px`,
   });
-}
+};
 
-function close() {
-  this.state.onClose();
-  this.state = new StateClose(this);
-}
+const close = dialog => () => {
+  dialog.state.onClose();
+  dialog.state = new StateClose(dialog);
+};
 
-function open() {
-  this.state.onOpen();
-  this.state = new StateOpen(this);
-}
+const open = dialog => () => {
+  dialog.state.onOpen();
+  dialog.state = new StateOpen(dialog);
+};
 
 export default {
   [METHODS.READY_STATE_BRIDGE]: readyDialog,
@@ -38,5 +39,4 @@ export default {
   [METHODS.DIALOG_RESIZE]: resize,
   [METHODS.DIALOG_CLOSE]: close,
   [METHODS.DIALOG_OPEN]: open,
-  [METHODS.LOGOUT_REQUEST]: () => {},
 };

@@ -1,13 +1,12 @@
 import Widget from '@/class/Widget';
 import { getFrameRouteUrl } from '@/util/url';
-import widgetHandlers from '@/class/Widget/widgetHandlers';
 import PluginBase from './PluginBase';
 
 const WIDGET_AUTH_TIMEOUT = 200;
 
 export default class WidgetPlugin extends PluginBase {
-  constructor(options) {
-    super(options);
+  constructor(options, context) {
+    super(options, context);
     this.options = options;
   }
 
@@ -16,15 +15,14 @@ export default class WidgetPlugin extends PluginBase {
   }
 
   handleEvent(payload, req) {
-    if (!widgetHandlers[req.method]) {
+    if (!this.widget.widgetHandlers[req.method]) {
       return;
     }
-    widgetHandlers[req.method].apply(this.widget, [payload, req]);
+    this.widget.widgetHandlers[req.method](payload, req);
   }
 
   get subscribeData() {
-    const methodsNamesList = Object.keys(widgetHandlers);
-    return [[this.widget.widgetMessenger, methodsNamesList]];
+    return [[this.widget.widgetMessenger]];
   }
 
   setupWidgetOnAuth(widget, options) {

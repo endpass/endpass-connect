@@ -6,8 +6,8 @@ import PluginBase from './PluginBase';
 const { ERRORS } = ConnectError;
 
 export default class OauthPlugin extends PluginBase {
-  constructor(options) {
-    super(options);
+  constructor(options, context) {
+    super(options, context);
     if (!options.oauthClientId) {
       throw ConnectError.create(ERRORS.OAUTH_REQUIRE_ID);
     }

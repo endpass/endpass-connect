@@ -1,57 +1,57 @@
+/* eslint-disable no-param-reassign */
 import { METHODS, WIDGET_EVENTS } from '@/constants';
 import StateExpand from '@/class/Widget/states/StateExpand';
 import StateCollapse from '@/class/Widget/states/StateCollapse';
 import StateOpen from '@/class/Widget/states/StateOpen';
 import StateClose from '@/class/Widget/states/StateClose';
 
-function handleInit(payload, req) {
+const handleInit = widget => (payload, req) => {
   req.answer({
-    position: this.position,
-    isMobile: this.isMobile,
+    position: widget.position,
+    isMobile: widget.isMobile,
   });
-}
+};
 
-function expand(payload, req) {
-  this.stateCompact.onExpand();
-  this.stateCompact = new StateExpand(this);
+const expand = widget => (payload, req) => {
+  widget.stateCompact.onExpand();
+  widget.stateCompact = new StateExpand(widget);
   req.answer();
-}
+};
 
-function collapse() {
-  this.stateCompact.onCollapse();
-  this.stateCompact = new StateCollapse(this);
-}
+const collapse = widget => () => {
+  widget.stateCompact.onCollapse();
+  widget.stateCompact = new StateCollapse(widget);
+};
 
-function open({ root }, req) {
-  this.state.onOpen(root);
-  this.state = new StateOpen(this);
+const open = widget => ({ root }, req) => {
+  widget.state.onOpen(root);
+  widget.state = new StateOpen(widget);
   req.answer();
-}
+};
 
-function close() {
-  this.state.onClose();
-  this.state = new StateClose(this);
-}
+const close = widget => () => {
+  widget.state.onClose();
+  widget.state = new StateClose(widget);
+};
 
-function fit({ height }) {
-  this.resize({ height: `${height}px` });
-}
+const fit = widget => ({ height }) => {
+  widget.resize({ height: `${height}px` });
+};
 
-function unmount() {
-  this.unmount();
-}
+const unmount = widget => () => {
+  widget.unmount();
+};
 
-function logout() {
-  this.messengerGroup.send(METHODS.WIDGET_UNMOUNT);
-  this.emitFrameEvent(this.frame, WIDGET_EVENTS.LOGOUT);
-}
+const logout = widget => () => {
+  widget.messengerGroup.send(METHODS.WIDGET_UNMOUNT);
+  widget.emitFrameEvent(widget.frame, WIDGET_EVENTS.LOGOUT);
+};
 
-function changeSettings(payload) {
-  this.emitFrameEvent(this.frame, WIDGET_EVENTS.UPDATE, payload);
-}
+const changeSettings = widget => payload => {
+  widget.emitFrameEvent(widget.frame, WIDGET_EVENTS.UPDATE, payload);
+};
 
 export default {
-  [METHODS.INITIATE]: () => {}, // ????
   [METHODS.WIDGET_INIT]: handleInit,
   [METHODS.WIDGET_EXPAND_REQUEST]: expand,
   [METHODS.WIDGET_COLLAPSE_REQUEST]: collapse,

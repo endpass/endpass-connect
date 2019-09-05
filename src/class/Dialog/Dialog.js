@@ -1,5 +1,6 @@
 import ConnectError from '@endpass/class/ConnectError';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
+import mapValues from 'lodash.mapvalues';
 import { inlineStylesState } from '@/util/dom';
 import { DIRECTION, DIALOG_EVENTS } from '@/constants';
 import {
@@ -66,19 +67,18 @@ export default class Dialog {
     } else {
       this.mount();
     }
+    this.dialogHandlers = mapValues(dialogHandlers, method => method(this));
   }
 
   get subscribeData() {
-    const methodsNamesList = Object.keys(dialogHandlers);
-    return [[this.dialogMessenger, methodsNamesList]];
+    return [[this.dialogMessenger]];
   }
 
   handleEvent(payload, req) {
-    if (!dialogHandlers[req.method]) {
+    if (!this.dialogHandlers[req.method]) {
       return;
     }
-    const method = dialogHandlers[req.method];
-    method.apply(this, [payload, req]);
+    this.dialogHandlers[req.method](payload, req);
   }
 
   onClose() {

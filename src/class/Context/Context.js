@@ -1,23 +1,27 @@
+import mapValues from 'lodash.mapvalues';
 import ConnectError from '@endpass/class/ConnectError';
 import { DEFAULT_AUTH_URL, METHODS } from '@/constants';
-import PluginManager from '@/class/PluginManager';
+import PluginFactory from '@/class/PluginFactory';
 
 import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
 import MessengerGroup from '@/class/MessengerGroup';
 import Dialog from '@/class/Dialog';
 import Auth from '@/class/Auth';
-import OauthPlugin from '@/plugins/OauthPlugin';
-import WidgetPlugin from '@/plugins/WidgetPlugin';
 import EventSubscriber from '@/class/EventSubscriber';
 import contextHandlers from './contextHandlers';
 
 const { ERRORS } = ConnectError;
 
-const DEFAULT_PLUGINS = [OauthPlugin, WidgetPlugin];
+/**
+ * @typedef {import('@/plugins/PluginBase')} ConnectPlugin
+ */
 
 export default class Context {
   /**
+   * @param {object} options
    * @param {string} options.oauthClientId OAuth client id
+   * @param {ConnectPlugin} singlePlugin plugin for sinletone mode
+   * @param {Array<ConnectPlugin>]} [options.plugins] list of plugins
    * @param {string} [options.authUrl] Url of hosted Endpass Connect Application
    * @param {string} [options.namespace] namespace for see difference,
    *  between two instances
@@ -31,18 +35,20 @@ export default class Context {
    * @param {object} [options.widget.position] Widget positions. By default
    *  equals to `bottom right`
    */
-  constructor(options = {}) {
+  constructor(options = {}, singlePlugin) {
     const passedPlugins = options.plugins || [];
     this.options = options;
     this.authUrl = getAuthUrl(options.authUrl || DEFAULT_AUTH_URL);
+    this.contextHandlers = mapValues(contextHandlers, method => method(this));
 
-    this.plugins = PluginManager.createPlugins(
-      [...DEFAULT_PLUGINS, ...passedPlugins],
-      {
-        ...options,
-        context: this,
-      },
-    );
+    this.plugins = PluginFactory.createPlugins(passedPlugins, {
+      options,
+      context: this,
+    });
+
+    if (singlePlugin) {
+      this.plugins[singlePlugin.constructor.pluginName] = singlePlugin;
+    }
 
     EventSubscriber.subscribe(this);
   }
@@ -56,7 +62,7 @@ export default class Context {
     }, basicData);
     return res;
 
-    // [[messenger, events], [messenger, events]]
+    // [[messenger], [messenger]]
   }
 
   get isLogin() {
@@ -88,18 +94,6 @@ export default class Context {
 
   getAuthUrl() {
     return this.authUrl;
-  }
-
-  /**
-   * Send request to logout through injected bridge bypass application dialog
-   * @public
-   * @throws {Error} If logout failed
-   * @returns {Promise<Boolean>}
-   */
-  async logout() {
-    const res = await this.getAuthRequester().logout();
-    this.messengerGroup.send(METHODS.DIALOG_CLOSE);
-    return res;
   }
 
   async serverAuth() {
@@ -155,20 +149,44 @@ export default class Context {
 
   async handleEvent(payload, req) {
     try {
-      // global methods
-      if (contextHandlers[req.method]) {
-        await contextHandlers[req.method].apply(this, [payload, req]);
+      // 1. process context methods
+      if (this.contextHandlers[req.method]) {
+        await this.contextHandlers[req.method].apply(this, [payload, req]);
       }
 
+      // 2. process dialog methods
       await this.getDialog().handleEvent(payload, req);
 
-      await Object.keys(this.plugins).reduce(async (accumP, pluginKey) => {
-        await this.plugins[pluginKey].handleEvent(payload, req);
-        return accumP;
-      }, Promise.resolve);
-    } catch (err) {
-      throw ConnectError.create((err && err.code) || ERRORS.NOT_DEFINED);
+      // 3. process plugins methods
+      Object.keys(this.plugins).forEach(pluginKey => {
+        this.plugins[pluginKey].handleEvent(payload, req);
+      });
+    } catch (error) {
+      const err = ConnectError.createFromError(error, ERRORS.NOT_DEFINED);
+      req.answer({
+        status: false,
+        error: err,
+        code: err.code,
+      });
     }
+  }
+
+  handleRequest(method, payload) {
+    return new Promise((resolve, reject) => {
+      const req = {
+        method,
+        answer(result) {
+          const { status, error, code } = result;
+          if (!status) {
+            const err = ConnectError.createFromError(error, code);
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        },
+      };
+      this.handleEvent(payload, req);
+    });
   }
 
   /**
@@ -192,3 +210,5 @@ export default class Context {
     return this.authRequester;
   }
 }
+
+//TODO: remove context to plugin container, and move near by

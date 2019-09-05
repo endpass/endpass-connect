@@ -2,6 +2,11 @@ import Context from '@/class/Context';
 import privateFields from '@/privateFields';
 
 import pkg from '../package.json';
+import { METHODS } from '@/constants';
+import OauthPlugin from '@/plugins/OauthPlugin';
+import WidgetPlugin from '@/plugins/WidgetPlugin';
+
+const DEFAULT_PLUGINS = [OauthPlugin, WidgetPlugin];
 
 if (ENV.isProduction) {
   /* eslint-disable-next-line */
@@ -15,11 +20,15 @@ export default class Connect {
   /**
    * @param {string} options.authUrl Url of hosted Endpass Connect Application
    * @param {string} options.oauthClientId OAuth client id
+   * @param {array[Plugin]} options.plugins plugins for connect
    * @param {object|boolean} [options.widget] Widget parameters. Pass false to
    *  prevent widget mounting
    */
-  constructor(options) {
-    this[privateFields.context] = new Context(options);
+  constructor(options = {}) {
+    this[privateFields.context] = new Context({
+      ...options,
+      plugins: [...DEFAULT_PLUGINS, ...(options.plugins || [])],
+    });
   }
 
   /**
@@ -80,7 +89,10 @@ export default class Connect {
    * @returns {Promise<boolean>}
    */
   async logout() {
-    return this[privateFields.context].logout();
+    const { status } = await this[privateFields.context].handleRequest(
+      METHODS.LOGOUT_REQUEST,
+    );
+    return status;
   }
 
   /**

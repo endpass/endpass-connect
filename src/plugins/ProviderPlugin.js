@@ -6,12 +6,13 @@ import { INPAGE_EVENTS, METHODS } from '@/constants';
 import ProviderFactory from '@/class/ProviderFactory';
 import createInpageProviderStream from '@/streams/inpageProvider/inpageProviderStream';
 import PluginBase from './PluginBase';
+import WidgetPlugin from './WidgetPlugin';
 
 const { ERRORS } = ConnectError;
 
 export default class ProviderPlugin extends PluginBase {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
 
     this.getEmitter().on(INPAGE_EVENTS.LOGIN, async () => {
       let error = null;
@@ -31,6 +32,10 @@ export default class ProviderPlugin extends PluginBase {
     });
 
     createInpageProviderStream(this.getEmitter(), this.context);
+  }
+
+  static get dependencyPlugins() {
+    return [WidgetPlugin];
   }
 
   static get pluginName() {
@@ -134,7 +139,7 @@ export default class ProviderPlugin extends PluginBase {
    *
    * @return {InpageProvider}
    */
-  getInpageProvider() {
+  getProvider() {
     if (!this.inpageProvider) {
       this.inpageProvider = new InpageProvider(this.getEmitter());
     }
@@ -159,7 +164,7 @@ export default class ProviderPlugin extends PluginBase {
    * @returns {object} Current provider settings
    */
   getInpageProviderSettings() {
-    return { ...this.getInpageProvider().settings };
+    return { ...this.getProvider().settings };
   }
 
   async serverAuth() {
@@ -173,5 +178,40 @@ export default class ProviderPlugin extends PluginBase {
       await this.context.auth();
       await this.getAccountData();
     }
+  }
+
+  /**
+   * Mounts endpass widget
+   * @param {object} [params] Parameters object
+   * @param {object} [params.position] Position of mounting widget
+   * @param {object} [params.position.left]
+   * @param {object} [params.position.right]
+   * @param {object} [params.position.top]
+   * @param {object} [params.position.bottom]
+   * @returns {Promise<Element>} Mounted widget iframe element
+   */
+  mountWidget(params) {
+    return this.context.plugins.widget.widget.mount(params);
+  }
+
+  /**
+   * Unmounts endpass widget from DOM
+   */
+  unmountWidget() {
+    this.context.plugins.widget.widget.unmount();
+  }
+
+  /**
+   * Returns widget iframe element when it available
+   * @returns {Promise<Element>} Widget iframe node
+   */
+  async getWidgetNode() {
+    const res = await this.context.plugins.widget.widget.getWidgetNode();
+
+    return res;
+  }
+
+  auth(redirectUrl) {
+    return this.context.auth(redirectUrl);
   }
 }
