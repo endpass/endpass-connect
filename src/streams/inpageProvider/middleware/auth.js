@@ -1,6 +1,6 @@
 // @ts-check
 
-import { WEB3_METHODS } from '@/constants';
+import { PLUGIN_METHODS, WEB3_METHODS } from '@/constants';
 
 /** @type {import("@/types/Middleware").Middleware} */
 export default async function(context, action) {
@@ -8,6 +8,6 @@ export default async function(context, action) {
 
   if (request.method === WEB3_METHODS.ETH_ACCOUNTS && !context.isLogin) {
     // AuthClass.auth();
-    await context.serverAuth();
+    await context.handleRequest(PLUGIN_METHODS.CONTEXT_SERVER_AUTH);
   }
 }

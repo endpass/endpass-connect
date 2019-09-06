@@ -1,5 +1,9 @@
 import ConnectError from '@endpass/class/ConnectError';
-import { METHODS, INPAGE_EVENTS, DAPP_WHITELISTED_METHODS } from '@/constants';
+import {
+  MESSENGER_METHODS,
+  INPAGE_EVENTS,
+  DAPP_WHITELISTED_METHODS,
+} from '@/constants';
 
 const { ERRORS } = ConnectError;
 
@@ -89,7 +93,7 @@ export default class RequestProcess {
     const { context } = this;
     const { activeAccount, activeNet } = this.settings;
 
-    const res = await context.getDialog().ask(METHODS.SIGN, {
+    const res = await context.getDialog().ask(MESSENGER_METHODS.SIGN, {
       url: window.location.origin,
       address: activeAccount,
       net: activeNet,
@@ -112,7 +116,7 @@ export default class RequestProcess {
   async recover() {
     const { context } = this;
     const { activeAccount, activeNet } = this.settings;
-    const res = await context.getDialog().ask(METHODS.RECOVER, {
+    const res = await context.getDialog().ask(MESSENGER_METHODS.RECOVER, {
       address: activeAccount,
       net: activeNet,
       request: this.currentRequest,

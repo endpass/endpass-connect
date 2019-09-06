@@ -3,7 +3,7 @@
 import ConnectError from '@endpass/class/ConnectError';
 import PopupWindow from '@/class/PopupWindow';
 import pkce from '@/class/Oauth/pkce';
-import { METHODS } from '@/constants';
+import { MESSENGER_METHODS } from '@/constants';
 
 // eslint-disable-next-line
 import Dialog from '@/class/Dialog';
@@ -49,7 +49,7 @@ export default class OauthPkceStrategy {
    */
   async exchangeCodeToToken(fields) {
     const { payload, status, error } = await this.dialog.ask(
-      METHODS.EXCHANGE_TOKEN_REQUEST,
+      MESSENGER_METHODS.EXCHANGE_TOKEN_REQUEST,
       fields,
     );
     if (!status) {

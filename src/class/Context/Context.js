@@ -1,6 +1,5 @@
 import ConnectError from '@endpass/class/ConnectError';
-import { METHODS } from '@/constants';
-import PluginFactory from '@/class/PluginFactory';
+import { MESSENGER_METHODS } from '@/constants';
 
 import { getFrameRouteUrl } from '@/util/url';
 import MessengerGroup from '@/class/MessengerGroup';
@@ -9,6 +8,7 @@ import EventSubscriber from '@/class/EventSubscriber';
 import contextHandlers from './contextHandlers';
 import HandlersFactory from '@/class/HandlersFactory';
 import pkg from '../../../package.json';
+import ComponentsFactory from '@/class/ComponentsFactory';
 
 const { ERRORS } = ConnectError;
 
@@ -24,12 +24,11 @@ if (ENV.isProduction) {
  * @typedef {import('@/plugins/PluginBase')} ConnectPlugin
  */
 
-// TODO: remove context to plugin container, and move near by
 export default class Context {
   /**
-   * @param {object} options
+   * @param {object} props
    * @param {string} options.oauthClientId OAuth client id
-   * @param {ConnectPlugin} singlePlugin plugin for sinletone mode
+   * @param {ConnectPlugin} singlePlugin plugin for singleton mode
    * @param {Array<ConnectPlugin>]} [options.plugins] list of plugins
    * @param {string} [options.authUrl] Url of hosted Endpass Connect Application
    * @param {string} [options.namespace] namespace for see difference,
@@ -44,15 +43,13 @@ export default class Context {
    * @param {object} [options.widget.position] Widget positions. By default
    *  equals to `bottom right`
    */
-  constructor(options = {}, singlePlugin) {
-    const passedPlugins = options.plugins || [];
+  constructor({ options = {}, plugins = [], singlePlugin }) {
     this.options = options;
     this.contextHandlers = HandlersFactory.createHandlers(
       this,
       contextHandlers,
     );
-
-    this.plugins = PluginFactory.createPlugins(passedPlugins, {
+    this.plugins = ComponentsFactory.createComponents(plugins, {
       options,
       context: this,
     });
@@ -78,11 +75,8 @@ export default class Context {
   }
 
   get isLogin() {
-    return this.plugins.auth.isLogin;
-  }
-
-  async serverAuth() {
-    await this.plugins.provider.serverAuth();
+    // STAY AS IS
+    return this.plugins.authorize.isLogin;
   }
 
   /**
@@ -90,6 +84,7 @@ export default class Context {
    * @param {Web3.Provider} reqProvider Web3 provider instance
    */
   setRequestProvider(reqProvider) {
+    // GO TO HANDLERS
     this.plugins.provider.setRequestProvider(reqProvider);
   }
 
@@ -101,10 +96,14 @@ export default class Context {
    * @param {string} payload.activeNet Active network ID
    */
   setProviderSettings(payload) {
+    // GO TO HANDLERS
     this.plugins.provider.setInpageProviderSettings(payload);
 
     const settings = this.getInpageProviderSettings();
-    this.messengerGroup.send(METHODS.CHANGE_SETTINGS_RESPONSE, settings);
+    this.messengerGroup.send(
+      MESSENGER_METHODS.CHANGE_SETTINGS_RESPONSE,
+      settings,
+    );
   }
 
   getRequestProvider() {

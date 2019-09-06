@@ -1,6 +1,6 @@
 import ConnectError from '@endpass/class/ConnectError';
-import Connect from '@/Connect';
-import { INPAGE_EVENTS, METHODS } from '@/constants';
+import ConnectPlugin from '@/plugins/Connect';
+import { INPAGE_EVENTS, MESSENGER_METHODS } from '@/constants';
 import privateFields from '@/privateFields';
 import RequestProcess from '@/streams/inpageProvider/middleware/netRequest/RequestProcess';
 
@@ -17,7 +17,7 @@ describe('Request process middleware', () => {
   beforeAll(() => {
     window.open = jest.fn();
     jest.useFakeTimers();
-    connect = new Connect({
+    connect = new ConnectPlugin({
       authUrl: 'http://localhost:5000',
       oauthClientId: 'xxxxxxxxxxxxxxx',
     });
@@ -211,7 +211,7 @@ describe('Request process middleware', () => {
 
       await reqProcess.recover();
 
-      expect(dialog.ask).toBeCalledWith(METHODS.RECOVER, {
+      expect(dialog.ask).toBeCalledWith(MESSENGER_METHODS.RECOVER, {
         address: '0x0',
         net: 1,
         request,
@@ -255,7 +255,7 @@ describe('Request process middleware', () => {
 
       await reqProcess.sign();
 
-      expect(dialog.ask).toBeCalledWith(METHODS.SIGN, {
+      expect(dialog.ask).toBeCalledWith(MESSENGER_METHODS.SIGN, {
         address: '0x0',
         net: 1,
         url: expect.any(String),

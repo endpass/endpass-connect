@@ -2,16 +2,16 @@ import ConnectError from '@endpass/class/ConnectError';
 import Network from '@endpass/class/Network';
 import Emmiter from '@/class/Emmiter';
 import InpageProvider from '@/class/InpageProvider';
-import { INPAGE_EVENTS, METHODS } from '@/constants';
+import { INPAGE_EVENTS, MESSENGER_METHODS, PLUGIN_METHODS } from '@/constants';
 import ProviderFactory from '@/class/ProviderFactory';
 import createInpageProviderStream from '@/streams/inpageProvider/inpageProviderStream';
-import PluginBase from './PluginBase';
-import WidgetPlugin from './WidgetPlugin';
-import AuthPlugin from './AuthPlugin';
+import PluginComponent from './PluginBase';
+import WidgetComponent from './WidgetPlugin';
+import AuthorizeComponent from './AuthorizePlugin';
 
 const { ERRORS } = ConnectError;
 
-export default class ProviderPlugin extends PluginBase {
+export default class ProviderPlugin extends PluginComponent {
   constructor(props, context) {
     super(props, context);
 
@@ -20,7 +20,7 @@ export default class ProviderPlugin extends PluginBase {
 
       if (!this.context.isLogin) {
         try {
-          await this.serverAuth();
+          await this.context.handleRequest(PLUGIN_METHODS.CONTEXT_SERVER_AUTH);
         } catch (e) {
           error =
             e.code === ERRORS.AUTH_CANCELED_BY_USER
@@ -36,7 +36,7 @@ export default class ProviderPlugin extends PluginBase {
   }
 
   static get dependencyPlugins() {
-    return [AuthPlugin, WidgetPlugin];
+    return [AuthorizeComponent, WidgetComponent];
   }
 
   static get pluginName() {
@@ -48,7 +48,7 @@ export default class ProviderPlugin extends PluginBase {
    * @return {Promise<object>}
    */
   async openProviderAccount() {
-    const res = await this.context.getDialog().ask(METHODS.ACCOUNT);
+    const res = await this.context.getDialog().ask(MESSENGER_METHODS.ACCOUNT);
 
     if (!res.status) {
       throw ConnectError.create(res.code || ERRORS.ACCOUNT_UPDATE);
@@ -81,7 +81,7 @@ export default class ProviderPlugin extends PluginBase {
     try {
       const { payload, status, code } = await this.context
         .getDialog()
-        .ask(METHODS.GET_SETTINGS);
+        .ask(MESSENGER_METHODS.GET_SETTINGS);
 
       if (!status) {
         throw ConnectError.create(code || ERRORS.AUTH);
@@ -176,7 +176,7 @@ export default class ProviderPlugin extends PluginBase {
         throw ConnectError.create(ERRORS.AUTH_CANCELED_BY_USER);
       }
 
-      await this.auth();
+      await this.context.auth();
       await this.getProviderAccountData();
     }
   }

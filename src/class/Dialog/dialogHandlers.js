@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { METHODS } from '@/constants';
+import { MESSENGER_METHODS } from '@/constants';
 import StateClose from '@/class/Dialog/states/StateClose';
 import StateOpen from '@/class/Dialog/states/StateOpen';
 
@@ -34,9 +34,9 @@ const open = dialog => () => {
 };
 
 export default {
-  [METHODS.READY_STATE_BRIDGE]: readyDialog,
-  [METHODS.INITIATE]: initiate,
-  [METHODS.DIALOG_RESIZE]: resize,
-  [METHODS.DIALOG_CLOSE]: close,
-  [METHODS.DIALOG_OPEN]: open,
+  [MESSENGER_METHODS.READY_STATE_BRIDGE]: readyDialog,
+  [MESSENGER_METHODS.INITIATE]: initiate,
+  [MESSENGER_METHODS.DIALOG_RESIZE]: resize,
+  [MESSENGER_METHODS.DIALOG_CLOSE]: close,
+  [MESSENGER_METHODS.DIALOG_OPEN]: open,
 };

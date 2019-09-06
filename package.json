@@ -16,7 +16,7 @@
     },
     {
       "library": "EndpassAuthPlugin",
-      "input": "./src/plugins/AuthPlugin.js",
+      "input": "./src/plugins/AuthorizePlugin.js",
       "main": "./auth.min.js",
       "module": "./auth.js",
       "umd": "./auth.umd.js",

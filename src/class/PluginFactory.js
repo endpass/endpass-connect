@@ -1,66 +1,24 @@
-import mapValues from 'lodash.mapvalues';
+import PluginContainerApi from '@/class/PluginContainerApi';
 
 export default class PluginFactory {
-  /**
-   *
-   * @param {Array<typeof Plugin>} pluginClassesList
-   * @param {object} props
-   * @param {*} props.options
-   * @param {import('./context')} props.context
-   * @return {*}
-   */
-  static createPlugins(pluginClassesList, props) {
-    const { options = {}, context } = props;
-
-    const pluginClassesMap = PluginFactory.createUniqueClasses(
-      pluginClassesList,
-    );
-
-    const targetMap = mapValues(pluginClassesMap, PluginClass => {
-      return new PluginClass(options, context);
-    });
-
-    return PluginFactory.createProxy(targetMap);
-  }
-
-  static createUniqueClasses(pluginsClasses, objectMap = {}) {
-    return pluginsClasses.reduce((map, PluginClass) => {
-      if (map[PluginClass.pluginName]) {
-        return map;
+  static create(ClassPlugin) {
+    function Plugin(options, context) {
+      // single mode
+      if (!context) {
+        return new PluginContainerApi({
+          ...options,
+          plugins: ClassPlugin.dependencyPlugins,
+          singlePlugin: ClassPlugin.pluginName,
+        });
       }
 
-      Object.assign(map, {
-        [PluginClass.pluginName]: PluginClass,
-      });
+      // plugin mode
+      return new ClassPlugin(options, context);
+    }
 
-      const childMap = PluginFactory.createUniqueClasses(
-        PluginClass.dependencyPlugins,
-        map,
-      );
+    Plugin.dependencyPlugins = ClassPlugin.dependencyPlugins;
+    Plugin.pluginName = ClassPlugin.pluginName;
 
-      return Object.assign(map, {
-        ...childMap,
-      });
-    }, objectMap);
-  }
-
-  static createProxy(targetMap) {
-    return new Proxy(targetMap, {
-      get(target, name) {
-        if (!(name in target)) {
-          throw new Error(`Please define '${name}' plugin`);
-        }
-        return target[name];
-      },
-      set(target, name, value) {
-        if (name in target) {
-          throw new Error(`Plugin '${name}' already defined`);
-        }
-        Object.assign(target, {
-          [name]: value,
-        });
-        return true;
-      },
-    });
+    return Plugin;
   }
 }

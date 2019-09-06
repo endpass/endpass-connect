@@ -1,16 +1,23 @@
 import ConnectError from '@endpass/class/ConnectError';
-import { METHODS } from '@/constants';
-import HandlersFactory from '@/class/HandlersFactory';
-import authHandlers from '@/class/Auth/authHandlers';
+import { MESSENGER_METHODS } from '@/constants';
+import authHandlers from '@/plugins/AuthorizePlugin/authHandlers';
+import PluginBase from '@/plugins/PluginBase';
+import PluginFactory from '@/class/PluginFactory';
 
 const { ERRORS } = ConnectError;
 
-export default class Auth {
-  constructor({ dialog, options = {} }) {
-    this.dialog = dialog;
+class AuthorizePlugin extends PluginBase {
+  static get pluginName() {
+    return 'authorize';
+  }
+
+  static handlers = authHandlers;
+
+  constructor(props, context) {
+    super(props, context);
+    const { options } = props;
     this.isServerLogin = false;
     this.haveDemoData = !!options.demoData;
-    this.handleEvent = HandlersFactory.createHandleEvent(this, authHandlers);
   }
 
   get isLogin() {
@@ -29,13 +36,13 @@ export default class Auth {
    * Open application on auth screen and waits result (success of failure)
    * @public
    * @throws {Error} If authentication failed
-   * @returns {Promise<boolean>} Auth result, check `status` property to
+   * @returns {Promise<boolean>} AuthorizePlugin result, check `status` property to
    *  know about result
    */
-  async authMe(redirectUrl) {
+  async authorizeMe(redirectUrl) {
     const toPath = redirectUrl || window.location.href;
 
-    const res = await this.dialog.ask(METHODS.AUTH, {
+    const res = await this.context.getDialog().ask(MESSENGER_METHODS.AUTH, {
       redirectUrl: toPath,
     });
 
@@ -58,7 +65,7 @@ export default class Auth {
    * @returns {Promise<Boolean>}
    */
   async logout() {
-    const res = await this.dialog.ask(METHODS.LOGOUT);
+    const res = await this.context.getDialog().ask(MESSENGER_METHODS.LOGOUT);
 
     if (!res.status) {
       throw ConnectError.create(res.code || ERRORS.AUTH_LOGOUT);
@@ -69,3 +76,5 @@ export default class Auth {
     return res.status;
   }
 }
+
+export default PluginFactory.create(AuthorizePlugin);

@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { METHODS, WIDGET_EVENTS } from '@/constants';
+import { MESSENGER_METHODS, WIDGET_EVENTS } from '@/constants';
 import StateExpand from '@/class/Widget/states/StateExpand';
 import StateCollapse from '@/class/Widget/states/StateCollapse';
 import StateOpen from '@/class/Widget/states/StateOpen';
@@ -51,13 +51,13 @@ const changeSettings = widget => payload => {
 };
 
 export default {
-  [METHODS.WIDGET_INIT]: handleInit,
-  [METHODS.WIDGET_EXPAND_REQUEST]: expand,
-  [METHODS.WIDGET_COLLAPSE_REQUEST]: collapse,
-  [METHODS.WIDGET_OPEN]: open,
-  [METHODS.WIDGET_CLOSE]: close,
-  [METHODS.WIDGET_FIT]: fit,
-  [METHODS.WIDGET_UNMOUNT]: unmount,
-  [METHODS.LOGOUT_REQUEST]: logout,
-  [METHODS.CHANGE_SETTINGS_REQUEST]: changeSettings,
+  [MESSENGER_METHODS.WIDGET_INIT]: handleInit,
+  [MESSENGER_METHODS.WIDGET_EXPAND_REQUEST]: expand,
+  [MESSENGER_METHODS.WIDGET_COLLAPSE_REQUEST]: collapse,
+  [MESSENGER_METHODS.WIDGET_OPEN]: open,
+  [MESSENGER_METHODS.WIDGET_CLOSE]: close,
+  [MESSENGER_METHODS.WIDGET_FIT]: fit,
+  [MESSENGER_METHODS.WIDGET_UNMOUNT]: unmount,
+  [MESSENGER_METHODS.LOGOUT_REQUEST]: logout,
+  [MESSENGER_METHODS.CHANGE_SETTINGS_REQUEST]: changeSettings,
 };

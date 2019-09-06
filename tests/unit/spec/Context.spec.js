@@ -1,7 +1,7 @@
 import ConnectError from '@endpass/class/ConnectError';
 import Context from '@/class/Context';
-import { METHODS, INPAGE_EVENTS } from '@/constants';
-import ProviderPlugin from '@/plugins/ProviderPlugin';
+import { MESSENGER_METHODS, INPAGE_EVENTS } from '@/constants';
+import ProviderComponent from '@/plugins/ProviderPlugin';
 
 const { ERRORS } = ConnectError;
 
@@ -39,10 +39,10 @@ describe('Context class', () => {
     });
 
     it('should create with provider plugin', () => {
-      context = new Context({ ...options, plugins: [ProviderPlugin] });
+      context = new Context({ ...options, plugins: [ProviderComponent] });
       expect(Object.keys(context.plugins)).toHaveLength(4);
-      expect(context.plugins[ProviderPlugin.pluginName]).toBeInstanceOf(
-        ProviderPlugin,
+      expect(context.plugins[ProviderComponent.pluginName]).toBeInstanceOf(
+        ProviderComponent,
       );
     });
   });
@@ -53,7 +53,7 @@ describe('Context class', () => {
       emitter = {
         emit: jest.fn(),
       };
-      context = new Context({ ...options, plugins: [ProviderPlugin] });
+      context = new Context({ ...options, plugins: [ProviderComponent] });
       context.plugins.provider.getEmitter = () => emitter;
 
       context.plugins.elements.messengerGroup = () => msgGroup;
@@ -76,13 +76,13 @@ describe('Context class', () => {
       );
       expect(
         context.plugins.elements.messengerGroup().send,
-      ).toBeCalledWith(METHODS.CHANGE_SETTINGS_RESPONSE, payload);
+      ).toBeCalledWith(MESSENGER_METHODS.CHANGE_SETTINGS_RESPONSE, payload);
     });
   });
 
   describe('serverAuth', () => {
     beforeEach(() => {
-      context = new Context({ ...options, plugins: [ProviderPlugin] });
+      context = new Context({ ...options, plugins: [ProviderComponent] });
       context.plugins.elements.getDialogInstance = dialog;
       context.auth = jest.fn();
       context.getDialog = () => dialog;
@@ -122,7 +122,7 @@ describe('Context class', () => {
 
       const res = await context.logout();
       expect(res).toBe(logoutResult);
-      expect(msgGroup.send).toBeCalledWith(METHODS.LOGOUT_RESPONSE);
+      expect(msgGroup.send).toBeCalledWith(MESSENGER_METHODS.LOGOUT_RESPONSE);
     });
   });
 });

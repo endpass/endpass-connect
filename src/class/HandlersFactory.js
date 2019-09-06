@@ -1,8 +1,8 @@
 import mapValues from 'lodash.mapvalues';
 
 export default class HandlersFactory {
-  static createHandlers(ctx, handlers) {
-    return mapValues(handlers, method => method(ctx));
+  static createHandlers(self, handlers) {
+    return mapValues(handlers, method => method(self));
   }
 
   static createHandleEvent(ctx, handlers) {

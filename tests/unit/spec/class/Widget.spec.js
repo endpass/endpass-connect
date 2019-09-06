@@ -1,7 +1,7 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import Widget from '@/class/Widget/Widget';
 import { getWidgetFrameStylesObject } from '@/class/Widget/WidgetStyles';
-import { METHODS, WIDGET_EVENTS } from '@/constants';
+import { MESSENGER_METHODS, WIDGET_EVENTS } from '@/constants';
 
 describe('Widget class', () => {
   const url = 'https://auth.foo.bar/public/widget';
@@ -198,15 +198,15 @@ describe('Widget class', () => {
 
       expect(messenger.setTarget).not.toBeCalled();
       expect(messenger.subscribe).toBeCalledWith(
-        METHODS.WIDGET_OPEN,
+        MESSENGER_METHODS.WIDGET_OPEN,
         expect.any(Function),
       );
       expect(messenger.subscribe).toBeCalledWith(
-        METHODS.WIDGET_CLOSE,
+        MESSENGER_METHODS.WIDGET_CLOSE,
         expect.any(Function),
       );
       expect(messenger.subscribe).toBeCalledWith(
-        METHODS.WIDGET_FIT,
+        MESSENGER_METHODS.WIDGET_FIT,
         expect.any(Function),
       );
     });

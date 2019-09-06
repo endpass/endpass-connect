@@ -1,8 +1,8 @@
 import ConnectError from '@endpass/class/ConnectError';
-import ProviderPlugin from '@/plugins/ProviderPlugin';
+import ProviderComponent from '@/plugins/ProviderPlugin';
 import ProviderFactory from '@/class/ProviderFactory';
 import InpageProvider from '@/class/InpageProvider';
-import { METHODS } from '@/constants';
+import { MESSENGER_METHODS } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
@@ -30,7 +30,7 @@ describe('Provider plugin', () => {
   };
 
   const createPlugin = () => {
-    const inst = new ProviderPlugin({ context });
+    const inst = new ProviderComponent({ context });
     inst.init();
     return inst;
   };
@@ -46,7 +46,7 @@ describe('Provider plugin', () => {
     });
 
     it('should create instance of plugin', () => {
-      expect(plugin).toBeInstanceOf(ProviderPlugin);
+      expect(plugin).toBeInstanceOf(ProviderComponent);
     });
 
     it('should not create request provider until it called', () => {
@@ -122,7 +122,7 @@ describe('Provider plugin', () => {
 
       const res = await plugin.getAccountData();
 
-      expect(dialog.ask).toBeCalledWith(METHODS.GET_SETTINGS);
+      expect(dialog.ask).toBeCalledWith(MESSENGER_METHODS.GET_SETTINGS);
 
       expect(res).toEqual({
         activeAccount: settings.lastActiveAccount,
@@ -161,7 +161,7 @@ describe('Provider plugin', () => {
 
       const res = await plugin.openAccount();
 
-      expect(dialog.ask).toBeCalledWith(METHODS.ACCOUNT);
+      expect(dialog.ask).toBeCalledWith(MESSENGER_METHODS.ACCOUNT);
       expect(res).toEqual({
         type: 'foo',
         settings: undefined,

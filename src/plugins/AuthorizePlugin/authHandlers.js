@@ -1,5 +1,5 @@
 import ConnectError from '@endpass/class/ConnectError';
-import { METHODS } from '@/constants';
+import { MESSENGER_METHODS } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
@@ -16,18 +16,11 @@ const logout = auth => async (payload, req) => {
       status: res,
     });
   } catch (error) {
-    const code = (error && error.code) || ERRORS.AUTH_LOGOUT;
-    throw ConnectError.create(code);
+    throw ConnectError.createFromError(error, ERRORS.AUTH_LOGOUT);
   }
 };
 
-const authInternal = auth => async (redirectUrl, req) => {
-  const res = await auth.authMe(redirectUrl);
-  req.answer(res);
-};
-
 export default {
-  [METHODS.INTERNAL_AUTH]: authInternal,
-  [METHODS.AUTH_STATUS]: authStatus,
-  [METHODS.LOGOUT_REQUEST]: logout,
+  [MESSENGER_METHODS.AUTH_STATUS]: authStatus,
+  [MESSENGER_METHODS.LOGOUT_REQUEST]: logout,
 };

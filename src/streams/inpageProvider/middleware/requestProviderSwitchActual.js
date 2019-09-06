@@ -2,6 +2,7 @@ import get from 'lodash.get';
 
 import Network from '@endpass/class/Network';
 import ProviderFactory from '@/class/ProviderFactory';
+import { PLUGIN_METHODS } from '@/constants';
 
 /** @type {import("@/types/Middleware").Middleware} */
 const requestProviderSwitchActual = async (context, action) => {
@@ -12,7 +13,10 @@ const requestProviderSwitchActual = async (context, action) => {
   if (itemUrl === host) return;
 
   const provider = ProviderFactory.createRequestProvider(activeNet);
-  context.setRequestProvider(provider);
+  await context.handleRequest(
+    PLUGIN_METHODS.CONTEXT_SET_REQUEST_PROVIDER,
+    provider,
+  );
 };
 
 export default requestProviderSwitchActual;

@@ -1,12 +1,12 @@
-import Connect from '@/Connect';
-import ProviderPlugin from '@/plugins/ProviderPlugin';
+import ConnectPlugin from '@/plugins/Connect';
+import ProviderComponent from '@/plugins/ProviderPlugin';
 import InpageProvider from '@/class/InpageProvider';
 
 describe('Connect class', () => {
   let connect;
   const authUrl = 'http://test.auth';
   const oauthClientId = 'xxxxxxxxxx';
-  const plugins = [ProviderPlugin];
+  const plugins = [ProviderComponent];
   beforeAll(() => {
     window.open = jest.fn();
     jest.useFakeTimers();
@@ -14,7 +14,7 @@ describe('Connect class', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    connect = new Connect({ authUrl, oauthClientId, plugins });
+    connect = new ConnectPlugin({ authUrl, oauthClientId, plugins });
   });
 
   describe('initial', () => {
@@ -23,20 +23,20 @@ describe('Connect class', () => {
     });
 
     it('should create instance of connect if all authUrl present', () => {
-      connect = new Connect({ authUrl, oauthClientId });
-      expect(connect).toBeInstanceOf(Connect);
+      connect = new ConnectPlugin({ authUrl, oauthClientId });
+      expect(connect).toBeInstanceOf(ConnectPlugin);
     });
 
     it('should create instance of connect if all authUrl present', () => {
-      connect = new Connect({ authUrl, oauthClientId, plugins });
-      expect(connect).toBeInstanceOf(Connect);
+      connect = new ConnectPlugin({ authUrl, oauthClientId, plugins });
+      expect(connect).toBeInstanceOf(ConnectPlugin);
     });
   });
 
   describe('getProvider', () => {
     beforeEach(() => {
       jest.clearAllMocks();
-      connect = new Connect({ authUrl, oauthClientId, plugins });
+      connect = new ConnectPlugin({ authUrl, oauthClientId, plugins });
     });
 
     it('should return Inpage provider from given parameters', () => {

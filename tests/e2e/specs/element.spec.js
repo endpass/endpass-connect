@@ -12,7 +12,7 @@ describe('accounts', function() {
     cy
       .get('[data-test=dialog-iframe]')
       .getIframeElement('.frame')
-      .contains('Endpass Auth bridge');
+      .contains('Endpass AuthorizePlugin bridge');
 
     cy.get('[data-test=endpass-sign-in-button]').click();
 

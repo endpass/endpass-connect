@@ -1,5 +1,5 @@
 import PluginFactory from '@/class/PluginFactory';
-import PluginBase from '@/class/plugins/Plugin';
+import PluginBase from '@/class/components/Plugin';
 
 describe('plugin manager', () => {
   class TestPlugin extends PluginBase {
@@ -24,20 +24,20 @@ describe('plugin manager', () => {
   };
 
   it('should create plugins by list', () => {
-    const plugins = PluginFactory.createPlugins([TestPlugin], { context });
+    const plugins = PluginFactory.createComponents([TestPlugin], { context });
     expect(plugins[TestPlugin.pluginName]).toBeInstanceOf(TestPlugin);
     expect(plugins.auth.init).not.toBeCalled();
   });
 
   it('should initiate plugins', () => {
-    const plugins = PluginFactory.createPlugins([TestPlugin], { context });
+    const plugins = PluginFactory.createComponents([TestPlugin], { context });
     PluginFactory.initPlugins(plugins);
     expect(plugins.auth.init).toBeCalled();
   });
 
   it('should throw error, if not defined name of plugin', () => {
     try {
-      PluginFactory.createPlugins([PluginBase], { context });
+      PluginFactory.createComponents([PluginBase], { context });
     } catch (e) {
       const err = new Error('Please define plugin name');
       expect(e).toEqual(err);
@@ -45,7 +45,7 @@ describe('plugin manager', () => {
   });
 
   it('should throw error, if trying to get not defined plugin', () => {
-    const plugins = PluginFactory.createPlugins([TestPlugin], { context });
+    const plugins = PluginFactory.createComponents([TestPlugin], { context });
     try {
       // eslint-disable-next-line
       const provider = plugins.provider;

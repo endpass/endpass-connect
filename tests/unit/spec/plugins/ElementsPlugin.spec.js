@@ -1,6 +1,6 @@
 import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
 
-import ElementsPlugin from '@/class/plugins/ElementsPlugin';
+import ElementsPlugin from '@/class/components/ElementsPlugin';
 
 describe('Elements plugin', () => {
   const authUrl = 'http://test.auth';

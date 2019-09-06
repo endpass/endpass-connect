@@ -1,6 +1,6 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import debounce from 'lodash.debounce';
-import { DIRECTION, METHODS, WIDGET_EVENTS } from '@/constants';
+import { DIRECTION, MESSENGER_METHODS, WIDGET_EVENTS } from '@/constants';
 import { inlineStyles } from '@/util/dom';
 import {
   MOBILE_BREAKPOINT,
@@ -76,7 +76,7 @@ export default class Widget {
 
   handleDocumentClick() {
     document.body.removeEventListener('click', this.handleDocumentClick);
-    this.widgetMessenger.send(METHODS.WIDGET_COLLAPSE_RESPONSE);
+    this.widgetMessenger.send(MESSENGER_METHODS.WIDGET_COLLAPSE_RESPONSE);
   }
 
   handleDocumentClickOnce() {
@@ -165,7 +165,7 @@ export default class Widget {
   }
 
   handleScreenResize() {
-    this.widgetMessenger.send(METHODS.WIDGET_CHANGE_MOBILE_MODE, {
+    this.widgetMessenger.send(MESSENGER_METHODS.WIDGET_CHANGE_MOBILE_MODE, {
       isMobile: this.isMobile,
     });
     this.frame.style = this.getWidgetFrameInlineStyles();

@@ -1,5 +1,5 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
-import { METHODS } from '@/constants';
+import { MESSENGER_METHODS } from '@/constants';
 import Dialog from '@/class/Dialog';
 import StateOpen from '@/class/Dialog/states/StateOpen';
 import StateClose from '@/class/Dialog/states/StateClose';
@@ -33,11 +33,11 @@ describe('Dialog class', () => {
 
     expect(inst.state).toBeInstanceOf(StateClose);
 
-    cbs[METHODS.DIALOG_OPEN]();
+    cbs[MESSENGER_METHODS.DIALOG_OPEN]();
 
     expect(inst.state).toBeInstanceOf(StateOpen);
 
-    cbs[METHODS.DIALOG_CLOSE]();
+    cbs[MESSENGER_METHODS.DIALOG_CLOSE]();
 
     expect(inst.state).toBeInstanceOf(StateClose);
   });

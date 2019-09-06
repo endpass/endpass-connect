@@ -1,11 +1,12 @@
 import ConnectError from '@endpass/class/ConnectError';
 import OauthPkceStrategy from '@/class/Oauth/OauthPkceStrategy';
 import Oauth from '@/class/Oauth';
+import PluginFactory from '@/class/PluginFactory';
 import PluginBase from './PluginBase';
 
 const { ERRORS } = ConnectError;
 
-export default class OauthPlugin extends PluginBase {
+class OauthPlugin extends PluginBase {
   constructor(options, context) {
     super(options, context);
     if (!options.oauthClientId) {
@@ -18,7 +19,7 @@ export default class OauthPlugin extends PluginBase {
     return 'oauth';
   }
 
-  get oauthRequest() {
+  get oauthProvider() {
     if (!this.oauthRequestProvider) {
       throw ConnectError.create(ERRORS.OAUTH_REQUIRE_AUTHORIZE);
     }
@@ -44,4 +45,21 @@ export default class OauthPlugin extends PluginBase {
     });
     await this.oauthRequestProvider.init();
   }
+
+  logout() {
+    if (!this.oauthRequestProvider) {
+      throw ConnectError.create(ERRORS.OAUTH_NOT_LOGGED_IN);
+    }
+    this.oauthRequestProvider.logout();
+  }
+
+  setPopupParams(params) {
+    this.oauthProvider.setPopupParams(params);
+  }
+
+  request(options) {
+    return this.oauthProvider.request(options);
+  }
 }
+
+export default PluginFactory.create(OauthPlugin);

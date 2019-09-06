@@ -1,10 +1,10 @@
 import ConnectError from '@endpass/class/ConnectError';
-import Auth from '@/class/Auth';
-import { METHODS } from '@/constants';
+import Authorize from '@/plugins/AuthorizePlugin';
+import { MESSENGER_METHODS } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
-describe('Auth class', () => {
+describe('AuthorizePlugin class', () => {
   let authInstance;
   const dialog = {
     ask: jest.fn(),
@@ -19,7 +19,7 @@ describe('Auth class', () => {
   });
 
   beforeEach(() => {
-    authInstance = new Auth({
+    authInstance = new Authorize({
       dialog,
     });
   });
@@ -41,7 +41,7 @@ describe('Auth class', () => {
 
     const res = await authInstance.auth();
 
-    expect(dialog.ask).toBeCalledWith(METHODS.AUTH, {
+    expect(dialog.ask).toBeCalledWith(MESSENGER_METHODS.AUTH, {
       redirectUrl: 'http://localhost/',
     });
     expect(res).toEqual(dialogResponse);
@@ -81,7 +81,7 @@ describe('Auth class', () => {
 
     const res = await authInstance.logout();
 
-    expect(dialog.ask).toBeCalledWith(METHODS.LOGOUT);
+    expect(dialog.ask).toBeCalledWith(MESSENGER_METHODS.LOGOUT);
     expect(res).toEqual(dialogResponse.status);
   });
 
@@ -108,11 +108,11 @@ describe('Auth class', () => {
     const demoData = {};
 
     it('should pass isLogin with demoData', () => {
-      const defaultAuth = new Auth({
+      const defaultAuth = new Authorize({
         dialog,
       });
 
-      const demoAuth = new Auth({
+      const demoAuth = new Authorize({
         dialog,
         options: { demoData },
       });

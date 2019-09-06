@@ -5,7 +5,7 @@
 // export const createAuthStream = (context) => {
 //   const messenger = context.getMessenger();
 //   return pipe(
-//     fromEmitter(messenger, METHODS.LOGIN_STATE),
+//     fromEmitter(messenger, MESSENGER_METHODS.LOGIN_STATE),
 //     // loginState
 //     map(state => state),
 //     map(({isLogin, isPermission}) => isLogin && isPermission)),
