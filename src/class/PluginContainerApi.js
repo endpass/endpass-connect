@@ -3,12 +3,8 @@ import { PLUGIN_METHODS, MESSENGER_METHODS } from '@/constants';
 
 // OLD CONNECT
 export default class PluginContainerApi {
-  constructor(options, plugins, singlePlugin) {
-    this.context = new Context({
-      options,
-      plugins,
-      singlePlugin,
-    });
+  constructor(options, ClassPlugin) {
+    this.context = new Context(options, ClassPlugin);
   }
 
   /**
@@ -70,7 +66,12 @@ export default class PluginContainerApi {
    *  know about result
    */
   async auth(redirectUrl) {
-    const res = await this.context.plugins.authorize.authorizeMe(redirectUrl);
+    const res = await this.context.handleRequest(
+      PLUGIN_METHODS.CONTEXT_AUTHORIZE,
+      redirectUrl,
+    );
+    // const res = await this.context.plugins.authorize
+    // .authorizeMe(redirectUrl);
 
     return {
       ...res.payload,
@@ -147,14 +148,14 @@ export default class PluginContainerApi {
    * @returns {Promise<Element>} Mounted widget iframe element
    */
   mountWidget(params) {
-    return this.context.plugins.widget.widget.mount(params);
+    return this.context.plugins.widget.mount(params);
   }
 
   /**
    * Unmounts endpass widget from DOM
    */
   unmountWidget() {
-    this.context.plugins.widget.widget.unmount();
+    return this.context.plugins.widget.unmount();
   }
 
   /**
@@ -162,14 +163,9 @@ export default class PluginContainerApi {
    * @returns {Promise<Element>} Widget iframe node
    */
   async getWidgetNode() {
-    return this.context.handleRequest(PLUGIN_METHODS.CONTEXT_GET_WIDGET_NODE);
-    // const res = await this.context.plugins.widget.widget.getWidgetNode();
-    //
-    // return res;
-  }
+    // return this.context.handleRequest(PLUGIN_METHODS.CONTEXT_GET_WIDGET_NODE);
+    const res = await this.context.plugins.widget.getWidgetNode();
 
-  auth(url) {
-    return this.context.handleRequest(PLUGIN_METHODS.CONTEXT_AUTHORIZE, url);
-    //return this.context.plugins.authorize.auth(url);
+    return res;
   }
 }

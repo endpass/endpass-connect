@@ -7,7 +7,6 @@ export default async function(context, action) {
   const { request } = action;
 
   if (request.method === WEB3_METHODS.ETH_ACCOUNTS && !context.isLogin) {
-    // AuthClass.auth();
     await context.handleRequest(PLUGIN_METHODS.CONTEXT_SERVER_AUTH);
   }
 }

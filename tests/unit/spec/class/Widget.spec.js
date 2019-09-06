@@ -1,6 +1,6 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
-import Widget from '@/class/Widget/Widget';
-import { getWidgetFrameStylesObject } from '@/class/Widget/WidgetStyles';
+import Widget from '@/plugins/WidgetPlugin/WidgetPlugin';
+import { getWidgetFrameStylesObject } from '@/plugins/WidgetPlugin/WidgetStyles';
 import { MESSENGER_METHODS, WIDGET_EVENTS } from '@/constants';
 
 describe('Widget class', () => {

@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { MESSENGER_METHODS, WIDGET_EVENTS } from '@/constants';
-import StateExpand from '@/class/Widget/states/StateExpand';
-import StateCollapse from '@/class/Widget/states/StateCollapse';
-import StateOpen from '@/class/Widget/states/StateOpen';
-import StateClose from '@/class/Widget/states/StateClose';
+import StateExpand from '@/plugins/WidgetPlugin/states/StateExpand';
+import StateCollapse from '@/plugins/WidgetPlugin/states/StateCollapse';
+import StateOpen from '@/plugins/WidgetPlugin/states/StateOpen';
+import StateClose from '@/plugins/WidgetPlugin/states/StateClose';
 
 const handleInit = widget => (payload, req) => {
   req.answer({
@@ -38,8 +38,8 @@ const fit = widget => ({ height }) => {
   widget.resize({ height: `${height}px` });
 };
 
-const unmount = widget => () => {
-  widget.unmount();
+const unmount = widget => async () => {
+  await widget.unmount();
 };
 
 const logout = widget => () => {

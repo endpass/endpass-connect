@@ -8,12 +8,13 @@ import createInpageProviderStream from '@/streams/inpageProvider/inpageProviderS
 import PluginComponent from './PluginBase';
 import WidgetComponent from './WidgetPlugin';
 import AuthorizeComponent from './AuthorizePlugin';
+import PluginFactory from '@/class/PluginFactory';
 
 const { ERRORS } = ConnectError;
 
-export default class ProviderPlugin extends PluginComponent {
-  constructor(props, context) {
-    super(props, context);
+class ProviderPlugin extends PluginComponent {
+  constructor(options, context) {
+    super(options, context);
 
     this.getEmitter().on(INPAGE_EVENTS.LOGIN, async () => {
       let error = null;
@@ -176,7 +177,7 @@ export default class ProviderPlugin extends PluginComponent {
    * @returns {object} Current provider settings
    */
   getInpageProviderSettings() {
-    return { ...this.getProvider().settings };
+    return { ...this.getInpageProvider().settings };
   }
 
   async serverAuth() {
@@ -187,8 +188,12 @@ export default class ProviderPlugin extends PluginComponent {
         throw ConnectError.create(ERRORS.AUTH_CANCELED_BY_USER);
       }
 
-      await this.context.auth();
+      // await this.context.auth();
+      await this.context.handleRequest(PLUGIN_METHODS.CONTEXT_AUTHORIZE);
+
       await this.getProviderAccountData();
     }
   }
 }
+
+export default PluginFactory.create(ProviderPlugin);

@@ -11,11 +11,12 @@ class AuthorizePlugin extends PluginBase {
     return 'authorize';
   }
 
-  static handlers = authHandlers;
+  static get handlers() {
+    return authHandlers;
+  }
 
-  constructor(props, context) {
-    super(props, context);
-    const { options } = props;
+  constructor(options, context) {
+    super(options, context);
     this.isServerLogin = false;
     this.haveDemoData = !!options.demoData;
   }

@@ -1,6 +1,6 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import debounce from 'lodash.debounce';
-import { DIRECTION, MESSENGER_METHODS, WIDGET_EVENTS } from '@/constants';
+import { DIRECTION, MESSENGER_METHODS, PLUGIN_METHODS, WIDGET_EVENTS } from '@/constants';
 import { inlineStyles } from '@/util/dom';
 import {
   MOBILE_BREAKPOINT,
@@ -10,18 +10,32 @@ import {
 import StateCollapse from './states/StateCollapse';
 import StateClose from './states/StateClose';
 import widgetHandlers from './widgetHandlers';
-import HandlersFactory from '@/class/HandlersFactory';
+import PluginBase from '@/plugins/PluginBase';
+import PluginFactory from '@/class/PluginFactory';
+import { getFrameRouteUrl } from '@/util/url';
 
-export default class Widget {
+const WIDGET_AUTH_TIMEOUT = 200;
+
+class WidgetPlugin extends PluginBase {
+  static get pluginName() {
+    return 'widget';
+  }
+
+  static get handlers() {
+    return widgetHandlers;
+  }
+
   /**
-   * @param {object} props
-   * @param {object} props.namespace namespace
-   * @param {import('@/class/MessengerGroup')} props.messengerGroup messengerGroup for communicate between others
-   * @param {string} props.url frame url
+   * @param {object} options
+   * @param {object} context
+   * @param {object} options.namespace namespace
+   * @param {string} options.url frame url
    */
-  constructor({ namespace = '', messengerGroup, url }) {
-    this.messengerGroup = messengerGroup;
-    this.url = url;
+  constructor(options, context) {
+    super(options, context);
+    const { namespace = '', authUrl } = options;
+
+    this.url = getFrameRouteUrl(authUrl, 'public/widget');
     /** @type HTMLIFrameElement */
     this.frame = null;
     this.position = null;
@@ -45,12 +59,34 @@ export default class Widget {
     });
     /** @type Array<Promise> */
     this.frameResolver = [];
-    this.widgetHandlers = HandlersFactory.createHandlers(this, widgetHandlers);
+
+    this.setupWidgetOnAuth(this, options.widget);
+  }
+
+  get subscribeData() {
+    return [[this.widgetMessenger]];
   }
 
   /* eslint-disable-next-line */
   get isMobile() {
     return window.innerWidth < MOBILE_BREAKPOINT;
+  }
+
+  setupWidgetOnAuth(widget, options) {
+    if (options === false) {
+      return;
+    }
+    let timerId;
+
+    const handler = async () => {
+      clearTimeout(timerId);
+      if (this.context.isLogin) {
+        await widget.mount(options);
+        return;
+      }
+      timerId = setTimeout(handler, WIDGET_AUTH_TIMEOUT);
+    };
+    handler();
   }
 
   onClose() {
@@ -127,7 +163,8 @@ export default class Widget {
 
     this.widgetMessenger.setTarget(this.frame.contentWindow);
 
-    this.messengerGroup.addMessenger(this.widgetMessenger);
+    await this.context
+      .handleRequest(PLUGIN_METHODS.MESSENGER_GROUP_ADD, this.widgetMessenger);
 
     this.frameResolver.forEach(resolve => resolve(this.frame));
     this.frameResolver.length = 0;
@@ -135,12 +172,13 @@ export default class Widget {
     return this.frame;
   }
 
-  unmount() {
+  async unmount() {
     if (!this.isMounted) return;
 
     this.isMounted = false;
 
-    this.messengerGroup.removeMessenger(this.widgetMessenger);
+    await this.context
+      .handleRequest(PLUGIN_METHODS.MESSENGER_GROUP_REMOVE, this.widgetMessenger);
 
     this.frame.style.opacity = 0;
     this.isLoaded = false;
@@ -215,3 +253,5 @@ export default class Widget {
     return inlineStyles(stylesObject);
   }
 }
+
+export default PluginFactory.create(WidgetPlugin);

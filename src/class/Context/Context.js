@@ -1,5 +1,4 @@
 import ConnectError from '@endpass/class/ConnectError';
-import { MESSENGER_METHODS } from '@/constants';
 
 import { getFrameRouteUrl } from '@/util/url';
 import MessengerGroup from '@/class/MessengerGroup';
@@ -26,9 +25,9 @@ if (ENV.isProduction) {
 
 export default class Context {
   /**
-   * @param {object} props
+   * @param {object} options
+   * @param {ConnectPlugin} ClassPlugin plugin for singleton mode
    * @param {string} options.oauthClientId OAuth client id
-   * @param {ConnectPlugin} singlePlugin plugin for singleton mode
    * @param {Array<ConnectPlugin>]} [options.plugins] list of plugins
    * @param {string} [options.authUrl] Url of hosted Endpass Connect Application
    * @param {string} [options.namespace] namespace for see difference,
@@ -43,8 +42,9 @@ export default class Context {
    * @param {object} [options.widget.position] Widget positions. By default
    *  equals to `bottom right`
    */
-  constructor({ options = {}, plugins = [], singlePlugin }) {
+  constructor(options = {}, ClassPlugin) {
     this.options = options;
+
     this.contextHandlers = HandlersFactory.createHandlers(
       this,
       contextHandlers,
@@ -53,14 +53,22 @@ export default class Context {
     /**
      * @private
      */
-    this.plugins = ComponentsFactory.createComponents(plugins, {
-      options,
-      context: this,
-    });
+    this.plugins = ComponentsFactory.createProxy({});
 
-    if (singlePlugin) {
-      this.plugins[singlePlugin.constructor.pluginName] = singlePlugin;
-    }
+    const pluginClassesMap = ComponentsFactory.createUniqueClasses([
+      ...ClassPlugin.dependencyPlugins,
+      ClassPlugin,
+      ...options.plugins,
+    ]);
+
+    Object.keys(pluginClassesMap).reduce((plugins, pluginKey) => {
+      const PluginClass = pluginClassesMap[pluginKey];
+      const pluginInstance = new PluginClass(options, this);
+      Object.assign(plugins, {
+        [pluginKey]: pluginInstance,
+      });
+      return plugins;
+    }, this.plugins);
 
     EventSubscriber.subscribe(this);
   }

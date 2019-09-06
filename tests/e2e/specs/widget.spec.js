@@ -1,6 +1,6 @@
 import { v3password, address } from '@fixtures/identity/accounts';
 import { etherPrices } from '@fixtures/cryptodata/price';
-import { MOBILE_BREAKPOINT } from '@/class/Widget/WidgetStyles';
+import { MOBILE_BREAKPOINT } from '@/plugins/WidgetPlugin/WidgetStyles';
 
 describe('widget', function() {
   describe('mobile mode', () => {

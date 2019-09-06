@@ -1,28 +1,4 @@
-import mapValues from 'lodash.mapvalues';
-
 export default class ComponentsFactory {
-  /**
-   *
-   * @param {Array<typeof Plugin>} pluginClassesList
-   * @param {object} props
-   * @param {*} props.options
-   * @param {import('./context')} props.context
-   * @return {*}
-   */
-  static createComponents(pluginClassesList, props) {
-    const { options = {}, context } = props;
-
-    const pluginClassesMap = ComponentsFactory.createUniqueClasses(
-      pluginClassesList,
-    );
-
-    const targetMap = mapValues(pluginClassesMap, PluginClass => {
-      return new PluginClass(options, context);
-    });
-
-    return ComponentsFactory.createProxy(targetMap);
-  }
-
   static createUniqueClasses(pluginsClasses, objectMap = {}) {
     return pluginsClasses.reduce((map, PluginClass) => {
       if (map[PluginClass.pluginName]) {
@@ -48,6 +24,7 @@ export default class ComponentsFactory {
     return new Proxy(targetMap, {
       get(target, name) {
         if (!(name in target)) {
+          debugger;
           throw new Error(`Please define '${name}' plugin`);
         }
         return target[name];

@@ -9,7 +9,9 @@ export default class PluginBase {
     return [];
   }
 
-  static handlers = [];
+  static get handlers() {
+    return {};
+  }
 
   constructor(props, context) {
     this.context = context;

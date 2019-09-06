@@ -5,11 +5,7 @@ export default class PluginFactory {
     function Plugin(options, context) {
       // single mode
       if (!context) {
-        return new PluginContainerApi({
-          ...options,
-          plugins: ClassPlugin.dependencyPlugins,
-          singlePlugin: ClassPlugin.pluginName,
-        });
+        return new PluginContainerApi(options, Plugin);
       }
 
       // plugin mode
