@@ -1,8 +1,8 @@
 import ConnectError from '@endpass/class/ConnectError';
-import OauthPkceStrategy from '@/class/Oauth/OauthPkceStrategy';
-import Oauth from '@/class/Oauth';
+import OauthPkceStrategy from '@/plugins/OauthPlugin/Oauth/OauthPkceStrategy';
+import Oauth from '@/plugins/OauthPlugin/Oauth';
 import PluginFactory from '@/class/PluginFactory';
-import PluginBase from './PluginBase';
+import PluginBase from '../PluginBase';
 
 const { ERRORS } = ConnectError;
 

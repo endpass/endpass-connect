@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { MESSENGER_METHODS, PLUGIN_METHODS } from '@/constants';
-import StateClose from '@/class/Dialog/states/StateClose';
-import StateOpen from '@/class/Dialog/states/StateOpen';
+import StateClose from '@/plugins/DialogPlugin/states/StateClose';
+import StateOpen from '@/plugins/DialogPlugin/states/StateOpen';
 
 const readyDialog = dialog => (payload, req) => {
   if (req.source === dialog.dialogMessenger.target) {
@@ -33,16 +33,10 @@ const open = dialog => () => {
   dialog.state = new StateOpen(dialog);
 };
 
-const ask = dialog => async ({ method, payload }, req) => {
-  const res = await dialog.ask(method, payload);
-  req.answer(res);
-};
-
 export default {
   [MESSENGER_METHODS.READY_STATE_BRIDGE]: readyDialog,
   [MESSENGER_METHODS.INITIATE]: initiate,
   [MESSENGER_METHODS.DIALOG_RESIZE]: resize,
   [MESSENGER_METHODS.DIALOG_CLOSE]: close,
   [MESSENGER_METHODS.DIALOG_OPEN]: open,
-  [PLUGIN_METHODS.DIALOG_ASK]: ask,
 };

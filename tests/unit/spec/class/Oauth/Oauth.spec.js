@@ -1,5 +1,5 @@
-import Oauth, { OauthPkceStrategy } from '@/class/Oauth';
-import PopupWindow from '@/class/PopupWindow';
+import Oauth, { OauthPkceStrategy } from '@/plugins/OauthPlugin/Oauth';
+import PopupWindow from '@/plugins/OauthPlugin/Oauth/PopupWindow';
 
 jest.mock('@/class/PopupWindow', () => {
   return {

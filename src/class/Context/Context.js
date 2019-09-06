@@ -1,16 +1,14 @@
 import ConnectError from '@endpass/class/ConnectError';
 
-import { getFrameRouteUrl } from '@/util/url';
-import MessengerGroup from '@/class/MessengerGroup';
-import Dialog from '@/class/Dialog';
-import EventSubscriber from '@/class/EventSubscriber';
+import pkg from '../../../package.json';
 import contextHandlers from './contextHandlers';
 import HandlersFactory from '@/class/HandlersFactory';
-import pkg from '../../../package.json';
-import ComponentsFactory from '@/class/ComponentsFactory';
+import PluginFactory from '@/class/PluginFactory';
+import DialogPlugin from '@/plugins/DialogPlugin';
+import MessengerGroupPlugin from '@/plugins/MessengerGroupPlugin';
 
 const { ERRORS } = ConnectError;
-let idx = 1;
+
 if (ENV.isProduction) {
   /* eslint-disable-next-line */
   console.info(
@@ -53,37 +51,25 @@ export default class Context {
     /**
      * @private
      */
-    this.plugins = ComponentsFactory.createProxy({});
+    this.plugins = PluginFactory.createProxy({});
 
-    const pluginClassesMap = ComponentsFactory.createUniqueClasses([
+    // please do not redefine order of plugins
+    const pluginClassesMap = PluginFactory.createUniqueClasses([
+      DialogPlugin,
+
       ...ClassPlugin.dependencyPlugins,
       ClassPlugin,
       ...options.plugins,
+
+      MessengerGroupPlugin,
     ]);
 
     Object.keys(pluginClassesMap).reduce((plugins, pluginKey) => {
       const PluginClass = pluginClassesMap[pluginKey];
-      const pluginInstance = new PluginClass(options, this);
-      Object.assign(plugins, {
-        [pluginKey]: pluginInstance,
+      return Object.assign(plugins, {
+        [pluginKey]: new PluginClass(options, this),
       });
-      return plugins;
     }, this.plugins);
-
-    EventSubscriber.subscribe(this);
-  }
-
-  get subscribeData() {
-    const { plugins } = this;
-    const basicData = [...this.getDialog().subscribeData];
-    const res = Object.keys(plugins).reduce((eventsList, pluginKey) => {
-      const plugin = plugins[pluginKey];
-      return eventsList.concat(plugin.subscribeData);
-    }, basicData);
-
-    return res;
-
-    // [[messenger], [messenger]]
   }
 
   get isLogin() {
@@ -91,57 +77,16 @@ export default class Context {
     return this.plugins.authorize.isLogin;
   }
 
-  getRequestProvider() {
-    // from stream call
-    return this.plugins.provider.getRequestProvider();
-  }
-
-  getInpageProviderSettings() {
-    // from stream call
-    return this.plugins.provider.getInpageProviderSettings();
-  }
-
-  getEmitter() {
-    return this.plugins.provider.getEmitter();
-  }
-
-  getDialog() {
-    if (!this.dialog) {
-      const { element, namespace, authUrl } = this.options;
-      this.dialog = new Dialog({
-        element,
-        namespace,
-        url: getFrameRouteUrl(authUrl, 'bridge'),
-      });
-      this.messengerGroup.addMessenger(this.dialog.getDialogMessenger());
-    }
-
-    return this.dialog;
-  }
-
   async handleEvent(payload, req) {
-    idx++;
-    req.idx = `${idx} - ${req.method}`;
-    console.log('req.method', req.idx);
     try {
-      console.log(req.idx, '// 1. process context methods');
       if (this.contextHandlers[req.method]) {
         await this.contextHandlers[req.method].apply(this, [payload, req]);
       }
 
-      console.log(req.idx, '// 2. process dialog methods');
-      await this.getDialog().handleEvent(payload, req);
-
-      console.log(req.idx, '// 3. process plugins methods');
       await Object.keys(this.plugins).reduce(async (awaiter, pluginKey) => {
         await awaiter;
         await this.plugins[pluginKey].handleEvent(payload, req);
       }, Promise.resolve());
-
-      console.log(req.idx, '// 4. process messenger group');
-      this.messengerGroup.handleEvent(payload, req);
-
-      console.log(req.idx, '// 5. finish');
     } catch (error) {
       console.error('context.handleEvent', error);
       const err = ConnectError.createFromError(error, ERRORS.NOT_DEFINED);
@@ -153,8 +98,8 @@ export default class Context {
     }
   }
 
-  handleRequest(method, payload) {
-    return new Promise(async (resolve, reject) => {
+  executeMethod(method, payload) {
+    const executor = async (resolve, reject) => {
       let isAnswered = false;
       const answer = (result = {}) => {
         isAnswered = true;
@@ -174,17 +119,11 @@ export default class Context {
       if (!isAnswered) {
         answer();
       }
-    });
+    };
+    return new Promise(executor);
   }
 
-  /**
-   *
-   * @return {MessengerGroup}
-   */
-  get messengerGroup() {
-    if (!this.messengerGroupPrivate) {
-      this.messengerGroupPrivate = new MessengerGroup();
-    }
-    return this.messengerGroupPrivate;
+  ask(method, payload) {
+    return this.plugins.dialog.ask(method, payload);
   }
 }

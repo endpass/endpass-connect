@@ -14,7 +14,6 @@ const remove = messengerGroup => messenger => {
 };
 
 const send = messengerGroup => ({ method, payload }, req) => {
-  console.log('messengerGroup', method, payload);
   messengerGroup.send(method, payload);
   req.answer();
 };

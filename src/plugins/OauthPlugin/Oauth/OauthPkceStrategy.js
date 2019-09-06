@@ -1,9 +1,9 @@
 // @ts-check
 // @ts-ignore
 import ConnectError from '@endpass/class/ConnectError';
-import PopupWindow from '@/class/PopupWindow';
-import pkce from '@/class/Oauth/pkce';
-import { MESSENGER_METHODS, PLUGIN_METHODS } from '@/constants';
+import PopupWindow from '@/plugins/OauthPlugin/Oauth/PopupWindow';
+import pkce from '@/plugins/OauthPlugin/Oauth/pkce';
+import { MESSENGER_METHODS } from '@/constants';
 
 // eslint-disable-next-line
 import Context from '@/class/Context';
@@ -48,12 +48,9 @@ export default class OauthPkceStrategy {
    * @return {Promise<object>}
    */
   async exchangeCodeToToken(fields) {
-    const { payload, status, error } = await this.context.handleRequest(
-      PLUGIN_METHODS.DIALOG_ASK,
-      {
-        method: MESSENGER_METHODS.EXCHANGE_TOKEN_REQUEST,
-        payload: fields,
-      },
+    const { payload, status, error } = await this.context.ask(
+      MESSENGER_METHODS.EXCHANGE_TOKEN_REQUEST,
+      fields,
     );
 
     if (!status) {

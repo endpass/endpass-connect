@@ -1,10 +1,10 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import { MESSENGER_METHODS } from '@/constants';
-import Dialog from '@/class/Dialog';
-import StateOpen from '@/class/Dialog/states/StateOpen';
-import StateClose from '@/class/Dialog/states/StateClose';
+import DialogPlugin from '@/plugins/DialogPlugin';
+import StateOpen from '@/plugins/DialogPlugin/states/StateOpen';
+import StateClose from '@/plugins/DialogPlugin/states/StateClose';
 
-describe('Dialog class', () => {
+describe('DialogPlugin class', () => {
   const url = 'url';
   const messenger = {
     send: jest.fn(),
@@ -29,7 +29,7 @@ describe('Dialog class', () => {
         cbs[method] = cb;
       });
 
-    const inst = new Dialog({ url });
+    const inst = new DialogPlugin({ url });
 
     expect(inst.state).toBeInstanceOf(StateClose);
 

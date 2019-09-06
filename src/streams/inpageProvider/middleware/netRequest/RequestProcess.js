@@ -3,16 +3,16 @@ import {
   MESSENGER_METHODS,
   INPAGE_EVENTS,
   DAPP_WHITELISTED_METHODS,
-  PLUGIN_METHODS,
 } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
 export default class RequestProcess {
-  constructor({ context, request, settings = {} }) {
+  constructor({ context, request, settings = {}, pluginProvider }) {
     this.context = context;
     this.currentRequest = request;
     this.settings = settings;
+    this.pluginProvider = pluginProvider;
   }
 
   /**
@@ -59,9 +59,8 @@ export default class RequestProcess {
    * @returns {Promise<Object>} Result from network
    */
   async sendToNetwork() {
-    const { context } = this;
     return new Promise((resolve, reject) => {
-      const reqProvider = context.getRequestProvider();
+      const reqProvider = this.pluginProvider.getRequestProvider();
       const req = this.currentRequest;
       reqProvider.send(req, (err, res) => {
         if (err) {
@@ -82,7 +81,7 @@ export default class RequestProcess {
       console.error(`Request have return error: ${payload.error}`);
     }
 
-    this.context.getEmitter().emit(INPAGE_EVENTS.RESPONSE, payload);
+    this.pluginProvider.emitter.emit(INPAGE_EVENTS.RESPONSE, payload);
   }
 
   /**
@@ -91,17 +90,13 @@ export default class RequestProcess {
    * @returns {Promise<Object>} Sign result
    */
   async sign() {
-    const { context } = this;
     const { activeAccount, activeNet } = this.settings;
 
-    const res = await context.handleRequest(PLUGIN_METHODS.DIALOG_ASK, {
-      method: MESSENGER_METHODS.SIGN,
-      payload: {
-        url: window.location.origin,
-        address: activeAccount,
-        net: activeNet,
-        request: this.currentRequest,
-      },
+    const res = await this.context.ask(MESSENGER_METHODS.SIGN, {
+      url: window.location.origin,
+      address: activeAccount,
+      net: activeNet,
+      request: this.currentRequest,
     });
 
     if (!res.status) {
@@ -118,15 +113,11 @@ export default class RequestProcess {
    * @returns {Promise<String>} Recovered address
    */
   async recover() {
-    const { context } = this;
     const { activeAccount, activeNet } = this.settings;
-    const res = await context.handleRequest(PLUGIN_METHODS.DIALOG_ASK, {
-      method: MESSENGER_METHODS.RECOVER,
-      payload: {
-        address: activeAccount,
-        net: activeNet,
-        request: this.currentRequest,
-      },
+    const res = await this.context.ask(MESSENGER_METHODS.RECOVER, {
+      address: activeAccount,
+      net: activeNet,
+      request: this.currentRequest,
     });
 
     if (!res.status) {

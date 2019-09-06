@@ -29,8 +29,8 @@ export default class PluginContainerApi {
    * @param {string} payload.activeAccount Current account check summed address
    * @param {string} payload.activeNet Active network ID
    */
-  setProviderSettings(payload) {
-    return this.context.handleRequest(
+  async setProviderSettings(payload) {
+    return this.context.executeMethod(
       PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS,
       payload,
     );
@@ -44,11 +44,8 @@ export default class PluginContainerApi {
    * @returns {Promise<object>} Account data
    */
   async getAccountData() {
-    console.log(' getAccountData 1');
     await this.auth();
-    console.log(' getAccountData 2');
     const res = await this.context.plugins.provider.getProviderAccountData();
-    console.log(' getAccountData 3', res);
     return res;
   }
 
@@ -59,7 +56,7 @@ export default class PluginContainerApi {
    * @returns {Web3.Provider} Inpage provider for injections into application
    *  Web3 instance
    */
-  getProvider() {
+  async getProvider() {
     return this.context.plugins.provider.getInpageProvider();
   }
 
@@ -70,7 +67,7 @@ export default class PluginContainerApi {
    *  know about result
    */
   async auth(redirectUrl) {
-    const res = await this.context.handleRequest(
+    const res = await this.context.executeMethod(
       PLUGIN_METHODS.CONTEXT_AUTHORIZE,
       redirectUrl,
     );
@@ -90,7 +87,7 @@ export default class PluginContainerApi {
    * @returns {Promise<boolean>}
    */
   async logout() {
-    const { status } = await this.context.handleRequest(
+    const { status } = await this.context.executeMethod(
       MESSENGER_METHODS.LOGOUT_REQUEST,
     );
     return status;
@@ -111,7 +108,7 @@ export default class PluginContainerApi {
    * Clears instance scopes and token
    * @throws {Error} If not authorized yet;
    */
-  logoutFromOauth() {
+  async logoutFromOauth() {
     this.context.plugins.oauth.logout();
   }
 
@@ -122,7 +119,7 @@ export default class PluginContainerApi {
    * @param {number} [params.height] Oauth popup height
    * @throws {Error} If not authorized yet;
    */
-  setOauthPopupParams(params) {
+  async setOauthPopupParams(params) {
     this.context.plugins.oauth.setPopupParams(params);
   }
 
@@ -137,7 +134,7 @@ export default class PluginContainerApi {
    * @returns {Promise} Request promise
    * @throws {Error} If not authorized yet;
    */
-  request(options) {
+  async request(options) {
     return this.context.plugins.oauth.request(options);
   }
 
@@ -151,14 +148,14 @@ export default class PluginContainerApi {
    * @param {object} [params.position.bottom]
    * @returns {Promise<Element>} Mounted widget iframe element
    */
-  mountWidget(params) {
+  async mountWidget(params) {
     return this.context.plugins.widget.mount(params);
   }
 
   /**
    * Unmounts endpass widget from DOM
    */
-  unmountWidget() {
+  async unmountWidget() {
     return this.context.plugins.widget.unmount();
   }
 
@@ -167,7 +164,6 @@ export default class PluginContainerApi {
    * @returns {Promise<Element>} Widget iframe node
    */
   async getWidgetNode() {
-    // return this.context.handleRequest(PLUGIN_METHODS.CONTEXT_GET_WIDGET_NODE);
     const res = await this.context.plugins.widget.getWidgetNode();
 
     return res;

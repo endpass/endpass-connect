@@ -15,7 +15,7 @@ const initiate = context => (payload, req) => {
 
 const changeSettings = context => async (payload, req) => {
   try {
-    await context.handleRequest(
+    await context.executeMethod(
       PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS,
       payload,
     );
@@ -25,7 +25,6 @@ const changeSettings = context => async (payload, req) => {
     });
   } catch (error) {
     console.error(error);
-    debugger;
     const code = (error && error.code) || ERRORS.AUTH_LOGOUT;
     req.answer({
       status: false,
@@ -37,7 +36,8 @@ const changeSettings = context => async (payload, req) => {
 };
 
 const getSettings = context => (payload, req) => {
-  req.answer(context.inpageProvider.settings);
+  const settings = context.plugins.provider.getInpageProviderSettings();
+  req.answer(settings);
 };
 
 const authorize = context => async (payload, req) => {
@@ -45,29 +45,15 @@ const authorize = context => async (payload, req) => {
   req.answer(res);
 };
 
-const getWidgetNode = context => async (payload, req) => {
-  const res = await context.plugins.widget.getWidgetNode();
-  req.answer(res);
-};
-
-const serverAuth = context => async () => {
-  await context.plugins.provider.serverAuth();
-};
-
-const setRequestProvider = context => provider => {
-  context.plugins.provider.setRequestProvider(provider);
-};
-
 const setProviderSettings = context => async payload => {
   context.plugins.provider.setInpageProviderSettings(payload);
 
-  console.log('!!! --- settings sets', payload);
-  const settings = context.getInpageProviderSettings();
-  await context.handleRequest(PLUGIN_METHODS.MESSENGER_GROUP_SEND, {
-    method: MESSENGER_METHODS.CHANGE_SETTINGS_RESPONSE,
-    payload: settings,
-  });
-  console.log('!!! --- MESSENGER_GROUP_SEND');
+  const settings = context.plugins.provider.getInpageProviderSettings();
+
+  context.plugins.messengerGroup.send(
+    MESSENGER_METHODS.CHANGE_SETTINGS_RESPONSE,
+    settings,
+  );
 };
 
 export default {
@@ -75,8 +61,5 @@ export default {
   [MESSENGER_METHODS.CHANGE_SETTINGS_REQUEST]: changeSettings,
   [MESSENGER_METHODS.WIDGET_GET_SETTING]: getSettings,
   [PLUGIN_METHODS.CONTEXT_AUTHORIZE]: authorize,
-  [PLUGIN_METHODS.CONTEXT_GET_WIDGET_NODE]: getWidgetNode,
-  [PLUGIN_METHODS.CONTEXT_SERVER_AUTH]: serverAuth,
-  [PLUGIN_METHODS.CONTEXT_SET_REQUEST_PROVIDER]: setRequestProvider,
   [PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS]: setProviderSettings,
 };

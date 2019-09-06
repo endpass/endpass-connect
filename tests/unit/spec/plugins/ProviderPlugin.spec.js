@@ -1,7 +1,7 @@
 import ConnectError from '@endpass/class/ConnectError';
 import ProviderComponent from '@/plugins/ProviderPlugin';
-import ProviderFactory from '@/class/ProviderFactory';
-import InpageProvider from '@/class/InpageProvider';
+import ProviderFactory from '@/plugins/ProviderPlugin/ProviderFactory';
+import InpageProvider from '@/plugins/ProviderPlugin/InpageProvider';
 import { MESSENGER_METHODS } from '@/constants';
 
 const { ERRORS } = ConnectError;

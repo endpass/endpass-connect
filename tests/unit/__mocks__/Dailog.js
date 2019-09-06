@@ -1,4 +1,4 @@
-jest.mock('@/class/Dialog', () => {
+jest.mock('@/class/DialogPlugin', () => {
   return jest.fn().mockImplementation(() => {
     return {
       open: jest.fn(),

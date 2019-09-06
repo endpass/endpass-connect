@@ -3,8 +3,9 @@
 // @ts-ignore
 // eslint-disable-next-line no-unused-vars
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
-import HandlersFactory from '@/class/HandlersFactory';
 import messengerGroupHandlers from './messengerGroupHandlers';
+import PluginFactory from '@/class/PluginFactory';
+import PluginBase from '@/plugins/PluginBase';
 
 /**
  * @callback Listener {import('@types/global').Listener}
@@ -14,13 +15,24 @@ import messengerGroupHandlers from './messengerGroupHandlers';
  * @typedef {Object<string, Array<Listener>>} Resolvers
  */
 
-export default class MessengerGroup {
-  constructor() {
+class MessengerGroupPlugin extends PluginBase {
+  static get pluginName() {
+    return 'messengerGroup';
+  }
+
+  static get handlers() {
+    return messengerGroupHandlers;
+  }
+
+  /**
+   *
+   * @param {object} options
+   * @param {object} context
+   */
+  constructor(options, context) {
+    super(options, context);
     /** @type Array<CrossWindowMessenger> */
     this.messengers = [];
-
-    this.handleEvent = HandlersFactory
-      .createHandleEvent(this, messengerGroupHandlers);
   }
 
   /**
@@ -51,3 +63,5 @@ export default class MessengerGroup {
     });
   }
 }
+
+export default PluginFactory.create(MessengerGroupPlugin);

@@ -2,7 +2,7 @@
 import { INPAGE_EVENTS, DAPP_BLACKLISTED_METHODS } from '@/constants';
 
 /** @type {import("@/types/Middleware").Middleware} */
-export default async function(context, action) {
+export default async function({ action, providerPlugin }) {
   const { request } = action;
 
   if (!request) return;
@@ -20,5 +20,5 @@ export default async function(context, action) {
     },
   };
   action.end();
-  context.getEmitter().emit(INPAGE_EVENTS.RESPONSE, response);
+  providerPlugin.emitter.emit(INPAGE_EVENTS.RESPONSE, response);
 }

@@ -1,7 +1,7 @@
 import ConnectError from '@endpass/class/ConnectError';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import { inlineStylesState } from '@/util/dom';
-import { DIRECTION, DIALOG_EVENTS } from '@/constants';
+import { DIRECTION, DIALOG_EVENTS, PLUGIN_METHODS } from '@/constants';
 import {
   propsIframe,
   propsIframeShow,
@@ -12,8 +12,10 @@ import {
   stylesWrapperHide,
 } from './DialogStyles';
 import StateClose from './states/StateClose';
-import dialogHandlers from '@/class/Dialog/dialogHandlers';
-import HandlersFactory from '@/class/HandlersFactory';
+import dialogHandlers from '@/plugins/DialogPlugin/dialogHandlers';
+import PluginFactory from '@/class/PluginFactory';
+import PluginBase from '@/plugins/PluginBase';
+import { getFrameRouteUrl } from '@/util/url';
 
 const { ERRORS } = ConnectError;
 
@@ -27,16 +29,28 @@ const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
  * @typedef {Object<string, Array<Listener>>} Resolvers
  */
 
-export default class Dialog {
+class DialogPlugin extends PluginBase {
+  static get pluginName() {
+    return 'dialog';
+  }
+
+  static get handlers() {
+    return dialogHandlers;
+  }
+
   /**
-   * @param {object} props
-   * @param {string} props.url frame url
-   * @param {string?} props.namespace namespace of connect
-   * @param {HTMLElement|string?} [props.element] render place
+   * @param {object} options
+   * @param {object} context
+   * @param {string} options.url frame url
+   * @param {string?} options.namespace namespace of connect
+   * @param {HTMLElement|string?} [options.element] render place
    */
-  constructor({ namespace = '', element, url }) {
+  constructor(options, context) {
+    super(options, context);
+    const { namespace = '', authUrl, element } = options;
+
     this.namespace = namespace;
-    this.url = url;
+    this.url = getFrameRouteUrl(authUrl, 'bridge');
     this.ready = false;
     this.element = element;
     this.isElementMode = !!element;
@@ -52,7 +66,7 @@ export default class Dialog {
     /** @type Resolvers */
     this.readyResolvers = [];
 
-    // Dialog elements nodes
+    // DialogPlugin elements nodes
     this.overlay = null;
     this.wrapper = null;
     this.frame = null;
@@ -65,13 +79,16 @@ export default class Dialog {
         }
       });
     } else {
-      this.mount();
+      // hack for mount after create all plugins
+      setTimeout(() => {
+        this.mount();
+      }, 0);
+
     }
-    this.handleEvent = HandlersFactory.createHandleEvent(this, dialogHandlers);
   }
 
-  get subscribeData() {
-    return [[this.dialogMessenger]];
+  get messenger() {
+    return this.dialogMessenger;
   }
 
   onClose() {
@@ -101,7 +118,7 @@ export default class Dialog {
   }
 
   /**
-   * Return instance of Dialog messenger
+   * Return instance of DialogPlugin messenger
    * @public
    * @return {CrossWindowMessenger}
    */
@@ -129,7 +146,7 @@ export default class Dialog {
   }
 
   /**
-   * Create default markup for Dialog
+   * Create default markup for DialogPlugin
    * @private
    * @return {HTMLDivElement}
    */
@@ -175,6 +192,11 @@ export default class Dialog {
       });
       document.body.appendChild(this.overlay);
     }
+
+    this.context.executeMethod(
+      PLUGIN_METHODS.MESSENGER_GROUP_ADD,
+      this.dialogMessenger,
+    );
 
     // subscribe
     this.dialogMessenger.setTarget(this.frame.contentWindow);
@@ -225,3 +247,5 @@ export default class Dialog {
     return res;
   }
 }
+
+export default PluginFactory.create(DialogPlugin);

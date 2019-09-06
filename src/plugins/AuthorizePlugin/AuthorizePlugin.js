@@ -1,5 +1,5 @@
 import ConnectError from '@endpass/class/ConnectError';
-import { MESSENGER_METHODS, PLUGIN_METHODS } from '@/constants';
+import { MESSENGER_METHODS } from '@/constants';
 import authHandlers from '@/plugins/AuthorizePlugin/authHandlers';
 import PluginBase from '@/plugins/PluginBase';
 import PluginFactory from '@/class/PluginFactory';
@@ -43,14 +43,9 @@ class AuthorizePlugin extends PluginBase {
   async authorizeMe(redirectUrl) {
     const toPath = redirectUrl || window.location.href;
 
-    const res = await this.context.handleRequest(PLUGIN_METHODS.DIALOG_ASK, {
-      method: MESSENGER_METHODS.AUTH,
-      payload: {
-        redirectUrl: toPath,
-      },
+    const res = await this.context.ask(MESSENGER_METHODS.AUTH, {
+      redirectUrl: toPath,
     });
-
-    console.log('WTF!!!', res);
 
     if (!res.status) {
       throw ConnectError.create(res.code || ERRORS.AUTH);
@@ -71,9 +66,7 @@ class AuthorizePlugin extends PluginBase {
    * @returns {Promise<Boolean>}
    */
   async logout() {
-    const res = await this.context.handleRequest(PLUGIN_METHODS.DIALOG_ASK, {
-      method: MESSENGER_METHODS.LOGOUT,
-    });
+    const res = await this.context.ask(MESSENGER_METHODS.LOGOUT);
 
     if (!res.status) {
       throw ConnectError.create(res.code || ERRORS.AUTH_LOGOUT);

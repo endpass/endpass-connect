@@ -1,27 +1,28 @@
 import ConnectError from '@endpass/class/ConnectError';
 import Network from '@endpass/class/Network';
-import Emmiter from '@/class/Emmiter';
-import InpageProvider from '@/class/InpageProvider';
+import Emmiter from '@/plugins/ProviderPlugin/Emmiter';
+import InpageProvider from '@/plugins/ProviderPlugin/InpageProvider';
 import { INPAGE_EVENTS, MESSENGER_METHODS, PLUGIN_METHODS } from '@/constants';
-import ProviderFactory from '@/class/ProviderFactory';
+import ProviderFactory from '@/plugins/ProviderPlugin/ProviderFactory';
 import createInpageProviderStream from '@/streams/inpageProvider/inpageProviderStream';
-import PluginComponent from './PluginBase';
-import WidgetComponent from './WidgetPlugin';
-import AuthorizeComponent from './AuthorizePlugin';
+import PluginComponent from '../PluginBase';
+import WidgetComponent from '../WidgetPlugin';
+import AuthorizeComponent from '../AuthorizePlugin';
 import PluginFactory from '@/class/PluginFactory';
 
 const { ERRORS } = ConnectError;
 
-class ProviderPlugin extends PluginComponent {
+export class ProviderPlugin extends PluginComponent {
   constructor(options, context) {
     super(options, context);
 
-    this.getEmitter().on(INPAGE_EVENTS.LOGIN, async () => {
+    this.emitter = new Emmiter();
+    this.emitter.on(INPAGE_EVENTS.LOGIN, async () => {
       let error = null;
 
       if (!this.context.isLogin) {
         try {
-          await this.context.handleRequest(PLUGIN_METHODS.CONTEXT_SERVER_AUTH);
+          this.serverAuth();
         } catch (e) {
           error =
             e.code === ERRORS.AUTH_CANCELED_BY_USER
@@ -30,10 +31,10 @@ class ProviderPlugin extends PluginComponent {
         }
       }
 
-      this.getEmitter().emit(INPAGE_EVENTS.LOGGED_IN, { error });
+      this.emitter.emit(INPAGE_EVENTS.LOGGED_IN, { error });
     });
 
-    createInpageProviderStream(this.getEmitter(), this.context);
+    createInpageProviderStream(this.context, this);
   }
 
   static get dependencyPlugins() {
@@ -49,9 +50,7 @@ class ProviderPlugin extends PluginComponent {
    * @return {Promise<object>}
    */
   async openProviderAccount() {
-    const res = await this.context.handleRequest(PLUGIN_METHODS.DIALOG_ASK, {
-      method: MESSENGER_METHODS.ACCOUNT,
-    });
+    const res = await this.context.ask(MESSENGER_METHODS.ACCOUNT);
 
     if (!res.status) {
       throw ConnectError.create(res.code || ERRORS.ACCOUNT_UPDATE);
@@ -60,7 +59,7 @@ class ProviderPlugin extends PluginComponent {
     const { type, settings } = res.payload;
 
     if (type === 'update') {
-      await this.context.handleRequest(
+      await this.context.executeMethod(
         PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS,
         settings,
       );
@@ -85,12 +84,8 @@ class ProviderPlugin extends PluginComponent {
    */
   async getProviderAccountData() {
     try {
-      const { payload, status, code } = await this.context.handleRequest(
-        PLUGIN_METHODS.DIALOG_ASK,
-        {
-          method: MESSENGER_METHODS.GET_SETTINGS,
-        },
-      );
+      const { payload, status, code } = await this.context
+        .ask(MESSENGER_METHODS.GET_SETTINGS);
 
       if (!status) {
         throw ConnectError.create(code || ERRORS.AUTH);
@@ -102,12 +97,10 @@ class ProviderPlugin extends PluginComponent {
         activeNet: settings.net || Network.NET_ID.MAIN,
       };
 
-      console.log(' where is data. start', res);
-      await this.context.handleRequest(
+      await this.context.executeMethod(
         PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS,
         res,
       );
-      console.log(' where is data. end', res);
 
       return res;
     } catch (err) {
@@ -124,7 +117,7 @@ class ProviderPlugin extends PluginComponent {
    * @param {string} payload.activeNet Active network ID
    */
   setInpageProviderSettings(payload) {
-    this.getEmitter().emit(INPAGE_EVENTS.SETTINGS, {
+    this.emitter.emit(INPAGE_EVENTS.SETTINGS, {
       activeAccount: payload.activeAccount,
       activeNet: payload.activeNet || Network.NET_ID.MAIN,
     });
@@ -156,21 +149,10 @@ class ProviderPlugin extends PluginComponent {
    */
   getInpageProvider() {
     if (!this.inpageProvider) {
-      this.inpageProvider = new InpageProvider(this.getEmitter());
+      this.inpageProvider = new InpageProvider(this.emitter);
     }
 
     return this.inpageProvider;
-  }
-
-  /**
-   *
-   * @return {Emitter}
-   */
-  getEmitter() {
-    if (!this.emitter) {
-      this.emitter = new Emmiter();
-    }
-    return this.emitter;
   }
 
   /**
@@ -191,7 +173,7 @@ class ProviderPlugin extends PluginComponent {
       }
 
       // await this.context.auth();
-      await this.context.handleRequest(PLUGIN_METHODS.CONTEXT_AUTHORIZE);
+      await this.context.executeMethod(PLUGIN_METHODS.CONTEXT_AUTHORIZE);
 
       await this.getProviderAccountData();
     }

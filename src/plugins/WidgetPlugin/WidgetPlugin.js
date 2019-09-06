@@ -69,8 +69,8 @@ class WidgetPlugin extends PluginBase {
     this.setupWidgetOnAuth(this, options.widget);
   }
 
-  get subscribeData() {
-    return [[this.widgetMessenger]];
+  get messenger() {
+    return this.widgetMessenger;
   }
 
   /* eslint-disable-next-line */
@@ -169,7 +169,7 @@ class WidgetPlugin extends PluginBase {
 
     this.widgetMessenger.setTarget(this.frame.contentWindow);
 
-    await this.context.handleRequest(
+    await this.context.executeMethod(
       PLUGIN_METHODS.MESSENGER_GROUP_ADD,
       this.widgetMessenger,
     );
@@ -185,10 +185,11 @@ class WidgetPlugin extends PluginBase {
 
     this.isMounted = false;
 
-    await this.context.handleRequest(
+    await this.context.executeMethod(
       PLUGIN_METHODS.MESSENGER_GROUP_REMOVE,
       this.widgetMessenger,
     );
+    this.widgetMessenger.setTarget({});
 
     this.frame.style.opacity = 0;
     this.isLoaded = false;

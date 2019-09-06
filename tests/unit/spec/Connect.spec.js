@@ -1,6 +1,6 @@
 import ConnectPlugin from '@/plugins/Connect';
 import ProviderComponent from '@/plugins/ProviderPlugin';
-import InpageProvider from '@/class/InpageProvider';
+import InpageProvider from '@/plugins/ProviderPlugin/InpageProvider';
 
 describe('Connect class', () => {
   let connect;
