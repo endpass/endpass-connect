@@ -44,8 +44,12 @@ export default class PluginContainerApi {
    * @returns {Promise<object>} Account data
    */
   async getAccountData() {
+    console.log(' getAccountData 1');
     await this.auth();
-    return this.context.plugins.provider.getProviderAccountData();
+    console.log(' getAccountData 2');
+    const res = await this.context.plugins.provider.getProviderAccountData();
+    console.log(' getAccountData 3', res);
+    return res;
   }
 
   /**

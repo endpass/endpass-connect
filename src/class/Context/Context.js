@@ -10,7 +10,7 @@ import pkg from '../../../package.json';
 import ComponentsFactory from '@/class/ComponentsFactory';
 
 const { ERRORS } = ConnectError;
-
+let idx = 1;
 if (ENV.isProduction) {
   /* eslint-disable-next-line */
   console.info(
@@ -120,24 +120,28 @@ export default class Context {
   }
 
   async handleEvent(payload, req) {
-    console.log('req.method', req.method);
+    idx++;
+    req.idx = `${idx} - ${req.method}`;
+    console.log('req.method', req.idx);
     try {
-      // 1. process context methods
+      console.log(req.idx, '// 1. process context methods');
       if (this.contextHandlers[req.method]) {
         await this.contextHandlers[req.method].apply(this, [payload, req]);
       }
 
-      // 2. process dialog methods
+      console.log(req.idx, '// 2. process dialog methods');
       await this.getDialog().handleEvent(payload, req);
 
-      // 3. process plugins methods
+      console.log(req.idx, '// 3. process plugins methods');
       await Object.keys(this.plugins).reduce(async (awaiter, pluginKey) => {
         await awaiter;
         await this.plugins[pluginKey].handleEvent(payload, req);
       }, Promise.resolve());
 
-      // 4. process messenger group
+      console.log(req.idx, '// 4. process messenger group');
       this.messengerGroup.handleEvent(payload, req);
+
+      console.log(req.idx, '// 5. finish');
     } catch (error) {
       console.error('context.handleEvent', error);
       const err = ConnectError.createFromError(error, ERRORS.NOT_DEFINED);
@@ -150,20 +154,26 @@ export default class Context {
   }
 
   handleRequest(method, payload) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      let isAnswered = false;
+      const answer = (result = {}) => {
+        isAnswered = true;
+        const { status, error, code } = result;
+        if (status === false) {
+          const err = ConnectError.createFromError(error, code);
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      };
       const req = {
         method,
-        answer(result) {
-          const { status, error, code } = result;
-          if (!status) {
-            const err = ConnectError.createFromError(error, code);
-            reject(err);
-          } else {
-            resolve(result);
-          }
-        },
+        answer,
       };
-      this.handleEvent(payload, req);
+      await this.handleEvent(payload, req);
+      if (!isAnswered) {
+        answer();
+      }
     });
   }
 

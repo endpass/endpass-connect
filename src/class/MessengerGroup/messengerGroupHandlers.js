@@ -13,8 +13,10 @@ const remove = messengerGroup => messenger => {
   messengerGroup.removeMessenger(messenger);
 };
 
-const send = messengerGroup => ({ method, payload }) => {
+const send = messengerGroup => ({ method, payload }, req) => {
+  console.log('messengerGroup', method, payload);
   messengerGroup.send(method, payload);
+  req.answer();
 };
 
 export default {

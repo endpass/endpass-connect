@@ -102,10 +102,12 @@ class ProviderPlugin extends PluginComponent {
         activeNet: settings.net || Network.NET_ID.MAIN,
       };
 
+      console.log(' where is data. start', res);
       await this.context.handleRequest(
         PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS,
         res,
       );
+      console.log(' where is data. end', res);
 
       return res;
     } catch (err) {

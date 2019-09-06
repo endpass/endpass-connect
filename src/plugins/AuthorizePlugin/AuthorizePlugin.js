@@ -50,6 +50,8 @@ class AuthorizePlugin extends PluginBase {
       },
     });
 
+    console.log('WTF!!!', res);
+
     if (!res.status) {
       throw ConnectError.create(res.code || ERRORS.AUTH);
     }

@@ -1,6 +1,11 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import debounce from 'lodash.debounce';
-import { DIRECTION, MESSENGER_METHODS, PLUGIN_METHODS, WIDGET_EVENTS } from '@/constants';
+import {
+  DIRECTION,
+  MESSENGER_METHODS,
+  PLUGIN_METHODS,
+  WIDGET_EVENTS,
+} from '@/constants';
 import { inlineStyles } from '@/util/dom';
 import {
   MOBILE_BREAKPOINT,
@@ -57,6 +62,7 @@ class WidgetPlugin extends PluginBase {
       to: DIRECTION.AUTH,
       from: DIRECTION.CONNECT,
     });
+    this.widgetMessenger.setTarget({});
     /** @type Array<Promise> */
     this.frameResolver = [];
 
@@ -163,8 +169,10 @@ class WidgetPlugin extends PluginBase {
 
     this.widgetMessenger.setTarget(this.frame.contentWindow);
 
-    await this.context
-      .handleRequest(PLUGIN_METHODS.MESSENGER_GROUP_ADD, this.widgetMessenger);
+    await this.context.handleRequest(
+      PLUGIN_METHODS.MESSENGER_GROUP_ADD,
+      this.widgetMessenger,
+    );
 
     this.frameResolver.forEach(resolve => resolve(this.frame));
     this.frameResolver.length = 0;
@@ -177,8 +185,10 @@ class WidgetPlugin extends PluginBase {
 
     this.isMounted = false;
 
-    await this.context
-      .handleRequest(PLUGIN_METHODS.MESSENGER_GROUP_REMOVE, this.widgetMessenger);
+    await this.context.handleRequest(
+      PLUGIN_METHODS.MESSENGER_GROUP_REMOVE,
+      this.widgetMessenger,
+    );
 
     this.frame.style.opacity = 0;
     this.isLoaded = false;

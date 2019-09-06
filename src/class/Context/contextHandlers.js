@@ -13,9 +13,9 @@ const initiate = context => (payload, req) => {
   });
 };
 
-const changeSettings = context => (payload, req) => {
+const changeSettings = context => async (payload, req) => {
   try {
-    context.handleRequest(
+    await context.handleRequest(
       PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS,
       payload,
     );
@@ -24,6 +24,8 @@ const changeSettings = context => (payload, req) => {
       status: true,
     });
   } catch (error) {
+    console.error(error);
+    debugger;
     const code = (error && error.code) || ERRORS.AUTH_LOGOUT;
     req.answer({
       status: false,
@@ -56,14 +58,16 @@ const setRequestProvider = context => provider => {
   context.plugins.provider.setRequestProvider(provider);
 };
 
-const setProviderSettings = context => payload => {
+const setProviderSettings = context => async payload => {
   context.plugins.provider.setInpageProviderSettings(payload);
 
+  console.log('!!! --- settings sets', payload);
   const settings = context.getInpageProviderSettings();
-  context.handleRequest(PLUGIN_METHODS.MESSENGER_GROUP_SEND, {
+  await context.handleRequest(PLUGIN_METHODS.MESSENGER_GROUP_SEND, {
     method: MESSENGER_METHODS.CHANGE_SETTINGS_RESPONSE,
     payload: settings,
   });
+  console.log('!!! --- MESSENGER_GROUP_SEND');
 };
 
 export default {
