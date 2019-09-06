@@ -56,13 +56,6 @@ class DialogPlugin extends PluginBase {
     this.isElementMode = !!element;
     this.state = new StateClose(this);
 
-    this.dialogMessenger = new CrossWindowMessenger({
-      showLogs: false, //!ENV.isProduction,
-      name: `connect-bridge-dialog[]`,
-      to: DIRECTION.AUTH,
-      from: DIRECTION.CONNECT,
-    });
-
     /** @type Resolvers */
     this.readyResolvers = [];
 
@@ -87,6 +80,14 @@ class DialogPlugin extends PluginBase {
   }
 
   get messenger() {
+    if (!this.dialogMessenger) {
+      this.dialogMessenger = new CrossWindowMessenger({
+        showLogs: false, //!ENV.isProduction,
+        name: `connect-bridge-dialog[]`,
+        to: DIRECTION.AUTH,
+        from: DIRECTION.CONNECT,
+      });
+    }
     return this.dialogMessenger;
   }
 
@@ -175,6 +176,11 @@ class DialogPlugin extends PluginBase {
   mount() {
     const markup = this.createMarkup();
 
+    this.context.executeMethod(
+      PLUGIN_METHODS.MESSENGER_GROUP_ADD,
+      this.dialogMessenger,
+    );
+
     this.overlay = markup.querySelector('[data-endpass="overlay"]');
     this.wrapper = markup.querySelector('[data-endpass="wrapper"]');
     this.frame = markup.querySelector('[data-endpass="frame"]');
@@ -191,11 +197,6 @@ class DialogPlugin extends PluginBase {
       });
       document.body.appendChild(this.overlay);
     }
-
-    this.context.executeMethod(
-      PLUGIN_METHODS.MESSENGER_GROUP_ADD,
-      this.dialogMessenger,
-    );
 
     // subscribe
     this.dialogMessenger.setTarget(this.frame.contentWindow);

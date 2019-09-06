@@ -72,7 +72,12 @@ export default class Context {
     return this.plugins.authorize.isLogin;
   }
 
+  ask(method, payload) {
+    return this.plugins.dialog.ask(method, payload);
+  }
+
   async handleEvent(payload, req) {
+    console.log('method', req.method);
     try {
       if (this.contextHandlers[req.method]) {
         await this.contextHandlers[req.method].apply(this, [payload, req]);
@@ -116,9 +121,5 @@ export default class Context {
       }
     };
     return new Promise(executor);
-  }
-
-  ask(method, payload) {
-    return this.plugins.dialog.ask(method, payload);
   }
 }

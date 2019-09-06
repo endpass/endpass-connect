@@ -35,6 +35,7 @@ export default class PluginBase {
    */
   constructor(options, context) {
     this.context = context;
+    this.options = options;
     this.handleEvent = HandlersFactory.createHandleEvent(
       this,
       this.constructor.handlers,

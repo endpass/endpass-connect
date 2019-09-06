@@ -24,7 +24,6 @@ export default class ClassesFactory {
     return new Proxy(targetMap, {
       get(target, name) {
         if (!(name in target)) {
-          debugger;
           throw new Error(`Please define '${name}' plugin`);
         }
         return target[name];

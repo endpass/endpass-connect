@@ -38,7 +38,7 @@ class WidgetPlugin extends PluginBase {
    */
   constructor(options, context) {
     super(options, context);
-    const { namespace = '', authUrl } = options;
+    const { authUrl } = options;
 
     this.url = getFrameRouteUrl(authUrl, 'public/widget');
     /** @type HTMLIFrameElement */
@@ -56,13 +56,6 @@ class WidgetPlugin extends PluginBase {
     this.handleScreenResize = this.handleScreenResize.bind(this);
     this.debouncedHandleScreenResize = debounce(this.handleScreenResize, 100);
 
-    this.widgetMessenger = new CrossWindowMessenger({
-      showLogs: false, //! ENV.isProduction,
-      name: `connect-bridge-widget[${namespace}]`,
-      to: DIRECTION.AUTH,
-      from: DIRECTION.CONNECT,
-    });
-    this.widgetMessenger.setTarget({});
     /** @type Array<Promise> */
     this.frameResolver = [];
 
@@ -70,6 +63,16 @@ class WidgetPlugin extends PluginBase {
   }
 
   get messenger() {
+    if (!this.widgetMessenger) {
+      const { namespace = '' } = this.options;
+      this.widgetMessenger = new CrossWindowMessenger({
+        showLogs: false, //! ENV.isProduction,
+        name: `connect-bridge-widget[${namespace}]`,
+        to: DIRECTION.AUTH,
+        from: DIRECTION.CONNECT,
+      });
+      this.widgetMessenger.setTarget({});
+    }
     return this.widgetMessenger;
   }
 
