@@ -3,6 +3,7 @@ import {
   MESSENGER_METHODS,
   INPAGE_EVENTS,
   DAPP_WHITELISTED_METHODS,
+  PLUGIN_METHODS,
 } from '@/constants';
 
 const { ERRORS } = ConnectError;
@@ -93,11 +94,14 @@ export default class RequestProcess {
     const { context } = this;
     const { activeAccount, activeNet } = this.settings;
 
-    const res = await context.getDialog().ask(MESSENGER_METHODS.SIGN, {
-      url: window.location.origin,
-      address: activeAccount,
-      net: activeNet,
-      request: this.currentRequest,
+    const res = await context.handleRequest(PLUGIN_METHODS.DIALOG_ASK, {
+      method: MESSENGER_METHODS.SIGN,
+      payload: {
+        url: window.location.origin,
+        address: activeAccount,
+        net: activeNet,
+        request: this.currentRequest,
+      },
     });
 
     if (!res.status) {
@@ -116,10 +120,13 @@ export default class RequestProcess {
   async recover() {
     const { context } = this;
     const { activeAccount, activeNet } = this.settings;
-    const res = await context.getDialog().ask(MESSENGER_METHODS.RECOVER, {
-      address: activeAccount,
-      net: activeNet,
-      request: this.currentRequest,
+    const res = await context.handleRequest(PLUGIN_METHODS.DIALOG_ASK, {
+      method: MESSENGER_METHODS.RECOVER,
+      payload: {
+        address: activeAccount,
+        net: activeNet,
+        request: this.currentRequest,
+      },
     });
 
     if (!res.status) {

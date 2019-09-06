@@ -15,7 +15,10 @@ const initiate = context => (payload, req) => {
 
 const changeSettings = context => (payload, req) => {
   try {
-    context.setProviderSettings(payload);
+    context.handleRequest(
+      PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS,
+      payload,
+    );
 
     req.answer({
       status: true,
@@ -53,6 +56,16 @@ const setRequestProvider = context => provider => {
   context.plugins.provider.setRequestProvider(provider);
 };
 
+const setProviderSettings = context => payload => {
+  context.plugins.provider.setInpageProviderSettings(payload);
+
+  const settings = context.getInpageProviderSettings();
+  context.handleRequest(PLUGIN_METHODS.MESSENGER_GROUP_SEND, {
+    method: MESSENGER_METHODS.CHANGE_SETTINGS_RESPONSE,
+    payload: settings,
+  });
+};
+
 export default {
   [MESSENGER_METHODS.INITIATE]: initiate,
   [MESSENGER_METHODS.CHANGE_SETTINGS_REQUEST]: changeSettings,
@@ -61,4 +74,5 @@ export default {
   [PLUGIN_METHODS.CONTEXT_GET_WIDGET_NODE]: getWidgetNode,
   [PLUGIN_METHODS.CONTEXT_SERVER_AUTH]: serverAuth,
   [PLUGIN_METHODS.CONTEXT_SET_REQUEST_PROVIDER]: setRequestProvider,
+  [PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS]: setProviderSettings,
 };

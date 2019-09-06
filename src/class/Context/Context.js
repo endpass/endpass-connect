@@ -49,6 +49,10 @@ export default class Context {
       this,
       contextHandlers,
     );
+
+    /**
+     * @private
+     */
     this.plugins = ComponentsFactory.createComponents(plugins, {
       options,
       context: this,
@@ -75,42 +79,17 @@ export default class Context {
   }
 
   get isLogin() {
-    // STAY AS IS
+    // from widget and stream call
     return this.plugins.authorize.isLogin;
   }
 
-  /**
-   * Define Current request
-   * @param {Web3.Provider} reqProvider Web3 provider instance
-   */
-  setRequestProvider(reqProvider) {
-    // GO TO HANDLERS
-    this.plugins.provider.setRequestProvider(reqProvider);
-  }
-
-  /**
-   * Sets settings to current `web3` provider injected to page with `injectWeb3`
-   * method
-   * @param {object} payload
-   * @param {string} payload.activeAccount Currenct account checksummed address
-   * @param {string} payload.activeNet Active network ID
-   */
-  setProviderSettings(payload) {
-    // GO TO HANDLERS
-    this.plugins.provider.setInpageProviderSettings(payload);
-
-    const settings = this.getInpageProviderSettings();
-    this.messengerGroup.send(
-      MESSENGER_METHODS.CHANGE_SETTINGS_RESPONSE,
-      settings,
-    );
-  }
-
   getRequestProvider() {
+    // from stream call
     return this.plugins.provider.getRequestProvider();
   }
 
   getInpageProviderSettings() {
+    // from stream call
     return this.plugins.provider.getInpageProviderSettings();
   }
 

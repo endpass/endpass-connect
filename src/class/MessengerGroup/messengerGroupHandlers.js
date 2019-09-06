@@ -13,8 +13,13 @@ const remove = messengerGroup => messenger => {
   messengerGroup.removeMessenger(messenger);
 };
 
+const send = messengerGroup => ({ method, payload }) => {
+  messengerGroup.send(method, payload);
+};
+
 export default {
   [MESSENGER_METHODS.LOGOUT_REQUEST]: logout,
   [PLUGIN_METHODS.MESSENGER_GROUP_ADD]: add,
   [PLUGIN_METHODS.MESSENGER_GROUP_REMOVE]: remove,
+  [PLUGIN_METHODS.MESSENGER_GROUP_SEND]: send,
 };

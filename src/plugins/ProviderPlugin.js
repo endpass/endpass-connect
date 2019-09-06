@@ -48,7 +48,9 @@ export default class ProviderPlugin extends PluginComponent {
    * @return {Promise<object>}
    */
   async openProviderAccount() {
-    const res = await this.context.getDialog().ask(MESSENGER_METHODS.ACCOUNT);
+    const res = await this.context.handleRequest(PLUGIN_METHODS.DIALOG_ASK, {
+      method: MESSENGER_METHODS.ACCOUNT,
+    });
 
     if (!res.status) {
       throw ConnectError.create(res.code || ERRORS.ACCOUNT_UPDATE);
@@ -57,7 +59,10 @@ export default class ProviderPlugin extends PluginComponent {
     const { type, settings } = res.payload;
 
     if (type === 'update') {
-      this.context.setProviderSettings(settings);
+      await this.context.handleRequest(
+        PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS,
+        settings,
+      );
 
       return {
         type,
@@ -79,9 +84,12 @@ export default class ProviderPlugin extends PluginComponent {
    */
   async getProviderAccountData() {
     try {
-      const { payload, status, code } = await this.context
-        .getDialog()
-        .ask(MESSENGER_METHODS.GET_SETTINGS);
+      const { payload, status, code } = await this.context.handleRequest(
+        PLUGIN_METHODS.DIALOG_ASK,
+        {
+          method: MESSENGER_METHODS.GET_SETTINGS,
+        },
+      );
 
       if (!status) {
         throw ConnectError.create(code || ERRORS.AUTH);
@@ -93,7 +101,10 @@ export default class ProviderPlugin extends PluginComponent {
         activeNet: settings.net || Network.NET_ID.MAIN,
       };
 
-      this.context.setProviderSettings(res);
+      await this.context.handleRequest(
+        PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS,
+        res,
+      );
 
       return res;
     } catch (err) {

@@ -1,5 +1,5 @@
 import Context from '@/class/Context';
-import { PLUGIN_METHODS } from '@/constants';
+import { PLUGIN_METHODS, MESSENGER_METHODS } from '@/constants';
 
 // OLD CONNECT
 export default class PluginContainerApi {
@@ -34,7 +34,10 @@ export default class PluginContainerApi {
    * @param {string} payload.activeNet Active network ID
    */
   setProviderSettings(payload) {
-    this.context.setProviderSettings(payload);
+    return this.context.handleRequest(
+      PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS,
+      payload,
+    );
   }
 
   /**

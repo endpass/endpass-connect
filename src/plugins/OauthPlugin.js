@@ -35,7 +35,7 @@ class OauthPlugin extends PluginBase {
    */
   async loginWithOauth(params) {
     const strategy = new OauthPkceStrategy({
-      dialog: this.context.getDialog(),
+      context: this.context,
     });
 
     this.oauthRequestProvider = new Oauth({
