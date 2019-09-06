@@ -3,9 +3,7 @@ import ConnectError from '@endpass/class/ConnectError';
 import pkg from '../../../package.json';
 import contextHandlers from './contextHandlers';
 import HandlersFactory from '@/class/HandlersFactory';
-import PluginFactory from '@/class/PluginFactory';
-import DialogPlugin from '@/plugins/DialogPlugin';
-import MessengerGroupPlugin from '@/plugins/MessengerGroupPlugin';
+import ClassesFactory from '@/class/ClassesFactory';
 
 const { ERRORS } = ConnectError;
 
@@ -51,17 +49,14 @@ export default class Context {
     /**
      * @private
      */
-    this.plugins = PluginFactory.createProxy({});
+    this.plugins = ClassesFactory.createProxy({});
 
     // please do not redefine order of plugins
-    const pluginClassesMap = PluginFactory.createUniqueClasses([
-      DialogPlugin,
-
+    const pluginClassesMap = ClassesFactory.createUniqueClasses([
       ...ClassPlugin.dependencyPlugins,
       ClassPlugin,
-      ...options.plugins,
-
-      MessengerGroupPlugin,
+      ...(options.plugins || []),
+      ...ClassPlugin.lastPlugins,
     ]);
 
     Object.keys(pluginClassesMap).reduce((plugins, pluginKey) => {

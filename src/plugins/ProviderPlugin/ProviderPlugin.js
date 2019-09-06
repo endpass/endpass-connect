@@ -9,10 +9,24 @@ import PluginComponent from '../PluginBase';
 import WidgetComponent from '../WidgetPlugin';
 import AuthorizeComponent from '../AuthorizePlugin';
 import PluginFactory from '@/class/PluginFactory';
+import DialogPlugin from '@/plugins/DialogPlugin';
+import MessengerGroupPlugin from '@/plugins/MessengerGroupPlugin';
 
 const { ERRORS } = ConnectError;
 
 export class ProviderPlugin extends PluginComponent {
+  static get dependencyPlugins() {
+    return [DialogPlugin, AuthorizeComponent, WidgetComponent];
+  }
+
+  static get lastPlugins() {
+    return [MessengerGroupPlugin];
+  }
+
+  static get pluginName() {
+    return 'provider';
+  }
+
   constructor(options, context) {
     super(options, context);
 
@@ -35,14 +49,6 @@ export class ProviderPlugin extends PluginComponent {
     });
 
     createInpageProviderStream(this.context, this);
-  }
-
-  static get dependencyPlugins() {
-    return [AuthorizeComponent, WidgetComponent];
-  }
-
-  static get pluginName() {
-    return 'provider';
   }
 
   /**
@@ -84,8 +90,9 @@ export class ProviderPlugin extends PluginComponent {
    */
   async getProviderAccountData() {
     try {
-      const { payload, status, code } = await this.context
-        .ask(MESSENGER_METHODS.GET_SETTINGS);
+      const { payload, status, code } = await this.context.ask(
+        MESSENGER_METHODS.GET_SETTINGS,
+      );
 
       if (!status) {
         throw ConnectError.create(code || ERRORS.AUTH);

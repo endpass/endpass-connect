@@ -3,20 +3,30 @@ import OauthPkceStrategy from '@/plugins/OauthPlugin/Oauth/OauthPkceStrategy';
 import Oauth from '@/plugins/OauthPlugin/Oauth';
 import PluginFactory from '@/class/PluginFactory';
 import PluginBase from '../PluginBase';
+import DialogPlugin from '@/plugins/DialogPlugin/DialogPlugin';
+import MessengerGroupPlugin from '@/plugins/MessengerGroupPlugin/MessengerGroupPlugin';
 
 const { ERRORS } = ConnectError;
 
 class OauthPlugin extends PluginBase {
+  static get pluginName() {
+    return 'oauth';
+  }
+
+  static get dependencyPlugins() {
+    return [DialogPlugin];
+  }
+
+  static get lastPlugins() {
+    return [MessengerGroupPlugin];
+  }
+
   constructor(options, context) {
     super(options, context);
     if (!options.oauthClientId) {
       throw ConnectError.create(ERRORS.OAUTH_REQUIRE_ID);
     }
     this.oauthClientId = options.oauthClientId;
-  }
-
-  static get pluginName() {
-    return 'oauth';
   }
 
   get oauthProvider() {

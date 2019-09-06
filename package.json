@@ -8,7 +8,7 @@
   "connectPlugins": [
     {
       "library": "EndpassProviderPlugin",
-      "input": "./src/plugins/ProviderPlugin.js",
+      "input": "./src/plugins/ProviderPlugin/index.js",
       "main": "./provider.min.js",
       "module": "./provider.js",
       "umd": "./provider.umd.js",
@@ -24,7 +24,7 @@
     },
     {
       "library": "EndpassOauthPlugin",
-      "input": "./src/plugins/OauthPlugin.js",
+      "input": "./src/plugins/OauthPlugin/index.js",
       "main": "./oauth.min.js",
       "module": "./oauth.js",
       "umd": "./oauth.umd.js",

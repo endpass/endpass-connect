@@ -3,6 +3,8 @@ import { MESSENGER_METHODS } from '@/constants';
 import authHandlers from '@/plugins/AuthorizePlugin/authHandlers';
 import PluginBase from '@/plugins/PluginBase';
 import PluginFactory from '@/class/PluginFactory';
+import DialogPlugin from '@/plugins/DialogPlugin/DialogPlugin';
+import MessengerGroupPlugin from '@/plugins/MessengerGroupPlugin/MessengerGroupPlugin';
 
 const { ERRORS } = ConnectError;
 
@@ -13,6 +15,14 @@ class AuthorizePlugin extends PluginBase {
 
   static get handlers() {
     return authHandlers;
+  }
+
+  static get dependencyPlugins() {
+    return [DialogPlugin];
+  }
+
+  static get lastPlugins() {
+    return [MessengerGroupPlugin];
   }
 
   constructor(options, context) {

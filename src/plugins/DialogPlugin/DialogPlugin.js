@@ -13,8 +13,8 @@ import {
 } from './DialogStyles';
 import StateClose from './states/StateClose';
 import dialogHandlers from '@/plugins/DialogPlugin/dialogHandlers';
-import PluginFactory from '@/class/PluginFactory';
 import PluginBase from '@/plugins/PluginBase';
+import PluginFactory from '@/class/PluginFactory';
 import { getFrameRouteUrl } from '@/util/url';
 
 const { ERRORS } = ConnectError;
@@ -83,7 +83,6 @@ class DialogPlugin extends PluginBase {
       setTimeout(() => {
         this.mount();
       }, 0);
-
     }
   }
 
