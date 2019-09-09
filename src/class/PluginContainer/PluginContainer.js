@@ -6,33 +6,42 @@ export default function PluginContainer(options, context, ClassPlugin) {
     ClassPlugin,
   );
 
-  const pluginNames = pluginsClassesList.map(PluginClass => {
-    return PluginClass.constructor.pluginName;
+  const pluginsName = pluginsClassesList.map(PluginClass => {
+    return PluginClass.pluginName;
   });
 
   const pluginsMap = pluginsClassesList.reduce(
     (pluginInstanceMap, PluginClass) => {
       return Object.assign(pluginInstanceMap, {
-        [PluginClass.constructor.pluginName]: new PluginClass(options, context),
+        [PluginClass.pluginName]: new PluginClass(options, context),
       });
     },
     {},
   );
 
   pluginsMap.init = () => {
-    pluginNames.forEach(pluginName => {
+    pluginsName.forEach(pluginName => {
       pluginsMap[pluginName].init();
     });
   };
 
-  // TODO refactor to Symbol.iterate
-  pluginsMap.iterate = async handler => {
-    await pluginNames.reduce(async (awaiter, pluginName) => {
-      await awaiter;
-      const plugin = pluginsMap[pluginName];
-      await handler(plugin);
-    }, Promise.resolve());
+  pluginsMap[Symbol.iterator] = function() {
+    const privatePluginsName = [...pluginsName];
+    return {
+      next() {
+        const pluginName = privatePluginsName.shift();
+
+        return {
+          done: !pluginName,
+          value: pluginName ? pluginsMap[pluginName] : null,
+        };
+      },
+    };
   };
 
-  return PluginClassUtils.createAccessor(pluginsMap, pluginNames);
+  const accessor = PluginClassUtils.createAccessor(pluginsMap, pluginsName);
+
+  window.pluginsMap = accessor;
+
+  return accessor;
 }

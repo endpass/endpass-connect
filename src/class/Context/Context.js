@@ -61,15 +61,16 @@ export default class Context {
   }
 
   async handleEvent(payload, req) {
-    console.log('method', req.method);
     try {
       if (this.contextHandlers[req.method]) {
         await this.contextHandlers[req.method].apply(this, [payload, req]);
       }
 
-      await this.plugins.iterate(async plugin => {
+      // `this.plugins` iterable object to array
+      await [...this.plugins].reduce(async (awaiter, plugin) => {
+        await awaiter;
         await plugin.handleEvent(payload, req);
-      });
+      }, Promise.resolve());
     } catch (error) {
       console.error('context.handleEvent', error);
       const err = ConnectError.createFromError(error, ERRORS.NOT_DEFINED);

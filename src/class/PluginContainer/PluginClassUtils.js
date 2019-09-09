@@ -26,7 +26,11 @@ export default class PluginClassUtils {
       pluginClass => pluginClass.pluginName === PLUGIN_MESSENGER_GROUP,
     );
 
-    const excludePlugins = [dialogClass, messengerGroupClass];
+    const excludePlugins = [
+      dialogClass.pluginName,
+      messengerGroupClass.pluginName,
+    ];
+
     const mainPlugins = pluginsClassesList.filter(
       pluginClass => !excludePlugins.includes(pluginClass.pluginName),
     );
