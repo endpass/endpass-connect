@@ -12,7 +12,7 @@ describe('requestProviderCheck middleware', () => {
   const mainUrl = Network.NETWORK_URL_HTTP[Network.NET_ID.MAIN][0];
   const getRequestProvider = jest.fn().mockReturnValue({ host: mainUrl });
   const setRequestProvider = jest.fn();
-  const context = {
+  const providerPlugin = {
     getRequestProvider,
     setRequestProvider,
   };
@@ -24,11 +24,11 @@ describe('requestProviderCheck middleware', () => {
   const ropstenUrl = Network.NETWORK_URL_HTTP[Network.NET_ID.ROPSTEN][0];
 
   it('should set a new provider if the net id has been changed', () => {
-    const item = {
+    const action = {
       settings: { activeNet: Network.NET_ID.ROPSTEN },
     };
 
-    requestProviderSwitchActual(context, item);
+    requestProviderSwitchActual({ providerPlugin, action });
 
     const provider = new Web3HttpProvider(ropstenUrl);
 
@@ -36,13 +36,13 @@ describe('requestProviderCheck middleware', () => {
   });
 
   it(`should chain request if the net id hasn't been changed`, () => {
-    const item = Object.freeze({
+    const action = Object.freeze({
       settings: Object.freeze({ activeNet: Network.NET_ID.MAIN }),
     });
 
-    const freezeContext = Object.freeze({ getRequestProvider });
+    const freezePlugin = Object.freeze({ getRequestProvider });
 
-    requestProviderSwitchActual(freezeContext, item);
+    requestProviderSwitchActual({ providerPlugin: freezePlugin, action });
 
     expect(setRequestProvider).not.toBeCalled();
   });

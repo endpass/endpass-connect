@@ -15,6 +15,7 @@ describe('inpageProviderStream', () => {
   let middleWareMock;
   let middleware;
   let createInpageProviderStream;
+  let providerPlugin;
 
   beforeEach(() => {
     jest.resetModules();
@@ -26,12 +27,14 @@ describe('inpageProviderStream', () => {
     [middleWareMock] = middleware;
     emitter = new Emmiter();
 
-    context = {
-      getEmitter: () => emitter,
+    providerPlugin = {
+      emitter,
       getInpageProviderSettings: jest.fn(),
     };
 
-    createInpageProviderStream(context);
+    context = {};
+
+    createInpageProviderStream(context, providerPlugin);
   });
 
   describe('initial', () => {
@@ -41,8 +44,8 @@ describe('inpageProviderStream', () => {
         off: jest.fn(),
       };
 
-      createInpageProviderStream({
-        getEmitter: () => emitter,
+      createInpageProviderStream(context, {
+        emitter,
         getInpageProviderSettings: jest.fn(),
       });
 
@@ -120,16 +123,20 @@ describe('inpageProviderStream', () => {
       expect(middleWareMock).toBeCalledTimes(2);
       expect(middleWareMock).toHaveBeenNthCalledWith(
         1,
-        context,
         expect.objectContaining({
-          request: firstItem,
+          providerPlugin,
+          action: expect.objectContaining({
+            request: firstItem,
+          })
         }),
       );
       expect(middleWareMock).toHaveBeenNthCalledWith(
         2,
-        context,
         expect.objectContaining({
-          request: secondItem,
+          providerPlugin,
+          action: expect.objectContaining({
+            request: secondItem,
+          })
         }),
       );
     });

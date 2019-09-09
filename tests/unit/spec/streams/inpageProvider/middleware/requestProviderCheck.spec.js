@@ -1,13 +1,7 @@
-import requestProviderCheck from '@/streams/inpageProvider/middleware/requestProviderCheck';
 import Network from '@endpass/class/Network';
+import requestProviderCheck from '@/streams/inpageProvider/middleware/requestProviderCheck';
 
 describe('requestProviderCheck middleware', () => {
-  const mainUrl = Network.NETWORK_URL_HTTP[Network.NET_ID.MAIN][0];
-  const getRequestProvider = jest.fn().mockReturnValue({ host: mainUrl });
-  const context = {
-    getRequestProvider,
-  };
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -15,28 +9,26 @@ describe('requestProviderCheck middleware', () => {
   it('should stop processing the request with an invalid net id', () => {
     const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
 
-    const item = {
+    const action = {
       settings: { activeNet: 0 },
       end: jest.fn(),
     };
 
-    requestProviderCheck(context, item);
+    requestProviderCheck({ action });
 
-    expect(item.end).toBeCalled();
+    expect(action.end).toBeCalled();
 
     consoleSpy.mockRestore();
   });
 
   it(`should chain request with a valid net id`, () => {
-    const item = Object.freeze({
+    const action = Object.freeze({
       settings: Object.freeze({ activeNet: String(Network.NET_ID.MAIN) }),
     });
-    const cachedItem = { ...item };
+    const cachedItem = { ...action };
 
-    const freezeContext = Object.freeze({ getRequestProvider });
+    requestProviderCheck({ action});
 
-    requestProviderCheck(freezeContext, item);
-
-    expect(item).toEqual(cachedItem);
+    expect(action).toEqual(cachedItem);
   });
 });
