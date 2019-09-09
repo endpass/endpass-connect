@@ -3,7 +3,7 @@ import Widget from '@/plugins/WidgetPlugin/WidgetPlugin';
 import { getWidgetFrameStylesObject } from '@/plugins/WidgetPlugin/WidgetStyles';
 import { MESSENGER_METHODS, WIDGET_EVENTS } from '@/constants';
 
-describe('Widget class', () => {
+describe.skip('Widget class', () => {
   const url = 'https://auth.foo.bar/public/widget';
   let messenger;
   let messengerGroup;

@@ -4,7 +4,7 @@ import { MESSENGER_METHODS } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
-describe('AuthorizePlugin class', () => {
+describe.skip('AuthorizePlugin class', () => {
   let authInstance;
   const dialog = {
     ask: jest.fn(),

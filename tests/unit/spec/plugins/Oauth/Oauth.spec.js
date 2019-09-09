@@ -1,13 +1,13 @@
 import Oauth, { OauthPkceStrategy } from '@/plugins/OauthPlugin/Oauth';
 import PopupWindow from '@/plugins/OauthPlugin/Oauth/PopupWindow';
 
-jest.mock('@/class/PopupWindow', () => {
+jest.mock('@/plugins/OauthPlugin/Oauth/PopupWindow', () => {
   return {
     open: jest.fn(),
   };
 });
 
-jest.mock('@/class/Oauth/pkce', () => {
+jest.mock('@/plugins/OauthPlugin/Oauth/pkce', () => {
   return {
     generateRandomString: jest.fn().mockReturnValue('pkce-random-string'),
     challengeFromVerifier: jest
@@ -17,7 +17,7 @@ jest.mock('@/class/Oauth/pkce', () => {
 });
 
 describe('Oauth class', () => {
-  let dialog;
+  let context;
   let oauth;
   const scopes = ['chpok'];
   const clientId = 'kek';
@@ -43,7 +43,7 @@ describe('Oauth class', () => {
   });
 
   function mockOauthTokenResult(result = {}, status = true) {
-    dialog.ask.mockResolvedValue({
+    context.ask.mockResolvedValue({
       payload: result,
       status,
     });
@@ -51,13 +51,11 @@ describe('Oauth class', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    dialog = {
+    context = {
       ask: jest.fn(),
     };
 
-    const strategy = new OauthPkceStrategy({
-      dialog,
-    });
+    const strategy = new OauthPkceStrategy({ context });
 
     oauth = new Oauth({
       scopes,

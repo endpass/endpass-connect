@@ -2,27 +2,24 @@ import OauthPlugin from '@/plugins/OauthPlugin';
 
 describe('Oauth plugin', () => {
   const oauthClientId = 'xxxxxxxxxx';
-  const dialog = {
+
+  const context = {
     ask: jest.fn(),
   };
-  const context = {
-    getDialog() {
-      return dialog;
-    },
-  };
+  const options = {};
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('throw error without apiKey', () => {
-    expect(() => new OauthPlugin({ context })).toThrow();
-    expect(() => new OauthPlugin({ context, options: {} })).toThrow();
+    expect(() => new OauthPlugin(options)).toThrow();
+    expect(() => new OauthPlugin(options, context)).toThrow();
     expect(
-      () => new OauthPlugin({ context, options: { oauthClientId: undefined } }),
+      () => new OauthPlugin({ oauthClientId: undefined }),
     ).toThrow();
     expect(
-      () => new OauthPlugin({ context, options: { oauthClientId } }),
+      () => new OauthPlugin({ oauthClientId }),
     ).not.toThrow();
   });
 });
