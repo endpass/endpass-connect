@@ -1,10 +1,12 @@
 import Context from '@/class/Context';
 import { PLUGIN_METHODS, MESSENGER_METHODS } from '@/constants';
 
+const context = Symbol('context');
+
 // OLD CONNECT
 export default class PluginApiTrait {
   constructor(options, ClassPlugin) {
-    this.context = new Context(options, ClassPlugin);
+    this[context] = new Context(options, ClassPlugin);
   }
 
   /**
@@ -18,7 +20,7 @@ export default class PluginApiTrait {
    */
   async openAccount() {
     await this.auth();
-    return this.context.plugins.provider.openProviderAccount();
+    return this[context].plugins.provider.openProviderAccount();
   }
 
   /**
@@ -30,7 +32,7 @@ export default class PluginApiTrait {
    * @param {string} payload.activeNet Active network ID
    */
   async setProviderSettings(payload) {
-    return this.context.executeMethod(
+    return this[context].executeMethod(
       PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS,
       payload,
     );
@@ -45,7 +47,7 @@ export default class PluginApiTrait {
    */
   async getAccountData() {
     await this.auth();
-    const res = await this.context.plugins.provider.getProviderAccountData();
+    const res = await this[context].plugins.provider.getProviderAccountData();
     return res;
   }
 
@@ -57,7 +59,7 @@ export default class PluginApiTrait {
    *  Web3 instance
    */
   async getProvider() {
-    return this.context.plugins.provider.getInpageProvider();
+    return this[context].plugins.provider.getInpageProvider();
   }
 
   /**
@@ -67,11 +69,11 @@ export default class PluginApiTrait {
    *  know about result
    */
   async auth(redirectUrl) {
-    const res = await this.context.executeMethod(
+    const res = await this[context].executeMethod(
       PLUGIN_METHODS.CONTEXT_AUTHORIZE,
       redirectUrl,
     );
-    // const res = await this.context.plugins.authorize
+    // const res = await this[context].plugins.authorize
     // .authorizeMe(redirectUrl);
 
     return {
@@ -87,7 +89,7 @@ export default class PluginApiTrait {
    * @returns {Promise<boolean>}
    */
   async logout() {
-    const { status } = await this.context.executeMethod(
+    const { status } = await this[context].executeMethod(
       MESSENGER_METHODS.LOGOUT_REQUEST,
     );
     return status;
@@ -101,7 +103,7 @@ export default class PluginApiTrait {
    * @param {string[]} params.scopes - Array of authorization scopes
    */
   async loginWithOauth(params) {
-    await this.context.plugins.oauth.loginWithOauth(params);
+    await this[context].plugins.oauth.loginWithOauth(params);
   }
 
   /**
@@ -109,7 +111,7 @@ export default class PluginApiTrait {
    * @throws {Error} If not authorized yet;
    */
   async logoutFromOauth() {
-    this.context.plugins.oauth.logout();
+    this[context].plugins.oauth.logout();
   }
 
   /**
@@ -120,7 +122,7 @@ export default class PluginApiTrait {
    * @throws {Error} If not authorized yet;
    */
   async setOauthPopupParams(params) {
-    this.context.plugins.oauth.setPopupParams(params);
+    this[context].plugins.oauth.setPopupParams(params);
   }
 
   /**
@@ -135,7 +137,7 @@ export default class PluginApiTrait {
    * @throws {Error} If not authorized yet;
    */
   async request(options) {
-    return this.context.plugins.oauth.request(options);
+    return this[context].plugins.oauth.request(options);
   }
 
   /**
@@ -149,14 +151,14 @@ export default class PluginApiTrait {
    * @returns {Promise<Element>} Mounted widget iframe element
    */
   async mountWidget(params) {
-    return this.context.plugins.widget.mount(params);
+    return this[context].plugins.widget.mount(params);
   }
 
   /**
    * Unmounts endpass widget from DOM
    */
   async unmountWidget() {
-    return this.context.plugins.widget.unmount();
+    return this[context].plugins.widget.unmount();
   }
 
   /**
@@ -164,7 +166,7 @@ export default class PluginApiTrait {
    * @returns {Promise<Element>} Widget iframe node
    */
   async getWidgetNode() {
-    const res = await this.context.plugins.widget.getWidgetNode();
+    const res = await this[context].plugins.widget.getWidgetNode();
 
     return res;
   }
