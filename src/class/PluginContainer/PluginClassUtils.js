@@ -26,6 +26,14 @@ export default class PluginClassUtils {
       pluginClass => pluginClass.pluginName === PLUGIN_MESSENGER_GROUP,
     );
 
+    if (!dialogClass) {
+      throw new Error('Not defined DialogPlugin in dependencies!');
+    }
+
+    if (!messengerGroupClass) {
+      throw new Error('Not defined MessengerGroupPlugin in dependencies!');
+    }
+
     const excludePlugins = [
       dialogClass.pluginName,
       messengerGroupClass.pluginName,
@@ -34,14 +42,6 @@ export default class PluginClassUtils {
     const mainPlugins = pluginsClassesList.filter(
       pluginClass => !excludePlugins.includes(pluginClass.pluginName),
     );
-
-    if (!dialogClass) {
-      throw new Error('Not defined DialogPlugin in dependencies!');
-    }
-
-    if (!messengerGroupClass) {
-      throw new Error('Not defined MessengerGroupPlugin in dependencies!');
-    }
 
     return [dialogClass, ...mainPlugins, messengerGroupClass];
   }

@@ -1,8 +1,10 @@
 import Context from '@/class/Context';
-import { PLUGIN_METHODS, MESSENGER_METHODS } from '@/constants';
+import {
+  PLUGIN_METHODS,
+  MESSENGER_METHODS,
+  CONTEXT as context,
+} from '@/constants';
 import pkg from '../../package.json';
-
-const context = Symbol('context');
 
 if (ENV.isProduction) {
   /* eslint-disable-next-line */

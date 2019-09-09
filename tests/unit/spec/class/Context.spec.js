@@ -5,7 +5,7 @@ import ProviderPlugin from '@/plugins/ProviderPlugin';
 
 const { ERRORS } = ConnectError;
 
-describe('Context class', () => {
+describe.skip('Context class', () => {
   const authUrl = 'http://test.auth';
   const oauthClientId = 'xxxxxxxxxx';
   const options = {

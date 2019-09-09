@@ -108,3 +108,5 @@ export const DIALOG_EVENTS = {
   OPEN: 'open',
   CLOSE: 'close',
 };
+
+export const CONTEXT = Symbol('context');
