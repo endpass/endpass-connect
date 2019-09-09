@@ -1,5 +1,5 @@
 import ConnectError from '@endpass/class/ConnectError';
-import ProviderComponent from '@/plugins/ProviderPlugin';
+import ProviderPlugin from '@/plugins/ProviderPlugin';
 import ProviderFactory from '@/plugins/ProviderPlugin/ProviderFactory';
 import InpageProvider from '@/plugins/ProviderPlugin/InpageProvider';
 import { MESSENGER_METHODS } from '@/constants';
@@ -30,7 +30,7 @@ describe('Provider plugin', () => {
   };
 
   const createPlugin = () => {
-    const inst = new ProviderComponent({ context });
+    const inst = new ProviderPlugin({ context });
     inst.init();
     return inst;
   };
@@ -46,7 +46,7 @@ describe('Provider plugin', () => {
     });
 
     it('should create instance of plugin', () => {
-      expect(plugin).toBeInstanceOf(ProviderComponent);
+      expect(plugin).toBeInstanceOf(ProviderPlugin);
     });
 
     it('should not create request provider until it called', () => {

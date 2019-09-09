@@ -1,19 +1,10 @@
 import ConnectError from '@endpass/class/ConnectError';
 
-import pkg from '../../../package.json';
 import contextHandlers from './contextHandlers';
 import HandlersFactory from '@/class/HandlersFactory';
 import PluginContainer from '@/class/PluginContainer';
 
 const { ERRORS } = ConnectError;
-
-if (ENV.isProduction) {
-  /* eslint-disable-next-line */
-  console.info(
-    `%cEndpass connect version ${pkg.version} loaded 🔌`,
-    'color: #fff; background: #4B0873',
-  );
-}
 
 /**
  * @typedef {import('@/plugins/PluginBase')} ConnectPlugin

@@ -1,4 +1,4 @@
-import OauthComponent from '@/class/components/OauthPlugin';
+import OauthPlugin from '@/plugins/OauthPlugin';
 
 describe('Oauth plugin', () => {
   const oauthClientId = 'xxxxxxxxxx';
@@ -16,13 +16,13 @@ describe('Oauth plugin', () => {
   });
 
   it('throw error without apiKey', () => {
-    expect(() => new OauthComponent({ context })).toThrow();
-    expect(() => new OauthComponent({ context, options: {} })).toThrow();
+    expect(() => new OauthPlugin({ context })).toThrow();
+    expect(() => new OauthPlugin({ context, options: {} })).toThrow();
     expect(
-      () => new OauthComponent({ context, options: { oauthClientId: undefined } }),
+      () => new OauthPlugin({ context, options: { oauthClientId: undefined } }),
     ).toThrow();
     expect(
-      () => new OauthComponent({ context, options: { oauthClientId } }),
+      () => new OauthPlugin({ context, options: { oauthClientId } }),
     ).not.toThrow();
   });
 });

@@ -1,4 +1,4 @@
-# Endpass ConnectPlugin
+# Endpass Connect
 
 ## Table of contents
 

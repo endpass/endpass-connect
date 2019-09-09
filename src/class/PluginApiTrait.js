@@ -1,7 +1,16 @@
 import Context from '@/class/Context';
 import { PLUGIN_METHODS, MESSENGER_METHODS } from '@/constants';
+import pkg from '../../package.json';
 
 const context = Symbol('context');
+
+if (ENV.isProduction) {
+  /* eslint-disable-next-line */
+  console.info(
+    `%cEndpass connect version ${pkg.version} loaded 🔌`,
+    'color: #fff; background: #4B0873',
+  );
+}
 
 // OLD CONNECT
 export default class PluginApiTrait {
@@ -55,7 +64,7 @@ export default class PluginApiTrait {
    * Return Inpage provider for inner requests and returns it back
    * @public
    * @param {Web3.Provider} provider Web3-friendly provider
-   * @returns {Web3.Provider} Inpage provider for injections into application
+   * @returns {Promise<Web3.Provider>} Inpage provider for injections into application
    *  Web3 instance
    */
   async getProvider() {

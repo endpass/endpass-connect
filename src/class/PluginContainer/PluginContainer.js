@@ -39,9 +39,5 @@ export default function PluginContainer(options, context, ClassPlugin) {
     };
   };
 
-  const accessor = PluginClassUtils.createAccessor(pluginsMap, pluginsName);
-
-  window.pluginsMap = accessor;
-
-  return accessor;
+  return PluginClassUtils.createAccessor(pluginsMap, pluginsName);
 }

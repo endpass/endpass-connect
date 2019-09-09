@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { MESSENGER_METHODS, PLUGIN_METHODS } from '@/constants';
+import { MESSENGER_METHODS } from '@/constants';
 import StateClose from '@/plugins/DialogPlugin/states/StateClose';
 import StateOpen from '@/plugins/DialogPlugin/states/StateOpen';
 

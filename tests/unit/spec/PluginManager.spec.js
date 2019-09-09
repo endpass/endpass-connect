@@ -1,5 +1,5 @@
 import PluginFactory from '@/class/PluginFactory';
-import PluginBase from '@/class/components/Plugin';
+import PluginBase from '@/plugins/PluginBase';
 
 describe('plugin manager', () => {
   class TestPlugin extends PluginBase {

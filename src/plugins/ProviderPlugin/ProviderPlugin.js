@@ -35,7 +35,7 @@ export class ProviderPlugin extends PluginBase {
 
       if (!this.context.isLogin) {
         try {
-          this.serverAuth();
+          await this.serverAuth();
         } catch (e) {
           error =
             e.code === ERRORS.AUTH_CANCELED_BY_USER

@@ -1,5 +1,5 @@
 import ConnectPlugin from '@/plugins/ConnectPlugin';
-import ProviderComponent from '@/plugins/ProviderPlugin';
+import ProviderPlugin from '@/plugins/ProviderPlugin';
 import InpageProvider from '@/plugins/ProviderPlugin/InpageProvider';
 import PluginApiTrait from '@/class/PluginApiTrait';
 
@@ -7,7 +7,7 @@ describe('Connect class', () => {
   let connect;
   const authUrl = 'http://test.auth';
   const oauthClientId = 'xxxxxxxxxx';
-  const plugins = [ProviderComponent];
+  const plugins = [ProviderPlugin];
   beforeAll(() => {
     window.open = jest.fn();
     jest.useFakeTimers();

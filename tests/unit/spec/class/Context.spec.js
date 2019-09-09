@@ -1,7 +1,7 @@
 import ConnectError from '@endpass/class/ConnectError';
 import Context from '@/class/Context';
 import { MESSENGER_METHODS, INPAGE_EVENTS } from '@/constants';
-import ProviderComponent from '@/plugins/ProviderPlugin';
+import ProviderPlugin from '@/plugins/ProviderPlugin';
 
 const { ERRORS } = ConnectError;
 
@@ -39,10 +39,10 @@ describe('Context class', () => {
     });
 
     it('should create with provider plugin', () => {
-      context = new Context({ ...options, plugins: [ProviderComponent] });
+      context = new Context({ ...options, plugins: [ProviderPlugin] });
       expect(Object.keys(context.plugins)).toHaveLength(4);
-      expect(context.plugins[ProviderComponent.pluginName]).toBeInstanceOf(
-        ProviderComponent,
+      expect(context.plugins[ProviderPlugin.pluginName]).toBeInstanceOf(
+        ProviderPlugin,
       );
     });
   });
@@ -53,7 +53,7 @@ describe('Context class', () => {
       emitter = {
         emit: jest.fn(),
       };
-      context = new Context({ ...options, plugins: [ProviderComponent] });
+      context = new Context({ ...options, plugins: [ProviderPlugin] });
       context.plugins.provider.getEmitter = () => emitter;
 
       context.plugins.elements.messengerGroup = () => msgGroup;
@@ -82,7 +82,7 @@ describe('Context class', () => {
 
   describe('serverAuth', () => {
     beforeEach(() => {
-      context = new Context({ ...options, plugins: [ProviderComponent] });
+      context = new Context({ ...options, plugins: [ProviderPlugin] });
       context.plugins.elements.getDialogInstance = dialog;
       context.auth = jest.fn();
       context.getDialog = () => dialog;
