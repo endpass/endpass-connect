@@ -65,6 +65,9 @@ class DialogPlugin extends PluginBase {
     this.frame = null;
     this.initialTimer = null;
     this.frameStyles = inlineStylesState(propsIframe);
+  }
+
+  init() {
     if (document.readyState !== 'complete') {
       document.addEventListener('readystatechange', () => {
         if (document.readyState === 'complete') {
@@ -72,10 +75,7 @@ class DialogPlugin extends PluginBase {
         }
       });
     } else {
-      // hack for mount after create all plugins
-      setTimeout(() => {
-        this.mount();
-      }, 0);
+      this.mount();
     }
   }
 

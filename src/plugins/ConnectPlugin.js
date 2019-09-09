@@ -1,6 +1,3 @@
-import OauthPlugin from '@/plugins/OauthPlugin';
-import WidgetPlugin from '@/plugins/WidgetPlugin';
-import AuthorizePlugin from '@/plugins/AuthorizePlugin';
 import PluginBase from '@/plugins/PluginBase';
 import PluginFactory from '@/class/PluginFactory';
 import DialogPlugin from '@/plugins/DialogPlugin';
@@ -12,11 +9,7 @@ class ConnectPlugin extends PluginBase {
   }
 
   static get dependencyPlugins() {
-    return [DialogPlugin, AuthorizePlugin, OauthPlugin, WidgetPlugin];
-  }
-
-  static get lastPlugins() {
-    return [MessengerGroupPlugin];
+    return [DialogPlugin, MessengerGroupPlugin];
   }
 }
 

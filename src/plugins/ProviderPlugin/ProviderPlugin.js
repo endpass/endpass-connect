@@ -5,22 +5,18 @@ import InpageProvider from '@/plugins/ProviderPlugin/InpageProvider';
 import { INPAGE_EVENTS, MESSENGER_METHODS, PLUGIN_METHODS } from '@/constants';
 import ProviderFactory from '@/plugins/ProviderPlugin/ProviderFactory';
 import createInpageProviderStream from '@/streams/inpageProvider/inpageProviderStream';
-import PluginComponent from '../PluginBase';
-import WidgetComponent from '../WidgetPlugin';
-import AuthorizeComponent from '../AuthorizePlugin';
+import PluginBase from '../PluginBase';
+import WidgetPlugin from '../WidgetPlugin';
+import AuthorizePlugin from '../AuthorizePlugin';
 import PluginFactory from '@/class/PluginFactory';
 import DialogPlugin from '@/plugins/DialogPlugin';
 import MessengerGroupPlugin from '@/plugins/MessengerGroupPlugin';
 
 const { ERRORS } = ConnectError;
 
-export class ProviderPlugin extends PluginComponent {
+export class ProviderPlugin extends PluginBase {
   static get dependencyPlugins() {
-    return [DialogPlugin, AuthorizeComponent, WidgetComponent];
-  }
-
-  static get lastPlugins() {
-    return [MessengerGroupPlugin];
+    return [DialogPlugin, AuthorizePlugin, WidgetPlugin, MessengerGroupPlugin];
   }
 
   static get pluginName() {
@@ -31,6 +27,9 @@ export class ProviderPlugin extends PluginComponent {
     super(options, context);
 
     this.emitter = new Emmiter();
+  }
+
+  init() {
     this.emitter.on(INPAGE_EVENTS.LOGIN, async () => {
       let error = null;
 

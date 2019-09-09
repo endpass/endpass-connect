@@ -3,7 +3,7 @@ import ConnectError from '@endpass/class/ConnectError';
 import pkg from '../../../package.json';
 import contextHandlers from './contextHandlers';
 import HandlersFactory from '@/class/HandlersFactory';
-import ClassesFactory from '@/class/ClassesFactory';
+import PluginContainer from '@/class/PluginContainer';
 
 const { ERRORS } = ConnectError;
 
@@ -46,25 +46,9 @@ export default class Context {
       contextHandlers,
     );
 
-    /**
-     * @private
-     */
-    this.plugins = ClassesFactory.createProxy({});
+    this.plugins = new PluginContainer(options, this, ClassPlugin);
 
-    // please do not redefine order of plugins
-    const pluginClassesMap = ClassesFactory.createUniqueClasses([
-      ...ClassPlugin.dependencyPlugins,
-      ClassPlugin,
-      ...(options.plugins || []),
-      ...ClassPlugin.lastPlugins,
-    ]);
-
-    Object.keys(pluginClassesMap).reduce((plugins, pluginKey) => {
-      const PluginClass = pluginClassesMap[pluginKey];
-      return Object.assign(plugins, {
-        [pluginKey]: new PluginClass(options, this),
-      });
-    }, this.plugins);
+    this.plugins.init();
   }
 
   get isLogin() {
@@ -83,10 +67,9 @@ export default class Context {
         await this.contextHandlers[req.method].apply(this, [payload, req]);
       }
 
-      await Object.keys(this.plugins).reduce(async (awaiter, pluginKey) => {
-        await awaiter;
-        await this.plugins[pluginKey].handleEvent(payload, req);
-      }, Promise.resolve());
+      await this.plugins.iterate(async plugin => {
+        await plugin.handleEvent(payload, req);
+      });
     } catch (error) {
       console.error('context.handleEvent', error);
       const err = ConnectError.createFromError(error, ERRORS.NOT_DEFINED);

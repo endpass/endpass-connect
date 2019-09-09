@@ -16,10 +16,6 @@ export default class PluginBase {
     return [];
   }
 
-  static get lastPlugins() {
-    return [];
-  }
-
   /**
    *
    * @return {object}
@@ -47,6 +43,8 @@ export default class PluginBase {
       });
     }
   }
+
+  init() {}
 
   handleEvent() {}
 

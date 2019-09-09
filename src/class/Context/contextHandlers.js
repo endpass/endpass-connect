@@ -35,7 +35,7 @@ const changeSettings = context => async (payload, req) => {
   }
 };
 
-const getSettings = context => (payload, req) => {
+const widgetGetSettings = context => (payload, req) => {
   const settings = context.plugins.provider.getInpageProviderSettings();
   req.answer(settings);
 };
@@ -59,7 +59,7 @@ const setProviderSettings = context => async payload => {
 export default {
   [MESSENGER_METHODS.INITIATE]: initiate,
   [MESSENGER_METHODS.CHANGE_SETTINGS_REQUEST]: changeSettings,
-  [MESSENGER_METHODS.WIDGET_GET_SETTING]: getSettings,
+  [MESSENGER_METHODS.WIDGET_GET_SETTING]: widgetGetSettings,
   [PLUGIN_METHODS.CONTEXT_AUTHORIZE]: authorize,
   [PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS]: setProviderSettings,
 };

@@ -58,8 +58,10 @@ class WidgetPlugin extends PluginBase {
 
     /** @type Array<Promise> */
     this.frameResolver = [];
+  }
 
-    this.setupWidgetOnAuth(this, options.widget);
+  init() {
+    this.setupWidgetOnAuth(this, this.options.widget);
   }
 
   get messenger() {

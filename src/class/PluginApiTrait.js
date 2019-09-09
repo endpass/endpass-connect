@@ -2,7 +2,7 @@ import Context from '@/class/Context';
 import { PLUGIN_METHODS, MESSENGER_METHODS } from '@/constants';
 
 // OLD CONNECT
-export default class PluginContainerApi {
+export default class PluginApiTrait {
   constructor(options, ClassPlugin) {
     this.context = new Context(options, ClassPlugin);
   }

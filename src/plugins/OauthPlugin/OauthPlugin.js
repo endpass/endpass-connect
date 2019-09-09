@@ -14,11 +14,7 @@ class OauthPlugin extends PluginBase {
   }
 
   static get dependencyPlugins() {
-    return [DialogPlugin];
-  }
-
-  static get lastPlugins() {
-    return [MessengerGroupPlugin];
+    return [DialogPlugin, MessengerGroupPlugin];
   }
 
   constructor(options, context) {
