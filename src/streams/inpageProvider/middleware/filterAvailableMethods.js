@@ -20,5 +20,6 @@ export default async function({ action, providerPlugin }) {
     },
   };
   action.end();
+
   providerPlugin.emitter.emit(INPAGE_EVENTS.RESPONSE, response);
 }

@@ -10,7 +10,7 @@ import middleware from '@/streams/inpageProvider/middleware';
 import actionState from './actionState';
 import createAction from './createAction';
 
-const createMiddlewareStream = ({ context, action, pluginProvider }) => {
+const createMiddlewareStream = ({ context, action, providerPlugin }) => {
   const middleWare$ = pipe(
     fromIter(middleware),
     // tap(x => console.log('fun', x.name)),
@@ -18,7 +18,7 @@ const createMiddlewareStream = ({ context, action, pluginProvider }) => {
     // tap(x => console.log('data->', x)),
     concatMap(fn =>
       fromPromise(
-        fn({ context, action, pluginProvider }),
+        fn({ context, action, providerPlugin }),
         // (async function f() {
         //   console.log('[calling]', fn.name);
         //   const res = await fn(context, action);
@@ -31,24 +31,24 @@ const createMiddlewareStream = ({ context, action, pluginProvider }) => {
   return middleWare$;
 };
 
-export default function createInpageProviderStream(context, pluginProvider) {
+export default function createInpageProviderStream(context, providerPlugin) {
   const request$ = pipe(
-    fromEmitter(pluginProvider.emitter, INPAGE_EVENTS.REQUEST),
+    fromEmitter(providerPlugin.emitter, INPAGE_EVENTS.REQUEST),
   );
   const settings$ = pipe(
-    fromEmitter(pluginProvider.emitter, INPAGE_EVENTS.SETTINGS),
+    fromEmitter(providerPlugin.emitter, INPAGE_EVENTS.SETTINGS),
   );
 
   return pipe(
     merge(request$, settings$),
     map(request =>
-      createAction(request, pluginProvider.getInpageProviderSettings()),
+      createAction(request, providerPlugin.getInpageProviderSettings()),
     ),
     // tap(x => console.log('action', x)),
     filter(x => x && x.request),
     // tap(x => console.log('req', x)),
     concatMap(action =>
-      createMiddlewareStream({ context, action, pluginProvider }),
+      createMiddlewareStream({ context, action, providerPlugin }),
     ),
     subscribe({
       error: err => console.error(err),

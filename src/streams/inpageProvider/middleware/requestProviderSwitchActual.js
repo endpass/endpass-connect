@@ -2,7 +2,6 @@ import get from 'lodash.get';
 
 import Network from '@endpass/class/Network';
 import ProviderFactory from '@/plugins/ProviderPlugin/ProviderFactory';
-import { PLUGIN_METHODS } from '@/constants';
 
 /** @type {import("@/types/Middleware").Middleware} */
 const requestProviderSwitchActual = async ({ action, providerPlugin }) => {

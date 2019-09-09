@@ -33,7 +33,7 @@ export default function PluginContainer(options, context, ClassPlugin) {
 
         return {
           done: !pluginName,
-          value: pluginName ? pluginsMap[pluginName] : null,
+          value: !!pluginName && pluginsMap[pluginName],
         };
       },
     };

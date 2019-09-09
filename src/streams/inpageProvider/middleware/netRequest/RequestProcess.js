@@ -8,11 +8,11 @@ import {
 const { ERRORS } = ConnectError;
 
 export default class RequestProcess {
-  constructor({ context, request, settings = {}, pluginProvider }) {
+  constructor({ context, request, settings = {}, providerPlugin }) {
     this.context = context;
     this.currentRequest = request;
     this.settings = settings;
-    this.pluginProvider = pluginProvider;
+    this.providerPlugin = providerPlugin;
   }
 
   /**
@@ -60,7 +60,7 @@ export default class RequestProcess {
    */
   async sendToNetwork() {
     return new Promise((resolve, reject) => {
-      const reqProvider = this.pluginProvider.getRequestProvider();
+      const reqProvider = this.providerPlugin.getRequestProvider();
       const req = this.currentRequest;
       reqProvider.send(req, (err, res) => {
         if (err) {
@@ -81,7 +81,7 @@ export default class RequestProcess {
       console.error(`Request have return error: ${payload.error}`);
     }
 
-    this.pluginProvider.emitter.emit(INPAGE_EVENTS.RESPONSE, payload);
+    this.providerPlugin.emitter.emit(INPAGE_EVENTS.RESPONSE, payload);
   }
 
   /**

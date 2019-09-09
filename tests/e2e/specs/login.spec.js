@@ -6,7 +6,7 @@ describe('login', function() {
       cy.waitPageLoad();
     });
 
-    it.only('should login to system', () => {
+    it('should login to system', () => {
       cy.authFrameContinueRun();
 
       cy.shouldLoggedIn();
