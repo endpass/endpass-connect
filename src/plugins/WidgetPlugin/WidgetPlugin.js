@@ -1,11 +1,6 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import debounce from 'lodash.debounce';
-import {
-  DIRECTION,
-  MESSENGER_METHODS,
-  PLUGIN_METHODS,
-  WIDGET_EVENTS,
-} from '@/constants';
+import { DIRECTION, MESSENGER_METHODS, WIDGET_EVENTS } from '@/constants';
 import { inlineStyles } from '@/util/dom';
 import {
   MOBILE_BREAKPOINT,
@@ -16,10 +11,9 @@ import StateCollapse from './states/StateCollapse';
 import StateClose from './states/StateClose';
 import widgetHandlers from './widgetHandlers';
 import PluginBase from '@/plugins/PluginBase';
-import PluginFactory from '@/class/PluginFactory';
 import { getFrameRouteUrl } from '@/util/url';
 
-class WidgetPlugin extends PluginBase {
+export default class WidgetPlugin extends PluginBase {
   static get pluginName() {
     return 'widget';
   }
@@ -244,5 +238,3 @@ class WidgetPlugin extends PluginBase {
     return inlineStyles(stylesObject);
   }
 }
-
-export default PluginFactory.create(WidgetPlugin);

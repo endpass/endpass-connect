@@ -1,12 +1,7 @@
 import ConnectError from '@endpass/class/ConnectError';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import { inlineStylesState } from '@/util/dom';
-import {
-  DIRECTION,
-  DIALOG_EVENTS,
-  PLUGIN_METHODS,
-  PLUGIN_NAMES,
-} from '@/constants';
+import { DIRECTION, DIALOG_EVENTS, PLUGIN_NAMES } from '@/constants';
 import {
   propsIframe,
   propsIframeShow,
@@ -19,7 +14,6 @@ import {
 import StateClose from './states/StateClose';
 import dialogHandlers from '@/plugins/DialogPlugin/dialogHandlers';
 import PluginBase from '@/plugins/PluginBase';
-import PluginFactory from '@/class/PluginFactory';
 import { getFrameRouteUrl } from '@/util/url';
 
 const { ERRORS } = ConnectError;
@@ -34,7 +28,7 @@ const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
  * @typedef {Object<string, Array<Listener>>} Resolvers
  */
 
-class DialogPlugin extends PluginBase {
+export default class DialogPlugin extends PluginBase {
   static get pluginName() {
     return PLUGIN_NAMES.DIALOG;
   }
@@ -75,7 +69,7 @@ class DialogPlugin extends PluginBase {
   get messenger() {
     if (!this.dialogMessenger) {
       this.dialogMessenger = new CrossWindowMessenger({
-        showLogs: true, //!ENV.isProduction,
+        showLogs: false, //!ENV.isProduction,
         name: `connect-bridge-dialog[]`,
         to: DIRECTION.AUTH,
         from: DIRECTION.CONNECT,
@@ -226,5 +220,3 @@ class DialogPlugin extends PluginBase {
     return res;
   }
 }
-
-export default PluginFactory.create(DialogPlugin);

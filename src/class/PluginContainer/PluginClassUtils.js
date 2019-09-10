@@ -9,11 +9,15 @@ const PLUGIN_MESSENGER_GROUP = PLUGIN_NAMES.MESSENGER_GROUP;
 
 export default class PluginClassUtils {
   static createPluginClassesList(options, ClassPlugin) {
+    const optionPlugins = (options.plugins || []).map(
+      ExportPlugin => ExportPlugin.ClassPlugin,
+    );
+
     // please do not redefine order of plugins
     const pluginsClassesList = PluginClassUtils.createUniques([
       ...ClassPlugin.dependencyPlugins,
       ClassPlugin,
-      ...(options.plugins || []),
+      ...optionPlugins,
     ]);
 
     return PluginClassUtils.getClassesWithOrder(pluginsClassesList);

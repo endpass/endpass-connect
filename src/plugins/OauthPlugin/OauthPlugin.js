@@ -1,14 +1,13 @@
 import ConnectError from '@endpass/class/ConnectError';
 import OauthPkceStrategy from '@/plugins/OauthPlugin/Oauth/OauthPkceStrategy';
 import Oauth from '@/plugins/OauthPlugin/Oauth';
-import PluginFactory from '@/class/PluginFactory';
 import PluginBase from '../PluginBase';
-import DialogPlugin from '@/plugins/DialogPlugin/DialogPlugin';
-import MessengerGroupPlugin from '@/plugins/MessengerGroupPlugin/MessengerGroupPlugin';
+import { DialogPlugin } from '@/plugins/DialogPlugin';
+import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 
 const { ERRORS } = ConnectError;
 
-class OauthPlugin extends PluginBase {
+export default class OauthPlugin extends PluginBase {
   static get pluginName() {
     return 'oauth';
   }
@@ -64,5 +63,3 @@ class OauthPlugin extends PluginBase {
     return this.oauthProvider.request(options);
   }
 }
-
-export default PluginFactory.create(OauthPlugin);

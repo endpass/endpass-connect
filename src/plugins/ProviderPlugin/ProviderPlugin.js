@@ -6,15 +6,14 @@ import { INPAGE_EVENTS, MESSENGER_METHODS, PLUGIN_METHODS } from '@/constants';
 import ProviderFactory from '@/plugins/ProviderPlugin/ProviderFactory';
 import createInpageProviderStream from '@/streams/inpageProvider/inpageProviderStream';
 import PluginBase from '../PluginBase';
-import WidgetPlugin from '../WidgetPlugin';
-import AuthorizePlugin from '../AuthorizePlugin';
-import PluginFactory from '@/class/PluginFactory';
-import DialogPlugin from '@/plugins/DialogPlugin';
-import MessengerGroupPlugin from '@/plugins/MessengerGroupPlugin';
+import { WidgetPlugin } from '../WidgetPlugin';
+import { AuthorizePlugin } from '../AuthorizePlugin';
+import { DialogPlugin } from '@/plugins/DialogPlugin';
+import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 
 const { ERRORS } = ConnectError;
 
-export class ProviderPlugin extends PluginBase {
+export default class ProviderPlugin extends PluginBase {
   static get dependencyPlugins() {
     return [DialogPlugin, AuthorizePlugin, WidgetPlugin, MessengerGroupPlugin];
   }
@@ -185,5 +184,3 @@ export class ProviderPlugin extends PluginBase {
     }
   }
 }
-
-export default PluginFactory.create(ProviderPlugin);

@@ -2,13 +2,12 @@ import ConnectError from '@endpass/class/ConnectError';
 import { MESSENGER_METHODS } from '@/constants';
 import authHandlers from '@/plugins/AuthorizePlugin/authHandlers';
 import PluginBase from '@/plugins/PluginBase';
-import PluginFactory from '@/class/PluginFactory';
-import DialogPlugin from '@/plugins/DialogPlugin/DialogPlugin';
-import MessengerGroupPlugin from '@/plugins/MessengerGroupPlugin/MessengerGroupPlugin';
+import { DialogPlugin } from '@/plugins/DialogPlugin';
+import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 
 const { ERRORS } = ConnectError;
 
-class AuthorizePlugin extends PluginBase {
+export default class AuthorizePlugin extends PluginBase {
   static get pluginName() {
     return 'authorize';
   }
@@ -83,5 +82,3 @@ class AuthorizePlugin extends PluginBase {
     return res.status;
   }
 }
-
-export default PluginFactory.create(AuthorizePlugin);

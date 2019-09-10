@@ -3,7 +3,6 @@
 // @ts-ignore
 // eslint-disable-next-line no-unused-vars
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
-import PluginFactory from '@/class/PluginFactory';
 import PluginBase from '@/plugins/PluginBase';
 import { PLUGIN_NAMES } from '@/constants';
 
@@ -15,7 +14,7 @@ import { PLUGIN_NAMES } from '@/constants';
  * @typedef {Object<string, Array<Listener>>} Resolvers
  */
 
-class MessengerGroupPlugin extends PluginBase {
+export default class MessengerGroupPlugin extends PluginBase {
   static get pluginName() {
     return PLUGIN_NAMES.MESSENGER_GROUP;
   }
@@ -59,5 +58,3 @@ class MessengerGroupPlugin extends PluginBase {
     });
   }
 }
-
-export default PluginFactory.create(MessengerGroupPlugin);

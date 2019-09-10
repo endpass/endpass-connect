@@ -59,17 +59,20 @@ export default class Context {
   }
 
   async handleEvent(payload, req) {
-    try {
-      let isAnswered = false;
-      const answer = result => {
-        isAnswered = true;
-        req.answer(result);
-      };
-      const proxyReq = {
-        ...req,
-        answer,
-      };
+    console.log('req.method', req.method);
+    let isAnswered = false;
+    const answer = result => {
+      isAnswered = true;
+      req.answer(result);
+    };
+    const proxyReq = {
+      ...req,
+      answer,
+    };
 
+    let answerRes;
+
+    try {
       if (this.contextHandlers[req.method]) {
         await this.contextHandlers[req.method](payload, proxyReq);
       }
@@ -78,18 +81,17 @@ export default class Context {
       [...this.plugins].forEach(plugin => {
         plugin.handleEvent(payload, proxyReq);
       });
-
-      if (!isAnswered) {
-        answer();
-      }
     } catch (error) {
       console.error('context.handleEvent', error);
       const err = ConnectError.createFromError(error, ERRORS.NOT_DEFINED);
-      req.answer({
+      answerRes = {
         status: false,
         error: err,
         code: err.code,
-      });
+      };
+    }
+    if (!isAnswered) {
+      answer(answerRes);
     }
   }
 

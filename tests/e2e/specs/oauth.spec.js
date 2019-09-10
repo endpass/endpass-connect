@@ -36,7 +36,7 @@ describe('oauth', function() {
     });
   });
 
-  describe('oauth login and get data', () => {
+  describe.skip('oauth login and get data', () => {
     beforeEach(() => {
       cy.visit(`${visitUrl}${visitBlockOauth}`, {
         onBeforeLoad(win) {
