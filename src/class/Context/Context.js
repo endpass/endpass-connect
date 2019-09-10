@@ -58,40 +58,37 @@ export default class Context {
     return this.plugins.dialog.ask(method, payload);
   }
 
-  async handleEvent(payload, req) {
-    console.log('req.method', req.method);
+  async handleEvent(payload, originReq) {
     let isAnswered = false;
-    const answer = result => {
-      isAnswered = true;
-      req.answer(result);
-    };
     const proxyReq = {
-      ...req,
-      answer,
+      ...originReq,
+      answer: result => {
+        if (isAnswered) {
+          return;
+        }
+        isAnswered = true;
+        originReq.answer(result);
+      },
     };
-
-    let answerRes;
 
     try {
-      if (this.contextHandlers[req.method]) {
-        await this.contextHandlers[req.method](payload, proxyReq);
+      if (this.contextHandlers[proxyReq.method]) {
+        await this.contextHandlers[proxyReq.method](payload, proxyReq);
       }
 
       // `this.plugins` iterable object to array
       [...this.plugins].forEach(plugin => {
         plugin.handleEvent(payload, proxyReq);
       });
+      proxyReq.answer();
     } catch (error) {
       console.error('context.handleEvent', error);
       const err = ConnectError.createFromError(error, ERRORS.NOT_DEFINED);
-      answerRes = {
+      proxyReq.answer({
         status: false,
         error: err,
         code: err.code,
-      };
-    }
-    if (!isAnswered) {
-      answer(answerRes);
+      });
     }
   }
 

@@ -126,7 +126,7 @@ describe('login', function() {
       cy.shouldLoggedIn();
     });
 
-    it.skip('should recovery account', () => {
+    it('should recovery account', () => {
       cy.mockAuthCheck(401);
 
       cy.authFrameContinueRun();
