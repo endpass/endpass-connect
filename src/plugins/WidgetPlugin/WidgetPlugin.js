@@ -19,8 +19,6 @@ import PluginBase from '@/plugins/PluginBase';
 import PluginFactory from '@/class/PluginFactory';
 import { getFrameRouteUrl } from '@/util/url';
 
-const WIDGET_AUTH_TIMEOUT = 200;
-
 class WidgetPlugin extends PluginBase {
   static get pluginName() {
     return 'widget';
@@ -60,8 +58,11 @@ class WidgetPlugin extends PluginBase {
     this.frameResolver = [];
   }
 
-  init() {
-    this.setupWidgetOnAuth(this, this.options.widget);
+  get mountSettings() {
+    return {
+      position: this.position,
+      isMobile: this.isMobile,
+    };
   }
 
   get messenger() {
@@ -81,23 +82,6 @@ class WidgetPlugin extends PluginBase {
   /* eslint-disable-next-line */
   get isMobile() {
     return window.innerWidth < MOBILE_BREAKPOINT;
-  }
-
-  setupWidgetOnAuth(widget, options) {
-    if (options === false) {
-      return;
-    }
-    let timerId;
-
-    const handler = async () => {
-      clearTimeout(timerId);
-      if (this.context.isLogin) {
-        await widget.mount(options);
-        return;
-      }
-      timerId = setTimeout(handler, WIDGET_AUTH_TIMEOUT);
-    };
-    handler();
   }
 
   onClose() {
@@ -131,7 +115,7 @@ class WidgetPlugin extends PluginBase {
   }
 
   /**
-   *
+   * @param {HTMLElement} frame
    * @param {string} event
    * @param {any} [detail]
    */
@@ -174,11 +158,6 @@ class WidgetPlugin extends PluginBase {
 
     this.widgetMessenger.setTarget(this.frame.contentWindow);
 
-    await this.context.executeMethod(
-      PLUGIN_METHODS.MESSENGER_GROUP_ADD,
-      this.widgetMessenger,
-    );
-
     this.frameResolver.forEach(resolve => resolve(this.frame));
     this.frameResolver.length = 0;
 
@@ -190,10 +169,6 @@ class WidgetPlugin extends PluginBase {
 
     this.isMounted = false;
 
-    await this.context.executeMethod(
-      PLUGIN_METHODS.MESSENGER_GROUP_REMOVE,
-      this.widgetMessenger,
-    );
     this.widgetMessenger.setTarget({});
 
     this.frame.style.opacity = 0;

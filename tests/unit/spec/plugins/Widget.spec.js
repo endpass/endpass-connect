@@ -1,13 +1,18 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import Widget from '@/plugins/WidgetPlugin/WidgetPlugin';
 import { getWidgetFrameStylesObject } from '@/plugins/WidgetPlugin/WidgetStyles';
-import { MESSENGER_METHODS, WIDGET_EVENTS } from '@/constants';
+import { MESSENGER_METHODS, PLUGIN_METHODS, WIDGET_EVENTS } from '@/constants';
 
-describe.skip('Widget class', () => {
-  const url = 'https://auth.foo.bar/public/widget';
+describe('Widget class', () => {
+  const url = 'https://auth.foo.bar';
   let messenger;
   let messengerGroup;
   let widget;
+  const options = { authUrl: url };
+  const context = {
+    ask: jest.fn(),
+    executeMethod: jest.fn(),
+  };
   const spies = [];
   function spyMessenger(method, fn) {
     return jest
@@ -44,7 +49,7 @@ describe.skip('Widget class', () => {
       }),
     );
 
-    widget = new Widget({ messengerGroup, url });
+    widget = new Widget(options, context);
   });
 
   afterEach(() => {
@@ -88,19 +93,23 @@ describe.skip('Widget class', () => {
   });
 
   describe('unmount', () => {
-    it('should unmount widget after it faded out', () => {
+    it('should unmount widget after it faded out', async () => {
+      expect.assertions(4);
+
       jest.spyOn(window, 'removeEventListener');
       jest.useFakeTimers();
 
-      widget.mount({ position: { top: '15px', left: '15px' } });
-
       widget.emitFrameEvent = jest.fn();
+
+      await widget.mount({ position: { top: '15px', left: '15px' } });
+
       widget.frame.removeEventListener = jest.fn();
       widget.frame.remove = jest.fn();
+      const { frame } = widget;
 
-      widget.unmount();
+      await widget.unmount();
 
-      expect(widget.frame.removeEventListener).toBeCalledWith(
+      expect(frame.removeEventListener).toBeCalledWith(
         'load',
         expect.any(Function),
       );
@@ -111,7 +120,7 @@ describe.skip('Widget class', () => {
 
       jest.advanceTimersByTime(300);
 
-      expect(widget.emitFrameEvent).toBeCalledWith('destroy');
+      expect(widget.emitFrameEvent).toBeCalledWith(expect.any(Object), 'destroy');
       expect(widget.frame).toBeNull();
     });
 
@@ -122,27 +131,40 @@ describe.skip('Widget class', () => {
 
       expect(widget.isMounted).toBe(true);
 
-      widget.unmount();
+      await widget.unmount();
 
       expect(widget.isMounted).toBe(false);
 
-      widget.unmount();
+      await widget.unmount();
 
-      expect(messengerGroup.addMessenger).toBeCalledTimes(1);
-      expect(messengerGroup.removeMessenger).toBeCalledTimes(1);
+      expect(context.executeMethod).toHaveBeenNthCalledWith(
+        1,
+        PLUGIN_METHODS.MESSENGER_GROUP_ADD,
+        widget.widgetMessenger
+      );
+      expect(context.executeMethod).toHaveBeenNthCalledWith(
+        2,
+        PLUGIN_METHODS.MESSENGER_GROUP_REMOVE,
+        widget.widgetMessenger
+      );
     });
 
     it('should mount widget once', async () => {
-      expect.assertions(3);
+      expect.assertions(4);
+
+      expect(widget.isMounted).toBe(false);
 
       await widget.mount();
 
       expect(widget.isMounted).toBe(true);
 
-      widget.mount();
+      await widget.mount();
 
-      expect(messengerGroup.removeMessenger).toBeCalledTimes(0);
-      expect(messengerGroup.addMessenger).toBeCalledTimes(1);
+      expect(context.executeMethod).toBeCalledWith(
+        PLUGIN_METHODS.MESSENGER_GROUP_ADD,
+        widget.widgetMessenger
+      );
+      expect(context.executeMethod).toBeCalledTimes(1);
     });
   });
 
@@ -168,7 +190,7 @@ describe.skip('Widget class', () => {
       const handlerNotCall = jest.fn();
       widget.frame.addEventListener('bar', handlerNotCall);
 
-      widget.emitFrameEvent('foo', {
+      widget.emitFrameEvent(widget.frame, 'foo', {
         bar: 'baz',
       });
 

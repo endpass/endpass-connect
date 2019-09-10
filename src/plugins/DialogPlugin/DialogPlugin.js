@@ -1,7 +1,12 @@
 import ConnectError from '@endpass/class/ConnectError';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import { inlineStylesState } from '@/util/dom';
-import { DIRECTION, DIALOG_EVENTS, PLUGIN_METHODS } from '@/constants';
+import {
+  DIRECTION,
+  DIALOG_EVENTS,
+  PLUGIN_METHODS,
+  PLUGIN_NAMES,
+} from '@/constants';
 import {
   propsIframe,
   propsIframeShow,
@@ -31,7 +36,7 @@ const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
 
 class DialogPlugin extends PluginBase {
   static get pluginName() {
-    return 'dialog';
+    return PLUGIN_NAMES.DIALOG;
   }
 
   static get handlers() {
@@ -67,22 +72,10 @@ class DialogPlugin extends PluginBase {
     this.frameStyles = inlineStylesState(propsIframe);
   }
 
-  init() {
-    if (document.readyState !== 'complete') {
-      document.addEventListener('readystatechange', () => {
-        if (document.readyState === 'complete') {
-          this.mount();
-        }
-      });
-    } else {
-      this.mount();
-    }
-  }
-
   get messenger() {
     if (!this.dialogMessenger) {
       this.dialogMessenger = new CrossWindowMessenger({
-        showLogs: false, //!ENV.isProduction,
+        showLogs: true, //!ENV.isProduction,
         name: `connect-bridge-dialog[]`,
         to: DIRECTION.AUTH,
         from: DIRECTION.CONNECT,
@@ -115,15 +108,6 @@ class DialogPlugin extends PluginBase {
     });
 
     this.overlay.dispatchEvent(frameEvent);
-  }
-
-  /**
-   * Return instance of DialogPlugin messenger
-   * @public
-   * @return {CrossWindowMessenger}
-   */
-  getDialogMessenger() {
-    return this.dialogMessenger;
   }
 
   /**
@@ -175,11 +159,6 @@ class DialogPlugin extends PluginBase {
    */
   mount() {
     const markup = this.createMarkup();
-
-    this.context.executeMethod(
-      PLUGIN_METHODS.MESSENGER_GROUP_ADD,
-      this.dialogMessenger,
-    );
 
     this.overlay = markup.querySelector('[data-endpass="overlay"]');
     this.wrapper = markup.querySelector('[data-endpass="wrapper"]');

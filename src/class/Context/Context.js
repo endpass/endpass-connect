@@ -3,6 +3,7 @@ import ConnectError from '@endpass/class/ConnectError';
 import contextHandlers from './contextHandlers';
 import HandlersFactory from '@/class/HandlersFactory';
 import PluginContainer from '@/class/PluginContainer';
+import { PLUGIN_METHODS } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
@@ -40,6 +41,12 @@ export default class Context {
     this.plugins = new PluginContainer(options, this, ClassPlugin);
 
     this.plugins.init();
+
+    this.executeMethod(
+      PLUGIN_METHODS.CONTEXT_MOUNT_WIDGET_ON_AUTH,
+      options.widget,
+    );
+    this.executeMethod(PLUGIN_METHODS.CONTEXT_MOUNT_DIALOG);
   }
 
   get isLogin() {
@@ -53,15 +60,28 @@ export default class Context {
 
   async handleEvent(payload, req) {
     try {
+      let isAnswered = false;
+      const answer = result => {
+        isAnswered = true;
+        req.answer(result);
+      };
+      const proxyReq = {
+        ...req,
+        answer,
+      };
+
       if (this.contextHandlers[req.method]) {
-        await this.contextHandlers[req.method].apply(this, [payload, req]);
+        await this.contextHandlers[req.method](payload, proxyReq);
       }
 
       // `this.plugins` iterable object to array
-      await [...this.plugins].reduce(async (awaiter, plugin) => {
-        await awaiter;
-        await plugin.handleEvent(payload, req);
-      }, Promise.resolve());
+      [...this.plugins].forEach(plugin => {
+        plugin.handleEvent(payload, proxyReq);
+      });
+
+      if (!isAnswered) {
+        answer();
+      }
     } catch (error) {
       console.error('context.handleEvent', error);
       const err = ConnectError.createFromError(error, ERRORS.NOT_DEFINED);
@@ -75,9 +95,7 @@ export default class Context {
 
   executeMethod(method, payload) {
     const executor = async (resolve, reject) => {
-      let isAnswered = false;
       const answer = (result = {}) => {
-        isAnswered = true;
         const { status, error, code } = result;
         if (status === false) {
           const err = ConnectError.createFromError(error, code);
@@ -86,14 +104,10 @@ export default class Context {
           resolve(result);
         }
       };
-      const req = {
+      await this.handleEvent(payload, {
         method,
         answer,
-      };
-      await this.handleEvent(payload, req);
-      if (!isAnswered) {
-        answer();
-      }
+      });
     };
     return new Promise(executor);
   }

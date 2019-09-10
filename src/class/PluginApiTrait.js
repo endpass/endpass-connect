@@ -162,14 +162,18 @@ export default class PluginApiTrait {
    * @returns {Promise<Element>} Mounted widget iframe element
    */
   async mountWidget(params) {
-    return this[context].plugins.widget.mount(params);
+    return this[context].executeMethod(
+      PLUGIN_METHODS.CONTEXT_MOUNT_WIDGET,
+      params,
+    );
   }
 
   /**
    * Unmounts endpass widget from DOM
    */
   async unmountWidget() {
-    return this[context].plugins.widget.unmount();
+    // execute
+    return this[context].executeMethod(MESSENGER_METHODS.WIDGET_UNMOUNT);
   }
 
   /**

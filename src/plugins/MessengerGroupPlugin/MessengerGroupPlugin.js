@@ -3,9 +3,9 @@
 // @ts-ignore
 // eslint-disable-next-line no-unused-vars
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
-import messengerGroupHandlers from './messengerGroupHandlers';
 import PluginFactory from '@/class/PluginFactory';
 import PluginBase from '@/plugins/PluginBase';
+import { PLUGIN_NAMES } from '@/constants';
 
 /**
  * @callback Listener {import('@types/global').Listener}
@@ -17,11 +17,7 @@ import PluginBase from '@/plugins/PluginBase';
 
 class MessengerGroupPlugin extends PluginBase {
   static get pluginName() {
-    return 'messengerGroup';
-  }
-
-  static get handlers() {
-    return messengerGroupHandlers;
+    return PLUGIN_NAMES.MESSENGER_GROUP;
   }
 
   /**

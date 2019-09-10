@@ -32,7 +32,8 @@ export default class PluginBase {
   constructor(options, context) {
     this.context = context;
     this.options = options;
-    this.handleEvent = HandlersFactory.createHandleEvent(
+
+    this.handlersMap = HandlersFactory.createHandlers(
       this,
       this.constructor.handlers,
     );
@@ -46,7 +47,12 @@ export default class PluginBase {
 
   init() {}
 
-  handleEvent() {}
+  handleEvent(payload, req) {
+    if (!this.handlersMap[req.method]) {
+      return null;
+    }
+    return this.handlersMap[req.method](payload, req);
+  }
 
   /**
    *

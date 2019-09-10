@@ -1,9 +1,11 @@
-function hasClass(classesList, pluginName) {
+import { PLUGIN_NAMES } from '@/constants';
+
+function getClassByName(classesList, pluginName) {
   return classesList.find(PluginClass => PluginClass.pluginName === pluginName);
 }
 
-const PLUGIN_DIALOG = 'dialog';
-const PLUGIN_MESSENGER_GROUP = 'messengerGroup';
+const PLUGIN_DIALOG = PLUGIN_NAMES.DIALOG;
+const PLUGIN_MESSENGER_GROUP = PLUGIN_NAMES.MESSENGER_GROUP;
 
 export default class PluginClassUtils {
   static createPluginClassesList(options, ClassPlugin) {
@@ -18,12 +20,11 @@ export default class PluginClassUtils {
   }
 
   static getClassesWithOrder(pluginsClassesList) {
-    const dialogClass = pluginsClassesList.find(
-      pluginClass => pluginClass.pluginName === PLUGIN_DIALOG,
-    );
+    const dialogClass = getClassByName(pluginsClassesList, PLUGIN_DIALOG);
 
-    const messengerGroupClass = pluginsClassesList.find(
-      pluginClass => pluginClass.pluginName === PLUGIN_MESSENGER_GROUP,
+    const messengerGroupClass = getClassByName(
+      pluginsClassesList,
+      PLUGIN_MESSENGER_GROUP,
     );
 
     if (!dialogClass) {
@@ -48,7 +49,7 @@ export default class PluginClassUtils {
 
   static createUniques(pluginsClasses, classesListResult = []) {
     return pluginsClasses.reduce((classesList, PluginClass) => {
-      if (hasClass(classesList, PluginClass.pluginName)) {
+      if (getClassByName(classesList, PluginClass.pluginName)) {
         return classesList;
       }
 

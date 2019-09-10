@@ -4,11 +4,13 @@ import { MESSENGER_METHODS } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
-describe.skip('AuthorizePlugin class', () => {
+describe('AuthorizePlugin class', () => {
   let authInstance;
-  const dialog = {
+  const context = {
     ask: jest.fn(),
   };
+
+  const options = {};
 
   beforeAll(() => {
     jest.useFakeTimers();
@@ -19,17 +21,15 @@ describe.skip('AuthorizePlugin class', () => {
   });
 
   beforeEach(() => {
-    authInstance = new Authorize({
-      dialog,
-    });
+    authInstance = new Authorize(options, context);
   });
 
-  it('should auth user through dialog request and returns result', async () => {
+  it('should auth user through context request and returns result', async () => {
     expect.assertions(4);
 
     expect(authInstance.isLogin).toBe(false);
 
-    const dialogResponse = {
+    const contextResponse = {
       status: true,
       payload: {
         type: 'local',
@@ -37,27 +37,27 @@ describe.skip('AuthorizePlugin class', () => {
       },
     };
 
-    dialog.ask.mockResolvedValueOnce(dialogResponse);
+    context.ask.mockResolvedValueOnce(contextResponse);
 
-    const res = await authInstance.auth();
+    const res = await authInstance.authorizeMe();
 
-    expect(dialog.ask).toBeCalledWith(MESSENGER_METHODS.AUTH, {
+    expect(context.ask).toBeCalledWith(MESSENGER_METHODS.AUTH, {
       redirectUrl: 'http://localhost/',
     });
-    expect(res).toEqual(dialogResponse);
+    expect(res).toEqual(contextResponse);
     expect(authInstance.isLogin).toBe(true);
   });
 
   it('should throw error if auth status is falsy', async () => {
     expect.assertions(3);
 
-    dialog.ask.mockResolvedValueOnce({
+    context.ask.mockResolvedValueOnce({
       status: false,
       code: ERRORS.AUTH,
     });
 
     try {
-      await authInstance.auth();
+      await authInstance.authorizeMe();
     } catch (e) {
       const err = new Error('Authentication Error!');
       expect(e).toEqual(err);
@@ -66,10 +66,10 @@ describe.skip('AuthorizePlugin class', () => {
     expect(authInstance.isLogin).toBe(false);
   });
 
-  it('should logout user through dialog request and returns result', async () => {
+  it('should logout user through context request and returns result', async () => {
     expect.assertions(2);
 
-    const dialogResponse = {
+    const contextResponse = {
       status: true,
       payload: {
         type: 'local',
@@ -77,26 +77,26 @@ describe.skip('AuthorizePlugin class', () => {
       },
     };
 
-    dialog.ask.mockResolvedValueOnce(dialogResponse);
+    context.ask.mockResolvedValueOnce(contextResponse);
 
     const res = await authInstance.logout();
 
-    expect(dialog.ask).toBeCalledWith(MESSENGER_METHODS.LOGOUT);
-    expect(res).toEqual(dialogResponse.status);
+    expect(context.ask).toBeCalledWith(MESSENGER_METHODS.LOGOUT);
+    expect(res).toEqual(contextResponse.status);
   });
 
   it('should throw error if logout user wrong', async () => {
     expect.assertions(2);
 
-    const dialogResponse = {
+    const contextResponse = {
       status: false,
       code: ERRORS.AUTH_LOGOUT,
     };
 
-    dialog.ask.mockResolvedValueOnce(dialogResponse);
+    context.ask.mockResolvedValueOnce(contextResponse);
 
     try {
-      await authInstance.auth();
+      await authInstance.authorizeMe();
     } catch (e) {
       const err = new Error('Logout Error!');
       expect(e).toEqual(err);
@@ -108,14 +108,9 @@ describe.skip('AuthorizePlugin class', () => {
     const demoData = {};
 
     it('should pass isLogin with demoData', () => {
-      const defaultAuth = new Authorize({
-        dialog,
-      });
+      const defaultAuth = new Authorize(options, context);
 
-      const demoAuth = new Authorize({
-        dialog,
-        options: { demoData },
-      });
+      const demoAuth = new Authorize({ demoData }, context);
 
       expect(defaultAuth.isLogin).toBe(false);
       expect(demoAuth.isLogin).toBe(true);

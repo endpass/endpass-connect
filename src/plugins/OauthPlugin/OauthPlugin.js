@@ -53,9 +53,6 @@ class OauthPlugin extends PluginBase {
   }
 
   logout() {
-    if (!this.oauthRequestProvider) {
-      throw ConnectError.create(ERRORS.OAUTH_NOT_LOGGED_IN);
-    }
     this.oauthRequestProvider.logout();
   }
 
