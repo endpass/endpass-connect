@@ -9,7 +9,7 @@ Cypress.Commands.add('preparePage', netId => {
 });
 
 Cypress.Commands.add('waitPageLoad', (netId = Network.NET_ID.MAIN, visitBlock = visitBlockBasic) => {
-  cy.visit(`${visitUrl}#/${visitBlock}`, {
+  cy.visit(`${visitUrl}${visitBlock}`, {
     onBeforeLoad(win) {
       // eslint-disable-next-line no-param-reassign
       win.e2eLogout = function() {};
