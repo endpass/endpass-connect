@@ -1,12 +1,11 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
-import Widget from '@/plugins/WidgetPlugin/WidgetPlugin';
+import { WidgetPlugin } from '@/plugins/WidgetPlugin';
 import { getWidgetFrameStylesObject } from '@/plugins/WidgetPlugin/WidgetStyles';
-import { MESSENGER_METHODS, PLUGIN_METHODS, WIDGET_EVENTS } from '@/constants';
+import { MESSENGER_METHODS, WIDGET_EVENTS } from '@/constants';
 
-describe('Widget class', () => {
+describe('WidgetPlugin class', () => {
   const url = 'https://auth.foo.bar';
   let messenger;
-  let messengerGroup;
   let widget;
   const options = { authUrl: url };
   const context = {
@@ -25,10 +24,6 @@ describe('Widget class', () => {
       setTarget: jest.fn(),
       subscribe: jest.fn(),
       unsubscribe: jest.fn(),
-    };
-    messengerGroup = {
-      removeMessenger: jest.fn(),
-      addMessenger: jest.fn(),
     };
 
     spies.push(
@@ -49,7 +44,7 @@ describe('Widget class', () => {
       }),
     );
 
-    widget = new Widget(options, context);
+    widget = new WidgetPlugin(options, context);
   });
 
   afterEach(() => {
@@ -125,7 +120,7 @@ describe('Widget class', () => {
     });
 
     it('should unmount widget once', async () => {
-      expect.assertions(4);
+      expect.assertions(2);
 
       await widget.mount();
 
@@ -136,21 +131,10 @@ describe('Widget class', () => {
       expect(widget.isMounted).toBe(false);
 
       await widget.unmount();
-
-      expect(context.executeMethod).toHaveBeenNthCalledWith(
-        1,
-        PLUGIN_METHODS.MESSENGER_GROUP_ADD,
-        widget.widgetMessenger
-      );
-      expect(context.executeMethod).toHaveBeenNthCalledWith(
-        2,
-        PLUGIN_METHODS.MESSENGER_GROUP_REMOVE,
-        widget.widgetMessenger
-      );
     });
 
     it('should mount widget once', async () => {
-      expect.assertions(4);
+      expect.assertions(2);
 
       expect(widget.isMounted).toBe(false);
 
@@ -159,12 +143,6 @@ describe('Widget class', () => {
       expect(widget.isMounted).toBe(true);
 
       await widget.mount();
-
-      expect(context.executeMethod).toBeCalledWith(
-        PLUGIN_METHODS.MESSENGER_GROUP_ADD,
-        widget.widgetMessenger
-      );
-      expect(context.executeMethod).toBeCalledTimes(1);
     });
   });
 
@@ -214,7 +192,7 @@ describe('Widget class', () => {
     });
   });
 
-  describe('subscribe', () => {
+  describe.skip('subscribe', () => {
     it('should subscribe on messenger view-responsible methods', () => {
       widget.subscribe();
 

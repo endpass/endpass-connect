@@ -1,12 +1,13 @@
+/* eslint-disable max-classes-per-file */
 import PluginFactory from '@/class/PluginFactory';
 import PluginBase from '@/plugins/PluginBase';
-import DialogPlugin from '@/plugins/DialogPlugin';
-import MessengerGroupPlugin from '@/plugins/MessengerGroupPlugin';
+import { DialogPlugin } from '@/plugins/DialogPlugin';
+import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 import PluginApiTrait from '@/class/PluginApiTrait';
 import { CONTEXT } from '@/constants';
 
 describe('plugin manager', () => {
-  class TestPlugin extends PluginBase {
+  class PluginClass extends PluginBase {
     static get pluginName() {
       return 'testPlugin';
     }
@@ -27,31 +28,16 @@ describe('plugin manager', () => {
     }
   }
 
-  const context = {
-    ask: jest.fn(),
-  };
+  const options = {widget: false};
 
-  const options = {};
-
-  const PluginClass = PluginFactory.create(TestPlugin);
-
-  it('should create child plugin', () => {
-    const plugin = new PluginClass(options, context);
-
-    expect(plugin).toBeInstanceOf(TestPlugin);
-  });
+  const ExternalPlugin = PluginFactory.create(PluginClass);
 
   it('should create Plugin class', () => {
-    const plugin = new PluginClass(options);
+    const plugin = new ExternalPlugin(options);
 
-    expect(plugin[CONTEXT].plugins.testPlugin).toBeInstanceOf(TestPlugin);
-    expect(plugin).toBeInstanceOf(PluginApiTrait);
-  });
-
-  it('should initiate plugins', () => {
-    const plugin = new PluginClass(options);
-
+    expect(plugin[CONTEXT].plugins.testPlugin).toBeInstanceOf(PluginClass);
     expect(plugin[CONTEXT].plugins.testPlugin.init).toBeCalled();
+    expect(plugin).toBeInstanceOf(PluginApiTrait);
   });
 
   it('should throw error, if not defined name of plugin', () => {
@@ -66,7 +52,7 @@ describe('plugin manager', () => {
   });
 
   it('should throw error, if trying to get not defined plugin', () => {
-    const plugin = new PluginClass(options);
+    const plugin = new ExternalPlugin(options);
 
     try {
       // eslint-disable-next-line

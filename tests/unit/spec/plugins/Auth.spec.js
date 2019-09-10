@@ -1,10 +1,10 @@
 import ConnectError from '@endpass/class/ConnectError';
-import Authorize from '@/plugins/AuthorizePlugin';
+import { AuthorizePlugin } from '@/plugins/AuthorizePlugin';
 import { MESSENGER_METHODS } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
-describe('AuthorizePlugin class', () => {
+describe('AuthorizePluginPlugin class', () => {
   let authInstance;
   const context = {
     ask: jest.fn(),
@@ -21,7 +21,7 @@ describe('AuthorizePlugin class', () => {
   });
 
   beforeEach(() => {
-    authInstance = new Authorize(options, context);
+    authInstance = new AuthorizePlugin(options, context);
   });
 
   it('should auth user through context request and returns result', async () => {
@@ -108,9 +108,9 @@ describe('AuthorizePlugin class', () => {
     const demoData = {};
 
     it('should pass isLogin with demoData', () => {
-      const defaultAuth = new Authorize(options, context);
+      const defaultAuth = new AuthorizePlugin(options, context);
 
-      const demoAuth = new Authorize({ demoData }, context);
+      const demoAuth = new AuthorizePlugin({ demoData }, context);
 
       expect(defaultAuth.isLogin).toBe(false);
       expect(demoAuth.isLogin).toBe(true);

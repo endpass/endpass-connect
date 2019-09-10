@@ -12,7 +12,7 @@ describe('login', function() {
       cy.shouldLoggedIn();
     });
 
-    it.only('should logout from system', () => {
+    it('should logout from system', () => {
       cy.mockAuthCheck(200);
 
       cy.authFrameContinueRun();

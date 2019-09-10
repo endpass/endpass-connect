@@ -1,6 +1,6 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import { MESSENGER_METHODS } from '@/constants';
-import DialogPlugin from '@/plugins/DialogPlugin';
+import { DialogPlugin } from '@/plugins/DialogPlugin';
 import StateOpen from '@/plugins/DialogPlugin/states/StateOpen';
 import StateClose from '@/plugins/DialogPlugin/states/StateClose';
 

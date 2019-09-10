@@ -9,7 +9,7 @@ describe('widget', function() {
       cy.waitPageLoad();
     });
 
-    it.only('should toggle widget on mobile screen', () => {
+    it('should toggle widget on mobile screen', () => {
       cy.authFrameContinueRun();
       cy.shouldLoggedIn();
 
