@@ -59,8 +59,8 @@ const initWidget = context => (payload, req) => {
 
 const logout = context => async (payload, req) => {
   try {
-    const { authorize, messengerGroup } = context.plugins;
-    const res = await authorize.logout();
+    const { authorize: authPlugin, messengerGroup } = context.plugins;
+    const res = await authPlugin.logout();
 
     messengerGroup.send(MESSENGER_METHODS.DIALOG_CLOSE);
     messengerGroup.send(MESSENGER_METHODS.WIDGET_UNMOUNT);
