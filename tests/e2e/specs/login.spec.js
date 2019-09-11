@@ -24,7 +24,12 @@ describe('login', function() {
 
       cy.get('[data-test=endpass-form-sign-out-button]').click();
 
-      cy.get('[data-test=endpass-sign-in-button]').should('exist');
+      cy.get('[data-test=endpass-app-loader]').should('exist');
+
+      cy.authFramePrepare();
+      cy.authFrameContinueRun();
+
+      cy.getElementFromAuth('[data-test=auth-form]').should('exist');
     });
 
     it('should pass throw apply password form, when already logged in', () => {
