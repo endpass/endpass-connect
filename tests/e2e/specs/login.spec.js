@@ -20,9 +20,9 @@ describe('login', function() {
       cy.get('[data-test=endpass-app-loader]').should('not.exist');
       cy.get('[data-test=endpass-sign-in-button]').should('not.exist');
 
-      cy.get('[data-test=endpass-form-sign-out-button]').click();
-
       cy.mockAuthCheck(401);
+
+      cy.get('[data-test=endpass-form-sign-out-button]').click();
 
       cy.get('[data-test=endpass-sign-in-button]').should('exist');
     });

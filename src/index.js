@@ -1,3 +1,3 @@
-import Connect from '@/Connect';
+import ConnectPlugin from '@/plugins/ConnectPlugin';
 
-export default Connect;
+export default ConnectPlugin;

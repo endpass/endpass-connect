@@ -2,12 +2,6 @@ import { INPAGE_EVENTS, DAPP_BLACKLISTED_METHODS } from '@/constants';
 import filterAvailableMethods from '@/streams/inpageProvider/middleware/filterAvailableMethods';
 
 describe('filterAvailableMethods middleware', () => {
-  const context = {
-    getEmitter: () => ({
-      emit: jest.fn(),
-    }),
-  };
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -19,8 +13,13 @@ describe('filterAvailableMethods middleware', () => {
       },
       end: jest.fn(),
     })).forEach(action => {
-      filterAvailableMethods(context, action);
+      const providerPlugin = {
+        emitter: {
+          emit: jest.fn(),
+        },
+      };
 
+      filterAvailableMethods({ providerPlugin, action });
       expect(action.end).toBeCalledTimes(1);
     });
   });
@@ -33,13 +32,13 @@ describe('filterAvailableMethods middleware', () => {
       end: jest.fn(),
     })).forEach(action => {
       const emit = jest.fn();
-      const contextWithMock = {
-        getEmitter: () => ({
+      const providerPlugin = {
+        emitter: {
           emit,
-        }),
+        },
       };
 
-      filterAvailableMethods(contextWithMock, action);
+      filterAvailableMethods({ action, providerPlugin });
 
       expect(emit).toBeCalledTimes(1);
       expect(emit).toBeCalledWith(
@@ -54,7 +53,7 @@ describe('filterAvailableMethods middleware', () => {
     });
   });
 
-  it('should chain request with available methods', () => {
+  it('should chain request with available methods', async () => {
     const action = {
       request: {
         method: 'not_in_black_list',
@@ -62,7 +61,7 @@ describe('filterAvailableMethods middleware', () => {
       end: jest.fn(),
     };
 
-    filterAvailableMethods(context, action);
+    await filterAvailableMethods({ action });
 
     expect(action.end).not.toBeCalled();
   });

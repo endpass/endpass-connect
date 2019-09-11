@@ -1,7 +1,11 @@
-import Context from '@/Context';
+import Context from '@/class/Context/Context';
 import { QueueAction } from '@/types/QueueAction';
+import ProviderPlugin from '@/plugins/ProviderPlugin/ProviderPlugin';
 
-type Middleware = (
+declare type MiddlewareProps = {
   context: Context,
   action: QueueAction,
-) => void;
+  providerPlugin: ProviderPlugin,
+}
+
+type Middleware = (props: MiddlewareProps) => void;

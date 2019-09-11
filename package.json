@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.27.3-beta",
+  "version": "0.28.0-beta",
   "authVersion": "",
   "main": "./endpass-connect.min.js",
   "module": "./endpass-connect.esm.js",
@@ -8,11 +8,27 @@
   "connectPlugins": [
     {
       "library": "EndpassProviderPlugin",
-      "input": "./src/plugins/ProviderPlugin.js",
+      "input": "./src/plugins/ProviderPlugin/index.js",
       "main": "./provider.min.js",
       "module": "./provider.js",
       "umd": "./provider.umd.js",
       "browser": "./provider.browser.js"
+    },
+    {
+      "library": "EndpassAuthPlugin",
+      "input": "./src/plugins/AuthorizePlugin/index.js",
+      "main": "./auth.min.js",
+      "module": "./auth.js",
+      "umd": "./auth.umd.js",
+      "browser": "./auth.browser.js"
+    },
+    {
+      "library": "EndpassOauthPlugin",
+      "input": "./src/plugins/OauthPlugin/index.js",
+      "main": "./oauth.min.js",
+      "module": "./oauth.js",
+      "umd": "./oauth.umd.js",
+      "browser": "./oauth.browser.js"
     }
   ],
   "description": "",
@@ -29,6 +45,7 @@
   "scripts": {
     "update": "yarn build && npm publish ./dist",
     "dev": "rollup -c -w",
+    "dev:browser": "webpack --mode development -w",
     "build": "rimraf ./dist && npm run build:lib && npm run build:browser",
     "build:lib": "NODE_ENV=production rollup -c",
     "build:browser:dev": "rollup -c & webpack --mode development",
@@ -88,7 +105,7 @@
     }
   },
   "dependencies": {
-    "@endpass/class": "^0.17.3",
+    "@endpass/class": "^0.17.5",
     "@endpass/utils": "^1.8.2",
     "axios": "^0.19.0",
     "axios-token-interceptor": "^0.1.0",
@@ -119,9 +136,9 @@
     "@endpass/eslint-plugin-endpass": "^0.2.4",
     "@semantic-release/changelog": "^3.0.4",
     "@semantic-release/git": "^7.0.16",
-    "@types/lodash": "^4.14.136",
+    "@types/lodash": "^4.14.138",
     "@types/lodash.get": "^4.4.6",
-    "@types/node": "^12.6.8",
+    "@types/node": "^12.7.4",
     "@types/web3": "^1.0.19",
     "axios-mock-adapter": "^1.17.0",
     "babel-loader": "^8.0.6",
@@ -130,13 +147,13 @@
     "copy-webpack-plugin": "^5.0.4",
     "cypress": "^3.4.1",
     "cz-conventional-changelog": "^3.0.2",
-    "eslint": "^6.1.0",
+    "eslint": "^6.3.0",
     "fs-extra": "^8.1.0",
-    "gh-pages": "^2.0.1",
-    "husky": "^3.0.2",
-    "jest": "^24.8.0",
+    "gh-pages": "^2.1.1",
+    "husky": "^3.0.5",
+    "jest": "^24.9.0",
     "jest-localstorage-mock": "^2.4.0",
-    "lint-staged": "^9.2.1",
+    "lint-staged": "^9.2.5",
     "mkdirp": "^0.5.1",
     "prettier": "^1.18.2",
     "regenerator-runtime": "^0.13.3",
@@ -153,8 +170,8 @@
     "rollup-plugin-visualizer": "^2.5.4",
     "semantic-release": "^15.13.18",
     "serve": "^11.1.0",
-    "typescript": "^3.5.3",
-    "webpack": "^4.38.0",
-    "webpack-cli": "^3.3.6"
+    "typescript": "^3.6.2",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.8"
   }
 }

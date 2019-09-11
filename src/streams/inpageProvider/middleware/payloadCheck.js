@@ -1,11 +1,11 @@
 import { INPAGE_EVENTS } from '@/constants';
 
 /** @type {import("@/types/Middleware").Middleware} */
-export default async function(context, action) {
+export default async function({ action, providerPlugin }) {
   const { payload } = action;
 
   if (payload && payload.result) {
     action.end();
-    context.getEmitter().emit(INPAGE_EVENTS.RESPONSE, payload);
+    providerPlugin.emitter.emit(INPAGE_EVENTS.RESPONSE, payload);
   }
 }

@@ -1,15 +1,15 @@
 import ConnectError from '@endpass/class/ConnectError';
-import Connect from '@/Connect';
-import { INPAGE_EVENTS, METHODS } from '@/constants';
-import privateFields from '@/privateFields';
+import ProviderPlugin from '@/plugins/ProviderPlugin';
+import { INPAGE_EVENTS, MESSENGER_METHODS } from '@/constants';
 import RequestProcess from '@/streams/inpageProvider/middleware/netRequest/RequestProcess';
 
 const { ERRORS } = ConnectError;
 
 describe('Request process middleware', () => {
   let reqProcess;
-  let connect;
   let context;
+  let providerPlugin;
+
   const emitter = {
     emit: jest.fn(),
   };
@@ -17,21 +17,25 @@ describe('Request process middleware', () => {
   beforeAll(() => {
     window.open = jest.fn();
     jest.useFakeTimers();
-    connect = new Connect({
-      authUrl: 'http://localhost:5000',
-      oauthClientId: 'xxxxxxxxxxxxxxx',
-    });
-    context = connect[privateFields.context];
+    providerPlugin = {
+      emitter,
+      getInpageProviderSettings: jest.fn(),
+    };
+
+    context = {
+      ask: jest.fn(),
+    };
+
   });
 
   beforeEach(() => {
     jest.clearAllMocks();
-    reqProcess = new RequestProcess({ context });
+    reqProcess = new RequestProcess({ context, providerPlugin });
   });
 
   describe('processRequest', () => {
     beforeEach(() => {
-      reqProcess = new RequestProcess({ context });
+      reqProcess = new RequestProcess({ context, providerPlugin });
       reqProcess.sendResponse = jest.fn();
     });
 
@@ -139,7 +143,6 @@ describe('Request process middleware', () => {
         foo: 'bar',
       };
 
-      context.getEmitter = () => emitter;
       reqProcess.sendResponse(payload);
 
       expect(emitter.emit).toBeCalledWith(
@@ -187,31 +190,26 @@ describe('Request process middleware', () => {
       method: 'foo',
       params: [],
     };
-    let dialog;
 
     beforeEach(() => {
-      dialog = {
-        ask: jest.fn(),
-      };
       reqProcess.settings = {
         activeAccount: '0x0',
         activeNet: 1,
       };
-      context.getDialog = () => dialog;
       reqProcess.currentRequest = request;
     });
 
     it('should recover request through bridge messaging', async () => {
       expect.assertions(1);
 
-      dialog.ask.mockResolvedValueOnce({
+      context.ask.mockResolvedValueOnce({
         status: true,
         result: 'hello',
       });
 
       await reqProcess.recover();
 
-      expect(dialog.ask).toBeCalledWith(METHODS.RECOVER, {
+      expect(context.ask).toBeCalledWith(MESSENGER_METHODS.RECOVER, {
         address: '0x0',
         net: 1,
         request,
@@ -219,7 +217,7 @@ describe('Request process middleware', () => {
     });
 
     it('should throw error is request recover status is falsy', () => {
-      dialog.ask.mockResolvedValueOnce({
+      context.ask.mockResolvedValueOnce({
         status: false,
       });
 
@@ -236,17 +234,15 @@ describe('Request process middleware', () => {
     let dialog;
 
     beforeEach(() => {
-      dialog = {
-        ask: jest.fn().mockResolvedValueOnce({
-          status: true,
-        }),
-      };
+      context.ask = jest.fn().mockResolvedValueOnce({
+        status: true,
+      });
+
 
       reqProcess.settings = {
         activeAccount: '0x0',
         activeNet: 1,
       };
-      context.getDialog = () => dialog;
       reqProcess.currentRequest = request;
     });
 
@@ -255,7 +251,7 @@ describe('Request process middleware', () => {
 
       await reqProcess.sign();
 
-      expect(dialog.ask).toBeCalledWith(METHODS.SIGN, {
+      expect(context.ask).toBeCalledWith(MESSENGER_METHODS.SIGN, {
         address: '0x0',
         net: 1,
         url: expect.any(String),
@@ -266,7 +262,7 @@ describe('Request process middleware', () => {
     it('should throw error is sign request status is falsy', async () => {
       expect.assertions(2);
 
-      dialog.ask = jest.fn().mockResolvedValueOnce({
+      context.ask = jest.fn().mockResolvedValueOnce({
         status: false,
       });
 

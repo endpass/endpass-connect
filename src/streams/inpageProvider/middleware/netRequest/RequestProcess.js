@@ -1,13 +1,18 @@
 import ConnectError from '@endpass/class/ConnectError';
-import { METHODS, INPAGE_EVENTS, DAPP_WHITELISTED_METHODS } from '@/constants';
+import {
+  MESSENGER_METHODS,
+  INPAGE_EVENTS,
+  DAPP_WHITELISTED_METHODS,
+} from '@/constants';
 
 const { ERRORS } = ConnectError;
 
 export default class RequestProcess {
-  constructor({ context, request, settings = {} }) {
+  constructor({ context, request, settings = {}, providerPlugin }) {
     this.context = context;
     this.currentRequest = request;
     this.settings = settings;
+    this.providerPlugin = providerPlugin;
   }
 
   /**
@@ -54,9 +59,8 @@ export default class RequestProcess {
    * @returns {Promise<Object>} Result from network
    */
   async sendToNetwork() {
-    const { context } = this;
     return new Promise((resolve, reject) => {
-      const reqProvider = context.getRequestProvider();
+      const reqProvider = this.providerPlugin.getRequestProvider();
       const req = this.currentRequest;
       reqProvider.send(req, (err, res) => {
         if (err) {
@@ -77,7 +81,7 @@ export default class RequestProcess {
       console.error(`Request have return error: ${payload.error}`);
     }
 
-    this.context.getEmitter().emit(INPAGE_EVENTS.RESPONSE, payload);
+    this.providerPlugin.emitter.emit(INPAGE_EVENTS.RESPONSE, payload);
   }
 
   /**
@@ -86,10 +90,9 @@ export default class RequestProcess {
    * @returns {Promise<Object>} Sign result
    */
   async sign() {
-    const { context } = this;
     const { activeAccount, activeNet } = this.settings;
 
-    const res = await context.getDialog().ask(METHODS.SIGN, {
+    const res = await this.context.ask(MESSENGER_METHODS.SIGN, {
       url: window.location.origin,
       address: activeAccount,
       net: activeNet,
@@ -110,9 +113,8 @@ export default class RequestProcess {
    * @returns {Promise<String>} Recovered address
    */
   async recover() {
-    const { context } = this;
     const { activeAccount, activeNet } = this.settings;
-    const res = await context.getDialog().ask(METHODS.RECOVER, {
+    const res = await this.context.ask(MESSENGER_METHODS.RECOVER, {
       address: activeAccount,
       net: activeNet,
       request: this.currentRequest,
