@@ -25,7 +25,7 @@ export default class WidgetPlugin extends PluginBase {
   /**
    * @param {object} options
    * @param {object} context
-   * @param {object} options.namespace namespace
+   * @param {string} options.namespace namespace
    * @param {string} options.url frame url
    */
   constructor(options, context) {
@@ -73,7 +73,6 @@ export default class WidgetPlugin extends PluginBase {
     return this.widgetMessenger;
   }
 
-  /* eslint-disable-next-line */
   get isMobile() {
     return window.innerWidth < MOBILE_BREAKPOINT;
   }

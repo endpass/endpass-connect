@@ -177,7 +177,6 @@ export default class ProviderPlugin extends PluginBase {
         throw ConnectError.create(ERRORS.AUTH_CANCELED_BY_USER);
       }
 
-      // await this.context.auth();
       await this.context.executeMethod(PLUGIN_METHODS.CONTEXT_AUTHORIZE);
 
       await this.getProviderAccountData();

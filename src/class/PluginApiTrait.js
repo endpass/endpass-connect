@@ -6,18 +6,17 @@ import {
 } from '@/constants';
 import pkg from '../../package.json';
 
-if (ENV.isProduction) {
-  /* eslint-disable-next-line */
-  console.info(
-    `%cEndpass connect version ${pkg.version} loaded 🔌`,
-    'color: #fff; background: #4B0873',
-  );
-}
-
 // OLD CONNECT
 export default class PluginApiTrait {
   constructor(options, ClassPlugin) {
     this[context] = new Context(options, ClassPlugin);
+    if (ENV.isProduction) {
+      /* eslint-disable-next-line */
+      console.info(
+        `%cEndpass connect:${ClassPlugin.pluginName} version ${pkg.version} created 🔌`,
+        'color: #fff; background: #4B0873',
+      );
+    }
   }
 
   /**
@@ -84,8 +83,6 @@ export default class PluginApiTrait {
       PLUGIN_METHODS.CONTEXT_AUTHORIZE,
       redirectUrl,
     );
-    // const res = await this[context].plugins.authorize
-    // .authorizeMe(redirectUrl);
 
     return {
       ...res.payload,
@@ -172,7 +169,6 @@ export default class PluginApiTrait {
    * Unmounts endpass widget from DOM
    */
   async unmountWidget() {
-    // execute
     return this[context].executeMethod(MESSENGER_METHODS.WIDGET_UNMOUNT);
   }
 

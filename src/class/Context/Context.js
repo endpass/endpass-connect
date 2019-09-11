@@ -54,10 +54,22 @@ export default class Context {
     return this.plugins.authorize.isLogin;
   }
 
+  /**
+   *
+   * @param {string} method
+   * @param {*} payload
+   * @return {Promise<*>}
+   */
   ask(method, payload) {
     return this.plugins.dialog.ask(method, payload);
   }
 
+  /**
+   *
+   * @param {*} payload
+   * @param {object} originReq
+   * @return {Promise<void>}
+   */
   async handleEvent(payload, originReq) {
     let isAnswered = false;
     const proxyReq = {
@@ -92,6 +104,12 @@ export default class Context {
     }
   }
 
+  /**
+   *
+   * @param {string} method
+   * @param {*} payload
+   * @return {Promise<*>}
+   */
   executeMethod(method, payload) {
     const executor = async (resolve, reject) => {
       const answer = (result = {}) => {
