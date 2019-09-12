@@ -1,6 +1,11 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import debounce from 'lodash.debounce';
-import { DIRECTION, MESSENGER_METHODS, WIDGET_EVENTS } from '@/constants';
+import {
+  DIRECTION,
+  MESSENGER_METHODS,
+  PLUGIN_METHODS,
+  WIDGET_EVENTS,
+} from '@/constants';
 import { inlineStyles } from '@/util/dom';
 import {
   MOBILE_BREAKPOINT,
@@ -12,6 +17,8 @@ import StateClose from './states/StateClose';
 import widgetHandlers from './widgetHandlers';
 import PluginBase from '@/plugins/PluginBase';
 import { getFrameRouteUrl } from '@/util/url';
+
+const WIDGET_AUTH_TIMEOUT = 200;
 
 export default class WidgetPlugin extends PluginBase {
   static get pluginName() {
@@ -50,6 +57,23 @@ export default class WidgetPlugin extends PluginBase {
 
     /** @type Array<Promise> */
     this.frameResolver = [];
+  }
+
+  init() {
+    if (this.options.widget === false) {
+      return;
+    }
+    let timerId;
+
+    const handler = async () => {
+      clearTimeout(timerId);
+      if (this.context.isLogin) {
+        await this.context.executeMethod(PLUGIN_METHODS.CONTEXT_MOUNT_WIDGET);
+        return;
+      }
+      timerId = setTimeout(handler, WIDGET_AUTH_TIMEOUT);
+    };
+    handler();
   }
 
   get mountSettings() {
