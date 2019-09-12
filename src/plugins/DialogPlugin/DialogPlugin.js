@@ -1,7 +1,12 @@
 import ConnectError from '@endpass/class/ConnectError';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import { inlineStylesState } from '@/util/dom';
-import { DIRECTION, DIALOG_EVENTS, PLUGIN_NAMES } from '@/constants';
+import {
+  DIRECTION,
+  DIALOG_EVENTS,
+  PLUGIN_NAMES,
+  PLUGIN_METHODS,
+} from '@/constants';
 import {
   propsIframe,
   propsIframeShow,
@@ -64,6 +69,10 @@ export default class DialogPlugin extends PluginBase {
     this.frame = null;
     this.initialTimer = null;
     this.frameStyles = inlineStylesState(propsIframe);
+  }
+
+  init() {
+    this.context.executeMethod(PLUGIN_METHODS.CONTEXT_MOUNT_DIALOG);
   }
 
   get messenger() {

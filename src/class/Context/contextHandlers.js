@@ -1,8 +1,6 @@
 import ConnectError from '@endpass/class/ConnectError';
 import { PLUGIN_METHODS, MESSENGER_METHODS } from '@/constants';
 
-const WIDGET_AUTH_TIMEOUT = 200;
-
 const { ERRORS } = ConnectError;
 
 const initiate = context => (payload, req) => {
@@ -85,23 +83,6 @@ const mountWidget = context => async () => {
   context.plugins.messengerGroup.addMessenger(context.plugins.widget.messenger);
 };
 
-const mountWidgetOnAuth = context => options => {
-  if (options === false) {
-    return;
-  }
-  let timerId;
-
-  const handler = async () => {
-    clearTimeout(timerId);
-    if (context.isLogin) {
-      await mountWidget(context)();
-      return;
-    }
-    timerId = setTimeout(handler, WIDGET_AUTH_TIMEOUT);
-  };
-  handler();
-};
-
 const initDialog = context => () => {
   const { dialog } = context.plugins;
   const handler = () => {
@@ -126,7 +107,6 @@ export default {
 
   [MESSENGER_METHODS.WIDGET_INIT]: initWidget,
   [MESSENGER_METHODS.WIDGET_UNMOUNT]: unmountWidget,
-  [PLUGIN_METHODS.CONTEXT_MOUNT_WIDGET_ON_AUTH]: mountWidgetOnAuth,
   [PLUGIN_METHODS.CONTEXT_MOUNT_WIDGET]: mountWidget,
 
   [MESSENGER_METHODS.INITIATE]: initiate,

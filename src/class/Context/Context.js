@@ -41,12 +41,6 @@ export default class Context {
     this.plugins = new PluginContainer(options, this, ClassPlugin);
 
     this.plugins.init();
-
-    this.executeMethod(
-      PLUGIN_METHODS.CONTEXT_MOUNT_WIDGET_ON_AUTH,
-      options.widget,
-    );
-    this.executeMethod(PLUGIN_METHODS.CONTEXT_MOUNT_DIALOG);
   }
 
   get isLogin() {
