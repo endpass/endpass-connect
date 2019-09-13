@@ -35,7 +35,7 @@ export default {
      * @returns {Promise<Element>} Widget iframe node
      */
     async () => {
-      const res = await widgetPlugin.context.getWidgetNode();
+      const res = await widgetPlugin.getWidgetNode();
 
       return res;
     },

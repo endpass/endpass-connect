@@ -12,9 +12,11 @@ export default {
      * @returns {Promise<object>}
      */
     async () => {
-      await providerPlugin.executeMethod(PLUGIN_METHODS.CONTEXT_AUTHORIZE);
+      await providerPlugin.context.executeMethod(
+        PLUGIN_METHODS.CONTEXT_AUTHORIZE,
+      );
 
-      return providerPlugin.plugins.provider.openProviderAccount();
+      return providerPlugin.openProviderAccount();
     },
   setProviderSettings: providerPlugin =>
     /**
