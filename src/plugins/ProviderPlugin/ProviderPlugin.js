@@ -10,6 +10,7 @@ import { WidgetPlugin } from '../WidgetPlugin';
 import { AuthorizePlugin } from '../AuthorizePlugin';
 import { DialogPlugin } from '@/plugins/DialogPlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
+import ProviderApi from '@/plugins/ProviderPlugin/ProviderPublicApi';
 
 const { ERRORS } = ConnectError;
 
@@ -20,6 +21,10 @@ export default class ProviderPlugin extends PluginBase {
 
   static get pluginName() {
     return 'provider';
+  }
+
+  static get publicApi() {
+    return ProviderApi;
   }
 
   constructor(options, context) {

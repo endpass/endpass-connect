@@ -4,6 +4,7 @@ import authHandlers from '@/plugins/AuthorizePlugin/authHandlers';
 import PluginBase from '@/plugins/PluginBase';
 import { DialogPlugin } from '@/plugins/DialogPlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
+import AuthApi from '@/plugins/AuthorizePlugin/AuthPublicApi';
 
 const { ERRORS } = ConnectError;
 
@@ -18,6 +19,10 @@ export default class AuthorizePlugin extends PluginBase {
 
   static get dependencyPlugins() {
     return [DialogPlugin, MessengerGroupPlugin];
+  }
+
+  static get publicApi() {
+    return AuthApi;
   }
 
   constructor(options, context) {

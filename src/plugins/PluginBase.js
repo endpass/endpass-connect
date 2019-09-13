@@ -24,6 +24,10 @@ export default class PluginBase {
     return {};
   }
 
+  static get publicApi() {
+    return {};
+  }
+
   /**
    *
    * @param {object} options

@@ -4,6 +4,7 @@ import Oauth from '@/plugins/OauthPlugin/Oauth';
 import PluginBase from '../PluginBase';
 import { DialogPlugin } from '@/plugins/DialogPlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
+import OauthApi from '@/plugins/OauthPlugin/OauthPublicApi';
 
 const { ERRORS } = ConnectError;
 
@@ -14,6 +15,10 @@ export default class OauthPlugin extends PluginBase {
 
   static get dependencyPlugins() {
     return [DialogPlugin, MessengerGroupPlugin];
+  }
+
+  static get publicApi() {
+    return OauthApi;
   }
 
   constructor(options, context) {
