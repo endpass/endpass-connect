@@ -18,6 +18,9 @@ export default class PluginApiTrait {
     [...this[context].plugins].forEach(plugin => {
       const { publicApi } = plugin.constructor;
       Object.keys(publicApi).forEach(methodName => {
+        if (this[methodName]) {
+          throw new Error(`Public api method "${methodName}" already exist!`);
+        }
         this[methodName] = publicApi[methodName](plugin);
       });
     });
