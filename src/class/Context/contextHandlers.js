@@ -101,6 +101,11 @@ const initDialog = context => () => {
   }
 };
 
+const loginWithOauth = context => async params => {
+  const { oauth } = context.plugins;
+  await oauth.loginWithOauth(params);
+};
+
 const createDocument = context => async (payload, req) => {
   const res = await context.plugins.document.createDocument(payload);
   req.answer(res);
@@ -121,4 +126,5 @@ export default {
   [MESSENGER_METHODS.WIDGET_GET_SETTING]: widgetGetSettings,
   [PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS]: setProviderSettings,
   [PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENT]: createDocument,
+  [PLUGIN_METHODS.CONTEXT_LOGIN_WITH_OAUTH]: loginWithOauth,
 };

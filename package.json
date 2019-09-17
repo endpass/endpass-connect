@@ -37,6 +37,14 @@
       "module": "./document.js",
       "umd": "./document.umd.js",
       "browser": "./document.browser.js"
+    },
+    {
+      "library": "EndpassLoginButtonPlugin",
+      "input": "./src/plugins/LoginButtonPlugin/index.js",
+      "main": "./loginButton.min.js",
+      "module": "./loginButton.js",
+      "umd": "./loginButton.umd.js",
+      "browser": "./loginButton.browser.js"
     }
   ],
   "description": "",
