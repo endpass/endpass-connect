@@ -1,3 +1,10 @@
+export const getBlockByNumber = {
+  payload: {
+    method: 'eth_getBlockByNumber',
+    params: [undefined, false],
+  },
+};
+
 export const getCodeSuccess = {
   payload: {
     method: 'eth_getCode',
@@ -24,7 +31,7 @@ export const sendRawTransactionSuccess = {
 export const getTransactionReceiptSuccess = {
   payload: {
     method: 'eth_getTransactionReceipt',
-    params: [null],
+    params: ['0x0'],
   },
   result: {
     transactionHash:

@@ -19,7 +19,8 @@ Cypress.Commands.add('setupWeb3ProviderMocks', (requests = []) => {
   cy.window()
     .its('web3Auth.currentProvider')
     .then(provider => {
-      if (!provider.mockResolvedValue) {
+      const { connection } = provider;
+      if (!connection || !connection.mockResolvedValue) {
         // eslint-disable-next-line no-console
         console.warn(
           'cy.mockWeb3Provider: Use web3 MockProvider to mock requests to Ethereum nodes',
@@ -29,9 +30,9 @@ Cypress.Commands.add('setupWeb3ProviderMocks', (requests = []) => {
 
       requests.forEach(request => {
         if (request.once) {
-          provider.mockResolvedValueOnce(request.payload, request.result);
+          connection.mockResolvedValueOnce(request.payload, request.result);
         } else {
-          provider.mockResolvedValue(request.payload, request.result);
+          connection.mockResolvedValue(request.payload, request.result);
         }
       });
     });
