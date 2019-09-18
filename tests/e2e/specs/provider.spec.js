@@ -1,6 +1,7 @@
 import Network from '@endpass/class/Network';
 import { v3password, address } from '@fixtures/identity/accounts';
 import {
+  getBlockByNumber,
   getCodeSuccess,
   getTransactionCountSuccess,
   getTransactionReceiptSuccess,
@@ -59,6 +60,7 @@ describe('provider', function() {
 
     it('web3.eth.sendTransaction', () => {
       cy.setupWeb3ProviderMocks([
+        getBlockByNumber,
         getCodeSuccess,
         getTransactionCountSuccess,
         getTransactionReceiptSuccess,
