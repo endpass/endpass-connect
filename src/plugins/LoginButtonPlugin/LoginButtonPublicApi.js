@@ -1,11 +1,12 @@
 export default {
-  mountLoginButton: loginButtonPlugin =>
+  createLoginButton: loginButtonPlugin =>
     /**
      * @param {object} params Parameters object
-     * @param {string} params.oauthClientId Oauth Client ID
-     * @param {HTMLElement} params.element
-     * @param {function} [params.callback]
-     * @return {Promise<Element>}
+     * @param {HTMLElement} [params.rootElement]
+     * @param {function} [params.onLogin]
+     * @param {string} [params.buttonLabel]
+     * @param {boolean} [params.isButtonLight]
+     * @return {Promise<LoginButton>}
      */
-    params => loginButtonPlugin.mount(params),
+    params => loginButtonPlugin.createLoginButton(params),
 };

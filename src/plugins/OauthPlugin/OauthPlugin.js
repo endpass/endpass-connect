@@ -29,7 +29,9 @@ export default class OauthPlugin extends PluginBase {
     if (!options.oauthClientId) {
       throw ConnectError.create(ERRORS.OAUTH_REQUIRE_ID);
     }
+
     this.oauthClientId = options.oauthClientId;
+    this.oauthServer = options.oauthServer;
   }
 
   get oauthProvider() {
@@ -44,6 +46,7 @@ export default class OauthPlugin extends PluginBase {
    * @param {object} [params] Parameters object
    * @param {number} [params.popupWidth] Oauth popup width
    * @param {number} [params.popupHeight] Oauth popup height
+   * @param {string} [params.oauthServer] Oauth server url
    * @param {string[]} params.scopes - Array of authorization scopes
    */
   async loginWithOauth(params) {
@@ -53,6 +56,7 @@ export default class OauthPlugin extends PluginBase {
 
     this.oauthRequestProvider = new Oauth({
       ...params,
+      oauthServer: this.oauthServer || params.oauthServer,
       clientId: this.oauthClientId,
       strategy,
     });

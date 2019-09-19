@@ -101,9 +101,9 @@ const initDialog = context => () => {
   }
 };
 
-const loginWithOauth = context => async params => {
+const loginWithOauth = context => async payload => {
   const { oauth } = context.plugins;
-  await oauth.loginWithOauth(params);
+  await oauth.loginWithOauth(payload);
 };
 
 const createDocument = context => async (payload, req) => {
