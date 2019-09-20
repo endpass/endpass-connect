@@ -6,6 +6,21 @@ describe('accounts', function() {
     cy.waitPageLoad();
   });
 
+  it('should close dialog without next reopen', () => {
+    /**
+     * This test checks Queue stucking with the last request
+     * It relates to everyone action through connect-auth chain
+     */
+    cy.authFrameContinueRun();
+    cy.shouldLoggedIn();
+
+    cy.get('[data-test=endpass-form-open-account]').click();
+    cy.getElementFromAuth('[data-test=cancel-button]').click();
+    // Time for reopen is not fixed but 25 second enough in the most of cases
+    cy.wait(25000);
+    cy.get('[data-test=dialog-wrapper][data-visible=true]').should('not.exist');
+  });
+
   it('should logout from accounts', () => {
     cy.authFrameContinueRun();
 

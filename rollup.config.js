@@ -94,6 +94,6 @@ export default [
       input: plugin.input,
       umd: plugin.umd,
       module: plugin.module,
-    })
+    });
   }),
 ];
