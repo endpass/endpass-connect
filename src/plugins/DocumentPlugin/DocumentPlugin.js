@@ -17,7 +17,7 @@ export default class DocumentPlugin extends PluginBase {
     return DocumentPublicApi;
   }
 
-  createDocument(params) {
-    return this.context.ask(MESSENGER_METHODS.CREATE_DOCUMENT, params);
+  createDocument() {
+    return this.context.ask(MESSENGER_METHODS.CREATE_DOCUMENT);
   }
 }

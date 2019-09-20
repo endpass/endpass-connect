@@ -1,5 +1,9 @@
 export default documentPlugin => ({
-  createDocument(params) {
-    return documentPlugin.createDocument(params);
+  /**
+   * Show dialog for create document
+   * @return {Promise<void>}
+   */
+  createDocument() {
+    return documentPlugin.createDocument();
   },
 });
