@@ -1244,10 +1244,10 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
-"@endpass/class@^0.18.2":
-  version "0.18.2"
-  resolved "https://registry.yarnpkg.com/@endpass/class/-/class-0.18.2.tgz#62281cef96e9d37220ede989e29254857b64ca79"
-  integrity sha512-xuNBzFnwVFrWbzoPJ2LA8pZ6lodAgirPKXOopiOyhG7oPwVyC9j/Y6Clx89LX/xkuaJd3BSe1umTOrWm8HKDVw==
+"@endpass/class@^0.18.3":
+  version "0.18.3"
+  resolved "https://registry.yarnpkg.com/@endpass/class/-/class-0.18.3.tgz#5d659b9fdc6db8f35858bd8595a250643bdd41b0"
+  integrity sha512-Cb8H5il7N14GoAubNfWXEx7ugPMisnGlCpvh7nPbZGN1QrUIpEah4bUgsPuZbkw9iNg2EDjcOA6RcFq6msi7sA==
   dependencies:
     "@endpass/utils" "^1.8.3"
     "@ledgerhq/hw-app-eth" "^4.24.0"

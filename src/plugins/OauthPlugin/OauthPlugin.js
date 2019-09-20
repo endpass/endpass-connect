@@ -68,15 +68,16 @@ export default class OauthPlugin extends PluginBase {
   }
 
   async request(options) {
-    let result = this.oauthProvider.request(options);
+    let result = await this.oauthProvider.request(options);
+    const { data } = result || {};
 
-    if (
-      result &&
-      !result.length &&
-      options.url.search(documentsCheckReg) !== -1
-    ) {
-      await this.context.executeMethod(PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENT);
-      result = this.oauthProvider.request(options);
+    if (data && !data.length && options.url.search(documentsCheckReg) !== -1) {
+      try {
+        await this.context.executeMethod(
+          PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENT,
+        );
+        result = await this.oauthProvider.request(options);
+      } catch (e) {}
     }
 
     return result;
