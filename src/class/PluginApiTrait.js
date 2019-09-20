@@ -15,14 +15,27 @@ export default class PluginApiTrait {
 
     this[context] = new Context(options, ClassPlugin);
 
+    const defineMethod = (methodName, method) => {
+      if (this[methodName]) {
+        throw new Error(`Public api method "${methodName}" already exist!`);
+      }
+      this[methodName] = method;
+    };
+
     [...this[context].plugins].forEach(plugin => {
       const { publicApi } = plugin.constructor;
-      Object.keys(publicApi).forEach(methodName => {
-        if (this[methodName]) {
-          throw new Error(`Public api method "${methodName}" already exist!`);
-        }
-        this[methodName] = publicApi[methodName](plugin);
-      });
+      if (typeof publicApi === 'function') {
+        // new plugins
+        const methods = publicApi(plugin);
+        Object.keys(methods).forEach(methodName => {
+          defineMethod(methodName, methods[methodName]);
+        });
+      } else {
+        // support old plugins
+        Object.keys(publicApi).forEach(methodName => {
+          defineMethod(methodName, publicApi[methodName](plugin));
+        });
+      }
     });
   }
 }

@@ -5,8 +5,11 @@ import PluginBase from '../PluginBase';
 import { DialogPlugin } from '@/plugins/DialogPlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 import OauthApi from '@/plugins/OauthPlugin/OauthPublicApi';
+import { MESSENGER_METHODS } from '@/constants';
 
 const { ERRORS } = ConnectError;
+
+const documentsCheckReg = /\/documents/gi;
 
 export default class OauthPlugin extends PluginBase {
   static get pluginName() {
@@ -64,7 +67,20 @@ export default class OauthPlugin extends PluginBase {
     this.oauthProvider.setPopupParams(params);
   }
 
-  request(options) {
-    return this.oauthProvider.request(options);
+  async request(options) {
+    let result = this.oauthProvider.request(options);
+
+    if (
+      result &&
+      !result.length &&
+      options.url.search(documentsCheckReg) !== -1
+    ) {
+      const document = await this.context.ask(
+        MESSENGER_METHODS.CREATE_DOCUMENT,
+      );
+      result = [document];
+    }
+
+    return result;
   }
 }
