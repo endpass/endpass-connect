@@ -1,25 +1,11 @@
 import ConnectError from '@endpass/class/ConnectError';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
-import { inlineStylesState } from '@/util/dom';
-import {
-  DIRECTION,
-  DIALOG_EVENTS,
-  PLUGIN_NAMES,
-  PLUGIN_METHODS,
-} from '@/constants';
-import {
-  propsIframe,
-  propsIframeShow,
-  propsIframeHide,
-  stylesOverlayShow,
-  stylesOverlayHide,
-  stylesWrapperShow,
-  stylesWrapperHide,
-} from './DialogStyles';
+import { DIRECTION, PLUGIN_NAMES, PLUGIN_METHODS } from '@/constants';
 import StateClose from './states/StateClose';
 import dialogHandlers from '@/plugins/DialogPlugin/dialogHandlers';
 import PluginBase from '@/plugins/PluginBase';
 import { getFrameRouteUrl } from '@/util/url';
+import DialogView from '@/class/Dialog/View';
 
 const { ERRORS } = ConnectError;
 
@@ -62,13 +48,12 @@ export default class DialogPlugin extends PluginBase {
 
     /** @type Resolvers */
     this.readyResolvers = [];
-
-    // DialogPlugin elements nodes
-    this.overlay = null;
-    this.wrapper = null;
-    this.frame = null;
     this.initialTimer = null;
-    this.frameStyles = inlineStylesState(propsIframe);
+    this.dialog = new DialogView({
+      url: this.url,
+      namespace: this.namespace,
+      element: this.element,
+    });
   }
 
   init() {
@@ -88,17 +73,11 @@ export default class DialogPlugin extends PluginBase {
   }
 
   onClose() {
-    this.wrapper.dataset.visible = 'false';
-    this.emitEvent(DIALOG_EVENTS.CLOSE);
-    this.frame.style = this.frameStyles(propsIframeHide);
-    this.wrapper.style = stylesWrapperHide;
+    this.dialog.hide();
   }
 
   onOpen() {
-    this.wrapper.dataset.visible = 'true';
-    this.frame.style = this.frameStyles(propsIframeShow);
-    this.emitEvent(DIALOG_EVENTS.OPEN);
-    this.wrapper.style = stylesWrapperShow;
+    this.dialog.show();
   }
 
   /**
@@ -106,11 +85,7 @@ export default class DialogPlugin extends PluginBase {
    * @param {string} event
    */
   emitEvent(event) {
-    const frameEvent = new CustomEvent(event, {
-      detail: {},
-    });
-
-    this.overlay.dispatchEvent(frameEvent);
+    this.dialog.emitEvent(event);
   }
 
   /**
@@ -133,56 +108,13 @@ export default class DialogPlugin extends PluginBase {
   }
 
   /**
-   * Create default markup for DialogPlugin
-   * @private
-   * @return {HTMLDivElement}
-   */
-  createMarkup() {
-    const NSmarkup = this.namespace
-      ? `data-endpass-namespace="${this.namespace}"`
-      : '';
-
-    const markupTemplate = `
-      <div data-endpass="overlay" ${NSmarkup} style="${stylesOverlayHide}" >
-        <div data-test="dialog-wrapper" data-endpass="wrapper" data-visible="false" style="${stylesWrapperHide}">
-          <iframe data-test="dialog-iframe" data-endpass="frame" src="${
-            this.url
-          }" style="${this.frameStyles(propsIframeHide)}"/>
-        </div>
-      </div>
-    `;
-    const markup = document.createElement('div');
-    markup.insertAdjacentHTML('afterBegin', markupTemplate);
-    return markup;
-  }
-
-  /**
    * Create markup and prepend to <body>
    * @private
    */
   mount() {
-    const markup = this.createMarkup();
-
-    this.overlay = markup.querySelector('[data-endpass="overlay"]');
-    this.wrapper = markup.querySelector('[data-endpass="wrapper"]');
-    this.frame = markup.querySelector('[data-endpass="frame"]');
-
-    if (this.isElementMode) {
-      this.overlay = this.selectHTMLElement();
-      this.overlay.appendChild(this.wrapper);
-    } else {
-      this.overlay.addEventListener(DIALOG_EVENTS.OPEN, () => {
-        this.overlay.style = stylesOverlayShow;
-      });
-      this.overlay.addEventListener(DIALOG_EVENTS.CLOSE, () => {
-        this.overlay.style = stylesOverlayHide;
-      });
-      document.body.appendChild(this.overlay);
-    }
-
-    // subscribe
-    this.dialogMessenger.setTarget(this.frame.contentWindow);
-    this.frame.addEventListener('load', () => {
+    this.dialog.mount();
+    this.dialogMessenger.setTarget(this.dialog.target);
+    this.dialog.onFrameLoad(() => {
       this.initialTimer = setTimeout(() => {
         // eslint-disable-next-line no-console
         console.error(
@@ -197,17 +129,7 @@ export default class DialogPlugin extends PluginBase {
    * @return {HTMLElement}
    */
   selectHTMLElement() {
-    const element =
-      typeof this.element === 'string'
-        ? document.querySelector(this.element)
-        : this.element;
-
-    if (!element) {
-      throw new Error(
-        'Not defined "element" in options. Please define "element" option as String or HTMLElement',
-      );
-    }
-    return element;
+    return this.dialog.rootElement;
   }
 
   /**

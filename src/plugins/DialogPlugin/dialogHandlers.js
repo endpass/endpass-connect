@@ -3,34 +3,34 @@ import { MESSENGER_METHODS } from '@/constants';
 import StateClose from '@/plugins/DialogPlugin/states/StateClose';
 import StateOpen from '@/plugins/DialogPlugin/states/StateOpen';
 
-const readyDialog = dialog => (payload, req) => {
-  if (req.source === dialog.dialogMessenger.target) {
-    dialog.ready = true;
-    dialog.readyResolvers.forEach(item => item(true));
-    dialog.readyResolvers.length = 0;
+const readyDialog = plugin => (payload, req) => {
+  if (req.source === plugin.dialogMessenger.target) {
+    plugin.ready = true;
+    plugin.readyResolvers.forEach(item => item(true));
+    plugin.readyResolvers.length = 0;
   }
 };
 
-const initiate = dialog => (payload, req) => {
-  if (req.source === dialog.dialogMessenger.target) {
-    clearTimeout(dialog.initialTimer);
+const initiate = plugin => (payload, req) => {
+  if (req.source === plugin.dialogMessenger.target) {
+    clearTimeout(plugin.initialTimer);
   }
 };
 
-const resize = dialog => ({ offsetHeight }) => {
-  dialog.frame.style = dialog.frameStyles({
+const resize = plugin => ({ offsetHeight }) => {
+  plugin.dialog.frame.style = plugin.dialog.frameStyles({
     'min-height': `${offsetHeight || 0}px`,
   });
 };
 
-const close = dialog => () => {
-  dialog.state.onClose();
-  dialog.state = new StateClose(dialog);
+const close = plugin => () => {
+  plugin.state.onClose();
+  plugin.state = new StateClose(plugin);
 };
 
-const open = dialog => () => {
-  dialog.state.onOpen();
-  dialog.state = new StateOpen(dialog);
+const open = plugin => () => {
+  plugin.state.onOpen();
+  plugin.state = new StateOpen(plugin);
 };
 
 export default {
