@@ -2,7 +2,12 @@ import ConnectError from '@endpass/class/ConnectError';
 import Network from '@endpass/class/Network';
 import Emmiter from '@/plugins/ProviderPlugin/Emmiter';
 import InpageProvider from '@/plugins/ProviderPlugin/InpageProvider';
-import { INPAGE_EVENTS, MESSENGER_METHODS, PLUGIN_METHODS } from '@/constants';
+import {
+  INPAGE_EVENTS,
+  MESSENGER_METHODS,
+  PLUGIN_METHODS,
+  PLUGIN_NAMES,
+} from '@/constants';
 import ProviderFactory from '@/plugins/ProviderPlugin/ProviderFactory';
 import createInpageProviderStream from '@/streams/inpageProvider/inpageProviderStream';
 import PluginBase from '../PluginBase';
@@ -20,7 +25,7 @@ export default class ProviderPlugin extends PluginBase {
   }
 
   static get pluginName() {
-    return 'provider';
+    return PLUGIN_NAMES.PROVIDER;
   }
 
   static get publicApi() {

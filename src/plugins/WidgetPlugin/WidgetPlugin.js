@@ -4,6 +4,7 @@ import {
   DIRECTION,
   MESSENGER_METHODS,
   PLUGIN_METHODS,
+  PLUGIN_NAMES,
   WIDGET_EVENTS,
 } from '@/constants';
 import { inlineStyles } from '@/util/dom';
@@ -23,7 +24,7 @@ const WIDGET_AUTH_TIMEOUT = 200;
 
 export default class WidgetPlugin extends PluginBase {
   static get pluginName() {
-    return 'widget';
+    return PLUGIN_NAMES.WIDGET;
   }
 
   static get handlers() {

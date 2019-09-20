@@ -2,7 +2,7 @@ import PluginBase from '../PluginBase';
 import { DialogPlugin } from '@/plugins/DialogPlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 import DocumentPublicApi from './DocumentPublicApi';
-import { PLUGIN_NAMES } from '@/constants';
+import { MESSENGER_METHODS, PLUGIN_NAMES } from '@/constants';
 
 export default class DocumentPlugin extends PluginBase {
   static get pluginName() {
@@ -15,5 +15,9 @@ export default class DocumentPlugin extends PluginBase {
 
   static get publicApi() {
     return DocumentPublicApi;
+  }
+
+  createDocument(params) {
+    return this.context.ask(MESSENGER_METHODS.CREATE_DOCUMENT, params);
   }
 }

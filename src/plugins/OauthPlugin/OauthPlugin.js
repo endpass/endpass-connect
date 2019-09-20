@@ -5,15 +5,15 @@ import PluginBase from '../PluginBase';
 import { DialogPlugin } from '@/plugins/DialogPlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 import OauthApi from '@/plugins/OauthPlugin/OauthPublicApi';
-import { MESSENGER_METHODS } from '@/constants';
+import { MESSENGER_METHODS, PLUGIN_METHODS, PLUGIN_NAMES } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
-const documentsCheckReg = /\/documents/gi;
+const documentsCheckReg = /\/documents$/gi;
 
 export default class OauthPlugin extends PluginBase {
   static get pluginName() {
-    return 'oauth';
+    return PLUGIN_NAMES.OAUTH;
   }
 
   static get dependencyPlugins() {
@@ -75,10 +75,8 @@ export default class OauthPlugin extends PluginBase {
       !result.length &&
       options.url.search(documentsCheckReg) !== -1
     ) {
-      const document = await this.context.ask(
-        MESSENGER_METHODS.CREATE_DOCUMENT,
-      );
-      result = [document];
+      await this.context.executeMethod(PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENT);
+      result = this.oauthProvider.request(options);
     }
 
     return result;

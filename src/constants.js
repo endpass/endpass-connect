@@ -84,6 +84,7 @@ export const PLUGIN_METHODS = {
   CONTEXT_SET_PROVIDER_SETTINGS: 'CONTEXT_SET_PROVIDER_SETTINGS',
   CONTEXT_MOUNT_DIALOG: 'CONTEXT_MOUNT_DIALOG',
   CONTEXT_MOUNT_WIDGET: 'CONTEXT_MOUNT_WIDGET',
+  CONTEXT_CREATE_DOCUMENT: 'CONTEXT_CREATE_DOCUMENT',
 };
 
 export const DIRECTION = Object.freeze({
@@ -111,6 +112,9 @@ export const PLUGIN_NAMES = {
   MESSENGER_GROUP: 'messengerGroup',
   AUTHORIZE: 'authorize',
   DOCUMENT: 'document',
+  OAUTH: 'oauth',
+  PROVIDER: 'provider',
+  WIDGET: 'widget',
 };
 
 export const CONTEXT = Symbol('context');
