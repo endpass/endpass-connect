@@ -1,1 +1,1 @@
-module.export = require('./dev');
+module.exports = require('./dev');
