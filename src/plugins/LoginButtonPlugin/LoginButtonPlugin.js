@@ -1,11 +1,12 @@
+import { PLUGIN_METHODS, PLUGIN_NAMES } from '@/constants';
 import { OauthPlugin } from '@/plugins/OauthPlugin';
 import PluginBase from '../PluginBase';
-import LoginButtonFactory from './LoginButton/LoginButtonFactory';
+import LoginButton from './LoginButton';
 import LoginButtonPublicApi from './LoginButtonPublicApi';
 
 export default class LoginButtonPlugin extends PluginBase {
   static get pluginName() {
-    return 'loginButton';
+    return PLUGIN_NAMES.LOGIN_BUTTON;
   }
 
   static get dependencyPlugins() {
@@ -16,7 +17,35 @@ export default class LoginButtonPlugin extends PluginBase {
     return LoginButtonPublicApi;
   }
 
-  createLoginButton(options = {}) {
-    return LoginButtonFactory.create(options, this.context);
+  createLoginButton({ rootElement, buttonLabel, isButtonLight, onLogin } = {}) {
+    const clickHandler = this.wrapCallback(onLogin);
+    return new LoginButton({
+      rootElement,
+      buttonLabel,
+      isButtonLight,
+      clickHandler,
+    });
+  }
+
+  wrapCallback(userCallback) {
+    const self = this;
+
+    return async () => {
+      let error;
+      let result;
+
+      try {
+        result = await self.context.executeMethod(
+          PLUGIN_METHODS.CONTEXT_OAUTH_AUTHORIZE,
+          { scopes: ['user:email:read'] },
+        );
+      } catch (e) {
+        error = e;
+      }
+
+      if (userCallback instanceof Function) {
+        userCallback(error, result);
+      }
+    };
   }
 }

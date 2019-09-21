@@ -10,6 +10,8 @@ import { terser } from 'rollup-plugin-terser';
 import replace from 'rollup-plugin-replace';
 import visualizer from 'rollup-plugin-visualizer';
 import ts from 'rollup-plugin-typescript';
+import postcss from 'rollup-plugin-postcss';
+import url from 'postcss-url';
 import babel from 'rollup-plugin-babel';
 
 import pkg from './package.json';
@@ -57,6 +59,15 @@ const commonConfig = {
     commonjs(),
     !withSourceMaps && terser(),
     visualizer(),
+    postcss({
+      plugins: [
+        url({
+          url: 'inline',
+          encodeType: 'base64',
+          optimizeSvgEncode: true,
+        })
+      ]
+    }),
   ],
   watch: {
     exclude: ['node_modules/**'],

@@ -1,3 +1,4 @@
+import './login-button.css';
 import PluginFactory from '@/class/PluginFactory';
 import ExportPlugin from './LoginButtonPlugin';
 

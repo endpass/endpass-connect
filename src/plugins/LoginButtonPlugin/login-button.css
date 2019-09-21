@@ -1,0 +1,39 @@
+.endpass-oauth-button {
+  background: #6e32c9 url("../../assets/img/button_bg.svg") center center no-repeat !important;
+  background-size: cover !important;
+  border: 0 !important;
+  padding: 12px 15px !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  color: white !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
+}
+
+.endpass-oauth-button .endpass-oauth-icon {
+  width: 18px !important;
+  height: 24px !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  margin-right: 12px !important;
+  background: url("../../assets/img/endpass_oauth_white.svg") center center no-repeat !important;
+}
+
+.endpass-oauth-button[disabled] {
+  cursor: default !important;
+  background: url("../../assets/img/button_bg_disabled.svg") center center no-repeat !important;
+}
+
+.endpass-oauth-button.endpass-oauth-button-light {
+  background: white !important;
+  color: #6e32c9 !important;
+}
+
+.endpass-oauth-button.endpass-oauth-button-light .endpass-oauth-icon {
+  background: url("../../assets/img/endpass_oauth.svg") center center no-repeat !important;
+}
+
+.endpass-oauth-button.endpass-oauth-button-light[disabled] {
+  filter: grayscale(1) !important;
+}
