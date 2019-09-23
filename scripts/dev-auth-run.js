@@ -6,7 +6,6 @@ process.chdir('./endpass-auth');
 console.log(`current directory: ${process.cwd()}`);
 executor([
   //
-  'yarn',
   'SOURCE_MAP=true PORT=8888 yarn dev:e2e',
 ]);
 

@@ -1,4 +1,5 @@
 import { address, email, v3password } from '@fixtures/identity/accounts';
+import { document } from '@fixtures/identity/documents';
 import { authUrl, visitUrl, visitBlockOauth } from '@config';
 
 describe('oauth', function() {
@@ -90,6 +91,62 @@ describe('oauth', function() {
         'contain.text',
         email,
       );
+    });
+
+    it('should get list of documents', () => {
+      cy.authFrameContinueRun();
+
+      const buttonSelector = '[data-test=endpass-oauth-check-documents]';
+
+      cy.get(buttonSelector).click();
+
+      cy.window()
+        .its('open')
+        .should('be.called');
+
+      cy.get('[data-test=endpass-app-loader]').should('not.exist');
+      cy.authFrameWrapperHidden().should('exist');
+      cy.get('[data-test=endpass-oauth-documents-list]')
+        .eq(0)
+        .should('contain.text', document.id);
+
+      cy.get('[data-test=endpass-oauth-clear-token-button]').click();
+      cy.get(buttonSelector).should('exist');
+    });
+    
+    it('should upload document with empty document list', () => {
+      cy.mockDocumentsList([]);
+      cy.authFrameContinueRun();
+
+      const buttonSelector = '[data-test=endpass-oauth-check-documents]';
+      const dialogSelector = '[data-test=document-create-modal]';
+
+      cy.get(buttonSelector).click();
+
+      cy.window()
+        .its('open')
+        .should('be.called');
+
+      cy.authFrameWrapperVisible().should('exist');
+      cy.getElementFromAuth(dialogSelector)
+        .should('contain.text', 'Upload document');
+
+      cy.uploadFile(
+        '#v-file-drop-area-idx-1',
+        'identity/documents/driver-license.jpg',
+        'image/jpg',
+      );
+      cy.getElementFromAuth(
+        `${dialogSelector} [data-test=submit-button]`,
+      ).click();
+      cy.getElementFromAuth(dialogSelector)
+        .should('contain.text', 'Add back side');
+      cy.getElementFromAuth(
+        `${dialogSelector} [data-test=modal-card-button-close]`,
+      ).click();
+
+      cy.get('[data-test=endpass-oauth-clear-token-button]').click();
+      cy.get(buttonSelector).should('exist');
     });
 
     it('should clean token', () => {
