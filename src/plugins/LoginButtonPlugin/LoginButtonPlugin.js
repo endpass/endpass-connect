@@ -45,6 +45,8 @@ export default class LoginButtonPlugin extends PluginBase {
       if (userCallback instanceof Function) {
         userCallback(error, result);
       }
+
+      return error;
     };
   }
 }
