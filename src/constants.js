@@ -50,6 +50,7 @@ export const MESSENGER_METHODS = Object.freeze({
   INITIATE: 'INITIATE',
   READY_STATE_BRIDGE: 'READY_STATE_BRIDGE',
   EXCHANGE_TOKEN_REQUEST: 'EXCHANGE_TOKEN_REQUEST',
+  CREATE_DOCUMENT: 'CREATE_DOCUMENT',
 
   // DialogPlugin-level messages
   DIALOG_RESIZE: 'DIALOG_RESIZE',
@@ -83,6 +84,7 @@ export const PLUGIN_METHODS = {
   CONTEXT_SET_PROVIDER_SETTINGS: 'CONTEXT_SET_PROVIDER_SETTINGS',
   CONTEXT_MOUNT_DIALOG: 'CONTEXT_MOUNT_DIALOG',
   CONTEXT_MOUNT_WIDGET: 'CONTEXT_MOUNT_WIDGET',
+  CONTEXT_CREATE_DOCUMENT: 'CONTEXT_CREATE_DOCUMENT',
 };
 
 export const DIRECTION = Object.freeze({
@@ -108,6 +110,11 @@ export const DIALOG_EVENTS = {
 export const PLUGIN_NAMES = {
   DIALOG: 'dialog',
   MESSENGER_GROUP: 'messengerGroup',
+  AUTHORIZE: 'authorize',
+  DOCUMENT: 'document',
+  OAUTH: 'oauth',
+  PROVIDER: 'provider',
+  WIDGET: 'widget',
 };
 
 export const CONTEXT = Symbol('context');

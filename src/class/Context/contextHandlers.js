@@ -101,6 +101,11 @@ const initDialog = context => () => {
   }
 };
 
+const createDocument = context => async (payload, req) => {
+  const res = await context.plugins.document.createDocument(payload);
+  req.answer(res);
+};
+
 export default {
   [PLUGIN_METHODS.CONTEXT_AUTHORIZE]: authorize,
   [MESSENGER_METHODS.LOGOUT_REQUEST]: logout,
@@ -115,4 +120,5 @@ export default {
   [MESSENGER_METHODS.CHANGE_SETTINGS_REQUEST]: changeSettings,
   [MESSENGER_METHODS.WIDGET_GET_SETTING]: widgetGetSettings,
   [PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS]: setProviderSettings,
+  [PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENT]: createDocument,
 };

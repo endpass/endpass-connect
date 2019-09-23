@@ -1,5 +1,5 @@
 import ConnectError from '@endpass/class/ConnectError';
-import { MESSENGER_METHODS } from '@/constants';
+import { MESSENGER_METHODS, PLUGIN_NAMES } from '@/constants';
 import authHandlers from '@/plugins/AuthorizePlugin/authHandlers';
 import PluginBase from '@/plugins/PluginBase';
 import { DialogPlugin } from '@/plugins/DialogPlugin';
@@ -10,7 +10,7 @@ const { ERRORS } = ConnectError;
 
 export default class AuthorizePlugin extends PluginBase {
   static get pluginName() {
-    return 'authorize';
+    return PLUGIN_NAMES.AUTHORIZE;
   }
 
   static get handlers() {
