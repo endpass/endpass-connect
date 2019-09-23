@@ -2,10 +2,10 @@ export default {
   createLoginButton: loginButtonPlugin =>
     /**
      * @param {object} params Parameters object
-     * @param {HTMLElement} [params.rootElement]
+     * @param {string|HTMLElement} [params.element]
      * @param {function} [params.onLogin]
-     * @param {string} [params.buttonLabel]
-     * @param {boolean} [params.isButtonLight]
+     * @param {string} [params.label]
+     * @param {boolean} [params.isLight]
      * @return {Promise<LoginButton>}
      */
     params => loginButtonPlugin.createLoginButton(params),

@@ -17,13 +17,13 @@ export default class LoginButtonPlugin extends PluginBase {
     return LoginButtonPublicApi;
   }
 
-  createLoginButton({ rootElement, buttonLabel, isButtonLight, onLogin } = {}) {
-    const clickHandler = this.wrapCallback(onLogin);
+  createLoginButton({ element, label, isLight, onLogin } = {}) {
+    const onClick = this.wrapCallback(onLogin);
     return new LoginButton({
-      rootElement,
-      buttonLabel,
-      isButtonLight,
-      clickHandler,
+      element,
+      label,
+      isLight,
+      onClick,
     });
   }
 
