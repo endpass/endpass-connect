@@ -11,6 +11,10 @@ export default {
       await oauthPlugin.loginWithOauth(params);
     },
 
+  loginWithOauthIframe: oauthPlugin => async params => {
+    await oauthPlugin.loginWithOauthIframe(params);
+  },
+
   logoutFromOauth: oauthPlugin =>
     /**
      * Clears instance scopes and token

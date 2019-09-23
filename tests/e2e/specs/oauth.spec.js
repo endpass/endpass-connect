@@ -2,7 +2,7 @@ import { address, email, v3password } from '@fixtures/identity/accounts';
 import { authUrl, visitUrl, visitBlockOauth } from '@config';
 
 describe('oauth', function() {
-  describe('oauth popup window', () => {
+  describe.skip('oauth popup window', () => {
     beforeEach(() => {
       cy.server();
       cy.mockAuthCheck(401);
