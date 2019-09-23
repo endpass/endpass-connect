@@ -8,6 +8,10 @@ Cypress.Commands.add('mockInitialData', (netId = Network.NET_ID.MAIN) => {
 
   cy.mockAuthLogin('emailLink');
 
+  cy.mockDocumentsList();
+  cy.mockDocumentUpload();
+  cy.mockDocumentFrontUpload();
+
   cy.mockAuthLogout();
   cy.mockAuthRecover();
 
