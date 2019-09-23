@@ -101,6 +101,14 @@ const initDialog = context => () => {
   }
 };
 
+const loginWithOauth = context => async (payload, req) => {
+  const { oauth } = context.plugins;
+  await oauth.loginWithOauth({ scopes: ['user:email:read'] });
+
+  const { data } = await oauth.request({ url: `${ENV.apiServer}/user` });
+  req.answer(data);
+};
+
 const createDocument = context => async (payload, req) => {
   const res = await context.plugins.document.createDocument(payload);
   req.answer(res);
@@ -121,4 +129,5 @@ export default {
   [MESSENGER_METHODS.WIDGET_GET_SETTING]: widgetGetSettings,
   [PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS]: setProviderSettings,
   [PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENT]: createDocument,
+  [PLUGIN_METHODS.CONTEXT_OAUTH_AUTHORIZE]: loginWithOauth,
 };

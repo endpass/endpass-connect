@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg fill="none" version="1.1" viewBox="0 0 198 48" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <metadata>
+    <rdf:RDF>
+      <cc:Work rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <mask id="e" x="4" y="2" width="198" height="48" mask-type="alpha" maskUnits="userSpaceOnUse">
+    <rect x="4" y="2" width="198" height="48" rx="4" fill="#6e32c9"/>
+  </mask>
+  <g transform="translate(-4,-2)" mask="url(#e)">
+    <rect x="4" y="2" width="198" height="48" fill="url(#d)"/>
+    <g filter="url(#f)">
+      <rect x="4" y="2" width="198" height="48" rx="4" fill="#9fa5ad"/>
+    </g>
+    <path d="m103-108 100.99 82.731-50.492 41.405-50.498-41.433z" fill="url(#c)" opacity=".3"/>
+    <path d="m103 57.605 100.99-82.873-0.118 82.873-100.87 82.632z" fill="url(#b)"/>
+    <path d="m104.99 67.35-100.99-82.866 0.11809 82.866 100.87 82.639z" fill="url(#a)" opacity=".3"/>
+  </g>
+  <defs>
+    <filter id="f" x="0" y="0" width="206" height="56" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+      <feOffset dy="2"/>
+      <feGaussianBlur stdDeviation="2"/>
+      <feColorMatrix values="0 0 0 0 0.141176 0 0 0 0 0.164706 0 0 0 0 0.180392 0 0 0 0.1 0"/>
+      <feBlend in2="BackgroundImageFix" result="effect1_dropShadow"/>
+      <feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+      <feOffset dy="1"/>
+      <feGaussianBlur stdDeviation="0.5"/>
+      <feColorMatrix values="0 0 0 0 0.141176 0 0 0 0 0.164706 0 0 0 0 0.180392 0 0 0 0.1 0"/>
+      <feBlend in2="effect1_dropShadow" result="effect2_dropShadow"/>
+      <feBlend in="SourceGraphic" in2="effect2_dropShadow" result="shape"/>
+    </filter>
+    <linearGradient id="d" x1="206.93" x2="183.14" y1="22.667" y2="-53.755" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8035E2" offset="0"/>
+      <stop stop-color="#6003DB" offset="1"/>
+    </linearGradient>
+    <linearGradient id="c" x1="100.48" x2="196.17" y1="-67.754" y2="-20.581" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B9BFC7" offset="0"/>
+      <stop stop-color="#D5D9E0" offset="1"/>
+    </linearGradient>
+    <linearGradient id="b" x1="202.5" x2="106.38" y1="20.509" y2="66.011" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B9BFC7" offset="0"/>
+      <stop stop-color="#9FA5AD" offset="1"/>
+    </linearGradient>
+    <linearGradient id="a" x1="1.4756" x2="106.12" y1="38.143" y2="76.832" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B9BFC7" offset="0"/>
+      <stop stop-color="#D5D9E0" offset="1"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -85,6 +85,7 @@ export const PLUGIN_METHODS = {
   CONTEXT_MOUNT_DIALOG: 'CONTEXT_MOUNT_DIALOG',
   CONTEXT_MOUNT_WIDGET: 'CONTEXT_MOUNT_WIDGET',
   CONTEXT_CREATE_DOCUMENT: 'CONTEXT_CREATE_DOCUMENT',
+  CONTEXT_OAUTH_AUTHORIZE: 'CONTEXT_OAUTH_AUTHORIZE',
 };
 
 export const DIRECTION = Object.freeze({
@@ -115,6 +116,7 @@ export const PLUGIN_NAMES = {
   OAUTH: 'oauth',
   PROVIDER: 'provider',
   WIDGET: 'widget',
+  LOGIN_BUTTON: 'loginButton',
 };
 
 export const CONTEXT = Symbol('context');
