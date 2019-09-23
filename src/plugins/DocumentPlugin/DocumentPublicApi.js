@@ -3,7 +3,7 @@ export default documentPlugin => ({
    * Show dialog for create document
    * @return {Promise<void>}
    */
-  createDocument() {
+  async createDocument() {
     return documentPlugin.createDocument();
   },
 });
