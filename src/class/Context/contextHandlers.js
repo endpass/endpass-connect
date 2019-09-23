@@ -107,7 +107,7 @@ const loginWithOauth = context => async (payload, req) => {
 
   const { data } = await oauth.request({
     url: `${ENV.apiServer}/user`,
-    data: payload,
+    data: { scopes: ['user:email:read'] },
   });
   req.answer(data);
 };

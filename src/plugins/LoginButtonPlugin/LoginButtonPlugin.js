@@ -37,7 +37,6 @@ export default class LoginButtonPlugin extends PluginBase {
       try {
         result = await self.context.executeMethod(
           PLUGIN_METHODS.CONTEXT_OAUTH_AUTHORIZE,
-          { scopes: ['user:email:read'] },
         );
       } catch (e) {
         error = e;
