@@ -73,7 +73,12 @@ export default class Oauth {
       },
     );
 
-    LocalStorage.save(this.clientId, tokenObject);
+    if (tokenObject) {
+      LocalStorage.save(this.clientId, tokenObject);
+    }
+
+    console.log('tokenObject', tokenObject);
+
     return tokenObject;
   }
 

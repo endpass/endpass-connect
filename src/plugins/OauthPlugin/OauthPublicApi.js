@@ -10,6 +10,10 @@ export default oauthPlugin => ({
     await oauthPlugin.loginWithOauth(params);
   },
 
+  loginWithOauthIframe: oauthPlugin => async params => {
+    await oauthPlugin.loginWithOauthIframe(params);
+  },
+
   /**
    * Clears instance scopes and token
    * @throws {Error} If not authorized yet;

@@ -2,37 +2,36 @@ import ConnectError from '@endpass/class/ConnectError';
 import mapToQueryString from '@endpass/utils/mapToQueryString';
 import queryStringToMap from '@endpass/utils/queryStringToMap';
 
+import DialogView from '@/class/Dialog/View';
+
 const { ERRORS } = ConnectError;
 const replaceReg = /^#\/?/;
 
 export default class PopupWindow {
-  constructor(oauthServer, params, windowOptions = {}) {
+  constructor(oauthServer, params) {
     const server = oauthServer || ENV.oauthServer;
 
-    this.windowOptions = {
-      height: windowOptions.height || 1000,
-      width: windowOptions.width || 600,
-    };
-    this.id = 'endpass-oauth-authorize';
     this.promise = null;
     this.intervalId = null;
     this.url = mapToQueryString(`${server}/auth`, params);
+    this.dialog = new DialogView({
+      url: this.url,
+      namespace: 'endpass-oauth-authorize',
+    });
   }
 
   openPopup() {
-    const { url, id, windowOptions } = this;
-    this.window = window.open(
-      url,
-      id,
-      `width=${windowOptions.width},height=${windowOptions.height}`,
-    );
+    this.dialog.mount();
+    this.dialog.show();
   }
 
   poll() {
     this.promise = new Promise((resolve, reject) => {
       this.intervalId = window.setInterval(() => {
         try {
-          const popup = this.window;
+          const popup = this.dialog.target;
+
+          console.log(popup);
 
           if (!popup || popup.closed !== false) {
             this.close();
@@ -60,7 +59,9 @@ export default class PopupWindow {
 
           resolve(params);
           this.close();
-        } catch (error) {}
+        } catch (err) {
+          console.log('Window error: ', err);
+        }
       }, 500);
     });
   }
@@ -74,7 +75,7 @@ export default class PopupWindow {
 
   close() {
     this.cancel();
-    this.window.close();
+    this.dialog.hide();
   }
 
   static open(...args) {

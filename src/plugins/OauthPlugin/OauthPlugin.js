@@ -1,5 +1,6 @@
 import ConnectError from '@endpass/class/ConnectError';
 import OauthPkceStrategy from '@/plugins/OauthPlugin/Oauth/OauthPkceStrategy';
+import OauthPkceIframeStrategy from '@/plugins/OauthPlugin/Oauth/OauthPkceIframeStrategy';
 import Oauth from '@/plugins/OauthPlugin/Oauth';
 import PluginBase from '../PluginBase';
 import { DialogPlugin } from '@/plugins/DialogPlugin';
@@ -54,6 +55,19 @@ export default class OauthPlugin extends PluginBase {
     this.oauthRequestProvider = new Oauth({
       ...params,
       oauthServer: this.oauthServer || params.oauthServer,
+      clientId: this.oauthClientId,
+      strategy,
+    });
+    await this.oauthRequestProvider.init();
+  }
+
+  async loginWithOauthIframe(params) {
+    const strategy = new OauthPkceIframeStrategy({
+      context: this.context,
+    });
+
+    this.oauthRequestProvider = new Oauth({
+      ...params,
       clientId: this.oauthClientId,
       strategy,
     });

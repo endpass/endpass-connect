@@ -3,7 +3,7 @@ import { document } from '@fixtures/identity/documents';
 import { authUrl, visitUrl, visitBlockOauth } from '@config';
 
 describe('oauth', function() {
-  describe('oauth popup window', () => {
+  describe.skip('oauth popup window', () => {
     beforeEach(() => {
       cy.server();
       cy.mockAuthCheck(401);
