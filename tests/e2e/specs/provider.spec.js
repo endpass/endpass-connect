@@ -80,7 +80,8 @@ describe('provider', function() {
       cy.getElementFromAuth('[data-test=gas-price-input]')
         .clear()
         .type('1');
-      cy.getElementFromAuth('[data-test=submit-button]').click();
+      cy.getElementFromAuth('[data-test=submit-button]').should('not.be.disabled');
+      cy.getElementFromAuth('[data-test=submit-button]:not(:disabled)').click();
       cy.get('[data-test=app-notification]').contains('Transaction sent!');
     });
   });
