@@ -204,7 +204,7 @@ export default class DialogPlugin extends PluginBase {
 
     if (!element) {
       throw new Error(
-        'Not defined "element" from options. Please define "element" option as String or HTMLElement',
+        'Not defined "element" in options. Please define "element" option as String or HTMLElement',
       );
     }
     return element;

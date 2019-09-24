@@ -18,7 +18,7 @@ export default class LoginButtonPlugin extends PluginBase {
   }
 
   createLoginButton({ element, label, isLight, onLogin } = {}) {
-    const onClick = this.wrapCallback(onLogin);
+    const onClick = () => this.onAuthorize(onLogin);
     return new LoginButton({
       element,
       label,
@@ -27,26 +27,25 @@ export default class LoginButtonPlugin extends PluginBase {
     });
   }
 
-  wrapCallback(userCallback) {
-    const self = this;
+  async onAuthorize(userCallback) {
+    let error;
+    let result;
 
-    return async () => {
-      let error;
-      let result;
+    try {
+      result = await this.context.executeMethod(
+        PLUGIN_METHODS.CONTEXT_OAUTH_AUTHORIZE,
+      );
+    } catch (e) {
+      error = e;
+    }
 
-      try {
-        result = await self.context.executeMethod(
-          PLUGIN_METHODS.CONTEXT_OAUTH_AUTHORIZE,
-        );
-      } catch (e) {
-        error = e;
-      }
+    if (userCallback) {
+      userCallback(error, result);
+    }
 
-      if (userCallback instanceof Function) {
-        userCallback(error, result);
-      }
-
-      return error;
+    return {
+      error,
+      result,
     };
   }
 }
