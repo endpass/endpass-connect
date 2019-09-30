@@ -22,6 +22,8 @@ export default class Context {
    *  between two instances
    * @param {boolean} [options.isIdentityMode] isIdentityMode for define auth
    *  like identity
+   * @param {boolean} [options.isRegularPasswordMode] isRegularPasswordMode
+   * for define auth pwd
    * @param {object} [options.demoData] demoData passed object to auth
    * @param {object} [options.showCreateAccount] show create account form
    *  in auth dialog
