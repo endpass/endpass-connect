@@ -4,11 +4,17 @@ import { PLUGIN_METHODS, MESSENGER_METHODS } from '@/constants';
 const { ERRORS } = ConnectError;
 
 const initiate = context => (payload, req) => {
-  const { demoData, isIdentityMode, showCreateAccount } = context.options;
+  const {
+    demoData,
+    isRegularPasswordMode,
+    isIdentityMode,
+    showCreateAccount,
+  } = context.options;
 
   req.answer({
     demoData,
     isIdentityMode: isIdentityMode || false,
+    isRegularPasswordMode: isRegularPasswordMode || false,
     showCreateAccount,
   });
 };
