@@ -45,6 +45,14 @@
       "module": "./loginButton.js",
       "umd": "./loginButton.umd.js",
       "browser": "./loginButton.browser.js"
+    },
+    {
+      "library": "EndpassWalletPlugin",
+      "input": "./src/plugins/WalletPlugin/index.js",
+      "main": "./wallet.min.js",
+      "module": "./wallet.js",
+      "umd": "./wallet.umd.js",
+      "browser": "./wallet.browser.js"
     }
   ],
   "description": "",
