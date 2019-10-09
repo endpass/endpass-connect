@@ -66,6 +66,8 @@ const logout = context => async (payload, req) => {
     const { authorize: authPlugin, messengerGroup } = context.plugins;
     const res = await authPlugin.logout();
 
+    await context.executeMethod(MESSENGER_METHODS.WIDGET_LOGOUT);
+
     messengerGroup.send(MESSENGER_METHODS.LOGOUT_RESPONSE);
     await context.executeMethod(MESSENGER_METHODS.WIDGET_UNMOUNT);
     await context.executeMethod(MESSENGER_METHODS.DIALOG_CLOSE);
