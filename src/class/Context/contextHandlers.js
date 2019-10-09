@@ -127,11 +127,7 @@ const toggleWidget = context => async status => {
     return;
   }
 
-  if (context.options.widget === false) {
-    return;
-  }
-
-  if (status) {
+  if (status && context.options.widget !== false) {
     await context.executeMethod(PLUGIN_METHODS.CONTEXT_MOUNT_WIDGET);
   }
 };
