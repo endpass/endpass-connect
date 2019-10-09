@@ -66,8 +66,11 @@ const logout = context => async (payload, req) => {
     const { authorize: authPlugin, messengerGroup } = context.plugins;
     const res = await authPlugin.logout();
 
-    messengerGroup.send(MESSENGER_METHODS.DIALOG_CLOSE);
-    messengerGroup.send(MESSENGER_METHODS.WIDGET_UNMOUNT);
+    await context.executeMethod(MESSENGER_METHODS.WIDGET_LOGOUT);
+
+    messengerGroup.send(MESSENGER_METHODS.LOGOUT_RESPONSE);
+    await context.executeMethod(MESSENGER_METHODS.WIDGET_UNMOUNT);
+    await context.executeMethod(MESSENGER_METHODS.DIALOG_CLOSE);
 
     req.answer({
       status: res,
@@ -120,7 +123,19 @@ const createDocument = context => async (payload, req) => {
   req.answer(res);
 };
 
+const toggleWidget = context => async status => {
+  if (!status) {
+    await context.executeMethod(MESSENGER_METHODS.WIDGET_UNMOUNT);
+    return;
+  }
+
+  if (status && context.options.widget !== false) {
+    await context.executeMethod(PLUGIN_METHODS.CONTEXT_MOUNT_WIDGET);
+  }
+};
+
 export default {
+  [MESSENGER_METHODS.AUTH_STATUS]: toggleWidget,
   [PLUGIN_METHODS.CONTEXT_AUTHORIZE]: authorize,
   [MESSENGER_METHODS.LOGOUT_REQUEST]: logout,
 
