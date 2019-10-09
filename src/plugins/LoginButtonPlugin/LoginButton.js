@@ -66,6 +66,14 @@ export default class LoginButton {
     this.buttonElement = null;
   }
 
+  /**
+   *
+   * @return {boolean}
+   */
+  isMounted() {
+    return !!this.buttonElement;
+  }
+
   async onButtonClick() {
     const { buttonElement, onClick } = this;
 

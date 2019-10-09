@@ -65,23 +65,6 @@ export default class WidgetPlugin extends PluginBase {
     this.frameResolver = [];
   }
 
-  init() {
-    if (this.options.widget === false) {
-      return;
-    }
-    let timerId;
-
-    const handler = async () => {
-      clearTimeout(timerId);
-      if (this.context.isLogin) {
-        await this.context.executeMethod(PLUGIN_METHODS.CONTEXT_MOUNT_WIDGET);
-        return;
-      }
-      timerId = setTimeout(handler, WIDGET_AUTH_TIMEOUT);
-    };
-    handler();
-  }
-
   get mountSettings() {
     return {
       position: this.position,
