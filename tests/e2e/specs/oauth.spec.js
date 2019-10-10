@@ -1,4 +1,4 @@
-import { address, email, v3password } from '@fixtures/identity/accounts';
+import { address, email, otpCode, regularPassword, v3password } from '@fixtures/identity/accounts';
 import { document } from '@fixtures/identity/documents';
 import { authUrl, visitUrl, visitBlockOauth } from '@config';
 
@@ -20,14 +20,20 @@ describe('oauth', function() {
       cy.get('[data-test=email-input]').type(email);
       cy.get('[data-test=submit-button-auth]').click();
 
-      cy.mockAuthCheck(403);
-      cy.get('[data-test=code-input]').type('123456');
+      cy.get('[data-test=password-input]').type(regularPassword);
+      cy.get('[data-test=submit-button]').click();
+
+      cy.mockAuthCheck(200);
+      cy.get('[data-test=code-input]').type(otpCode);
+      cy.get('[data-test=submit-button]').click();
+
+      cy.get('[data-test=code-input]').type(otpCode);
       cy.get('[data-test=submit-button]').click();
 
       cy.mockAuthCheck(200);
       cy.mockOauthConsent(consentUrl);
-      cy.get('input[data-test=password-input]').type(v3password);
-      cy.get('[data-test=submit-button]').click();
+      // cy.get('input[data-test=password-input]').type(v3password);
+      // cy.get('[data-test=submit-button]').click();
 
       cy.get('[data-test=scopes-tree]').should('exist');
       cy.mockAuthCheck(401);

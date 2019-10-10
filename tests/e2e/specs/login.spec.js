@@ -1,4 +1,4 @@
-import { email, v3password, mnemonic } from '@fixtures/identity/accounts';
+import { email, v3password, mnemonic, regularPassword, otpCode } from '@fixtures/identity/accounts';
 
 describe('login', function() {
   describe('connect login features', () => {
@@ -70,22 +70,31 @@ describe('login', function() {
       cy.getElementFromAuth('[data-test=email-input]').type(email);
       cy.getElementFromAuth('[data-test=submit-button-auth]').click();
 
-      // create new password form
-      cy.mockAuthCheck(403);
+      // submit regular password
+      cy.getElementFromAuth('[data-test=password-input]').type(regularPassword);
+      cy.getElementFromAuth('[data-test=submit-button]').click();
+
+      // submit email code
       cy.mockAccountsList([]);
+      cy.mockAuthCheck(403);
+      cy.getElementFromAuth('[data-test=code-input]').type(otpCode);
+      cy.getElementFromAuth('[data-test=submit-button]').click();
+
+      // permission form
+      cy.getElementFromAuth('input[data-test=password-input]').type(regularPassword);
+      cy.getElementFromAuth('[data-test=submit-button]').click();
+
+      // create new wallet form
+      cy.mockAuthCheck(200);
       cy.getElementFromAuth('[data-test=password-main]').type(v3password);
       cy.getElementFromAuth('[data-test=password-confirm]').type(v3password);
-      cy.getElementFromAuth('[data-test=submit-button-create-wallet]').click();
+      cy.getElementFromAuth('[data-test=submit-button-wallet-create]').click();
 
       // apply seed
       cy.mockAuthCheck(403);
       cy.mockAccountsList();
       cy.getElementFromAuth('input[type="checkbox"]').click({ force: true });
       cy.getElementFromAuth('[data-test=continue-button]').click();
-
-      cy.mockAuthCheck(403);
-      cy.getElementFromAuth('input[data-test=password-input]').type(v3password);
-      cy.getElementFromAuth('[data-test=submit-button]').click();
 
       cy.mockAuthCheck(200);
 
@@ -101,8 +110,12 @@ describe('login', function() {
       cy.getElementFromAuth('[data-test=email-input]').type(email);
       cy.getElementFromAuth('[data-test=submit-button-auth]').click();
 
+      // submit regular password
+      cy.getElementFromAuth('[data-test=password-input]').type(regularPassword);
+      cy.getElementFromAuth('[data-test=submit-button]').click();
+
       cy.mockAuthCheck(403);
-      cy.getElementFromAuth('[data-test=code-input]').type('123456');
+      cy.getElementFromAuth('[data-test=code-input]').type(otpCode);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
       cy.mockAuthCheck(403);
@@ -126,6 +139,13 @@ describe('login', function() {
       cy.getElementFromAuth('input[data-test=password-input]').type(v3password);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
+      cy.getElementFromAuth('[data-test=code-input]').type(otpCode);
+      cy.getElementFromAuth('[data-test=submit-button]').click();
+
+      // permission submit
+      cy.getElementFromAuth('input[data-test=password-input]').type(v3password);
+      cy.getElementFromAuth('[data-test=submit-button]').click();
+
       cy.mockAuthCheck(200);
 
       cy.shouldLoggedIn();
@@ -139,6 +159,10 @@ describe('login', function() {
       cy.mockAuthLogin('otp');
       cy.getElementFromAuth('[data-test=email-input]').type(email);
       cy.getElementFromAuth('[data-test=submit-button-auth]').click();
+
+      // submit regular password
+      cy.getElementFromAuth('[data-test=password-input]').type(regularPassword);
+      cy.getElementFromAuth('[data-test=submit-button]').click();
 
       cy.mockAuthCheck(401);
       cy.getElementFromAuth('[data-test=recovery-link]').click();

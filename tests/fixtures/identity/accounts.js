@@ -7,6 +7,9 @@ export const checksumAddress = '0x31ea8795EE32D782C8ff41a5C68Dcbf0F5B27f6d';
 
 export const v3password = 'password123';
 export const email = 'user@example.com';
+export const regularPassword = 'regularPassword';
+export const otpCode = 123456;
+
 
 export const accountList = [address, addressXpub, addressHdChild];
 
