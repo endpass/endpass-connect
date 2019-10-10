@@ -72,6 +72,32 @@ describe('login', function() {
       cy.shouldLoggedIn();
     });
 
+    it.only('should logout, if regular password not exist when sign permission', () => {
+      cy.mockAuthCheck(403);
+      cy.mockRegularPasswordCheck(417);
+
+      cy.authFrameContinueRun();
+
+      cy.get('[data-test=endpass-app-loader]').should('exist');
+
+      cy.getElementFromAuth('[data-test=email-input]').type(email);
+      cy.getElementFromAuth('[data-test=submit-button-auth]').click();
+
+      // submit regular password
+      cy.getElementFromAuth('[data-test=password-input]').type(regularPassword);
+      cy.getElementFromAuth('[data-test=submit-button]').click();
+
+      cy.mockAuthCheck(200);
+      cy.mockRegularPasswordCheck();
+      cy.getElementFromAuth('[data-test=code-input]').type(otpCode);
+      cy.getElementFromAuth('[data-test=submit-button]').click();
+
+      cy.getElementFromAuth('[data-test=password-input]').type(regularPassword);
+      cy.getElementFromAuth('[data-test=submit-button]').click();
+
+      cy.shouldLoggedIn();
+    });
+
     it('should cancel login and close dialog', () => {
       cy.mockAuthCheck(401);
 
