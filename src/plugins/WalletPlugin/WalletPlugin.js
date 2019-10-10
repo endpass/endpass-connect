@@ -24,9 +24,9 @@ export default class WalletPlugin extends PluginBase {
    *
    * @return {Promise<object>}
    */
-  async createWallet() {
+  async generateWallet() {
     const { status, code, payload = {} } = await this.context.ask(
-      MESSENGER_METHODS.CREATE_WALLET,
+      MESSENGER_METHODS.GENERATE_WALLET,
     );
 
     if (!status) {
