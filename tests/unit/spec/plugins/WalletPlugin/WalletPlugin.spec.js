@@ -35,16 +35,18 @@ describe('Wallet plugin', () => {
   describe('createWallet', () => {
     it('should create wallet', async () => {
       expect.assertions(2);
+      const payload = { data: 'data' };
 
       context.ask = jest.fn().mockResolvedValueOnce({
         status: true,
+        payload,
       });
 
-      const res = await plugin.createWallet();
+      const res = await plugin.generateWallet();
 
-      expect(res).toEqual({});
+      expect(res).toEqual(payload);
       expect(context.ask)
-        .toBeCalledWith(MESSENGER_METHODS.CREATE_WALLET);
+        .toBeCalledWith(MESSENGER_METHODS.GENERATE_WALLET);
     });
 
     it('should throw error for create wallet', async () => {
@@ -55,13 +57,13 @@ describe('Wallet plugin', () => {
       });
 
       try {
-        await plugin.createWallet();
+        await plugin.generateWallet();
       } catch (e) {
         expect(e).toEqual(new Error('Wallet creation error'));
       }
 
       expect(context.ask)
-        .toBeCalledWith(MESSENGER_METHODS.CREATE_WALLET);
+        .toBeCalledWith(MESSENGER_METHODS.GENERATE_WALLET);
     });
   });
 });
