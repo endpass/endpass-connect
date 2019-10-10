@@ -72,7 +72,7 @@ describe('login', function() {
       cy.shouldLoggedIn();
     });
 
-    it.only('should logout, if regular password not exist when sign permission', () => {
+    it.skip('should logout, if regular password not exist when sign permission', () => {
       cy.mockAuthCheck(403);
       cy.mockRegularPasswordCheck(417);
 
