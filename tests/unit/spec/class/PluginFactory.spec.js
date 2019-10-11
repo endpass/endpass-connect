@@ -7,9 +7,11 @@ import PluginApiTrait from '@/class/PluginApiTrait';
 import { CONTEXT } from '@/constants';
 
 describe('plugin manager', () => {
+  const pluginName = 'testPlugin';
+
   class PluginClass extends PluginBase {
     static get pluginName() {
-      return 'testPlugin';
+      return pluginName;
     }
 
     static get dependencyPlugins() {
@@ -35,8 +37,8 @@ describe('plugin manager', () => {
   it('should create Plugin class', () => {
     const plugin = new ExternalPlugin(options);
 
-    expect(plugin[CONTEXT].plugins.testPlugin).toBeInstanceOf(PluginClass);
-    expect(plugin[CONTEXT].plugins.testPlugin.init).toBeCalled();
+    expect(plugin[CONTEXT].plugins[pluginName]).toBeInstanceOf(PluginClass);
+    expect(plugin[CONTEXT].plugins[pluginName].init).toBeCalled();
     expect(plugin).toBeInstanceOf(PluginApiTrait);
   });
 
@@ -62,5 +64,15 @@ describe('plugin manager', () => {
 
       expect(e).toEqual(err);
     }
+  });
+
+  it('should check existence of plugin', () => {
+    const plugin = new ExternalPlugin(options);
+
+    const isExist = pluginName in plugin[CONTEXT].plugins;
+    const isNotExist = 'wrongName' in plugin[CONTEXT].plugins;
+
+    expect(isExist).toBe(true);
+    expect(isNotExist).toBe(false);
   });
 });

@@ -1,5 +1,5 @@
 import ConnectError from '@endpass/class/ConnectError';
-import { PLUGIN_METHODS, MESSENGER_METHODS } from '@/constants';
+import { PLUGIN_METHODS, MESSENGER_METHODS, PLUGIN_NAMES } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
@@ -124,6 +124,10 @@ const createDocument = context => async (payload, req) => {
 };
 
 const toggleWidget = context => async status => {
+  if (!(PLUGIN_NAMES.WIDGET in context.plugins)) {
+    return;
+  }
+
   if (!status) {
     await context.executeMethod(MESSENGER_METHODS.WIDGET_UNMOUNT);
     return;
