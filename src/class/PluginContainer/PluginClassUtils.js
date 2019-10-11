@@ -74,6 +74,9 @@ export default class PluginClassUtils {
         }
         return target[name];
       },
+      has(target, name) {
+        return name in target;
+      },
       set(target, name, value) {
         if (name in target) {
           throw new Error(`Plugin '${name}' already defined`);
