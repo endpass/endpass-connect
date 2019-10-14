@@ -69,7 +69,9 @@ const logout = context => async (payload, req) => {
     await context.executeMethod(MESSENGER_METHODS.WIDGET_LOGOUT);
 
     messengerGroup.send(MESSENGER_METHODS.LOGOUT_RESPONSE);
-    await context.executeMethod(MESSENGER_METHODS.WIDGET_UNMOUNT);
+    if (PLUGIN_NAMES.WIDGET in context.plugins) {
+      await context.executeMethod(MESSENGER_METHODS.WIDGET_UNMOUNT);
+    }
     await context.executeMethod(MESSENGER_METHODS.DIALOG_CLOSE);
 
     req.answer({
