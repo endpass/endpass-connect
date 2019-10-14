@@ -3,7 +3,6 @@ import ConnectError from '@endpass/class/ConnectError';
 import contextHandlers from './contextHandlers';
 import HandlersFactory from '@/class/HandlersFactory';
 import PluginContainer from '@/class/PluginContainer';
-import { PLUGIN_METHODS } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
@@ -34,6 +33,10 @@ export default class Context {
    */
   constructor(options = {}, ClassPlugin) {
     this.options = options;
+
+    if (!options.oauthClientId) {
+      throw ConnectError.create(ERRORS.OAUTH_REQUIRE_ID);
+    }
 
     this.contextHandlers = HandlersFactory.createHandlers(
       this,

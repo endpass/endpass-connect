@@ -30,7 +30,7 @@ describe('plugin manager', () => {
     }
   }
 
-  const options = {widget: false};
+  const options = {widget: false, oauthClientId: 'oauthClientId'};
 
   const ExternalPlugin = PluginFactory.create(PluginClass);
 

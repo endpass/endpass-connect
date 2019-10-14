@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.28.11-beta",
+  "version": "0.28.12-beta",
   "authVersion": "",
   "main": "./endpass-connect.min.js",
   "module": "./endpass-connect.esm.js",
@@ -124,7 +124,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && npm run check-types",
+      "pre-commit": "tsc && lint-staged",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },

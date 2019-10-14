@@ -39,7 +39,7 @@ describe('Connect class', () => {
 
     it('should throw error if not passed oauth id', () => {
       try {
-        connect = new ConnectPlugin({ authUrl, plugins });
+        connect = new ConnectPlugin({ authUrl });
       } catch (e) {
         const err = new Error('Connect library requires OAuth client id!');
 
@@ -49,7 +49,7 @@ describe('Connect class', () => {
     });
 
     it('should create empty connect', () => {
-      connect = new ConnectPlugin();
+      connect = new ConnectPlugin({ oauthClientId });
       expect(connect).toBeInstanceOf(PluginApiTrait);
     });
   });

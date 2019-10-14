@@ -5,7 +5,7 @@ import PluginBase from '../PluginBase';
 import { DialogPlugin } from '@/plugins/DialogPlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 import OauthApi from '@/plugins/OauthPlugin/OauthPublicApi';
-import { MESSENGER_METHODS, PLUGIN_METHODS, PLUGIN_NAMES } from '@/constants';
+import { PLUGIN_METHODS, PLUGIN_NAMES } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
@@ -26,9 +26,6 @@ export default class OauthPlugin extends PluginBase {
 
   constructor(options, context) {
     super(options, context);
-    if (!options.oauthClientId) {
-      throw ConnectError.create(ERRORS.OAUTH_REQUIRE_ID);
-    }
 
     this.oauthClientId = options.oauthClientId;
     this.oauthServer = options.oauthServer;
