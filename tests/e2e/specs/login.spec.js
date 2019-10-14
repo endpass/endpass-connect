@@ -20,6 +20,7 @@ describe('login', function() {
       cy.get('[data-test=endpass-app-loader]').should('not.exist');
       cy.get('[data-test=endpass-sign-in-button]').should('not.exist');
 
+      cy.get('[data-test=endpass-form-sign-out-button]').should('exist');
       cy.mockAuthCheck(401);
 
       cy.get('[data-test=endpass-form-sign-out-button]').click();
@@ -40,6 +41,7 @@ describe('login', function() {
       cy.get('[data-test=endpass-app-loader]').should('exist');
       cy.getElementFromAuth('[data-test=sign-form]').should('exist');
 
+      cy.getElementFromAuth('input[data-test=password-input]').should('exist');
       cy.mockAuthCheck(200);
       cy.getElementFromAuth('input[data-test=password-input]').type(v3password);
       cy.getElementFromAuth('[data-test=submit-button]').click();
@@ -63,7 +65,7 @@ describe('login', function() {
       cy.getElementFromAuth('[data-test=code-input]').type(otpCode);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
-
+      cy.getElementFromAuth('[data-test=code-input]').should('exist');
       cy.mockAuthCheck(200);
       cy.mockRegularPasswordCheck();
       cy.getElementFromAuth('[data-test=code-input]').type(otpCode);
@@ -87,6 +89,7 @@ describe('login', function() {
       cy.getElementFromAuth('[data-test=password-input]').type(regularPassword);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
+      cy.getElementFromAuth('[data-test=code-input]').should('exist');
       cy.mockAuthCheck(200);
       cy.mockRegularPasswordCheck();
       cy.getElementFromAuth('[data-test=code-input]').type(otpCode);
@@ -112,6 +115,7 @@ describe('login', function() {
 
     it('should create new account', () => {
       cy.mockAuthCheck(401);
+      cy.mockAccountsList([]);
 
       cy.authFrameContinueRun();
 
@@ -122,32 +126,31 @@ describe('login', function() {
       cy.getElementFromAuth('[data-test=submit-button-auth]').click();
 
       // submit regular password
+      cy.getElementFromAuth('[data-test=password-input]').should('exist');
+      cy.mockAuthCheck(403);
       cy.getElementFromAuth('[data-test=password-input]').type(regularPassword);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
       // submit email code
-      cy.mockAccountsList([]);
-      cy.mockAuthCheck(403);
       cy.getElementFromAuth('[data-test=code-input]').type(otpCode);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
       // permission form
+      cy.getElementFromAuth('input[data-test=password-input]').should('exist');
+      cy.mockAuthCheck(200);
       cy.getElementFromAuth('input[data-test=password-input]').type(regularPassword);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
       // create new wallet form
-      cy.mockAuthCheck(200);
+      cy.getElementFromAuth('[data-test=password-main]').should('exist');
+      cy.mockAccountsList();
       cy.getElementFromAuth('[data-test=password-main]').type(v3password);
       cy.getElementFromAuth('[data-test=password-confirm]').type(v3password);
       cy.getElementFromAuth('[data-test=submit-button-wallet-create]').click();
 
       // apply seed
-      cy.mockAuthCheck(403);
-      cy.mockAccountsList();
       cy.getElementFromAuth('input[type="checkbox"]').click({ force: true });
       cy.getElementFromAuth('[data-test=continue-button]').click();
-
-      cy.mockAuthCheck(200);
 
       cy.shouldLoggedIn();
     });
@@ -165,11 +168,11 @@ describe('login', function() {
       cy.getElementFromAuth('[data-test=password-input]').type(regularPassword);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
+      cy.getElementFromAuth('[data-test=code-input]').should('exist');
       cy.mockAuthCheck(403);
       cy.getElementFromAuth('[data-test=code-input]').type(otpCode);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
-      cy.mockAuthCheck(403);
       cy.getElementFromAuth('input[data-test=password-input]').type(v3password);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
@@ -183,10 +186,12 @@ describe('login', function() {
 
       cy.authFrameContinueRun();
 
+      cy.getElementFromAuth('[data-test=auth-form]').should('exist');
+
+      cy.mockAuthCheck(403);
       cy.getElementFromAuth('[data-test=email-input]').type(email);
       cy.getElementFromAuth('[data-test=submit-button-auth]').click();
 
-      cy.mockAuthCheck(403);
       cy.getElementFromAuth('input[data-test=password-input]').type(v3password);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
@@ -194,10 +199,10 @@ describe('login', function() {
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
       // permission submit
+      cy.getElementFromAuth('input[data-test=password-input]').should('exist');
+      cy.mockAuthCheck(200);
       cy.getElementFromAuth('input[data-test=password-input]').type(v3password);
       cy.getElementFromAuth('[data-test=submit-button]').click();
-
-      cy.mockAuthCheck(200);
 
       cy.shouldLoggedIn();
     });
@@ -215,13 +220,13 @@ describe('login', function() {
       cy.getElementFromAuth('[data-test=password-input]').type(regularPassword);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
-      cy.mockAuthCheck(401);
       cy.getElementFromAuth('[data-test=recovery-link]').click();
       cy.getElementFromAuth('input[data-test=seed-phrase]').type(mnemonic);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
       cy.getElementFromAuth('[data-test=cancel-button]').click();
 
+      cy.get('[data-test=endpass-sign-in-button]').should('exist');
       cy.mockAuthCheck(200);
       cy.get('[data-test=endpass-sign-in-button]').click();
 
