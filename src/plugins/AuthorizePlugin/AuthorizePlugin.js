@@ -28,14 +28,9 @@ export default class AuthorizePlugin extends PluginBase {
   constructor(options, context) {
     super(options, context);
     this.isServerLogin = false;
-    this.haveDemoData = !!options.demoData;
   }
 
   get isLogin() {
-    if (this.haveDemoData) {
-      return true;
-    }
-
     return this.isServerLogin;
   }
 

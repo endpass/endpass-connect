@@ -5,9 +5,11 @@ import StateOpen from '@/plugins/DialogPlugin/states/StateOpen';
 
 const readyDialog = plugin => (payload, req) => {
   if (req.source === plugin.dialogMessenger.target) {
+    console.log('--- connect. readyDialog');
     plugin.ready = true;
     plugin.readyResolvers.forEach(item => item(true));
     plugin.readyResolvers.length = 0;
+    clearTimeout(plugin.initialTimer);
   }
 };
 

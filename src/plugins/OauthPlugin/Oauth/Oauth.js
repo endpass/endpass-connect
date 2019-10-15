@@ -77,7 +77,7 @@ export default class Oauth {
       LocalStorage.save(this.clientId, tokenObject);
     }
 
-    console.log('tokenObject', tokenObject);
+    console.log('--- connect. tokenObject', tokenObject);
 
     return tokenObject;
   }

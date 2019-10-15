@@ -62,9 +62,7 @@ describe.skip('Elements plugin', () => {
     it('should pass initial payload', () => {
       const passPayload = {
         isIdentityMode: true,
-        isRegularPasswordMode: true,
         demoData: 'demo',
-        showCreateAccount: true,
       };
 
       const plugin = new ElementsPlugin({

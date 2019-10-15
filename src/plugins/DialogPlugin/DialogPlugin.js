@@ -115,6 +115,9 @@ export default class DialogPlugin extends PluginBase {
     this.dialog.mount();
     this.dialogMessenger.setTarget(this.dialog.target);
     this.dialog.onFrameLoad(() => {
+      if (this.ready) {
+        return;
+      }
       this.initialTimer = setTimeout(() => {
         // eslint-disable-next-line no-console
         console.error(
