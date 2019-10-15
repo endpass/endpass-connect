@@ -1,7 +1,6 @@
 // @ts-check
 // @ts-ignore
 import ConnectError from '@endpass/class/ConnectError';
-import PopupWindow from '@/plugins/OauthPlugin/Oauth/PopupWindow';
 import pkce from '@/plugins/OauthPlugin/Oauth/pkce';
 import { MESSENGER_METHODS } from '@/constants';
 
@@ -16,9 +15,11 @@ export default class OauthPkceStrategy {
    *
    * @param {object} options
    * @param {InstanceType<typeof Context>} options.context
+   * @param {object} options.popup
    */
-  constructor({ context }) {
+  constructor({ context, popup }) {
     this.context = context;
+    this.popup = popup;
   }
 
   // TODO: after implement public api use this method and drop dialog
@@ -75,7 +76,7 @@ export default class OauthPkceStrategy {
     // Hash and base64-urlencode the secret to use as the challenge
     const codeChallenge = await pkce.challengeFromVerifier(codeVerifier);
 
-    const popupResult = await PopupWindow.open(
+    const popupResult = await this.popup.openPoll(
       oauthServer,
       {
         ...params,

@@ -1,6 +1,7 @@
 import ConnectError from '@endpass/class/ConnectError';
+import PopupWindow from '@/plugins/OauthPlugin/Popup/PopupWindow';
+import IframeWindow from '@/plugins/OauthPlugin/Popup/IframeWindow';
 import OauthPkceStrategy from '@/plugins/OauthPlugin/Oauth/OauthPkceStrategy';
-import OauthPkceIframeStrategy from '@/plugins/OauthPlugin/Oauth/OauthPkceIframeStrategy';
 import Oauth from '@/plugins/OauthPlugin/Oauth';
 import PluginBase from '../PluginBase';
 import { DialogPlugin } from '@/plugins/DialogPlugin';
@@ -50,6 +51,7 @@ export default class OauthPlugin extends PluginBase {
   async loginWithOauth(params) {
     const strategy = new OauthPkceStrategy({
       context: this.context,
+      popup: PopupWindow,
     });
 
     this.oauthRequestProvider = new Oauth({
@@ -62,8 +64,9 @@ export default class OauthPlugin extends PluginBase {
   }
 
   async loginWithOauthIframe(params) {
-    const strategy = new OauthPkceIframeStrategy({
+    const strategy = new OauthPkceStrategy({
       context: this.context,
+      popup: IframeWindow,
     });
 
     this.oauthRequestProvider = new Oauth({
