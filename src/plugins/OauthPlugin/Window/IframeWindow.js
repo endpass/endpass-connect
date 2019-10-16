@@ -2,24 +2,19 @@ import DialogView from '@/class/Dialog/View';
 import BaseWindow from '@/plugins/OauthPlugin/Window/BaseWindow';
 
 export default class IframeWindow extends BaseWindow {
-  constructor(url) {
-    super(url);
+  constructor(props) {
+    super(props);
+    const { url, messenger } = props;
     this.dialog = new DialogView({
       url,
       namespace: 'endpass-oauth-authorize',
     });
-
-    // this.messenger = new Messenger();
-    // this.messenger.setTarget(this.dialog);
-    // this.messenger.subscribe((method, payload) => {
-    //   if (method === 'resize') {
-    //     this.resize(payload);
-    //   }
-    // });
+    this.messenger = messenger;
   }
 
   open() {
     this.dialog.mount();
+    this.messenger.setTarget(this.dialog.target);
     this.dialog.show();
   }
 

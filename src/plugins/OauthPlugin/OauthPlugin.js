@@ -1,4 +1,5 @@
 import ConnectError from '@endpass/class/ConnectError';
+import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import PopupWindow from '@/plugins/OauthPlugin/Window/PopupWindow';
 import IframeWindow from '@/plugins/OauthPlugin/Window/IframeWindow';
 import OauthPkceStrategy from '@/plugins/OauthPlugin/Oauth/OauthPkceStrategy';
@@ -7,7 +8,7 @@ import PluginBase from '../PluginBase';
 import { DialogPlugin } from '@/plugins/DialogPlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 import OauthApi from '@/plugins/OauthPlugin/OauthPublicApi';
-import { PLUGIN_METHODS, PLUGIN_NAMES } from '@/constants';
+import { DIRECTION, PLUGIN_METHODS, PLUGIN_NAMES } from '@/constants';
 import oauthHandlers from './oauthHandlers';
 
 const { ERRORS } = ConnectError;
@@ -31,6 +32,18 @@ export default class OauthPlugin extends PluginBase {
     return OauthApi;
   }
 
+  get messenger() {
+    if (!this.dialogMessenger) {
+      this.dialogMessenger = new CrossWindowMessenger({
+        showLogs: !ENV.isProduction,
+        name: `connect-oauth-iframe[]`,
+        to: DIRECTION.AUTH,
+        from: DIRECTION.CONNECT,
+      });
+    }
+    return this.dialogMessenger;
+  }
+
   constructor(options, context) {
     super(options, context);
 
@@ -43,6 +56,7 @@ export default class OauthPlugin extends PluginBase {
     this.iframeStrategy = new OauthPkceStrategy({
       context,
       PopupClass: IframeWindow,
+      messenger: this.messenger,
     });
   }
 

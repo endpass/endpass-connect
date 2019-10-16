@@ -1,5 +1,5 @@
 export default class BaseWindow {
-  constructor(url) {
+  constructor({ url }) {
     this.url = url;
   }
 

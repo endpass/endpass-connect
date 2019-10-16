@@ -18,11 +18,13 @@ export default class OauthPkceStrategy {
    * @param {object} options
    * @param {InstanceType<typeof Context>} options.context
    * @param {object} options.PopupClass
+   * @param {object} options.messenger
    */
-  constructor({ context, PopupClass }) {
+  constructor({ context, PopupClass, messenger }) {
     this.context = context;
     this.PopupClass = PopupClass;
     this.popup = null;
+    this.messenger = messenger;
   }
 
   // TODO: after implement public api use this method and drop dialog
@@ -97,7 +99,11 @@ export default class OauthPkceStrategy {
       code_challenge: codeChallenge,
       code_challenge_method: 'S256',
     });
-    this.popup = new this.PopupClass(url, options);
+    this.popup = new this.PopupClass({
+      url,
+      options,
+      messenger: this.messenger,
+    });
     const poll = new PollClass(url, this.popup);
 
     const popupResult = await poll.promise;

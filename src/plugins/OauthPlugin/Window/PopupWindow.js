@@ -1,8 +1,9 @@
 import BaseWindow from '@/plugins/OauthPlugin/Window/BaseWindow';
 
 export default class PopupWindow extends BaseWindow {
-  constructor(url, windowOptions = {}) {
-    super(url);
+  constructor(props) {
+    super(props);
+    const { windowOptions = {} } = props;
     this.windowOptions = {
       height: windowOptions.height || 1000,
       width: windowOptions.width || 600,
