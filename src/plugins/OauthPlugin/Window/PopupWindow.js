@@ -1,14 +1,13 @@
-import getUrl from '@/plugins/OauthPlugin/Popup/getUrl';
-import PollClass from '@/plugins/OauthPlugin/Popup/PollClass';
+import BaseWindow from '@/plugins/OauthPlugin/Window/BaseWindow';
 
-export default class PopupWindow {
+export default class PopupWindow extends BaseWindow {
   constructor(url, windowOptions = {}) {
+    super(url);
     this.windowOptions = {
       height: windowOptions.height || 1000,
       width: windowOptions.width || 600,
     };
     this.id = 'endpass-oauth-authorize';
-    this.url = url;
   }
 
   open() {
@@ -26,13 +25,5 @@ export default class PopupWindow {
 
   target() {
     return this.window;
-  }
-
-  static openPoll(oauthServer, params, windowOptions) {
-    const url = getUrl(oauthServer, params);
-    const popup = new PopupWindow(url, windowOptions);
-    const poll = new PollClass(url, popup);
-
-    return poll.promise;
   }
 }

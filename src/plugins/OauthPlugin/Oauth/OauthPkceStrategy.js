@@ -6,6 +6,8 @@ import { MESSENGER_METHODS } from '@/constants';
 
 // eslint-disable-next-line
 import Context from '@/class/Context';
+import getUrl from '@/plugins/OauthPlugin/Oauth/getUrl';
+import PollClass from '@/plugins/OauthPlugin/Oauth/PollClass';
 
 const { ERRORS } = ConnectError;
 
@@ -15,11 +17,12 @@ export default class OauthPkceStrategy {
    *
    * @param {object} options
    * @param {InstanceType<typeof Context>} options.context
-   * @param {object} options.popup
+   * @param {object} options.PopupClass
    */
-  constructor({ context, popup }) {
+  constructor({ context, PopupClass }) {
     this.context = context;
-    this.popup = popup;
+    this.PopupClass = PopupClass;
+    this.popup = null;
   }
 
   // TODO: after implement public api use this method and drop dialog
@@ -61,6 +64,17 @@ export default class OauthPkceStrategy {
   }
 
   /**
+   *
+   * @param {object} payload
+   */
+  resize(payload) {
+    if (!this.popup) {
+      return;
+    }
+    this.popup.resize(payload);
+  }
+
+  /**
    * @param {string} oauthServer server url
    * @param {object} params params for oauth authorize
    * @param {string} params.client_id client id for oauth server
@@ -76,17 +90,19 @@ export default class OauthPkceStrategy {
     // Hash and base64-urlencode the secret to use as the challenge
     const codeChallenge = await pkce.challengeFromVerifier(codeVerifier);
 
-    const popupResult = await this.popup.openPoll(
-      oauthServer,
-      {
-        ...params,
-        state,
-        response_type: 'code',
-        code_challenge: codeChallenge,
-        code_challenge_method: 'S256',
-      },
-      options,
-    );
+    const url = getUrl(oauthServer, {
+      ...params,
+      state,
+      response_type: 'code',
+      code_challenge: codeChallenge,
+      code_challenge_method: 'S256',
+    });
+    this.popup = new this.PopupClass(url, options);
+    const poll = new PollClass(url, this.popup);
+
+    const popupResult = await poll.promise;
+
+    this.popup = null;
 
     if (popupResult.state !== state) {
       throw ConnectError.create(ERRORS.OAUTH_AUTHORIZE_STATE);

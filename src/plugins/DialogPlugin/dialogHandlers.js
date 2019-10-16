@@ -19,10 +19,8 @@ const initiate = plugin => (payload, req) => {
   }
 };
 
-const resize = plugin => ({ offsetHeight }) => {
-  plugin.dialog.frame.style = plugin.dialog.frameStyles({
-    'min-height': `${offsetHeight || 0}px`,
-  });
+const resize = plugin => payload => {
+  plugin.dialog.resize(payload);
 };
 
 const close = plugin => () => {

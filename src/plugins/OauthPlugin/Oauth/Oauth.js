@@ -17,8 +17,8 @@ export default class Oauth {
    * @param {string} params.clientId Client id for oauth server
    * @param {string[]} params.scopes Scopes list
    * @param {OauthStrategy} params.strategy Strategy for get TokenObject
-   * @param {number=} [params.popupHeight] Popup window height
-   * @param {number=} [params.popupWidth] Popup window width
+   * @param {number=} [params.popupHeight] Window window height
+   * @param {number=} [params.popupWidth] Window window width
    * @param {string=} [params.oauthServer] Url for oauth server
    */
   constructor({

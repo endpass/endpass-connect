@@ -1,12 +1,5 @@
-import ConnectError from '@endpass/class/ConnectError';
-import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import { inlineStylesState } from '@/util/dom';
-import {
-  DIRECTION,
-  DIALOG_EVENTS,
-  PLUGIN_NAMES,
-  PLUGIN_METHODS,
-} from '@/constants';
+import { DIALOG_EVENTS } from '@/constants';
 import {
   propsIframe,
   propsIframeShow,
@@ -64,6 +57,25 @@ export default class DialogView {
     this.frame.style = this.frameStyles(propsIframeShow);
     this.emitEvent(DIALOG_EVENTS.OPEN);
     this.wrapper.style = stylesWrapperShow;
+  }
+
+  close() {
+    if (!this.overlay) {
+      return;
+    }
+    this.hide();
+
+    this.overlay.parentNode.removeChild(this.overlay);
+    this.overlay = null;
+    this.wrapper = null;
+    this.frame = null;
+  }
+
+  resize({ offsetHeight }) {
+    console.log('-- resize dialog ', offsetHeight);
+    this.frame.style = this.frameStyles({
+      'min-height': `${offsetHeight || 0}px`,
+    });
   }
 
   onFrameLoad(handler) {
