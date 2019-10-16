@@ -1,7 +1,5 @@
 // @ts-check
 import axios from 'axios';
-
-// @ts-ignore
 import tokenProvider from 'axios-token-interceptor';
 // @ts-ignore
 import { isNumeric } from '@endpass/utils/numbers';
@@ -76,8 +74,6 @@ export default class Oauth {
     if (tokenObject) {
       LocalStorage.save(this.clientId, tokenObject);
     }
-
-    console.log('--- connect. tokenObject', tokenObject);
 
     return tokenObject;
   }

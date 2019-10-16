@@ -39,7 +39,6 @@ export default class Context {
     );
 
     this.plugins = new PluginContainer(options, this, ClassPlugin);
-
     this.plugins.init();
   }
 

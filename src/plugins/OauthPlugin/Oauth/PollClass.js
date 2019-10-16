@@ -1,23 +1,30 @@
+// @ts-check
 import ConnectError from '@endpass/class/ConnectError';
+// @ts-ignore
 import queryStringToMap from '@endpass/utils/queryStringToMap';
 
 const { ERRORS } = ConnectError;
 const replaceReg = /^#\/?/;
+const CHECK_TIMEOUT = 500;
 
 export default class PollClass {
+  /**
+   *
+   * @param {string} url
+   * @param {object} popup
+   */
   constructor(url, popup) {
     this.url = url;
     this.popup = popup;
-
-    this.promise = null;
     this.intervalId = null;
-
-    popup.open();
-    this.poll();
   }
 
-  poll() {
-    this.promise = new Promise((resolve, reject) => {
+  /**
+   *
+   * @return {Promise<object>}
+   */
+  result() {
+    return new Promise((resolve, reject) => {
       this.intervalId = window.setInterval(() => {
         const target = this.popup.target();
         try {
@@ -48,19 +55,15 @@ export default class PollClass {
           resolve(params);
           this.close();
         } catch (error) {}
-      }, 500);
+      }, CHECK_TIMEOUT);
     });
   }
 
-  cancel() {
+  close() {
     if (this.intervalId) {
       window.clearInterval(this.intervalId);
       this.intervalId = null;
     }
-  }
-
-  close() {
-    this.cancel();
     this.popup.close();
   }
 }

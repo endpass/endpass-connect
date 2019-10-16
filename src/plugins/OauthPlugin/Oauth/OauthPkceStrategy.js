@@ -1,13 +1,10 @@
 // @ts-check
-// @ts-ignore
 import ConnectError from '@endpass/class/ConnectError';
+// @ts-ignore
+import mapToQueryString from '@endpass/utils/mapToQueryString';
+import PollClass from '@/plugins/OauthPlugin/Oauth/PollClass';
 import pkce from '@/plugins/OauthPlugin/Oauth/pkce';
 import { MESSENGER_METHODS } from '@/constants';
-
-// eslint-disable-next-line
-import Context from '@/class/Context';
-import getUrl from '@/plugins/OauthPlugin/Oauth/getUrl';
-import PollClass from '@/plugins/OauthPlugin/Oauth/PollClass';
 
 const { ERRORS } = ConnectError;
 
@@ -16,15 +13,12 @@ export default class OauthPkceStrategy {
   /**
    *
    * @param {object} options
-   * @param {InstanceType<typeof Context>} options.context
-   * @param {object} options.PopupClass
-   * @param {object} options.messenger
+   * @param {InstanceType<typeof import('@/class/Context').default>} options.context
+   * @param {InstanceType<typeof import('@/plugins/OauthPlugin/View/ViewStrategy').default>} options.view
    */
-  constructor({ context, PopupClass, messenger }) {
+  constructor({ context, view }) {
     this.context = context;
-    this.PopupClass = PopupClass;
-    this.popup = null;
-    this.messenger = messenger;
+    this.view = view;
   }
 
   // TODO: after implement public api use this method and drop dialog
@@ -66,25 +60,12 @@ export default class OauthPkceStrategy {
   }
 
   /**
-   *
-   * @param {object} payload
+   * Prepare pkce structure and create url for open redirects
+   * @param {string} oauthServer
+   * @param {object} params
+   * @return {Promise<{codeVerifier: string, state: string, url: string}>}
    */
-  resize(payload) {
-    if (!this.popup) {
-      return;
-    }
-    this.popup.resize(payload);
-  }
-
-  /**
-   * @param {string} oauthServer server url
-   * @param {object} params params for oauth authorize
-   * @param {string} params.client_id client id for oauth server
-   * @param {string} params.scope scope for oauth
-   * @param {object=} [options] options for popup
-   * @return {Promise<TokenObject>}
-   */
-  async getTokenObject(oauthServer, params, options) {
+  async challenge(oauthServer, params) {
     // Create and store a random "state" value
     const state = pkce.generateRandomString();
     // Create and store a new PKCE code_verifier (the plaintext random secret)
@@ -92,23 +73,39 @@ export default class OauthPkceStrategy {
     // Hash and base64-urlencode the secret to use as the challenge
     const codeChallenge = await pkce.challengeFromVerifier(codeVerifier);
 
-    const url = getUrl(oauthServer, {
+    const server = oauthServer || ENV.oauthServer;
+    const url = mapToQueryString(`${server}/auth`, {
       ...params,
       state,
       response_type: 'code',
       code_challenge: codeChallenge,
       code_challenge_method: 'S256',
     });
-    this.popup = new this.PopupClass({
+    return {
       url,
-      options,
-      messenger: this.messenger,
-    });
-    const poll = new PollClass(url, this.popup);
+      state,
+      codeVerifier,
+    };
+  }
 
-    const popupResult = await poll.promise;
+  /**
+   *
+   * @param {string} oauthServer
+   * @param {object} params
+   * @param {object} options
+   * @return {Promise<{expires: number, scope: string, token: string}>}
+   */
+  async getTokenObject(oauthServer, params, options) {
+    const { url, state, codeVerifier } = await this.challenge(
+      oauthServer,
+      params,
+    );
+    const popup = await this.view.open(url, options);
+    const poll = new PollClass(url, popup);
 
-    this.popup = null;
+    const popupResult = await poll.result();
+
+    this.view.close();
 
     if (popupResult.state !== state) {
       throw ConnectError.create(ERRORS.OAUTH_AUTHORIZE_STATE);

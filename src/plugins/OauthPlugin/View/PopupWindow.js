@@ -1,17 +1,17 @@
-import BaseWindow from '@/plugins/OauthPlugin/Window/BaseWindow';
+import BaseWindow from '@/plugins/OauthPlugin/View/BaseWindow';
 
 export default class PopupWindow extends BaseWindow {
   constructor(props) {
     super(props);
-    const { windowOptions = {} } = props;
+    const { options = {} } = props;
     this.windowOptions = {
-      height: windowOptions.height || 1000,
-      width: windowOptions.width || 600,
+      height: options.height || 1000,
+      width: options.width || 600,
     };
     this.id = 'endpass-oauth-authorize';
   }
 
-  open() {
+  show() {
     const { url, id, windowOptions } = this;
     this.window = window.open(
       url,

@@ -10,18 +10,32 @@ import {
   stylesWrapperHide,
 } from './Styles';
 
+const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
+
+/**
+ * @callback Listener {import('@types/global').Listener}
+ */
+
+/**
+ * @typedef {Object<string, Array<Listener>>} Resolvers
+ */
+
 export default class DialogView {
   /**
    * @param {object} options
    * @param {string} options.url URL which would be opened in inner iframe element
-   * @param {string?} options.namespace Optional namespace for messengers bindings
+   * @param {string?} [options.namespace] Optional namespace for messengers bindings
    * @param {HTMLElement?|string?} [options.element] Render place
    */
-  constructor({ url, element, namespace = null }) {
+  constructor({ url, element, namespace = '' }) {
     this.url = url;
     this.namespace = namespace;
     this.element = element;
     this.isElementMode = !!element;
+    this.isReady = false;
+    /** @type Resolvers */
+    this.readyResolvers = [];
+    this.initialTimer = null;
 
     this.overlay = null;
     this.wrapper = null;
@@ -71,15 +85,59 @@ export default class DialogView {
     this.frame = null;
   }
 
+  /**
+   *
+   * @param {object} params
+   * @param {number} params.offsetHeight
+   */
   resize({ offsetHeight }) {
-    console.log('-- resize dialog ', offsetHeight);
     this.frame.style = this.frameStyles({
       'min-height': `${offsetHeight || 0}px`,
     });
   }
 
-  onFrameLoad(handler) {
-    this.frame.addEventListener('load', handler);
+  ready() {
+    this.isReady = true;
+    clearTimeout(this.initialTimer);
+    this.readyResolvers.forEach(item => item(true));
+    this.readyResolvers.length = 0;
+  }
+
+  /**
+   *
+   * @param {HTMLElement} frame
+   * @private
+   */
+  initFrameCheck(frame) {
+    frame.addEventListener('load', () => {
+      if (this.isReady) {
+        return;
+      }
+      this.initialTimer = setTimeout(() => {
+        // eslint-disable-next-line no-console
+        console.error(
+          `Dialog View is not initialized, please check auth url ${this.url}`,
+        );
+      }, INITIAL_TIMEOUT);
+    });
+  }
+
+  /**
+   * Checks dialog ready state
+   * Ask messenger before til it give any answer and resolve promise
+   * Also, it is caches ready state and in the next time just resolve returned
+   * promise
+   * @returns {Promise<boolean>}
+   */
+  waitReady() {
+    /* eslint-disable-next-line */
+    return new Promise(async resolve => {
+      if (this.isReady) {
+        return resolve(true);
+      }
+
+      this.readyResolvers.push(resolve);
+    });
   }
 
   /**
@@ -132,7 +190,6 @@ export default class DialogView {
 
   /**
    * Create markup and mount dialog view element to the page body
-   * @private
    */
   mount() {
     const markup = this.createMarkup();
@@ -141,8 +198,10 @@ export default class DialogView {
     this.wrapper = markup.querySelector('[data-endpass="wrapper"]');
     this.frame = markup.querySelector('[data-endpass="frame"]');
 
+    this.initFrameCheck(this.frame);
+
     if (this.isElementMode) {
-      this.overlay = this.selectHTMLElement();
+      this.overlay = this.rootElement;
       this.overlay.appendChild(this.wrapper);
       return;
     }

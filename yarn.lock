@@ -1687,6 +1687,13 @@
     lodash "^4.17.4"
     read-pkg-up "^6.0.0"
 
+"@types/axios-token-interceptor@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@types/axios-token-interceptor/-/axios-token-interceptor-0.1.2.tgz#78d1f520c2d9da7b492013f834111efc1979513c"
+  integrity sha512-UglYx7lM63tEmWLErUn+YH2BBvquesryG6OMTpUG8FGX98G0yJW8iDMq2TQYAM403VRTnhPC3JgLv87PQoJK5Q==
+  dependencies:
+    axios "*"
+
 "@types/babel__core@^7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.0.tgz#710f2487dda4dcfd010ca6abb2b4dc7394365c51"
@@ -2566,7 +2573,7 @@ axios-token-interceptor@^0.1.0:
   dependencies:
     lock "^0.1.4"
 
-axios@^0.19.0:
+axios@*, axios@^0.19.0:
   version "0.19.0"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.0.tgz#8e09bff3d9122e133f7b8101c8fbdd00ed3d2ab8"
   integrity sha512-1uvKqKQta3KBxIz14F2v06AEHZ/dIoeKfbTRkK1E5oqjDnuEerLmYTgJB5AiQZHJcljpg1TuRzdjDR06qNk0DQ==

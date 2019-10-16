@@ -1,7 +1,5 @@
 import ConnectError from '@endpass/class/ConnectError';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
-import PopupWindow from '@/plugins/OauthPlugin/Window/PopupWindow';
-import IframeWindow from '@/plugins/OauthPlugin/Window/IframeWindow';
 import OauthPkceStrategy from '@/plugins/OauthPlugin/Oauth/OauthPkceStrategy';
 import Oauth from '@/plugins/OauthPlugin/Oauth';
 import PluginBase from '../PluginBase';
@@ -10,6 +8,7 @@ import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 import OauthApi from '@/plugins/OauthPlugin/OauthPublicApi';
 import { DIRECTION, PLUGIN_METHODS, PLUGIN_NAMES } from '@/constants';
 import oauthHandlers from './oauthHandlers';
+import ViewStrategy from '@/plugins/OauthPlugin/View/ViewStrategy';
 
 const { ERRORS } = ConnectError;
 
@@ -35,7 +34,7 @@ export default class OauthPlugin extends PluginBase {
   get messenger() {
     if (!this.dialogMessenger) {
       this.dialogMessenger = new CrossWindowMessenger({
-        showLogs: !ENV.isProduction,
+        // showLogs: !ENV.isProduction,
         name: `connect-oauth-iframe[]`,
         to: DIRECTION.AUTH,
         from: DIRECTION.CONNECT,
@@ -49,15 +48,23 @@ export default class OauthPlugin extends PluginBase {
 
     this.oauthClientId = options.oauthClientId;
     this.oauthServer = options.oauthServer;
-    this.popupStrategy = new OauthPkceStrategy({
-      context,
-      PopupClass: PopupWindow,
-    });
-    this.iframeStrategy = new OauthPkceStrategy({
-      context,
-      PopupClass: IframeWindow,
+
+    this.viewStrategy = new ViewStrategy({
       messenger: this.messenger,
     });
+
+    this.oauthStrategy = new OauthPkceStrategy({
+      context,
+      view: this.viewStrategy,
+    });
+  }
+
+  handleReadyView(payload, req) {
+    this.viewStrategy.ready(payload, req);
+  }
+
+  handleResizeView(payload) {
+    this.viewStrategy.resize(payload);
   }
 
   get oauthProvider() {
@@ -78,18 +85,10 @@ export default class OauthPlugin extends PluginBase {
   async loginWithOauth(params) {
     this.oauthRequestProvider = new Oauth({
       ...params,
-      oauthServer: this.oauthServer || params.oauthServer,
+      // TODO: is it `params.oauthServer` must be first? or after `this.oauthServer`?
+      oauthServer: params.oauthServer || this.oauthServer,
       clientId: this.oauthClientId,
-      strategy: this.popupStrategy,
-    });
-    await this.oauthRequestProvider.init();
-  }
-
-  async loginWithOauthIframe(params) {
-    this.oauthRequestProvider = new Oauth({
-      ...params,
-      clientId: this.oauthClientId,
-      strategy: this.iframeStrategy,
+      strategy: this.oauthStrategy,
     });
     await this.oauthRequestProvider.init();
   }

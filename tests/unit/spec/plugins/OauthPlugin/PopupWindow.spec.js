@@ -1,4 +1,4 @@
-import PopupWindow from '@/plugins/OauthPlugin/Window/PopupWindow';
+import PopupWindow from '@/plugins/OauthPlugin/View/PopupWindow';
 
 describe('Window window', () => {
   let returnWindow;

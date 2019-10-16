@@ -1,36 +1,28 @@
 /* eslint-disable no-param-reassign */
 import { MESSENGER_METHODS } from '@/constants';
-import StateClose from '@/plugins/DialogPlugin/states/StateClose';
-import StateOpen from '@/plugins/DialogPlugin/states/StateOpen';
 
 const readyDialog = plugin => (payload, req) => {
   if (req.source === plugin.dialogMessenger.target) {
-    console.log('--- connect. readyDialog');
-    plugin.ready = true;
-    plugin.readyResolvers.forEach(item => item(true));
-    plugin.readyResolvers.length = 0;
-    clearTimeout(plugin.initialTimer);
+    plugin.handleReady(payload);
   }
 };
 
 const initiate = plugin => (payload, req) => {
-  if (req.source === plugin.dialogMessenger.target) {
-    clearTimeout(plugin.initialTimer);
-  }
+  // if (req.source === plugin.dialogMessenger.target) {
+  //   plugin.handleInitiate();
+  // }
 };
 
 const resize = plugin => payload => {
-  plugin.dialog.resize(payload);
+  plugin.handleResize(payload);
 };
 
 const close = plugin => () => {
-  plugin.state.onClose();
-  plugin.state = new StateClose(plugin);
+  plugin.handleClose();
 };
 
 const open = plugin => () => {
-  plugin.state.onOpen();
-  plugin.state = new StateOpen(plugin);
+  plugin.handleOpen();
 };
 
 export default {

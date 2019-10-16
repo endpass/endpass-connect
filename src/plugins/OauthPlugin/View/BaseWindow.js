@@ -3,11 +3,15 @@ export default class BaseWindow {
     this.url = url;
   }
 
-  open() {}
+  async mount() {}
+
+  show() {}
 
   close() {}
 
   target() {}
 
   resize() {}
+
+  ready() {}
 }

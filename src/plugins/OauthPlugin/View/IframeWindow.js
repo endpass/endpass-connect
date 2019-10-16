@@ -1,5 +1,5 @@
 import DialogView from '@/class/Dialog/View';
-import BaseWindow from '@/plugins/OauthPlugin/Window/BaseWindow';
+import BaseWindow from '@/plugins/OauthPlugin/View/BaseWindow';
 
 export default class IframeWindow extends BaseWindow {
   constructor(props) {
@@ -12,9 +12,17 @@ export default class IframeWindow extends BaseWindow {
     this.messenger = messenger;
   }
 
-  open() {
+  async mount() {
     this.dialog.mount();
     this.messenger.setTarget(this.dialog.target);
+    await this.dialog.waitReady();
+  }
+
+  ready() {
+    this.dialog.ready();
+  }
+
+  show() {
     this.dialog.show();
   }
 
@@ -27,7 +35,6 @@ export default class IframeWindow extends BaseWindow {
   }
 
   resize(payload) {
-    console.log('-- resize iframeWindow', payload);
     this.dialog.resize(payload);
   }
 }
