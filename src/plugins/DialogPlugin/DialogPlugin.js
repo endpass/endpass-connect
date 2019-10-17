@@ -33,13 +33,14 @@ export default class DialogPlugin extends PluginBase {
 
     this.namespace = namespace;
     this.url = getFrameRouteUrl(authUrl, 'bridge');
-    this.state = new StateClose(this);
 
     this.dialogView = new DialogView({
       url: this.url,
       namespace: this.namespace,
       element,
     });
+
+    this.state = new StateClose(this.dialogView);
   }
 
   init() {
@@ -61,21 +62,16 @@ export default class DialogPlugin extends PluginBase {
     return this.dialogMessenger;
   }
 
-  hide() {
-    this.dialogView.hide();
-  }
-
-  show() {
-    this.dialogView.show();
-  }
-
   /**
    * Create markup and prepend to <body>
    * @private
    */
   mount() {
     this.dialogView.mount();
-    this.messenger.setTarget(this.dialogView.target);
+    const { target } = this.dialogView;
+    if (target) {
+      this.messenger.setTarget(target);
+    }
   }
 
   /**
@@ -92,12 +88,12 @@ export default class DialogPlugin extends PluginBase {
 
   close() {
     this.state.close();
-    this.state = new StateClose(this);
+    this.state = new StateClose(this.dialogView);
   }
 
   open() {
     this.state.open();
-    this.state = new StateOpen(this);
+    this.state = new StateOpen(this.dialogView);
   }
 
   /**

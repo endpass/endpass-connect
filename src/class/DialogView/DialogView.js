@@ -1,3 +1,4 @@
+// @ts-check
 import { inlineStylesState } from '@/util/dom';
 import { DIALOG_EVENTS } from '@/constants';
 import {
@@ -27,46 +28,64 @@ export default class DialogView {
     this.url = url;
     this.namespace = namespace;
     this.element = element;
-    this.isElementMode = !!element;
     this.isReady = false;
     /** @type {Resolvers} */
     this.readyResolvers = [];
+
     this.initialTimer = null;
 
+    /** @type {HTMLElement?} */
     this.overlay = null;
+    /** @type {HTMLElement?} */
     this.wrapper = null;
+    /** @type {HTMLIFrameElement?} */
     this.frame = null;
     this.frameStyles = inlineStylesState(propsIframe);
   }
 
+  /**
+   *
+   * @type {HTMLElement}
+   */
   get rootElement() {
-    if (!this.isElementMode) {
+    if (!this.element) {
       throw new Error('DialogView was inited without target element!');
     }
 
-    if (typeof this.element === 'string') {
-      return document.querySelector(this.element);
+    if (typeof this.element !== 'string') {
+      return this.element;
     }
 
-    return this.element;
+    const el = document.querySelector(this.element);
+    if (!el) {
+      throw new Error('Element is not defined in DOM!');
+    }
+    return /** @type {HTMLElement} */ (el);
   }
 
+  /**
+   *
+   * @type {Window|null}
+   */
   get target() {
+    if (!this.frame) return null;
     return this.frame.contentWindow;
   }
 
   hide() {
+    if (!this.wrapper || !this.frame) return;
     this.wrapper.dataset.visible = 'false';
     this.emitEvent(DIALOG_EVENTS.CLOSE);
-    this.frame.style = this.frameStyles(propsIframeHide);
-    this.wrapper.style = stylesWrapperHide;
+    this.frame.setAttribute('style', this.frameStyles(propsIframeHide));
+    this.wrapper.setAttribute('style', stylesWrapperHide);
   }
 
   show() {
+    if (!this.wrapper || !this.frame) return;
     this.wrapper.dataset.visible = 'true';
-    this.frame.style = this.frameStyles(propsIframeShow);
+    this.frame.setAttribute('style', this.frameStyles(propsIframeShow));
     this.emitEvent(DIALOG_EVENTS.OPEN);
-    this.wrapper.style = stylesWrapperShow;
+    this.wrapper.setAttribute('style', stylesWrapperShow);
   }
 
   close() {
@@ -75,7 +94,9 @@ export default class DialogView {
     }
     this.hide();
 
-    this.overlay.parentNode.removeChild(this.overlay);
+    if (this.overlay.parentNode) {
+      this.overlay.parentNode.removeChild(this.overlay);
+    }
     this.overlay = null;
     this.wrapper = null;
     this.frame = null;
@@ -87,14 +108,22 @@ export default class DialogView {
    * @param {number} params.offsetHeight
    */
   resize({ offsetHeight }) {
-    this.frame.style = this.frameStyles({
-      'min-height': `${offsetHeight || 0}px`,
-    });
+    if (!this.frame) return;
+    this.frame.setAttribute(
+      'style',
+      this.frameStyles({
+        'min-height': `${offsetHeight || 0}px`,
+      }),
+    );
   }
 
   handleReady() {
     this.isReady = true;
-    clearTimeout(this.initialTimer);
+    if (this.initialTimer) {
+      window.clearTimeout(this.initialTimer);
+      this.initialTimer = null;
+    }
+
     this.readyResolvers.forEach(resolve => resolve(true));
     this.readyResolvers.length = 0;
   }
@@ -108,7 +137,7 @@ export default class DialogView {
       if (this.isReady) {
         return;
       }
-      this.initialTimer = setTimeout(() => {
+      this.initialTimer = window.setTimeout(() => {
         // eslint-disable-next-line no-console
         console.error(
           `Dialog View is not initialized, please check auth url ${this.url}`,
@@ -138,6 +167,8 @@ export default class DialogView {
    * @param {string} event
    */
   emitEvent(event) {
+    if (!this.overlay) return;
+
     const frameEvent = new CustomEvent(event, {
       detail: {},
     });
@@ -176,7 +207,7 @@ export default class DialogView {
     `;
     const markup = document.createElement('div');
 
-    markup.insertAdjacentHTML('afterBegin', markupTemplate);
+    markup.insertAdjacentHTML('afterbegin', markupTemplate);
 
     return markup;
   }
@@ -191,19 +222,21 @@ export default class DialogView {
     this.wrapper = markup.querySelector('[data-endpass="wrapper"]');
     this.frame = markup.querySelector('[data-endpass="frame"]');
 
-    this.initFrameCheck(this.frame);
+    this.initFrameCheck(/** @type {HTMLIFrameElement} */ (this.frame));
 
-    if (this.isElementMode) {
+    if (this.element && this.wrapper) {
       this.overlay = this.rootElement;
       this.overlay.appendChild(this.wrapper);
       return;
     }
 
+    if (!this.overlay) return;
+
     this.overlay.addEventListener(DIALOG_EVENTS.OPEN, () => {
-      this.overlay.style = stylesOverlayShow;
+      if (this.overlay) this.overlay.setAttribute('style', stylesOverlayShow);
     });
     this.overlay.addEventListener(DIALOG_EVENTS.CLOSE, () => {
-      this.overlay.style = stylesOverlayHide;
+      if (this.overlay) this.overlay.setAttribute('style', stylesOverlayHide);
     });
 
     document.body.appendChild(this.overlay);

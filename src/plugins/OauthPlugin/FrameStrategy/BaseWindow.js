@@ -17,7 +17,7 @@ export default class BaseWindow {
   close() {}
 
   /**
-   * @type {Window|null|undefined}
+   * @type {Window|null}
    */
   get target() {
     return null;
