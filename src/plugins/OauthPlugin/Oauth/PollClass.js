@@ -1,6 +1,5 @@
 // @ts-check
 import ConnectError from '@endpass/class/ConnectError';
-// @ts-ignore
 import queryStringToMap from '@endpass/utils/queryStringToMap';
 
 const { ERRORS } = ConnectError;
@@ -11,11 +10,11 @@ export default class PollClass {
   /**
    *
    * @param {string} url
-   * @param {object} popup
+   * @param {import('@/plugins/OauthPlugin/FrameStrategy').default} frame Frame Strategy for show frame
    */
-  constructor(url, popup) {
+  constructor(url, frame) {
     this.url = url;
-    this.popup = popup;
+    this.frame = frame;
     this.intervalId = null;
   }
 
@@ -23,10 +22,12 @@ export default class PollClass {
    *
    * @return {Promise<object>}
    */
-  result() {
+  async result() {
+    await this.frame.open(this.url);
+
     return new Promise((resolve, reject) => {
       this.intervalId = window.setInterval(() => {
-        const target = this.popup.target();
+        const { target } = this.frame;
         try {
           if (!target || target.closed !== false) {
             this.close();
@@ -64,6 +65,6 @@ export default class PollClass {
       window.clearInterval(this.intervalId);
       this.intervalId = null;
     }
-    this.popup.close();
+    this.frame.close();
   }
 }

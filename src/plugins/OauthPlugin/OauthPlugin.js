@@ -8,7 +8,7 @@ import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 import OauthApi from '@/plugins/OauthPlugin/OauthPublicApi';
 import { DIRECTION, PLUGIN_METHODS, PLUGIN_NAMES } from '@/constants';
 import oauthHandlers from './oauthHandlers';
-import ViewStrategy from '@/plugins/OauthPlugin/View/ViewStrategy';
+import FrameStrategy from '@/plugins/OauthPlugin/FrameStrategy';
 
 const { ERRORS } = ConnectError;
 
@@ -32,15 +32,15 @@ export default class OauthPlugin extends PluginBase {
   }
 
   get messenger() {
-    if (!this.dialogMessenger) {
-      this.dialogMessenger = new CrossWindowMessenger({
+    if (!this.oauthMessenger) {
+      this.oauthMessenger = new CrossWindowMessenger({
         // showLogs: !ENV.isProduction,
         name: `connect-oauth-iframe[]`,
         to: DIRECTION.AUTH,
         from: DIRECTION.CONNECT,
       });
     }
-    return this.dialogMessenger;
+    return this.oauthMessenger;
   }
 
   constructor(options, context) {
@@ -49,22 +49,23 @@ export default class OauthPlugin extends PluginBase {
     this.oauthClientId = options.oauthClientId;
     this.oauthServer = options.oauthServer;
 
-    this.viewStrategy = new ViewStrategy({
-      messenger: this.messenger,
+    this.frameStrategy = new FrameStrategy();
+
+    this.frameStrategy.on(FrameStrategy.EVENT_UPDATE_TARGET, target => {
+      this.messenger.setTarget(target);
     });
 
     this.oauthStrategy = new OauthPkceStrategy({
       context,
-      view: this.viewStrategy,
     });
   }
 
-  handleReadyView(payload, req) {
-    this.viewStrategy.ready(payload, req);
+  handleReadyFrame(payload, req) {
+    this.frameStrategy.handleReady(payload, req);
   }
 
-  handleResizeView(payload) {
-    this.viewStrategy.resize(payload);
+  resizeFrame(payload) {
+    this.frameStrategy.handleResize(payload);
   }
 
   get oauthProvider() {
@@ -88,17 +89,14 @@ export default class OauthPlugin extends PluginBase {
       // TODO: is it `params.oauthServer` must be first? or after `this.oauthServer`?
       oauthServer: params.oauthServer || this.oauthServer,
       clientId: this.oauthClientId,
-      strategy: this.oauthStrategy,
+      oauthStrategy: this.oauthStrategy,
+      frameStrategy: this.frameStrategy,
     });
     await this.oauthRequestProvider.init();
   }
 
   logout() {
     this.oauthRequestProvider.logout();
-  }
-
-  setPopupParams(params) {
-    this.oauthProvider.setPopupParams(params);
   }
 
   async request(options) {

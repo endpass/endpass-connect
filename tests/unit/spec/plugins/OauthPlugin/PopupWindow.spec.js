@@ -1,4 +1,4 @@
-import PopupWindow from '@/plugins/OauthPlugin/View/PopupWindow';
+import PopupFrame from '@/plugins/OauthPlugin/FrameStrategy/PopupFrame';
 
 describe('Window window', () => {
   let returnWindow;
@@ -26,7 +26,7 @@ describe('Window window', () => {
       closed: false,
     };
     window.open = jest.fn().mockReturnValue(returnWindow);
-    popupPromise = PopupWindow.open('testServer');
+    popupPromise = PopupFrame.open('testServer');
   });
 
   afterEach(() => {

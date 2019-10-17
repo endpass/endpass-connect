@@ -1,8 +1,4 @@
 // @ts-check
-
-// @ts-ignore
-// eslint-disable-next-line no-unused-vars
-import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import PluginBase from '@/plugins/PluginBase';
 import { PLUGIN_NAMES } from '@/constants';
 
@@ -12,6 +8,10 @@ import { PLUGIN_NAMES } from '@/constants';
 
 /**
  * @typedef {Object<string, Array<Listener>>} Resolvers
+ */
+
+/**
+ * @typedef {import('@endpass/class/CrossWindowMessenger').default} CrossWindowMessenger
  */
 
 export default class MessengerGroupPlugin extends PluginBase {

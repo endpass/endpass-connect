@@ -1,7 +1,7 @@
 import Oauth, { OauthPkceStrategy } from '@/plugins/OauthPlugin/Oauth';
-import PopupWindow from '@/plugins/OauthPlugin/View/PopupWindow';
+import PopupFrame from '@/plugins/OauthPlugin/FrameStrategy/PopupFrame';
 
-jest.mock('@/plugins/OauthPlugin/Oauth/PopupWindow', () => {
+jest.mock('@/plugins/OauthPlugin/Oauth/PopupFrame', () => {
   return {
     open: jest.fn(),
   };
@@ -33,7 +33,7 @@ describe('Oauth class', () => {
     state: 'pkce-random-string',
   };
 
-  PopupWindow.open.mockImplementation((serverUrl, params) => {
+  PopupFrame.open.mockImplementation((serverUrl, params) => {
     return {
       state: params.state,
       expires_in: 3600,
@@ -92,7 +92,7 @@ describe('Oauth class', () => {
 
       const secondToken = await oauth.getToken();
 
-      expect(PopupWindow.open).toBeCalledTimes(1);
+      expect(PopupFrame.open).toBeCalledTimes(1);
       expect(secondToken).toBe(oldToken);
     });
 
@@ -116,7 +116,7 @@ describe('Oauth class', () => {
       const secondToken = await oauth.getToken();
 
       expect(secondToken).toBe(newToken);
-      expect(PopupWindow.open).toBeCalledTimes(2);
+      expect(PopupFrame.open).toBeCalledTimes(2);
     });
   });
 
@@ -171,11 +171,11 @@ describe('Oauth class', () => {
       const newToken = await oauth.getToken();
 
       expect(newToken).toBe(checkToken);
-      expect(PopupWindow.open).toHaveBeenCalledWith(oauthServer, response, {
+      expect(PopupFrame.open).toHaveBeenCalledWith(oauthServer, response, {
         height: 1000,
         width: 600,
       });
-      expect(PopupWindow.open).toBeCalledTimes(1);
+      expect(PopupFrame.open).toBeCalledTimes(1);
     });
 
     it('should set token, and expire time and save it to local storage', async () => {
@@ -229,7 +229,7 @@ describe('Oauth class', () => {
 
       await oauth.updateTokenObject();
 
-      expect(PopupWindow.open).toHaveBeenCalledWith(
+      expect(PopupFrame.open).toHaveBeenCalledWith(
         oauthServer,
         expect.objectContaining(response),
         { height: 1000, width: 600 },
@@ -251,7 +251,7 @@ describe('Oauth class', () => {
 
       await oauth.updateTokenObject();
 
-      expect(PopupWindow.open).toHaveBeenCalledWith(
+      expect(PopupFrame.open).toHaveBeenCalledWith(
         oauthServer,
         expect.objectContaining(response),
         { height: 10, width: 600 },

@@ -77,7 +77,7 @@ export default class WidgetPlugin extends PluginBase {
       const { namespace = '' } = this.options;
       this.widgetMessenger = new CrossWindowMessenger({
         // showLogs: !ENV.isProduction,
-        name: `connect-bridge-widget[${namespace}]`,
+        name: `connect-widget[${namespace}]`,
         to: DIRECTION.AUTH,
         from: DIRECTION.CONNECT,
       });

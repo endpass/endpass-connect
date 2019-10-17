@@ -16,6 +16,7 @@ module.exports = {
         regenerator: true,
       },
     ],
+    ['@babel/plugin-proposal-class-properties', { loose: true }],
   ],
   env: {
     test: {

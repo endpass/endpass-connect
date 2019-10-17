@@ -1,6 +1,5 @@
 // @ts-check
 import ConnectError from '@endpass/class/ConnectError';
-// @ts-ignore
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import { DIRECTION, PLUGIN_NAMES, PLUGIN_METHODS } from '@/constants';
 import StateOpen from './states/StateOpen';
@@ -8,7 +7,7 @@ import StateClose from './states/StateClose';
 import dialogHandlers from '@/plugins/DialogPlugin/dialogHandlers';
 import PluginBase from '@/plugins/PluginBase';
 import { getFrameRouteUrl } from '@/util/url';
-import DialogView from '@/class/Dialog/View';
+import DialogView from '@/class/DialogView';
 
 const { ERRORS } = ConnectError;
 
@@ -22,11 +21,11 @@ export default class DialogPlugin extends PluginBase {
   }
 
   /**
-   * @param {InstanceType<typeof import('@/class/Context').default>} context
+   * @param {import('@/class/Context').default} context
    * @param {object} options
    * @param {string} options.authUrl frame url
-   * @param {string?} options.namespace namespace of connect
-   * @param {HTMLElement|string?} [options.element] render place
+   * @param {string=} options.namespace namespace of connect
+   * @param {HTMLElement|string=} options.element render place
    */
   constructor(options, context) {
     super(options, context);
@@ -36,7 +35,7 @@ export default class DialogPlugin extends PluginBase {
     this.url = getFrameRouteUrl(authUrl, 'bridge');
     this.state = new StateClose(this);
 
-    this.dialog = new DialogView({
+    this.dialogView = new DialogView({
       url: this.url,
       namespace: this.namespace,
       element,
@@ -54,7 +53,7 @@ export default class DialogPlugin extends PluginBase {
     if (!this.dialogMessenger) {
       this.dialogMessenger = new CrossWindowMessenger({
         // showLogs: !ENV.isProduction,
-        name: `connect-bridge-dialog[]`,
+        name: `connect-dialog[]`,
         to: DIRECTION.AUTH,
         from: DIRECTION.CONNECT,
       });
@@ -62,12 +61,12 @@ export default class DialogPlugin extends PluginBase {
     return this.dialogMessenger;
   }
 
-  onClose() {
-    this.dialog.hide();
+  hide() {
+    this.dialogView.hide();
   }
 
-  onOpen() {
-    this.dialog.show();
+  show() {
+    this.dialogView.show();
   }
 
   /**
@@ -75,29 +74,29 @@ export default class DialogPlugin extends PluginBase {
    * @private
    */
   mount() {
-    this.dialog.mount();
-    this.dialogMessenger.setTarget(this.dialog.target);
+    this.dialogView.mount();
+    this.messenger.setTarget(this.dialogView.target);
   }
 
   /**
    *
    * @param {object} payload
    */
-  handleResize(payload) {
-    this.dialog.resize(payload);
+  resize(payload) {
+    this.dialogView.resize(payload);
   }
 
   handleReady() {
-    this.dialog.ready();
+    this.dialogView.handleReady();
   }
 
-  handleClose() {
-    this.state.onClose();
+  close() {
+    this.state.close();
     this.state = new StateClose(this);
   }
 
-  handleOpen() {
-    this.state.onOpen();
+  open() {
+    this.state.open();
     this.state = new StateOpen(this);
   }
 
@@ -107,15 +106,15 @@ export default class DialogPlugin extends PluginBase {
    * @public
    * @param {string} method Method name
    * @param {object} [payload] Message payload. Must includes method property
-   * @returns {Promise<any>} Responded message payload
+   * @returns {Promise<object>} Responded message payload
    */
   async ask(method, payload) {
     if (!method) {
       throw ConnectError.create(ERRORS.BRIDGE_PROVIDE_METHOD);
     }
 
-    await this.dialog.waitReady();
-    const res = await this.dialogMessenger.sendAndWaitResponse(method, payload);
+    await this.dialogView.waitReady();
+    const res = await this.messenger.sendAndWaitResponse(method, payload);
 
     return res;
   }

@@ -19,17 +19,6 @@ export default oauthPlugin => ({
   },
 
   /**
-   * Sets oauth popup parameters
-   * @param {object} params Parameters object
-   * @param {number} [params.width] Oauth popup width
-   * @param {number} [params.height] Oauth popup height
-   * @throws {Error} If not authorized yet;
-   */
-  async setOauthPopupParams(params) {
-    oauthPlugin.setPopupParams(params);
-  },
-
-  /**
    * Fetch user data via oauth
    * @param {object} [options] Request parameters object
    * @param {string} options.url Request url

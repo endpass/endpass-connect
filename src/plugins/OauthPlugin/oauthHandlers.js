@@ -1,14 +1,14 @@
 import { MESSENGER_METHODS } from '@/constants';
 
-const resizeView = plugin => payload => {
-  plugin.handleResizeView(payload);
+const resizeFrame = plugin => payload => {
+  plugin.resizeFrame(payload);
 };
 
-const readyView = plugin => (payload, req) => {
-  plugin.handleReadyView(payload, req);
+const readyFrame = plugin => (payload, req) => {
+  plugin.handleReadyFrame(payload, req);
 };
 
 export default {
-  [MESSENGER_METHODS.READY_STATE_BRIDGE]: readyView,
-  [MESSENGER_METHODS.DIALOG_RESIZE]: resizeView,
+  [MESSENGER_METHODS.READY_STATE_BRIDGE]: readyFrame,
+  [MESSENGER_METHODS.DIALOG_RESIZE]: resizeFrame,
 };

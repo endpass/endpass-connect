@@ -1,12 +1,13 @@
 // @ts-check
 import axios from 'axios';
 import tokenProvider from 'axios-token-interceptor';
-// @ts-ignore
-import { isNumeric } from '@endpass/utils/numbers';
-// @ts-ignore
 import LocalStorage from '@endpass/class/LocalStorage';
+import ConnectError from '@endpass/class/ConnectError';
+import PollClass from '@/plugins/OauthPlugin/Oauth/PollClass';
 
 /** @typedef {string} Token */
+
+const { ERRORS } = ConnectError;
 
 export default class Oauth {
   /**
@@ -14,27 +15,14 @@ export default class Oauth {
    * @param {object} params Params for constructor
    * @param {string} params.clientId Client id for oauth server
    * @param {string[]} params.scopes Scopes list
-   * @param {OauthStrategy} params.strategy Strategy for get TokenObject
-   * @param {number=} [params.popupHeight] Window window height
-   * @param {number=} [params.popupWidth] Window window width
-   * @param {string=} [params.oauthServer] Url for oauth server
+   * @param {string=} params.oauthServer Url for oauth server
+   * @param {import('@/plugins/OauthPlugin/Oauth/OauthPkceStrategy').default} params.oauthStrategy Oauth Strategy for get TokenObject
+   * @param {import('@/plugins/OauthPlugin/FrameStrategy').default} params.frameStrategy Frame Strategy for show frame
    */
-  constructor({
-    clientId,
-    scopes,
-    popupHeight,
-    popupWidth,
-    oauthServer,
-    strategy,
-  }) {
+  constructor({ clientId, scopes, oauthServer, frameStrategy, oauthStrategy }) {
     this.clientId = clientId;
     this.oauthServer = oauthServer || ENV.oauthServer;
-    /** @type {number} */
-    this.popupHeight = popupHeight || 1000;
-    /** @type {number} */
-    this.popupWidth = popupWidth || 600;
     this.axiosInstance = this.createAxiosInstance();
-    this.strategy = strategy;
 
     this.scopesString = scopes.sort().join(' ');
     const storedData = this.getTokenObjectFromStore();
@@ -42,6 +30,9 @@ export default class Oauth {
     if (storedData && storedData.scope !== this.scopesString) {
       LocalStorage.remove(this.clientId);
     }
+
+    this.frameStrategy = frameStrategy;
+    this.oauthStrategy = oauthStrategy;
   }
 
   /**
@@ -59,16 +50,30 @@ export default class Oauth {
    * @return {Promise<TokenObject>}
    */
   async updateTokenObject() {
-    const tokenObject = await this.strategy.getTokenObject(
-      this.oauthServer,
-      {
-        client_id: this.clientId,
-        scope: this.scopesString,
-      },
-      {
-        height: this.popupHeight,
-        width: this.popupWidth,
-      },
+    const params = {
+      client_id: this.clientId,
+      scope: this.scopesString,
+    };
+
+    await this.oauthStrategy.init(this.oauthServer, params);
+    const poll = new PollClass(this.oauthStrategy.url, this.frameStrategy);
+
+    const pollResult = await poll.result();
+
+    if (pollResult.state !== this.oauthStrategy.state) {
+      throw ConnectError.create(ERRORS.OAUTH_AUTHORIZE_STATE);
+    }
+
+    if (pollResult.error) {
+      throw ConnectError.create(
+        ERRORS.OAUTH_AUTHORIZE_STATE,
+        `Authorization failed: ${pollResult.error}`,
+      );
+    }
+
+    const tokenObject = await this.oauthStrategy.getTokenObject(
+      pollResult.code,
+      params,
     );
 
     if (tokenObject) {
@@ -120,17 +125,6 @@ export default class Oauth {
       }),
     );
     return instance;
-  }
-
-  /**
-   * Sets oauth popup parameters
-   * @param {object} params Parameters object
-   * @param {number=} [params.width] Oauth popup width
-   * @param {number=} [params.height] Oauth popup height
-   */
-  setPopupParams({ height = this.popupHeight, width = this.popupWidth }) {
-    this.popupWidth = isNumeric(width) ? width : this.popupWidth;
-    this.popupHeight = isNumeric(height) ? height : this.popupHeight;
   }
 
   /**

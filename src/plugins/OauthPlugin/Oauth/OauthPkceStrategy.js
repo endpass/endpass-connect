@@ -1,8 +1,6 @@
 // @ts-check
 import ConnectError from '@endpass/class/ConnectError';
-// @ts-ignore
 import mapToQueryString from '@endpass/utils/mapToQueryString';
-import PollClass from '@/plugins/OauthPlugin/Oauth/PollClass';
 import pkce from '@/plugins/OauthPlugin/Oauth/pkce';
 import { MESSENGER_METHODS } from '@/constants';
 
@@ -13,12 +11,14 @@ export default class OauthPkceStrategy {
   /**
    *
    * @param {object} options
-   * @param {InstanceType<typeof import('@/class/Context').default>} options.context
-   * @param {InstanceType<typeof import('@/plugins/OauthPlugin/View/ViewStrategy').default>} options.view
+   * @param {import('@/class/Context').default} options.context
    */
-  constructor({ context, view }) {
+  constructor({ context }) {
     this.context = context;
-    this.view = view;
+
+    this.url = '';
+    this.state = '';
+    this.codeVerifier = '';
   }
 
   // TODO: after implement public api use this method and drop dialog
@@ -63,9 +63,8 @@ export default class OauthPkceStrategy {
    * Prepare pkce structure and create url for open redirects
    * @param {string} oauthServer
    * @param {object} params
-   * @return {Promise<{codeVerifier: string, state: string, url: string}>}
    */
-  async challenge(oauthServer, params) {
+  async init(oauthServer, params) {
     // Create and store a random "state" value
     const state = pkce.generateRandomString();
     // Create and store a new PKCE code_verifier (the plaintext random secret)
@@ -81,48 +80,26 @@ export default class OauthPkceStrategy {
       code_challenge: codeChallenge,
       code_challenge_method: 'S256',
     });
-    return {
-      url,
-      state,
-      codeVerifier,
-    };
+
+    this.url = url;
+    this.state = state;
+    this.codeVerifier = codeVerifier;
   }
 
   /**
    *
-   * @param {string} oauthServer
+   * @param {string} code
    * @param {object} params
-   * @param {object} options
+   * @param {string} params.client_id
+   * @param {string} params.scope
    * @return {Promise<{expires: number, scope: string, token: string}>}
    */
-  async getTokenObject(oauthServer, params, options) {
-    const { url, state, codeVerifier } = await this.challenge(
-      oauthServer,
-      params,
-    );
-    const popup = await this.view.open(url, options);
-    const poll = new PollClass(url, popup);
-
-    const popupResult = await poll.result();
-
-    this.view.close();
-
-    if (popupResult.state !== state) {
-      throw ConnectError.create(ERRORS.OAUTH_AUTHORIZE_STATE);
-    }
-
-    if (popupResult.error) {
-      throw ConnectError.create(
-        ERRORS.OAUTH_AUTHORIZE_STATE,
-        `Authorization failed: ${popupResult.error}`,
-      );
-    }
-
+  async getTokenObject(code, params) {
     const tokenResult = await this.exchangeCodeToToken({
       grant_type: 'authorization_code',
-      code: popupResult.code,
+      code,
       client_id: params.client_id,
-      code_verifier: codeVerifier,
+      code_verifier: this.codeVerifier,
     });
 
     return {

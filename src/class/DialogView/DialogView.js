@@ -13,19 +13,15 @@ import {
 const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
 
 /**
- * @callback Listener {import('@types/global').Listener}
- */
-
-/**
- * @typedef {Object<string, Array<Listener>>} Resolvers
+ * @typedef {Array<CallableFunction>} Resolvers
  */
 
 export default class DialogView {
   /**
    * @param {object} options
    * @param {string} options.url URL which would be opened in inner iframe element
-   * @param {string?} [options.namespace] Optional namespace for messengers bindings
-   * @param {HTMLElement?|string?} [options.element] Render place
+   * @param {string=} options.namespace Optional namespace for messengers bindings
+   * @param {HTMLElement|string=} options.element Render place
    */
   constructor({ url, element, namespace = '' }) {
     this.url = url;
@@ -33,7 +29,7 @@ export default class DialogView {
     this.element = element;
     this.isElementMode = !!element;
     this.isReady = false;
-    /** @type Resolvers */
+    /** @type {Resolvers} */
     this.readyResolvers = [];
     this.initialTimer = null;
 
@@ -45,7 +41,7 @@ export default class DialogView {
 
   get rootElement() {
     if (!this.isElementMode) {
-      throw new Error('Dialog was inited without target element!');
+      throw new Error('DialogView was inited without target element!');
     }
 
     if (typeof this.element === 'string') {
@@ -96,17 +92,16 @@ export default class DialogView {
     });
   }
 
-  ready() {
+  handleReady() {
     this.isReady = true;
     clearTimeout(this.initialTimer);
-    this.readyResolvers.forEach(item => item(true));
+    this.readyResolvers.forEach(resolve => resolve(true));
     this.readyResolvers.length = 0;
   }
 
   /**
-   *
-   * @param {HTMLElement} frame
    * @private
+   * @param {HTMLElement} frame
    */
   initFrameCheck(frame) {
     frame.addEventListener('load', () => {
@@ -127,16 +122,14 @@ export default class DialogView {
    * Ask messenger before til it give any answer and resolve promise
    * Also, it is caches ready state and in the next time just resolve returned
    * promise
-   * @returns {Promise<boolean>}
+   * @returns {Promise<void>}
    */
   waitReady() {
-    /* eslint-disable-next-line */
-    return new Promise(async resolve => {
-      if (this.isReady) {
-        return resolve(true);
-      }
-
+    return new Promise(resolve => {
       this.readyResolvers.push(resolve);
+      if (this.isReady) {
+        this.handleReady();
+      }
     });
   }
 

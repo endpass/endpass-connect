@@ -3,13 +3,13 @@
 export default class State {
   /**
    *
-   * @param {InstanceType<typeof import('../DialogPlugin').default>} dialog DialogPlugin instance
+   * @param {import('../DialogPlugin').default} dialogPlugin instance
    */
-  constructor(dialog) {
-    this.dialog = dialog;
+  constructor(dialogPlugin) {
+    this.dialogPlugin = dialogPlugin;
   }
 
-  onOpen() {}
+  open() {}
 
-  onClose() {}
+  close() {}
 }
