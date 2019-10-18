@@ -28,6 +28,7 @@ export default class FrameStrategy {
 
   /**
    *
+   * @private
    * @param {typeof IframeFrame|typeof PopupFrame} Frame
    * @param {string} url
    * @return {Promise<void>}

@@ -57,6 +57,7 @@ export default class Oauth {
   checkScopes() {
     const tokenObject = this.getTokenObjectFromStore();
     const now = new Date().getTime();
+
     if (
       !tokenObject ||
       tokenObject.scope !== this.scopesString ||
@@ -80,6 +81,7 @@ export default class Oauth {
     await this.oauthStrategy.init(this.oauthServer, params);
     const poll = new Polling(this.oauthStrategy.url, this.frameStrategy);
 
+    await poll.open();
     const pollResult = await poll.result();
 
     if (pollResult.state !== this.oauthStrategy.state) {
@@ -151,9 +153,8 @@ export default class Oauth {
 
   /**
    * Makes api request with authorization token
-   * @param {object} params
-   * @param {string[]=} params.scopes
-   * @param {import('axios').AxiosRequestConfig} params.options Request parameters object
+   * @template {import('axios').AxiosRequestConfig} T
+   * @param {{scopes?: string[]} & T} params
    */
   request({ scopes, ...options }) {
     this.setScopes(scopes);

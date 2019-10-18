@@ -1,22 +1,35 @@
-import PopupFrame from '@/plugins/OauthPlugin/FrameStrategy/PopupFrame';
+import Polling from '@/plugins/OauthPlugin/Oauth/Polling';
 
-describe('Window window', () => {
-  let returnWindow;
-  let popupPromise;
+describe('Polling', () => {
+  let target = {};
+  const url = 'url';
+  const frame = {
+    open: jest.fn().mockResolvedValue(),
+    close: jest.fn(),
+  };
+
+  Object.defineProperty(frame, 'target', {
+    get() {
+      return target;
+    },
+  });
 
   function prepareLocation(params) {
-    returnWindow.location = {
-      ...returnWindow.location,
+    target.location = {
+      ...target.location,
       ...params,
     };
+    const poll = new Polling(url, frame);
+
+    const res = poll.result();
     jest.advanceTimersByTime(1000);
 
-    return popupPromise;
+    return res;
   }
 
   beforeEach(() => {
     jest.useFakeTimers();
-    returnWindow = {
+    target = {
       location: {
         href: '',
         pathname: '',
@@ -25,8 +38,6 @@ describe('Window window', () => {
       },
       closed: false,
     };
-    window.open = jest.fn().mockReturnValue(returnWindow);
-    popupPromise = PopupFrame.open('testServer');
   });
 
   afterEach(() => {

@@ -18,13 +18,15 @@ export default class Polling {
     this.intervalId = null;
   }
 
+  async open() {
+    await this.frame.open(this.url);
+  }
+
   /**
    *
    * @return {Promise<object>}
    */
-  async result() {
-    await this.frame.open(this.url);
-
+  result() {
     return new Promise((resolve, reject) => {
       this.intervalId = window.setInterval(() => {
         const { target } = this.frame;
