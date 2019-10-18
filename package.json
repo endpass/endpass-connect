@@ -130,7 +130,7 @@
   },
   "dependencies": {
     "@endpass/class": "^0.18.13",
-    "@endpass/utils": "^1.8.3",
+    "@endpass/utils": "^1.8.6",
     "axios": "^0.19.0",
     "axios-token-interceptor": "^0.1.0",
     "callbag-basics": "^3.1.0",
