@@ -1306,6 +1306,22 @@
     node-notifier "^5.4.3"
     secp256k1 "^3.7.1"
 
+"@endpass/utils@^1.8.6":
+  version "1.8.6"
+  resolved "https://registry.yarnpkg.com/@endpass/utils/-/utils-1.8.6.tgz#ebf6e0f5f111749649db5c7beedce165bc40c3b2"
+  integrity sha512-hA13wGMIMU8Z/OeE/ZNMpNRXXGChUcR0wxB8Aj8tNiAjwGqv7UcqqtI/xaI53gEcWPa9tshmFnqOXJUuNSDIkA==
+  dependencies:
+    bip39 "^3.0.2"
+    bs58check "^2.1.2"
+    dayjs "^1.8.16"
+    eth-ecies "^1.0.3"
+    ethereumjs-wallet "^0.6.3"
+    export-files "^2.1.1"
+    keythereum "^1.0.4"
+    lodash "^4.17.15"
+    node-notifier "^5.4.3"
+    secp256k1 "^3.7.1"
+
 "@jest/console@^24.7.1":
   version "24.7.1"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-24.7.1.tgz#32a9e42535a97aedfe037e725bd67e954b459545"
