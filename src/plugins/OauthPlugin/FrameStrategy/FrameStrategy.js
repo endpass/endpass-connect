@@ -33,7 +33,7 @@ export default class FrameStrategy {
    * @return {Promise<void>}
    */
   async initFrame(Frame, url) {
-    this.frame = new Frame({ url });
+    this.frame = new Frame(url);
     this.frame.mount();
     this.emitter.emit(FrameStrategy.EVENT_UPDATE_TARGET, this.frame.target);
     await this.frame.waitReady();

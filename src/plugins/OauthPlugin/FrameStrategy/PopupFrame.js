@@ -6,10 +6,10 @@ const DEFAULT_HEIGHT = 1000;
 
 export default class PopupFrame extends BaseWindow {
   /**
-   * @param {object} props
+   * @param {string} url
    */
-  constructor(props) {
-    super(props);
+  constructor(url) {
+    super(url);
     this.window = null;
   }
 

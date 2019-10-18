@@ -55,8 +55,16 @@ export default class OauthPlugin extends PluginBase {
       this.messenger.setTarget(target);
     });
 
-    this.oauthStrategy = new OauthPkceStrategy({
+    const oauthStrategy = new OauthPkceStrategy({
       context,
+    });
+
+    this.oauthRequestProvider = new Oauth({
+      clientId: this.oauthClientId,
+      scopes: options.scopes,
+      oauthServer: this.oauthServer,
+      oauthStrategy,
+      frameStrategy: this.frameStrategy,
     });
   }
 
@@ -77,22 +85,11 @@ export default class OauthPlugin extends PluginBase {
 
   /**
    * Fetch user data via oaurh
-   * @param {object} [params] Parameters object
-   * @param {number} [params.popupWidth] Oauth popup width
-   * @param {number} [params.popupHeight] Oauth popup height
-   * @param {string} [params.oauthServer] Oauth server url
+   * @param {object=} params Parameters object
    * @param {string[]} params.scopes - Array of authorization scopes
    */
-  async loginWithOauth(params) {
-    this.oauthRequestProvider = new Oauth({
-      ...params,
-      // TODO: is it `params.oauthServer` must be first? or after `this.oauthServer`?
-      oauthServer: params.oauthServer || this.oauthServer,
-      clientId: this.oauthClientId,
-      oauthStrategy: this.oauthStrategy,
-      frameStrategy: this.frameStrategy,
-    });
-    await this.oauthRequestProvider.init();
+  async loginWithOauth(params = {}) {
+    await this.oauthRequestProvider.loginWithOauth(params);
   }
 
   logout() {

@@ -3,7 +3,6 @@ import debounce from 'lodash.debounce';
 import {
   DIRECTION,
   MESSENGER_METHODS,
-  PLUGIN_METHODS,
   PLUGIN_NAMES,
   WIDGET_EVENTS,
 } from '@/constants';
@@ -19,8 +18,6 @@ import widgetHandlers from './widgetHandlers';
 import PluginBase from '@/plugins/PluginBase';
 import { getFrameRouteUrl } from '@/util/url';
 import WidgetPublicApi from '@/plugins/WidgetPlugin/WidgetPublicApi';
-
-const WIDGET_AUTH_TIMEOUT = 200;
 
 export default class WidgetPlugin extends PluginBase {
   static get pluginName() {

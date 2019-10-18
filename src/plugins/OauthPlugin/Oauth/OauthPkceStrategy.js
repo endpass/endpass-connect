@@ -89,9 +89,7 @@ export default class OauthPkceStrategy {
   /**
    *
    * @param {string} code
-   * @param {object} params
-   * @param {string} params.client_id
-   * @param {string} params.scope
+   * @param {StrategyParams} params
    * @return {Promise<{expires: number, scope: string, token: string}>}
    */
   async getTokenObject(code, params) {

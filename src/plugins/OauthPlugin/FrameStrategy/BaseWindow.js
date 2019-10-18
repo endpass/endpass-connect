@@ -1,10 +1,9 @@
 // @ts-check
 export default class BaseWindow {
   /**
-   * @param {object} props
-   * @param {string=} props.url
+   * @param {string=} url
    */
-  constructor({ url } = {}) {
+  constructor(url) {
     this.url = url;
   }
 

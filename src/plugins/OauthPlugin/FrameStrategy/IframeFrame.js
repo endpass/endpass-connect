@@ -5,12 +5,10 @@ import BaseWindow from '@/plugins/OauthPlugin/FrameStrategy/BaseWindow';
 export default class IframeFrame extends BaseWindow {
   /**
    *
-   * @param {object} props
-   * @param {string} props.url
+   * @param {string} url
    */
-  constructor(props) {
-    super(props);
-    const { url } = props;
+  constructor(url) {
+    super(url);
     this.dialogView = new DialogView({
       url,
       namespace: 'endpass-oauth-authorize',

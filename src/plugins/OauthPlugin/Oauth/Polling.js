@@ -6,7 +6,7 @@ const { ERRORS } = ConnectError;
 const replaceReg = /^#\/?/;
 const CHECK_TIMEOUT = 500;
 
-export default class PollClass {
+export default class Polling {
   /**
    *
    * @param {string} url

@@ -2,8 +2,6 @@ export default oauthPlugin => ({
   /**
    * Fetch user data via oauth
    * @param {object} params Parameters object
-   * @param {number} [params.popupWidth] Oauth popup width
-   * @param {number} [params.popupHeight] Oauth popup height
    * @param {string[]} params.scopes - Array of authorization scopes
    */
   async loginWithOauth(params) {
