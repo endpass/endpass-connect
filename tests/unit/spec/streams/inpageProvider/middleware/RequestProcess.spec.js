@@ -1,5 +1,4 @@
 import ConnectError from '@endpass/class/ConnectError';
-import ProviderPlugin from '@/plugins/ProviderPlugin';
 import { INPAGE_EVENTS, MESSENGER_METHODS } from '@/constants';
 import RequestProcess from '@/streams/inpageProvider/middleware/netRequest/RequestProcess';
 
@@ -231,7 +230,6 @@ describe('Request process middleware', () => {
       method: 'foo',
       params: [],
     };
-    let dialog;
 
     beforeEach(() => {
       context.ask = jest.fn().mockResolvedValueOnce({

@@ -33,25 +33,7 @@ describe('Oauth class', () => {
   const clientId = 'kek';
   const token = 'bam';
   const oauthServer = 'http://oauthServer/oauth';
-
-  const response = {
-    client_id: 'kek',
-    code_challenge: 'verifier -> pkce-random-string',
-    code_challenge_method: 'S256',
-    response_type: 'code',
-    scope: scopes.join(' '),
-    state: 'pkce-random-string',
-  };
-
-  // PopupFrame.open.mockImplementation((serverUrl, params) => {
-  //   return {
-  //     state: params.state,
-  //     expires_in: 3600,
-  //     access_token: token,
-  //     ...params,
-  //   };
-  // });
-
+  
   function mockOauthTokenResult(result = {}, status = true) {
     context.ask.mockResolvedValue({
       payload: result,

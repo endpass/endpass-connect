@@ -1,5 +1,5 @@
-import { INPAGE_EVENTS } from '@/constants';
 import EventEmitter from '@endpass/class/EventEmitter';
+import { INPAGE_EVENTS } from '@/constants';
 
 jest.mock('@/streams/inpageProvider/middleware', () => {
   // eslint-disable-next-line

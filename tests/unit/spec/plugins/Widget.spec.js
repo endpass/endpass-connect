@@ -1,7 +1,7 @@
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import { WidgetPlugin } from '@/plugins/WidgetPlugin';
 import { getWidgetFrameStylesObject } from '@/plugins/WidgetPlugin/WidgetStyles';
-import { MESSENGER_METHODS, WIDGET_EVENTS } from '@/constants';
+import { WIDGET_EVENTS } from '@/constants';
 
 describe('WidgetPlugin class', () => {
   const url = 'https://auth.foo.bar';
@@ -189,26 +189,6 @@ describe('WidgetPlugin class', () => {
       });
 
       expect(widget.frame.style.height).toBe(300);
-    });
-  });
-
-  describe.skip('subscribe', () => {
-    it('should subscribe on messenger view-responsible methods', () => {
-      widget.subscribe();
-
-      expect(messenger.setTarget).not.toBeCalled();
-      expect(messenger.subscribe).toBeCalledWith(
-        MESSENGER_METHODS.WIDGET_OPEN,
-        expect.any(Function),
-      );
-      expect(messenger.subscribe).toBeCalledWith(
-        MESSENGER_METHODS.WIDGET_CLOSE,
-        expect.any(Function),
-      );
-      expect(messenger.subscribe).toBeCalledWith(
-        MESSENGER_METHODS.WIDGET_FIT,
-        expect.any(Function),
-      );
     });
   });
 

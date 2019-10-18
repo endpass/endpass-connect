@@ -2,6 +2,7 @@ import { MESSENGER_METHODS } from '@/constants';
 import { DialogPlugin } from '@/plugins/DialogPlugin';
 import StateOpen from '@/plugins/DialogPlugin/states/StateOpen';
 import StateClose from '@/plugins/DialogPlugin/states/StateClose';
+import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
 
 
 describe('DialogPlugin class', () => {
@@ -31,5 +32,19 @@ describe('DialogPlugin class', () => {
     });
 
     expect(inst.state).toBeInstanceOf(StateClose);
+  });
+
+  describe('auth url correct creation', () => {
+    it('should return url to auth on connect application', () => {
+      const url = getAuthUrl(authUrl);
+      expect(getFrameRouteUrl(url, 'foo')).toBe(`${authUrl}/foo`);
+
+      const plugin = new DialogPlugin({ authUrl }, context);
+      expect(plugin.url).toBe(`${authUrl}/bridge`);
+    });
+    it('should return default authUrl', () => {
+      const plugin = new DialogPlugin({}, context);
+      expect(plugin.url).toBe('https://auth.endpass.com/bridge');
+    });
   });
 });
