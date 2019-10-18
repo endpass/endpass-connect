@@ -19,12 +19,6 @@ export default function PluginContainer(options, context, ClassPlugin) {
     {},
   );
 
-  pluginsMap.init = () => {
-    pluginsName.forEach(pluginName => {
-      pluginsMap[pluginName].init();
-    });
-  };
-
   pluginsMap[Symbol.iterator] = function() {
     const privatePluginsName = [...pluginsName];
     return {

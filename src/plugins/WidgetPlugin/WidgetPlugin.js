@@ -150,7 +150,13 @@ export default class WidgetPlugin extends PluginBase {
 
     const styles = this.getWidgetFrameInlineStyles();
     const markup = `
-      <iframe id="endpass-widget" data-test="widget-frame" data-endpass="widget-frame" style="${styles}" src="${this.url}"></iframe>
+      <iframe 
+        id="endpass-widget" 
+        data-test="widget-frame" 
+        data-endpass="widget-frame" 
+        style="${styles}" 
+        src="${this.url}"
+        ></iframe>
     `;
 
     document.body.insertAdjacentHTML('afterBegin', markup);

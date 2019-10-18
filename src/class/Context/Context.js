@@ -39,7 +39,9 @@ export default class Context {
     );
 
     this.plugins = new PluginContainer(options, this, ClassPlugin);
-    this.plugins.init();
+    for (const plugin of this.plugins) {
+      plugin.init();
+    }
   }
 
   get isLogin() {
