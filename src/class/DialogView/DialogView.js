@@ -14,7 +14,7 @@ import {
 const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
 
 /**
- * @typedef {Array<CallableFunction>} Resolvers
+ * @typedef {Array<{resolve: CallableFunction, reject: CallableFunction}>} Resolvers
  */
 
 export default class DialogView {
@@ -29,6 +29,7 @@ export default class DialogView {
     this.namespace = namespace;
     this.element = element;
     this.isReady = false;
+    this.readyState = null;
     /** @type {Resolvers} */
     this.readyResolvers = [];
 
@@ -45,6 +46,7 @@ export default class DialogView {
 
   /**
    *
+   * @private
    * @type {HTMLElement}
    */
   get rootElement() {
@@ -118,13 +120,32 @@ export default class DialogView {
   }
 
   handleReady() {
+    this.setReadyState(true);
+    this.releaseResolvers();
+  }
+
+  /**
+   *
+   * @private
+   * @param {boolean} state
+   */
+  setReadyState(state) {
     this.isReady = true;
+    this.readyState = state;
+  }
+
+  /**
+   * @private
+   */
+  releaseResolvers() {
     if (this.initialTimer) {
       window.clearTimeout(this.initialTimer);
       this.initialTimer = null;
     }
 
-    this.readyResolvers.forEach(resolve => resolve(true));
+    this.readyResolvers.forEach(({ resolve, reject }) =>
+      this.readyState ? resolve() : reject(),
+    );
     this.readyResolvers.length = 0;
   }
 
@@ -138,6 +159,11 @@ export default class DialogView {
         return;
       }
       this.initialTimer = window.setTimeout(() => {
+        if (this.isReady) {
+          return;
+        }
+        this.setReadyState(false);
+        this.releaseResolvers();
         // eslint-disable-next-line no-console
         console.error(
           `Dialog View is not initialized, please check auth url ${this.url}`,
@@ -154,10 +180,10 @@ export default class DialogView {
    * @returns {Promise<void>}
    */
   waitReady() {
-    return new Promise(resolve => {
-      this.readyResolvers.push(resolve);
+    return new Promise((resolve, reject) => {
+      this.readyResolvers.push({ resolve, reject });
       if (this.isReady) {
-        this.handleReady();
+        this.releaseResolvers();
       }
     });
   }
