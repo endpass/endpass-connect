@@ -28,8 +28,7 @@ export default class DialogView {
     this.url = url;
     this.namespace = namespace;
     this.element = element;
-    this.isReady = false;
-    this.readyState = null;
+    this.isReady = null;
     /** @type {Resolvers} */
     this.readyResolvers = [];
 
@@ -63,6 +62,10 @@ export default class DialogView {
       throw new Error('Element is not defined in DOM!');
     }
     return /** @type {HTMLElement} */ (el);
+  }
+
+  get isConnected() {
+    return this.isReady !== null;
   }
 
   /**
@@ -133,9 +136,8 @@ export default class DialogView {
    * @param {boolean} state
    */
   setReadyState(state) {
-    if (this.isReady) return;
-    this.isReady = true;
-    this.readyState = state;
+    if (this.isConnected) return;
+    this.isReady = state;
   }
 
   /**
@@ -148,7 +150,7 @@ export default class DialogView {
     }
 
     this.readyResolvers.forEach(({ resolve, reject }) =>
-      this.readyState ? resolve() : reject(),
+      this.isReady ? resolve() : reject(),
     );
     this.readyResolvers = [];
   }
@@ -159,11 +161,11 @@ export default class DialogView {
    */
   initFrameCheck(frame) {
     frame.addEventListener('load', () => {
-      if (this.isReady) {
+      if (this.isConnected) {
         return;
       }
       this.initialTimer = window.setTimeout(() => {
-        if (this.isReady) {
+        if (this.isConnected) {
           return;
         }
         this.setReadyState(false);
@@ -186,7 +188,7 @@ export default class DialogView {
   waitReady() {
     return new Promise((resolve, reject) => {
       this.readyResolvers.push({ resolve, reject });
-      if (this.isReady) {
+      if (this.isConnected) {
         this.releaseResolvers();
       }
     });
