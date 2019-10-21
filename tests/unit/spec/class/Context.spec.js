@@ -1,6 +1,6 @@
 import ConnectError from '@endpass/class/ConnectError';
 import { CONTEXT, MESSENGER_METHODS, INPAGE_EVENTS, PLUGIN_NAMES } from '@/constants';
-import ProviderPlugin from '@/plugins/ProviderPlugin';
+import ProviderPlugin, { ProviderPlugin as ProviderPluginClass } from '@/plugins/ProviderPlugin';
 import ConnectPlugin from '@/plugins/ConnectPlugin';
 import AuthorizePlugin from '@/plugins/AuthorizePlugin';
 import WidgetPlugin from '@/plugins/WidgetPlugin';
@@ -18,7 +18,7 @@ describe('Context class', () => {
   let connect;
 
   const createContext = opt => {
-    connect = new ConnectPlugin({...options, ...opt});
+    connect = new ConnectPlugin({ ...options, ...opt });
     context = connect[CONTEXT];
   };
 
@@ -34,14 +34,21 @@ describe('Context class', () => {
 
   describe('initiate', () => {
     it('should create with default plugins', () => {
-      expect(Object.keys(context.plugins)).toEqual([PLUGIN_NAMES.DIALOG, PLUGIN_NAMES.CONNECT, PLUGIN_NAMES.MESSENGER_GROUP]);
-      expect(Object.keys(context.plugins)).toHaveLength(3);
+      const pluginList = [...context.plugins]
+        .map(item => item.constructor.pluginName);
+
+      expect(pluginList).toEqual([
+        PLUGIN_NAMES.DIALOG,
+        PLUGIN_NAMES.CONNECT,
+        PLUGIN_NAMES.MESSENGER_GROUP,
+      ]);
+      expect(pluginList).toHaveLength(3);
     });
 
     it('should create with provider plugin', () => {
       createContext({ plugins: [ProviderPlugin] });
 
-      expect(context.plugins[ProviderPlugin.ClassPlugin.pluginName]).not.toBe(undefined);
+      expect(context.plugins[ProviderPluginClass.pluginName]).not.toBe(undefined);
     });
 
     it('should pass initial payload', async () => {
@@ -124,7 +131,7 @@ describe('Context class', () => {
     it('should logout from endpass', async () => {
       expect.assertions(3);
 
-      createContext({ plugins: [AuthorizePlugin]});
+      createContext({ plugins: [AuthorizePlugin] });
 
       context.plugins.dialog.ask = jest.fn().mockResolvedValueOnce({
         status: true,

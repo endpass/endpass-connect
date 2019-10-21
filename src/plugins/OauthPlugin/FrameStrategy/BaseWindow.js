@@ -23,7 +23,7 @@ export default class BaseWindow {
   }
 
   /**
-   * @param {object} payload
+   * @param {{offsetHeight:number}} payload
    */
   resize(payload) {}
 

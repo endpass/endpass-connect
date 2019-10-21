@@ -6,7 +6,8 @@ import { MESSENGER_METHODS } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
-/** @type {OauthStrategy} */
+/** @typedef {{ client_id: string, scope: string }} StrategyParams */
+
 export default class OauthPkceStrategy {
   /**
    *
@@ -62,7 +63,7 @@ export default class OauthPkceStrategy {
   /**
    * Prepare pkce structure and create url for open redirects
    * @param {string} oauthServer
-   * @param {object} params
+   * @param {StrategyParams} params
    */
   async init(oauthServer, params) {
     // Create and store a random "state" value

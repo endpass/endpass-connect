@@ -34,7 +34,7 @@ export default class WidgetPlugin extends PluginBase {
 
   /**
    * @param {object} options
-   * @param {object} context
+   * @param {import('@/class/Context').default} context
    * @param {string} options.namespace namespace
    * @param {string} options.url frame url
    */

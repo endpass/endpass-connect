@@ -74,7 +74,7 @@ export default class DialogView {
     return this.frame.contentWindow;
   }
 
-  hide() {
+  close() {
     if (!this.wrapper || !this.frame) return;
     this.wrapper.dataset.visible = 'false';
     this.emitEvent(DIALOG_EVENTS.CLOSE);
@@ -82,7 +82,7 @@ export default class DialogView {
     this.wrapper.setAttribute('style', stylesWrapperHide);
   }
 
-  show() {
+  open() {
     if (!this.wrapper || !this.frame) return;
     this.wrapper.dataset.visible = 'true';
     this.frame.setAttribute('style', this.frameStyles(propsIframeShow));
@@ -90,11 +90,14 @@ export default class DialogView {
     this.wrapper.setAttribute('style', stylesWrapperShow);
   }
 
-  close() {
+  destroy() {
     if (!this.overlay) {
       return;
     }
-    this.hide();
+    this.setReadyState(false);
+    this.releaseResolvers();
+
+    this.close();
 
     if (this.overlay.parentNode) {
       this.overlay.parentNode.removeChild(this.overlay);
@@ -130,6 +133,7 @@ export default class DialogView {
    * @param {boolean} state
    */
   setReadyState(state) {
+    if (this.isReady) return;
     this.isReady = true;
     this.readyState = state;
   }
@@ -146,7 +150,7 @@ export default class DialogView {
     this.readyResolvers.forEach(({ resolve, reject }) =>
       this.readyState ? resolve() : reject(),
     );
-    this.readyResolvers.length = 0;
+    this.readyResolvers = [];
   }
 
   /**

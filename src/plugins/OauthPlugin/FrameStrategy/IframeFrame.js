@@ -28,11 +28,11 @@ export default class IframeFrame extends BaseWindow {
   }
 
   open() {
-    this.dialogView.show();
+    this.dialogView.open();
   }
 
   close() {
-    this.dialogView.close();
+    this.dialogView.destroy();
   }
 
   get target() {

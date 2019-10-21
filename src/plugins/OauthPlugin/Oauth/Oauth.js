@@ -44,7 +44,7 @@ export default class Oauth {
 
   /**
    *
-   * @param {array=} scopes
+   * @param {string[]=} scopes
    */
   setScopes(scopes) {
     if (!scopes) {

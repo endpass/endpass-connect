@@ -3,6 +3,7 @@ import { DialogPlugin } from '@/plugins/DialogPlugin';
 import StateOpen from '@/plugins/DialogPlugin/states/StateOpen';
 import StateClose from '@/plugins/DialogPlugin/states/StateClose';
 import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
+import { DEFAULT_AUTH_URL } from '@/constants';
 
 
 describe('DialogPlugin class', () => {
@@ -42,9 +43,11 @@ describe('DialogPlugin class', () => {
       const plugin = new DialogPlugin({ authUrl }, context);
       expect(plugin.url).toBe(`${authUrl}/bridge`);
     });
+
     it('should return default authUrl', () => {
       const plugin = new DialogPlugin({}, context);
-      expect(plugin.url).toBe('https://auth.endpass.com/bridge');
+
+      expect(plugin.url).toBe(`${DEFAULT_AUTH_URL}/bridge`);
     });
   });
 });

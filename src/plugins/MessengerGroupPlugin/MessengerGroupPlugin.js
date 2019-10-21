@@ -22,7 +22,7 @@ export default class MessengerGroupPlugin extends PluginBase {
   /**
    *
    * @param {object} options
-   * @param {object} context
+   * @param {import('@/class/Context').default} context
    */
   constructor(options, context) {
     super(options, context);

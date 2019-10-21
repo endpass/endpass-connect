@@ -76,7 +76,7 @@ export default class DialogPlugin extends PluginBase {
 
   /**
    *
-   * @param {object} payload
+   * @param {{offsetHeight:number}} payload
    */
   resize(payload) {
     this.dialogView.resize(payload);

@@ -71,7 +71,7 @@ export default class FrameStrategy {
 
   /**
    *
-   * @param {object} payload
+   * @param {{offsetHeight:number}} payload
    */
   handleResize(payload) {
     this.frame.resize(payload);
