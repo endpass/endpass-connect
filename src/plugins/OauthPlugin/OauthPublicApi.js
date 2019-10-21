@@ -2,8 +2,6 @@ export default oauthPlugin => ({
   /**
    * Fetch user data via oauth
    * @param {object} params Parameters object
-   * @param {number} [params.popupWidth] Oauth popup width
-   * @param {number} [params.popupHeight] Oauth popup height
    * @param {string[]} params.scopes - Array of authorization scopes
    */
   async loginWithOauth(params) {
@@ -16,17 +14,6 @@ export default oauthPlugin => ({
    */
   async logoutFromOauth() {
     oauthPlugin.logout();
-  },
-
-  /**
-   * Sets oauth popup parameters
-   * @param {object} params Parameters object
-   * @param {number} [params.width] Oauth popup width
-   * @param {number} [params.height] Oauth popup height
-   * @throws {Error} If not authorized yet;
-   */
-  async setOauthPopupParams(params) {
-    oauthPlugin.setPopupParams(params);
   },
 
   /**

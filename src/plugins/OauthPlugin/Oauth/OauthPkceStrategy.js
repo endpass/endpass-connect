@@ -1,24 +1,25 @@
 // @ts-check
-// @ts-ignore
 import ConnectError from '@endpass/class/ConnectError';
-import PopupWindow from '@/plugins/OauthPlugin/Oauth/PopupWindow';
+import mapToQueryString from '@endpass/utils/mapToQueryString';
 import pkce from '@/plugins/OauthPlugin/Oauth/pkce';
 import { MESSENGER_METHODS } from '@/constants';
 
-// eslint-disable-next-line
-import Context from '@/class/Context';
-
 const { ERRORS } = ConnectError;
 
-/** @type {OauthStrategy} */
+/** @typedef {{ client_id: string, scope: string }} StrategyParams */
+
 export default class OauthPkceStrategy {
   /**
    *
    * @param {object} options
-   * @param {InstanceType<typeof Context>} options.context
+   * @param {import('@/class/Context').default} options.context
    */
   constructor({ context }) {
     this.context = context;
+
+    this.url = '';
+    this.state = '';
+    this.codeVerifier = '';
   }
 
   // TODO: after implement public api use this method and drop dialog
@@ -60,14 +61,11 @@ export default class OauthPkceStrategy {
   }
 
   /**
-   * @param {string} oauthServer server url
-   * @param {object} params params for oauth authorize
-   * @param {string} params.client_id client id for oauth server
-   * @param {string} params.scope scope for oauth
-   * @param {object=} [options] options for popup
-   * @return {Promise<TokenObject>}
+   * Prepare pkce structure and create url for open redirects
+   * @param {string} oauthServer
+   * @param {StrategyParams} params
    */
-  async getTokenObject(oauthServer, params, options) {
+  async init(oauthServer, params) {
     // Create and store a random "state" value
     const state = pkce.generateRandomString();
     // Create and store a new PKCE code_verifier (the plaintext random secret)
@@ -75,34 +73,32 @@ export default class OauthPkceStrategy {
     // Hash and base64-urlencode the secret to use as the challenge
     const codeChallenge = await pkce.challengeFromVerifier(codeVerifier);
 
-    const popupResult = await PopupWindow.open(
-      oauthServer,
-      {
-        ...params,
-        state,
-        response_type: 'code',
-        code_challenge: codeChallenge,
-        code_challenge_method: 'S256',
-      },
-      options,
-    );
+    const server = oauthServer || ENV.oauthServer;
+    const url = mapToQueryString(`${server}/auth`, {
+      ...params,
+      state,
+      response_type: 'code',
+      code_challenge: codeChallenge,
+      code_challenge_method: 'S256',
+    });
 
-    if (popupResult.state !== state) {
-      throw ConnectError.create(ERRORS.OAUTH_AUTHORIZE_STATE);
-    }
+    this.url = url;
+    this.state = state;
+    this.codeVerifier = codeVerifier;
+  }
 
-    if (popupResult.error) {
-      throw ConnectError.create(
-        ERRORS.OAUTH_AUTHORIZE_STATE,
-        `Authorization failed: ${popupResult.error}`,
-      );
-    }
-
+  /**
+   *
+   * @param {string} code
+   * @param {StrategyParams} params
+   * @return {Promise<{expires: number, scope: string, token: string}>}
+   */
+  async getTokenObject(code, params) {
     const tokenResult = await this.exchangeCodeToToken({
       grant_type: 'authorization_code',
-      code: popupResult.code,
+      code,
       client_id: params.client_id,
-      code_verifier: codeVerifier,
+      code_verifier: this.codeVerifier,
     });
 
     return {

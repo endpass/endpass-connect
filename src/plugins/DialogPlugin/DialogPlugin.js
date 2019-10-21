@@ -1,37 +1,15 @@
+// @ts-check
 import ConnectError from '@endpass/class/ConnectError';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
-import { inlineStylesState } from '@/util/dom';
-import {
-  DIRECTION,
-  DIALOG_EVENTS,
-  PLUGIN_NAMES,
-  PLUGIN_METHODS,
-} from '@/constants';
-import {
-  propsIframe,
-  propsIframeShow,
-  propsIframeHide,
-  stylesOverlayShow,
-  stylesOverlayHide,
-  stylesWrapperShow,
-  stylesWrapperHide,
-} from './DialogStyles';
+import { DIRECTION, PLUGIN_NAMES, PLUGIN_METHODS } from '@/constants';
+import StateOpen from './states/StateOpen';
 import StateClose from './states/StateClose';
 import dialogHandlers from '@/plugins/DialogPlugin/dialogHandlers';
 import PluginBase from '@/plugins/PluginBase';
 import { getFrameRouteUrl } from '@/util/url';
+import DialogView from '@/class/DialogView';
 
 const { ERRORS } = ConnectError;
-
-const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
-
-/**
- * @callback Listener {import('@types/global').Listener}
- */
-
-/**
- * @typedef {Object<string, Array<Listener>>} Resolvers
- */
 
 export default class DialogPlugin extends PluginBase {
   static get pluginName() {
@@ -43,11 +21,11 @@ export default class DialogPlugin extends PluginBase {
   }
 
   /**
+   * @param {import('@/class/Context').default} context
    * @param {object} options
-   * @param {object} context
-   * @param {string} options.url frame url
-   * @param {string?} options.namespace namespace of connect
-   * @param {HTMLElement|string?} [options.element] render place
+   * @param {string} options.authUrl frame url
+   * @param {string=} options.namespace namespace of connect
+   * @param {HTMLElement|string=} options.element render place
    */
   constructor(options, context) {
     super(options, context);
@@ -55,31 +33,28 @@ export default class DialogPlugin extends PluginBase {
 
     this.namespace = namespace;
     this.url = getFrameRouteUrl(authUrl, 'bridge');
-    this.ready = false;
-    this.element = element;
-    this.isElementMode = !!element;
-    this.state = new StateClose(this);
 
-    /** @type Resolvers */
-    this.readyResolvers = [];
+    this.dialogView = new DialogView({
+      url: this.url,
+      namespace: this.namespace,
+      element,
+    });
 
-    // DialogPlugin elements nodes
-    this.overlay = null;
-    this.wrapper = null;
-    this.frame = null;
-    this.initialTimer = null;
-    this.frameStyles = inlineStylesState(propsIframe);
+    this.state = new StateClose(this.dialogView);
   }
 
   init() {
     this.context.executeMethod(PLUGIN_METHODS.CONTEXT_MOUNT_DIALOG);
   }
 
+  /**
+   * @return {CrossWindowMessenger}
+   */
   get messenger() {
     if (!this.dialogMessenger) {
       this.dialogMessenger = new CrossWindowMessenger({
-        showLogs: !ENV.isProduction,
-        name: `connect-bridge-dialog[]`,
+        // showLogs: !ENV.isProduction,
+        name: `connect-dialog[]`,
         to: DIRECTION.AUTH,
         from: DIRECTION.CONNECT,
       });
@@ -87,127 +62,38 @@ export default class DialogPlugin extends PluginBase {
     return this.dialogMessenger;
   }
 
-  onClose() {
-    this.wrapper.dataset.visible = 'false';
-    this.emitEvent(DIALOG_EVENTS.CLOSE);
-    this.frame.style = this.frameStyles(propsIframeHide);
-    this.wrapper.style = stylesWrapperHide;
-  }
-
-  onOpen() {
-    this.wrapper.dataset.visible = 'true';
-    this.frame.style = this.frameStyles(propsIframeShow);
-    this.emitEvent(DIALOG_EVENTS.OPEN);
-    this.wrapper.style = stylesWrapperShow;
-  }
-
-  /**
-   * @private
-   * @param {string} event
-   */
-  emitEvent(event) {
-    const frameEvent = new CustomEvent(event, {
-      detail: {},
-    });
-
-    this.overlay.dispatchEvent(frameEvent);
-  }
-
-  /**
-   * Checks dialog ready state
-   * Ask messenger before til it give any answer and resolve promise
-   * Also, it is caches ready state and in the next time just resolve returned
-   * promise
-   * @private
-   * @returns {Promise<boolean>}
-   */
-  checkReadyState() {
-    /* eslint-disable-next-line */
-    return new Promise(async resolve => {
-      if (this.ready) {
-        return resolve(true);
-      }
-
-      this.readyResolvers.push(resolve);
-    });
-  }
-
-  /**
-   * Create default markup for DialogPlugin
-   * @private
-   * @return {HTMLDivElement}
-   */
-  createMarkup() {
-    const NSmarkup = this.namespace
-      ? `data-endpass-namespace="${this.namespace}"`
-      : '';
-
-    const markupTemplate = `
-      <div data-endpass="overlay" ${NSmarkup} style="${stylesOverlayHide}" >
-        <div data-test="dialog-wrapper" data-endpass="wrapper" data-visible="false" style="${stylesWrapperHide}">
-          <iframe data-test="dialog-iframe" data-endpass="frame" src="${
-            this.url
-          }" style="${this.frameStyles(propsIframeHide)}"/>
-        </div>
-      </div>
-    `;
-    const markup = document.createElement('div');
-    markup.insertAdjacentHTML('afterBegin', markupTemplate);
-    return markup;
-  }
-
   /**
    * Create markup and prepend to <body>
    * @private
    */
   mount() {
-    const markup = this.createMarkup();
-
-    this.overlay = markup.querySelector('[data-endpass="overlay"]');
-    this.wrapper = markup.querySelector('[data-endpass="wrapper"]');
-    this.frame = markup.querySelector('[data-endpass="frame"]');
-
-    if (this.isElementMode) {
-      this.overlay = this.selectHTMLElement();
-      this.overlay.appendChild(this.wrapper);
-    } else {
-      this.overlay.addEventListener(DIALOG_EVENTS.OPEN, () => {
-        this.overlay.style = stylesOverlayShow;
-      });
-      this.overlay.addEventListener(DIALOG_EVENTS.CLOSE, () => {
-        this.overlay.style = stylesOverlayHide;
-      });
-      document.body.appendChild(this.overlay);
+    this.dialogView.mount();
+    const { target } = this.dialogView;
+    if (target) {
+      this.messenger.setTarget(target);
     }
-
-    // subscribe
-    this.dialogMessenger.setTarget(this.frame.contentWindow);
-    this.frame.addEventListener('load', () => {
-      this.initialTimer = setTimeout(() => {
-        // eslint-disable-next-line no-console
-        console.error(
-          `Dialog is not initialized, please check auth url ${this.url}`,
-        );
-      }, INITIAL_TIMEOUT);
-    });
   }
 
   /**
-   * @private
-   * @return {HTMLElement}
+   *
+   * @param {{offsetHeight:number}} payload
    */
-  selectHTMLElement() {
-    const element =
-      typeof this.element === 'string'
-        ? document.querySelector(this.element)
-        : this.element;
+  resize(payload) {
+    this.dialogView.resize(payload);
+  }
 
-    if (!element) {
-      throw new Error(
-        'Not defined "element" in options. Please define "element" option as String or HTMLElement',
-      );
-    }
-    return element;
+  handleReady() {
+    this.dialogView.handleReady();
+  }
+
+  close() {
+    this.state.close();
+    this.state = new StateClose(this.dialogView);
+  }
+
+  open() {
+    this.state.open();
+    this.state = new StateOpen(this.dialogView);
   }
 
   /**
@@ -216,15 +102,15 @@ export default class DialogPlugin extends PluginBase {
    * @public
    * @param {string} method Method name
    * @param {object} [payload] Message payload. Must includes method property
-   * @returns {Promise<any>} Responded message payload
+   * @returns {Promise<object>} Responded message payload
    */
   async ask(method, payload) {
     if (!method) {
       throw ConnectError.create(ERRORS.BRIDGE_PROVIDE_METHOD);
     }
 
-    await this.checkReadyState();
-    const res = await this.dialogMessenger.sendAndWaitResponse(method, payload);
+    await this.dialogView.waitReady();
+    const res = await this.messenger.sendAndWaitResponse(method, payload);
 
     return res;
   }

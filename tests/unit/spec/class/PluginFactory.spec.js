@@ -45,7 +45,8 @@ describe('plugin manager', () => {
   it('should throw error, if not defined name of plugin', () => {
     try {
       const PluginClassNoName = PluginFactory.create(TestPluginNoName);
-      const plugin = new PluginClassNoName(options);
+      // eslint-disable-next-line no-new
+      new PluginClassNoName(options);
     } catch (e) {
       const err = new Error('Please define plugin name');
 

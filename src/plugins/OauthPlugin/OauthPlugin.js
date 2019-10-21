@@ -1,11 +1,14 @@
 import ConnectError from '@endpass/class/ConnectError';
+import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import OauthPkceStrategy from '@/plugins/OauthPlugin/Oauth/OauthPkceStrategy';
 import Oauth from '@/plugins/OauthPlugin/Oauth';
 import PluginBase from '../PluginBase';
 import { DialogPlugin } from '@/plugins/DialogPlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 import OauthApi from '@/plugins/OauthPlugin/OauthPublicApi';
-import { PLUGIN_METHODS, PLUGIN_NAMES } from '@/constants';
+import { DIRECTION, PLUGIN_METHODS, PLUGIN_NAMES } from '@/constants';
+import oauthHandlers from './oauthHandlers';
+import FrameStrategy from '@/plugins/OauthPlugin/FrameStrategy';
 
 const { ERRORS } = ConnectError;
 
@@ -16,6 +19,10 @@ export default class OauthPlugin extends PluginBase {
     return PLUGIN_NAMES.OAUTH;
   }
 
+  static get handlers() {
+    return oauthHandlers;
+  }
+
   static get dependencyPlugins() {
     return [DialogPlugin, MessengerGroupPlugin];
   }
@@ -24,11 +31,49 @@ export default class OauthPlugin extends PluginBase {
     return OauthApi;
   }
 
+  get messenger() {
+    if (!this.oauthMessenger) {
+      this.oauthMessenger = new CrossWindowMessenger({
+        // showLogs: !ENV.isProduction,
+        name: `connect-oauth-iframe[]`,
+        to: DIRECTION.AUTH,
+        from: DIRECTION.CONNECT,
+      });
+    }
+    return this.oauthMessenger;
+  }
+
   constructor(options, context) {
     super(options, context);
 
     this.oauthClientId = options.oauthClientId;
     this.oauthServer = options.oauthServer;
+
+    this.frameStrategy = new FrameStrategy();
+
+    this.frameStrategy.on(FrameStrategy.EVENT_UPDATE_TARGET, target => {
+      this.messenger.setTarget(target);
+    });
+
+    const oauthStrategy = new OauthPkceStrategy({
+      context,
+    });
+
+    this.oauthRequestProvider = new Oauth({
+      clientId: this.oauthClientId,
+      scopes: options.scopes,
+      oauthServer: this.oauthServer,
+      oauthStrategy,
+      frameStrategy: this.frameStrategy,
+    });
+  }
+
+  handleReadyFrame(payload, req) {
+    this.frameStrategy.handleReady(payload, req);
+  }
+
+  resizeFrame(payload) {
+    this.frameStrategy.handleResize(payload);
   }
 
   get oauthProvider() {
@@ -40,32 +85,15 @@ export default class OauthPlugin extends PluginBase {
 
   /**
    * Fetch user data via oaurh
-   * @param {object} [params] Parameters object
-   * @param {number} [params.popupWidth] Oauth popup width
-   * @param {number} [params.popupHeight] Oauth popup height
-   * @param {string} [params.oauthServer] Oauth server url
+   * @param {object=} params Parameters object
    * @param {string[]} params.scopes - Array of authorization scopes
    */
-  async loginWithOauth(params) {
-    const strategy = new OauthPkceStrategy({
-      context: this.context,
-    });
-
-    this.oauthRequestProvider = new Oauth({
-      ...params,
-      oauthServer: this.oauthServer || params.oauthServer,
-      clientId: this.oauthClientId,
-      strategy,
-    });
-    await this.oauthRequestProvider.init();
+  async loginWithOauth(params = {}) {
+    await this.oauthRequestProvider.loginWithOauth(params);
   }
 
   logout() {
     this.oauthRequestProvider.logout();
-  }
-
-  setPopupParams(params) {
-    this.oauthProvider.setPopupParams(params);
   }
 
   async request(options) {

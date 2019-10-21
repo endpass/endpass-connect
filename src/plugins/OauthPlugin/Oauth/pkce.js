@@ -42,7 +42,7 @@ function base64urlencode(buffer) {
 }
 
 /**
- * Return the base64-urlencoded sha256 hash for the PKCE challenge
+ * Return the base64-urlencoded sha256 hash for the PKCE createChallege
  * @param {string} v
  * @return {Promise<string>}
  */

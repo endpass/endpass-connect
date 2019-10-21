@@ -1,6 +1,6 @@
 {
   "name": "@endpass/connect",
-  "version": "0.28.12-beta",
+  "version": "0.28.13-beta",
   "authVersion": "",
   "main": "./endpass-connect.min.js",
   "module": "./endpass-connect.esm.js",
@@ -129,7 +129,7 @@
     }
   },
   "dependencies": {
-    "@endpass/class": "^0.18.10",
+    "@endpass/class": "^0.18.11",
     "@endpass/utils": "^1.8.3",
     "axios": "^0.19.0",
     "axios-token-interceptor": "^0.1.0",
@@ -149,6 +149,7 @@
   "devDependencies": {
     "@babel/core": "^7.6.0",
     "@babel/parser": "^7.6.0",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-runtime": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
@@ -160,6 +161,7 @@
     "@endpass/eslint-plugin-endpass": "^0.2.7",
     "@semantic-release/changelog": "^3.0.4",
     "@semantic-release/git": "^7.0.16",
+    "@types/axios-token-interceptor": "^0.1.2",
     "@types/lodash": "^4.14.144",
     "@types/lodash.get": "^4.4.6",
     "@types/node": "^12.7.12",

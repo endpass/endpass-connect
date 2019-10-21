@@ -1,47 +1,39 @@
+import MockAdapter from 'axios-mock-adapter';
 import Oauth, { OauthPkceStrategy } from '@/plugins/OauthPlugin/Oauth';
-import PopupWindow from '@/plugins/OauthPlugin/Oauth/PopupWindow';
+import FrameStrategy from '@/plugins/OauthPlugin/FrameStrategy';
+import Polling from '@/plugins/OauthPlugin/Oauth/Polling';
 
-jest.mock('@/plugins/OauthPlugin/Oauth/PopupWindow', () => {
-  return {
-    open: jest.fn(),
-  };
+jest.mock('@/plugins/OauthPlugin/Oauth/Polling', () => {
+  class PollingMock {}
+  PollingMock.prototype.open = jest.fn().mockResolvedValue();
+  PollingMock.prototype.result = jest.fn().mockResolvedValue({state: 'pkce-random-string'});
+  return PollingMock;
 });
 
-jest.mock('@/plugins/OauthPlugin/Oauth/pkce', () => {
-  return {
-    generateRandomString: jest.fn().mockReturnValue('pkce-random-string'),
-    challengeFromVerifier: jest
-      .fn()
-      .mockImplementation(random => `verifier -> ${random}`),
-  };
-});
+jest.mock('@/plugins/OauthPlugin/FrameStrategy/IframeFrame', () => ({
+  open: jest.fn(),
+  mount: jest.fn(),
+  waitReady: jest.fn(),
+  close: jest.fn(),
+  target: {},
+}));
+
+jest.mock('@/plugins/OauthPlugin/Oauth/pkce', () => ({
+  generateRandomString: jest.fn().mockReturnValue('pkce-random-string'),
+  challengeFromVerifier: jest
+    .fn()
+    .mockImplementation(random => `verifier -> ${random}`),
+}));
 
 describe('Oauth class', () => {
   let context;
   let oauth;
+  let mockAdapter;
   const scopes = ['chpok'];
   const clientId = 'kek';
   const token = 'bam';
-  const oauthServer = 'https://identity-dev.endpass.com/api/v1.1/oauth';
-
-  const response = {
-    client_id: 'kek',
-    code_challenge: 'verifier -> pkce-random-string',
-    code_challenge_method: 'S256',
-    response_type: 'code',
-    scope: scopes.join(' '),
-    state: 'pkce-random-string',
-  };
-
-  PopupWindow.open.mockImplementation((serverUrl, params) => {
-    return {
-      state: params.state,
-      expires_in: 3600,
-      access_token: token,
-      ...params,
-    };
-  });
-
+  const oauthServer = 'http://oauthServer/oauth';
+  
   function mockOauthTokenResult(result = {}, status = true) {
     context.ask.mockResolvedValue({
       payload: result,
@@ -49,25 +41,35 @@ describe('Oauth class', () => {
     });
   }
 
-  beforeEach(() => {
-    jest.clearAllMocks();
+  const createOauth = () => {
     context = {
       ask: jest.fn(),
     };
 
-    const strategy = new OauthPkceStrategy({ context });
+    const oauthStrategy = new OauthPkceStrategy({ context });
+    const frameStrategy = new FrameStrategy();
 
-    oauth = new Oauth({
-      scopes,
+    const res = new Oauth({
       clientId,
-      strategy,
+      scopes,
+      oauthServer,
+      oauthStrategy,
+      frameStrategy,
     });
+    mockAdapter = new MockAdapter(res.axiosInstance);
+    return res;
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    oauth = createOauth();
   });
 
   describe('constructor', () => {
     it('should use existing token if not expired', async () => {
       expect.assertions(4);
 
+      const spy = jest.spyOn(Polling.prototype, 'result');
       // prepare old token
       const oldToken = 'oldToken';
       mockOauthTokenResult({
@@ -84,21 +86,18 @@ describe('Oauth class', () => {
       expect(newToken).toBe(oldToken);
 
       // next get token
-      oauth = new Oauth({
-        scopes,
-        clientId,
-        strategy: OauthPkceStrategy,
-      });
+      oauth = createOauth();
 
       const secondToken = await oauth.getToken();
 
-      expect(PopupWindow.open).toBeCalledTimes(1);
       expect(secondToken).toBe(oldToken);
+      expect(spy).toBeCalledTimes(1);
     });
 
     it('should get new token if old is expired', async () => {
       expect.assertions(3);
 
+      const spy = jest.spyOn(Polling.prototype, 'result');
       mockOauthTokenResult({
         expires_in: -3600,
         access_token: token,
@@ -116,7 +115,7 @@ describe('Oauth class', () => {
       const secondToken = await oauth.getToken();
 
       expect(secondToken).toBe(newToken);
-      expect(PopupWindow.open).toBeCalledTimes(2);
+      expect(spy).toBeCalledTimes(2);
     });
   });
 
@@ -157,27 +156,6 @@ describe('Oauth class', () => {
   });
 
   describe('updateTokenObject', () => {
-    it('should call method with correct params and set token', async () => {
-      expect.assertions(3);
-
-      const checkToken = 'checkToken';
-      mockOauthTokenResult({
-        access_token: checkToken,
-        expires_in: 3600,
-      });
-
-      await oauth.updateTokenObject();
-
-      const newToken = await oauth.getToken();
-
-      expect(newToken).toBe(checkToken);
-      expect(PopupWindow.open).toHaveBeenCalledWith(oauthServer, response, {
-        height: 1000,
-        width: 600,
-      });
-      expect(PopupWindow.open).toBeCalledTimes(1);
-    });
-
     it('should set token, and expire time and save it to local storage', async () => {
       expect.assertions(4);
 
@@ -218,44 +196,65 @@ describe('Oauth class', () => {
     });
   });
 
-  describe('setPopupParams', () => {
-    it('should use default params', async () => {
-      expect.assertions(1);
+  describe('request', () => {
+    const url = 'url';
+    const secondUrl = 'secondUrl';
 
+    const requestData = {
+      data: 'data'
+    };
+
+    beforeEach(() => {
       mockOauthTokenResult({
         expires_in: 3600,
         access_token: token,
       });
-
-      await oauth.updateTokenObject();
-
-      expect(PopupWindow.open).toHaveBeenCalledWith(
-        oauthServer,
-        expect.objectContaining(response),
-        { height: 1000, width: 600 },
-      );
+      mockAdapter.onGet(url).reply(200, requestData);
+      mockAdapter.onGet(secondUrl).reply(200, requestData);
     });
 
-    it('should set popup params', async () => {
-      expect.assertions(1);
+    afterEach(() => {
+      oauth.logout();
+    });
 
-      mockOauthTokenResult({
-        expires_in: 3600,
-        access_token: token,
+    it('should pass request with ask permissions', async () => {
+      expect.assertions(2);
+
+      const spy = jest.spyOn(Polling.prototype, 'result');
+      const { data } = await oauth.request({
+        url,
       });
 
-      oauth.setPopupParams({
-        width: 'abc',
-        height: 10,
+      await oauth.request({
+        url,
       });
 
-      await oauth.updateTokenObject();
+      expect(data).toEqual(requestData);
+      expect(spy).toBeCalledTimes(1);
+    });
 
-      expect(PopupWindow.open).toHaveBeenCalledWith(
-        oauthServer,
-        expect.objectContaining(response),
-        { height: 10, width: 600 },
-      );
+    it('should pass request with changed scopes and ask permissions', async () => {
+      expect.assertions(2);
+
+      const spy = jest.spyOn(Polling.prototype, 'result');
+      const otherScopes = ['kek', 'chop'];
+
+      await oauth.request({
+        url,
+      });
+
+      const { data } = await oauth.request({
+        scopes: otherScopes,
+        url: secondUrl,
+      });
+
+      await oauth.request({
+        scopes: otherScopes,
+        url,
+      });
+
+      expect(data).toEqual(requestData);
+      expect(spy).toBeCalledTimes(2);
     });
   });
 });

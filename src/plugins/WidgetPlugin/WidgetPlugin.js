@@ -3,7 +3,6 @@ import debounce from 'lodash.debounce';
 import {
   DIRECTION,
   MESSENGER_METHODS,
-  PLUGIN_METHODS,
   PLUGIN_NAMES,
   WIDGET_EVENTS,
 } from '@/constants';
@@ -20,8 +19,6 @@ import PluginBase from '@/plugins/PluginBase';
 import { getFrameRouteUrl } from '@/util/url';
 import WidgetPublicApi from '@/plugins/WidgetPlugin/WidgetPublicApi';
 
-const WIDGET_AUTH_TIMEOUT = 200;
-
 export default class WidgetPlugin extends PluginBase {
   static get pluginName() {
     return PLUGIN_NAMES.WIDGET;
@@ -37,7 +34,7 @@ export default class WidgetPlugin extends PluginBase {
 
   /**
    * @param {object} options
-   * @param {object} context
+   * @param {import('@/class/Context').default} context
    * @param {string} options.namespace namespace
    * @param {string} options.url frame url
    */
@@ -76,8 +73,8 @@ export default class WidgetPlugin extends PluginBase {
     if (!this.widgetMessenger) {
       const { namespace = '' } = this.options;
       this.widgetMessenger = new CrossWindowMessenger({
-        showLogs: !ENV.isProduction,
-        name: `connect-bridge-widget[${namespace}]`,
+        // showLogs: !ENV.isProduction,
+        name: `connect-widget[${namespace}]`,
         to: DIRECTION.AUTH,
         from: DIRECTION.CONNECT,
       });
@@ -153,7 +150,13 @@ export default class WidgetPlugin extends PluginBase {
 
     const styles = this.getWidgetFrameInlineStyles();
     const markup = `
-      <iframe id="endpass-widget" data-test="widget-frame" data-endpass="widget-frame" style="${styles}" src="${this.url}"></iframe>
+      <iframe 
+        id="endpass-widget" 
+        data-test="widget-frame" 
+        data-endpass="widget-frame" 
+        style="${styles}" 
+        src="${this.url}"
+        ></iframe>
     `;
 
     document.body.insertAdjacentHTML('afterBegin', markup);

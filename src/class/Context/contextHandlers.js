@@ -4,18 +4,10 @@ import { PLUGIN_METHODS, MESSENGER_METHODS, PLUGIN_NAMES } from '@/constants';
 const { ERRORS } = ConnectError;
 
 const initiate = context => (payload, req) => {
-  const {
-    demoData,
-    isRegularPasswordMode,
-    isIdentityMode,
-    showCreateAccount,
-  } = context.options;
+  const { isIdentityMode } = context.options;
 
   req.answer({
-    demoData,
     isIdentityMode: isIdentityMode || false,
-    isRegularPasswordMode: isRegularPasswordMode || false,
-    showCreateAccount,
   });
 };
 
@@ -113,10 +105,10 @@ const initDialog = context => () => {
 };
 
 const loginWithOauth = context => async (payload, req) => {
-  const { oauth } = context.plugins;
-  await oauth.loginWithOauth({ scopes: ['user:email:read'] });
-
-  const { data } = await oauth.request({ url: `${ENV.apiServer}/user` });
+  const { data } = await context.plugins.oauth.request({
+    url: `${ENV.apiServer}/user`,
+    scopes: ['user:email:read'],
+  });
   req.answer(data);
 };
 
@@ -125,10 +117,13 @@ const createDocument = context => async (payload, req) => {
   req.answer(res);
 };
 
-const toggleWidget = context => async status => {
+const toggleWidget = context => async payload => {
   if (!(PLUGIN_NAMES.WIDGET in context.plugins)) {
     return;
   }
+
+  // eslint-disable-next-line no-prototype-builtins
+  const status = payload.hasOwnProperty('status') ? payload.status : payload;
 
   if (!status) {
     await context.executeMethod(MESSENGER_METHODS.WIDGET_UNMOUNT);

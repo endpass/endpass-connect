@@ -1,6 +1,6 @@
 import ConnectError from '@endpass/class/ConnectError';
+import EventEmitter from '@endpass/class/EventEmitter';
 import Network from '@endpass/class/Network';
-import Emmiter from '@/plugins/ProviderPlugin/Emmiter';
 import InpageProvider from '@/plugins/ProviderPlugin/InpageProvider';
 import {
   INPAGE_EVENTS,
@@ -35,7 +35,7 @@ export default class ProviderPlugin extends PluginBase {
   constructor(options, context) {
     super(options, context);
 
-    this.emitter = new Emmiter();
+    this.emitter = new EventEmitter();
   }
 
   init() {

@@ -1,11 +1,13 @@
 import ConnectError from '@endpass/class/ConnectError';
-import Context from '@/class/Context';
-import { MESSENGER_METHODS, INPAGE_EVENTS } from '@/constants';
-import ProviderPlugin from '@/plugins/ProviderPlugin';
+import { CONTEXT, MESSENGER_METHODS, INPAGE_EVENTS, PLUGIN_NAMES } from '@/constants';
+import ProviderPlugin, { ProviderPlugin as ProviderPluginClass } from '@/plugins/ProviderPlugin';
+import ConnectPlugin from '@/plugins/ConnectPlugin';
+import AuthorizePlugin from '@/plugins/AuthorizePlugin';
+import WidgetPlugin from '@/plugins/WidgetPlugin';
 
 const { ERRORS } = ConnectError;
 
-describe.skip('Context class', () => {
+describe('Context class', () => {
   const authUrl = 'http://test.auth';
   const oauthClientId = 'xxxxxxxxxx';
   const options = {
@@ -13,13 +15,11 @@ describe.skip('Context class', () => {
     oauthClientId,
   };
   let context;
-  const dialog = {
-    ask: jest.fn(),
-  };
-  const msgGroup = {
-    send: jest.fn(),
-    addMessenger: jest.fn(),
-    removeMessenger: jest.fn(),
+  let connect;
+
+  const createContext = opt => {
+    connect = new ConnectPlugin({ ...options, ...opt });
+    context = connect[CONTEXT];
   };
 
   beforeAll(() => {
@@ -29,21 +29,45 @@ describe.skip('Context class', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    context = new Context(options);
+    createContext();
   });
 
   describe('initiate', () => {
     it('should create with default plugins', () => {
-      context = new Context(options);
-      expect(Object.keys(context.plugins)).toHaveLength(3);
+      const pluginList = [...context.plugins]
+        .map(item => item.constructor.pluginName);
+
+      expect(pluginList).toEqual([
+        PLUGIN_NAMES.DIALOG,
+        PLUGIN_NAMES.CONNECT,
+        PLUGIN_NAMES.MESSENGER_GROUP,
+      ]);
+      expect(pluginList).toHaveLength(3);
     });
 
     it('should create with provider plugin', () => {
-      context = new Context({ ...options, plugins: [ProviderPlugin] });
-      expect(Object.keys(context.plugins)).toHaveLength(4);
-      expect(context.plugins[ProviderPlugin.pluginName]).toBeInstanceOf(
-        ProviderPlugin,
-      );
+      createContext({ plugins: [ProviderPlugin] });
+
+      expect(context.plugins[ProviderPluginClass.pluginName]).not.toBe(undefined);
+    });
+
+    it('should pass initial payload', async () => {
+      expect.assertions(1);
+
+      const payload = {};
+      const req = {
+        method: MESSENGER_METHODS.INITIATE,
+        answer: jest.fn(),
+      };
+      createContext({
+        isIdentityMode: false,
+      });
+
+      await context.handleEvent(payload, req);
+
+      expect(req.answer).toBeCalledWith({
+        isIdentityMode: false,
+      });
     });
   });
 
@@ -53,13 +77,15 @@ describe.skip('Context class', () => {
       emitter = {
         emit: jest.fn(),
       };
-      context = new Context({ ...options, plugins: [ProviderPlugin] });
-      context.plugins.provider.getEmitter = () => emitter;
+      createContext({ plugins: [ProviderPlugin] });
 
-      context.plugins.elements.messengerGroup = () => msgGroup;
+      context.plugins.provider.emitter = emitter;
+      context.plugins.messengerGroup.send = jest.fn();
     });
 
-    it('should emit settings by inner connect emitter', () => {
+    it('should emit settings by inner connect emitter', async () => {
+      expect.assertions(2);
+
       const payload = {
         activeAccount: '0x0',
         activeNet: 2,
@@ -68,61 +94,86 @@ describe.skip('Context class', () => {
       context.plugins.provider.getInpageProviderSettings = jest.fn(
         () => payload,
       );
-      context.setProviderSettings(payload);
 
-      expect(context.getEmitter().emit).toBeCalledWith(
+      await connect.setProviderSettings(payload);
+
+      expect(context.plugins.provider.emitter.emit).toBeCalledWith(
         INPAGE_EVENTS.SETTINGS,
         payload,
       );
       expect(
-        context.plugins.elements.messengerGroup().send,
+        context.plugins.messengerGroup.send,
       ).toBeCalledWith(MESSENGER_METHODS.CHANGE_SETTINGS_RESPONSE, payload);
     });
   });
 
   describe('serverAuth', () => {
-    beforeEach(() => {
-      context = new Context({ ...options, plugins: [ProviderPlugin] });
-      context.plugins.elements.getDialogInstance = dialog;
-      context.auth = jest.fn();
-      context.getDialog = () => dialog;
-    });
-
-    it('should call only once getAccountData', async () => {
+    it('should cancel login if answer is bad', async () => {
       expect.assertions(2);
 
-      dialog.ask.mockResolvedValueOnce({
+      createContext({ plugins: [ProviderPlugin] });
+      context.plugins.dialog.ask = jest.fn().mockResolvedValueOnce({
         status: false,
         code: ERRORS.AUTH_CANCELED_BY_USER,
       });
 
       try {
-        await context.serverAuth();
+        await connect.getAccountData();
       } catch (e) {
         expect(e.code).toBe(ERRORS.AUTH_CANCELED_BY_USER);
       }
 
-      expect(context.auth).not.toBeCalled();
+      expect(context.plugins.authorize.isLogin).toBe(false);
     });
   });
 
   describe('logout', () => {
     it('should logout from endpass', async () => {
-      const logoutResult = 'result';
-      context.plugins.auth.getAuthInstance = () => {
-        return {
-          logout() {
-            return logoutResult;
-          },
-        };
-      };
-      context.plugins.elements.messengerGroup = () => {
-        return msgGroup;
-      };
+      expect.assertions(3);
 
-      const res = await context.logout();
-      expect(res).toBe(logoutResult);
-      expect(msgGroup.send).toBeCalledWith(MESSENGER_METHODS.LOGOUT_RESPONSE);
+      createContext({ plugins: [AuthorizePlugin] });
+
+      context.plugins.dialog.ask = jest.fn().mockResolvedValueOnce({
+        status: true,
+      });
+      context.plugins.messengerGroup.send = jest.fn();
+
+      const res = await connect.logout();
+
+      expect(res).toBe(true);
+      expect(context.plugins.messengerGroup.send).toBeCalledWith(MESSENGER_METHODS.LOGOUT_RESPONSE);
+      expect(context.plugins.dialog.ask).toBeCalledWith(MESSENGER_METHODS.LOGOUT, undefined);
+    });
+  });
+
+  describe('widget', () => {
+    const req = {
+      method: MESSENGER_METHODS.AUTH_STATUS,
+      answer: jest.fn(),
+    };
+
+    it('should automatically mount widget', async () => {
+      expect.assertions(2);
+
+      createContext({ plugins: [WidgetPlugin], widget: true });
+
+      expect(context.plugins.widget.isMounted).toBe(false);
+
+      await context.handleEvent({ status: true }, req);
+
+      expect(context.plugins.widget.isMounted).toBe(true);
+    });
+
+    it('should not mount widget', async () => {
+      expect.assertions(2);
+
+      createContext({ plugins: [WidgetPlugin], widget: false });
+
+      expect(context.plugins.widget.isMounted).toBe(false);
+
+      await context.handleEvent({ status: true }, req);
+
+      expect(context.plugins.widget.isMounted).toBe(false);
     });
   });
 });

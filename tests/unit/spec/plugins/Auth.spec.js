@@ -103,17 +103,4 @@ describe('AuthorizePluginPlugin class', () => {
       expect(e.code).toBe(ERRORS.AUTH_LOGOUT);
     }
   });
-
-  describe('initial data', () => {
-    const demoData = {};
-
-    it('should pass isLogin with demoData', () => {
-      const defaultAuth = new AuthorizePlugin(options, context);
-
-      const demoAuth = new AuthorizePlugin({ demoData }, context);
-
-      expect(defaultAuth.isLogin).toBe(false);
-      expect(demoAuth.isLogin).toBe(true);
-    });
-  });
 });
