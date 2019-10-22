@@ -1,27 +1,21 @@
 // @ts-check
+import ConnectError from '@endpass/class/ConnectError';
 import BaseWindow from '@/plugins/OauthPlugin/FrameStrategy/BaseWindow';
 
+const { ERRORS } = ConnectError;
 const DEFAULT_WIDTH = 600;
 const DEFAULT_HEIGHT = 1000;
 
 export default class PopupFrame extends BaseWindow {
   constructor() {
     super();
+    this.popupId = 'endpass-oauth-authorize';
     this.url = '';
     this.window = null;
   }
 
-  initFallback() {
-    this.window = window.open(
-      '',
-      'endpass-oauth-authorize',
-      'width=1,height=1',
-    );
-    if (this.window) {
-      this.window.document.write('Please wait, loading...');
-      this.window.blur();
-    }
-    window.focus();
+  prepare() {
+    this.window = window.open('', this.popupId, 'width=1,height=1');
   }
 
   /**
@@ -36,13 +30,13 @@ export default class PopupFrame extends BaseWindow {
     if (!this.window) {
       this.window = window.open(
         this.url,
-        'endpass-oauth-authorize',
+        this.popupId,
         `width=${DEFAULT_WIDTH},height=${DEFAULT_HEIGHT}`,
       );
       return;
     }
     if (this.window.closed) {
-      throw new Error('Popup was closed');
+      throw ConnectError.create(ERRORS.POPUP_CLOSED);
     }
     this.window.location.href = this.url;
     this.window.resizeTo(DEFAULT_WIDTH, DEFAULT_HEIGHT);

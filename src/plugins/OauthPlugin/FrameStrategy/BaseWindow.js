@@ -5,7 +5,7 @@ export default class BaseWindow {
    */
   init(url) {}
 
-  initFallback() {}
+  prepare() {}
 
   mount() {}
 

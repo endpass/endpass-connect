@@ -3,20 +3,16 @@ import Oauth, { OauthPkceStrategy } from '@/plugins/OauthPlugin/Oauth';
 import FrameStrategy from '@/plugins/OauthPlugin/FrameStrategy';
 import Polling from '@/plugins/OauthPlugin/Oauth/Polling';
 
+jest.mock('@/plugins/OauthPlugin/FrameStrategy/IframeFrame');
+
 jest.mock('@/plugins/OauthPlugin/Oauth/Polling', () => {
-  class PollingMock {}
+  class PollingMock {
+  }
+
   PollingMock.prototype.open = jest.fn().mockResolvedValue();
-  PollingMock.prototype.result = jest.fn().mockResolvedValue({state: 'pkce-random-string'});
+  PollingMock.prototype.result = jest.fn().mockResolvedValue({ state: 'pkce-random-string' });
   return PollingMock;
 });
-
-jest.mock('@/plugins/OauthPlugin/FrameStrategy/IframeFrame', () => ({
-  open: jest.fn(),
-  mount: jest.fn(),
-  waitReady: jest.fn(),
-  close: jest.fn(),
-  target: {},
-}));
 
 jest.mock('@/plugins/OauthPlugin/Oauth/pkce', () => ({
   generateRandomString: jest.fn().mockReturnValue('pkce-random-string'),
@@ -33,7 +29,7 @@ describe('Oauth class', () => {
   const clientId = 'kek';
   const token = 'bam';
   const oauthServer = 'http://oauthServer/oauth';
-  
+
   function mockOauthTokenResult(result = {}, status = true) {
     context.ask.mockResolvedValue({
       payload: result,
@@ -47,7 +43,7 @@ describe('Oauth class', () => {
     };
 
     const oauthStrategy = new OauthPkceStrategy({ context });
-    const frameStrategy = new FrameStrategy();
+    const frameStrategy = new FrameStrategy({ oauthPopup: false });
 
     const res = new Oauth({
       clientId,
@@ -190,7 +186,8 @@ describe('Oauth class', () => {
       mockOauthTokenResult(null, false);
       try {
         await oauth.getToken();
-      } catch (e) {}
+      } catch (e) {
+      }
 
       expect(oauth.getTokenObjectFromStore()).toBe(null);
     });
@@ -201,7 +198,7 @@ describe('Oauth class', () => {
     const secondUrl = 'secondUrl';
 
     const requestData = {
-      data: 'data'
+      data: 'data',
     };
 
     beforeEach(() => {
