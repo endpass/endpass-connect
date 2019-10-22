@@ -4,12 +4,21 @@ import IframeFrame from '@/plugins/OauthPlugin/FrameStrategy/IframeFrame';
 import PopupFrame from '@/plugins/OauthPlugin/FrameStrategy/PopupFrame';
 import BaseWindow from '@/plugins/OauthPlugin/FrameStrategy/BaseWindow';
 
+// const sleep = (ms = 1000) => {
+//   return new Promise(resolve => setTimeout(resolve, ms));
+// };
+
 export default class FrameStrategy {
   static EVENT_UPDATE_TARGET = 'update-target';
 
   constructor() {
     this.frame = new BaseWindow();
     this.emitter = new EventEmitter();
+    this.fallbackFrame = new PopupFrame();
+  }
+
+  prepare() {
+    this.fallbackFrame.initFallback();
   }
 
   /**
@@ -18,9 +27,15 @@ export default class FrameStrategy {
    */
   async open(url) {
     try {
-      await this.initFrame(IframeFrame, url);
+      // await sleep(5000);
+      // const frame = this.fallbackFrame;
+      // await this.initFrame(frame, url);
+
+      const frame = new IframeFrame();
+      await this.initFrame(frame, url);
+      this.fallbackFrame.close();
     } catch (e) {
-      await this.initFrame(PopupFrame, url);
+      await this.initFrame(this.fallbackFrame, url);
     }
 
     this.frame.open();
@@ -29,12 +44,13 @@ export default class FrameStrategy {
   /**
    *
    * @private
-   * @param {typeof IframeFrame|typeof PopupFrame} Frame
+   * @param {IframeFrame|PopupFrame} frame
    * @param {string} url
    * @return {Promise<void>}
    */
-  async initFrame(Frame, url) {
-    this.frame = new Frame(url);
+  async initFrame(frame, url) {
+    this.frame = frame;
+    this.frame.init(url);
     this.frame.mount();
     this.emitter.emit(FrameStrategy.EVENT_UPDATE_TARGET, this.frame.target);
     await this.frame.waitReady();

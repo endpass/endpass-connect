@@ -8,25 +8,19 @@ const CHECK_TIMEOUT = 500;
 
 export default class Polling {
   /**
-   *
-   * @param {string} url
    * @param {import('@/plugins/OauthPlugin/FrameStrategy').default} frame Frame Strategy for show frame
    */
-  constructor(url, frame) {
-    this.url = url;
+  constructor(frame) {
     this.frame = frame;
     this.intervalId = null;
   }
 
-  async open() {
-    await this.frame.open(this.url);
-  }
-
   /**
    *
+   * @param {string} url
    * @return {Promise<object>}
    */
-  result() {
+  result(url) {
     return new Promise((resolve, reject) => {
       this.intervalId = window.setInterval(() => {
         const { target } = this.frame;
@@ -40,7 +34,7 @@ export default class Polling {
           }
 
           if (
-            target.location.href === this.url ||
+            target.location.href === url ||
             target.location.pathname === 'blank'
           ) {
             return;

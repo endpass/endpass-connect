@@ -1,11 +1,11 @@
 // @ts-check
 export default class BaseWindow {
   /**
-   * @param {string=} url
+   * @param {string} url
    */
-  constructor(url) {
-    this.url = url;
-  }
+  init(url) {}
+
+  initFallback() {}
 
   mount() {}
 
