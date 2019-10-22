@@ -68,12 +68,20 @@ export default class OauthPlugin extends PluginBase {
     });
   }
 
-  handleReadyFrame(payload, req) {
-    this.frameStrategy.handleReady(payload, req);
+  isSourceEqualTarget(source) {
+    return source === this.frameStrategy.target;
+  }
+
+  handleReadyFrame() {
+    this.frameStrategy.handleReady();
   }
 
   resizeFrame(payload) {
     this.frameStrategy.handleResize(payload);
+  }
+
+  handleCloseFrame() {
+    this.frameStrategy.handleClose();
   }
 
   /**

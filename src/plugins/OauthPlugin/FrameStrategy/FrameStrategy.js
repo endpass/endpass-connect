@@ -45,15 +45,8 @@ export default class FrameStrategy {
     return this.frame.target;
   }
 
-  /**
-   *
-   * @param {*} payload
-   * @param {object} req
-   */
-  handleReady(payload, req) {
-    if (req.source === this.frame.target) {
-      this.frame.handleReady();
-    }
+  handleReady() {
+    this.frame.handleReady();
   }
 
   close() {
@@ -66,5 +59,9 @@ export default class FrameStrategy {
    */
   handleResize(payload) {
     this.frame.resize(payload);
+  }
+
+  handleClose() {
+    this.frame.close();
   }
 }
