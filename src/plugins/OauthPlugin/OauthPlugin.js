@@ -1,4 +1,3 @@
-import ConnectError from '@endpass/class/ConnectError';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import OauthPkceStrategy from '@/plugins/OauthPlugin/Oauth/OauthPkceStrategy';
 import Oauth from '@/plugins/OauthPlugin/Oauth';
@@ -9,8 +8,6 @@ import OauthApi from '@/plugins/OauthPlugin/OauthPublicApi';
 import { DIRECTION, PLUGIN_METHODS, PLUGIN_NAMES } from '@/constants';
 import oauthHandlers from './oauthHandlers';
 import FrameStrategy from '@/plugins/OauthPlugin/FrameStrategy';
-
-const { ERRORS } = ConnectError;
 
 const documentsCheckReg = /\/documents$/gi;
 
@@ -49,7 +46,9 @@ export default class OauthPlugin extends PluginBase {
     this.oauthClientId = options.oauthClientId;
     this.oauthServer = options.oauthServer;
 
-    this.frameStrategy = new FrameStrategy();
+    this.frameStrategy = new FrameStrategy({
+      oauthPopup: options.oauthPopup,
+    });
 
     this.frameStrategy.on(FrameStrategy.EVENT_UPDATE_TARGET, target => {
       this.messenger.setTarget(target);
@@ -62,29 +61,32 @@ export default class OauthPlugin extends PluginBase {
     this.oauthRequestProvider = new Oauth({
       clientId: this.oauthClientId,
       scopes: options.scopes,
+      oauthPopup: options.oauthPopup,
       oauthServer: this.oauthServer,
       oauthStrategy,
       frameStrategy: this.frameStrategy,
     });
   }
 
-  handleReadyFrame(payload, req) {
-    this.frameStrategy.handleReady(payload, req);
+  isSourceEqualTarget(source) {
+    return source === this.frameStrategy.target;
+  }
+
+  handleReadyFrame() {
+    this.frameStrategy.handleReady();
   }
 
   resizeFrame(payload) {
     this.frameStrategy.handleResize(payload);
   }
 
-  get oauthProvider() {
-    if (!this.oauthRequestProvider) {
-      throw ConnectError.create(ERRORS.OAUTH_REQUIRE_AUTHORIZE);
-    }
-    return this.oauthRequestProvider;
+  handleCloseFrame() {
+    this.frameStrategy.close();
   }
 
   /**
    * Fetch user data via oaurh
+   * @deprecated
    * @param {object=} params Parameters object
    * @param {string[]} params.scopes - Array of authorization scopes
    */
@@ -97,7 +99,7 @@ export default class OauthPlugin extends PluginBase {
   }
 
   async request(options) {
-    let result = await this.oauthProvider.request(options);
+    let result = await this.oauthRequestProvider.request(options);
     const { data } = result || {};
 
     if (data && !data.length && options.url.search(documentsCheckReg) !== -1) {
@@ -105,7 +107,7 @@ export default class OauthPlugin extends PluginBase {
         await this.context.executeMethod(
           PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENT,
         );
-        result = await this.oauthProvider.request(options);
+        result = await this.oauthRequestProvider.request(options);
       } catch (e) {}
     }
 

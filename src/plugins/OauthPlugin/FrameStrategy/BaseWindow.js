@@ -1,19 +1,17 @@
 // @ts-check
 export default class BaseWindow {
-  /**
-   * @param {string=} url
-   */
-  constructor(url) {
-    this.url = url;
-  }
+  prepare() {}
 
-  mount() {}
+  /**
+   * @param {string} url
+   */
+  mount(url) {}
 
   async waitReady() {}
 
   open() {}
 
-  close() {}
+  destroy() {}
 
   /**
    * @type {Window|null}

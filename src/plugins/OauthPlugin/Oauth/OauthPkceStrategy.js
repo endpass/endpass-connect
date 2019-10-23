@@ -65,7 +65,7 @@ export default class OauthPkceStrategy {
    * @param {string} oauthServer
    * @param {StrategyParams} params
    */
-  async init(oauthServer, params) {
+  async prepare(oauthServer, params) {
     // Create and store a random "state" value
     const state = pkce.generateRandomString();
     // Create and store a new PKCE code_verifier (the plaintext random secret)

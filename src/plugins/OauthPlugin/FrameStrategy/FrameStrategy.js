@@ -7,37 +7,31 @@ import BaseWindow from '@/plugins/OauthPlugin/FrameStrategy/BaseWindow';
 export default class FrameStrategy {
   static EVENT_UPDATE_TARGET = 'update-target';
 
-  constructor() {
-    this.frame = new BaseWindow();
-    this.emitter = new EventEmitter();
-  }
-
   /**
-   *
-   * @param {string} url
+   * @param {object} params
+   * @param {boolean=} params.oauthPopup
    */
-  async open(url) {
-    try {
-      await this.initFrame(IframeFrame, url);
-    } catch (e) {
-      await this.initFrame(PopupFrame, url);
-    }
+  constructor({ oauthPopup = false }) {
+    this.emitter = new EventEmitter();
+    this.oauthPopup = oauthPopup;
+    this.frame = new BaseWindow();
+  }
 
-    this.frame.open();
+  prepare() {
+    this.frame = this.oauthPopup ? new PopupFrame() : new IframeFrame();
+    this.frame.prepare();
   }
 
   /**
    *
-   * @private
-   * @param {typeof IframeFrame|typeof PopupFrame} Frame
    * @param {string} url
    * @return {Promise<void>}
    */
-  async initFrame(Frame, url) {
-    this.frame = new Frame(url);
-    this.frame.mount();
+  async open(url) {
+    this.frame.mount(url);
     this.emitter.emit(FrameStrategy.EVENT_UPDATE_TARGET, this.frame.target);
     await this.frame.waitReady();
+    this.frame.open();
   }
 
   /**
@@ -53,19 +47,12 @@ export default class FrameStrategy {
     return this.frame.target;
   }
 
-  /**
-   *
-   * @param {*} payload
-   * @param {object} req
-   */
-  handleReady(payload, req) {
-    if (req.source === this.frame.target) {
-      this.frame.handleReady();
-    }
+  handleReady() {
+    this.frame.handleReady();
   }
 
   close() {
-    this.frame.close();
+    this.frame.destroy();
     this.frame = new BaseWindow();
   }
 

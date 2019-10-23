@@ -3,20 +3,18 @@ import DialogView from '@/class/DialogView';
 import BaseWindow from '@/plugins/OauthPlugin/FrameStrategy/BaseWindow';
 
 export default class IframeFrame extends BaseWindow {
-  /**
-   *
-   * @param {string} url
-   */
-  constructor(url) {
-    super(url);
+  constructor() {
+    super();
     this.dialogView = new DialogView({
-      url,
       namespace: 'endpass-oauth-authorize',
     });
   }
 
-  mount() {
-    this.dialogView.mount();
+  /**
+   * @param {string} url
+   */
+  mount(url) {
+    this.dialogView.mount(url);
   }
 
   async waitReady() {
@@ -31,7 +29,7 @@ export default class IframeFrame extends BaseWindow {
     this.dialogView.open();
   }
 
-  close() {
+  destroy() {
     this.dialogView.destroy();
   }
 
@@ -44,6 +42,7 @@ export default class IframeFrame extends BaseWindow {
    * @param {object} payload
    */
   resize(payload) {
+    if (!this.dialogView) return;
     this.dialogView.resize(payload);
   }
 }

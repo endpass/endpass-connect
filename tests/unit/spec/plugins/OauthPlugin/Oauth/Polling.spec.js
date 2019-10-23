@@ -19,9 +19,9 @@ describe('Polling', () => {
       ...target.location,
       ...params,
     };
-    const poll = new Polling(url, frame);
+    const poll = new Polling(frame);
 
-    const res = poll.result();
+    const res = poll.getResult(url);
     jest.advanceTimersByTime(1000);
 
     return res;

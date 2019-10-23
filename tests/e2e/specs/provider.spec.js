@@ -75,13 +75,19 @@ describe('provider', function() {
         .clear()
         .type('0.01');
       cy.get('[data-test=endpass-form-send-transaction-button]').click();
+
+      // check that no errors in form
+      cy.getElementFromAuth('.is-error:not(:visible)');
+
       cy.getElementFromAuth('[data-test=password-input]').type(v3password);
       cy.getElementFromAuth('[data-test=advanced-settings-toggle]').click();
       cy.getElementFromAuth('[data-test=gas-price-input]')
         .clear()
         .type('1');
-      cy.getElementFromAuth('[data-test=submit-button]').should('not.be.disabled');
+
+      cy.getElementFromAuth('[data-test=submit-button]:not(:disabled)');
       cy.getElementFromAuth('[data-test=submit-button]:not(:disabled)').click();
+
       cy.get('[data-test=app-notification]').contains('Transaction sent!');
     });
   });

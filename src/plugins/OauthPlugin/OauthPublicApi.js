@@ -1,6 +1,7 @@
 export default oauthPlugin => ({
   /**
    * Fetch user data via oauth
+   * @deprecated
    * @param {object} params Parameters object
    * @param {string[]} params.scopes - Array of authorization scopes
    */

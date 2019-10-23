@@ -77,12 +77,14 @@ export default class Oauth {
       client_id: this.clientId,
       scope: this.scopesString,
     };
+    const poll = new Polling(this.frameStrategy);
 
-    await this.oauthStrategy.init(this.oauthServer, params);
-    const poll = new Polling(this.oauthStrategy.url, this.frameStrategy);
+    this.frameStrategy.prepare();
+    await this.oauthStrategy.prepare(this.oauthServer, params);
+    const { url } = this.oauthStrategy;
 
-    await poll.open();
-    const pollResult = await poll.result();
+    await this.frameStrategy.open(url);
+    const pollResult = await poll.getResult(url);
 
     if (pollResult.state !== this.oauthStrategy.state) {
       throw ConnectError.create(ERRORS.OAUTH_AUTHORIZE_STATE);
