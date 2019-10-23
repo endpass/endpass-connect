@@ -76,10 +76,11 @@ describe('provider', function() {
         .type('0.01');
       cy.get('[data-test=endpass-form-send-transaction-button]').click();
 
-      // check that no errors in form
-      cy.getElementFromAuth('.is-error:not(:visible)');
 
       cy.getElementFromAuth('[data-test=password-input]').type(v3password);
+
+      // check that no errors in form
+      cy.getElementFromAuth('.is-error:not(:visible)');
       cy.getElementFromAuth('[data-test=advanced-settings-toggle]').click();
       cy.getElementFromAuth('[data-test=gas-price-input]')
         .clear()
