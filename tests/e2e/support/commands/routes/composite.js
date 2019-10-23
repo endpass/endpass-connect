@@ -9,7 +9,7 @@ Cypress.Commands.add('mockInitialData', (netId = Network.NET_ID.MAIN) => {
   cy.mockAuthLogin('emailLink');
   cy.mockAuthCode();
 
-  cy.mockRegularPasswordCheck(200);
+  cy.mockRegularPasswordCheck();
   cy.mockRegularPasswordReset();
   cy.mockRegularPasswordResetConfirm();
 

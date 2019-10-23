@@ -17,7 +17,7 @@ Cypress.Commands.add('mockAuthPermission', () => {
     method: 'POST',
     status: 200,
     response: responseSuccess,
-  });
+  }).as('routeSendAuthPermission');
 });
 
 Cypress.Commands.add(
@@ -47,7 +47,7 @@ Cypress.Commands.add(
       method: 'POST',
       status: 200,
       response: responseSuccess,
-    });
+    }).as('routeLoginAuthToken');
   },
 );
 
@@ -75,7 +75,7 @@ Cypress.Commands.add('mockAuthCode', (status = 200) => {
     url: `${identityAPIUrl}/auth/code`,
     status,
     response: {},
-  });
+  }).as('routeAuthCode');
 });
 
 Cypress.Commands.add('mockAuthCheck', status => {
@@ -84,7 +84,7 @@ Cypress.Commands.add('mockAuthCheck', status => {
     url: `${identityAPIUrl}/auth/check`,
     status,
     response: {},
-  });
+  }).as('routeAuthCheck');
 });
 
 Cypress.Commands.add('mockAuthLogout', () => {

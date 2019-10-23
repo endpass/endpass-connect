@@ -7,7 +7,7 @@ Cypress.Commands.add('mockRegularPasswordCheck', (status = 200) => {
     url: `${identityAPIUrl}/regular-password/check`,
     status,
     response: {},
-  });
+  }).as('routeRegularPasswordCheck');
 });
 
 Cypress.Commands.add('mockRegularPasswordReset', (status = 200) => {
