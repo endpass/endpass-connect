@@ -158,7 +158,7 @@ describe('login', function() {
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
 
-      cy.wait('@routeSendAuthPermission');
+      cy.wait('@routeAuthPermissionPost');
       cy.wait('@routeAuthCheck');
       cy.wait('@routeAccountsList');
       cy.wait('@routeAuthCheck');
@@ -188,9 +188,13 @@ describe('login', function() {
 
       cy.authFrameContinueRun();
 
-      cy.mockAuthLogin('otp');
+      cy.wait('@routeAuthCheck');
+
       cy.getElementFromAuth('[data-test=email-input]').type(email);
+      cy.mockAuthLogin('otp');
       cy.getElementFromAuth('[data-test=submit-button-auth]').click();
+
+      cy.wait('@routeRegularPasswordCheck');
 
       // submit regular password
       cy.getElementFromAuth('[data-test=password-input]').type(regularPassword);
@@ -201,9 +205,15 @@ describe('login', function() {
       cy.mockAuthCheck(403);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
+      cy.wait('@routeAuthCheck');
+      cy.wait('@routeRegularPasswordCheck');
+
       cy.getElementFromAuth('input[data-test=password-input]').type(v3password);
       cy.mockAuthCheck(200);
       cy.getElementFromAuth('[data-test=submit-button]').click();
+
+      cy.wait('@routeAuthPermissionPost');
+      cy.wait('@routeAuthCheck');
 
       cy.shouldLoggedIn();
     });
@@ -213,23 +223,33 @@ describe('login', function() {
 
       cy.authFrameContinueRun();
 
+      cy.wait('@routeAuthCheck');
+
       cy.getElementFromAuth('[data-test=auth-form]').should('exist');
 
-      cy.mockAuthCheck(403);
       cy.getElementFromAuth('[data-test=email-input]').type(email);
+      cy.mockAuthCheck(403);
       cy.getElementFromAuth('[data-test=submit-button-auth]').click();
+
+      cy.wait('@routeRegularPasswordCheck');
 
       cy.getElementFromAuth('input[data-test=password-input]').type(v3password);
       cy.getElementFromAuth('[data-test=submit-button]').click();
+
+      cy.wait('@routeAuthCode');
 
       cy.getElementFromAuth('[data-test=code-input]').type(otpCode);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
+      cy.wait('@routeLoginAuthToken');
+      cy.wait('@routeAuthCheck');
+
       // permission submit
-      cy.getElementFromAuth('input[data-test=password-input]').should('exist');
-      cy.mockAuthCheck(200);
       cy.getElementFromAuth('input[data-test=password-input]').type(v3password);
+      cy.mockAuthCheck(200);
       cy.getElementFromAuth('[data-test=submit-button]').click();
+
+      cy.wait('@routeAuthPermissionPost');
 
       cy.shouldLoggedIn();
     });

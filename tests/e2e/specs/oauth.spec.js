@@ -3,7 +3,7 @@ import { document } from '@fixtures/identity/documents';
 import { authUrl, visitUrl, visitBlockOauth } from '@config';
 
 describe('oauth', function() {
-  describe.skip('oauth popup window', () => {
+  describe('oauth popup window', () => {
     beforeEach(() => {
       cy.server();
       cy.mockAuthCheck(401);
@@ -17,21 +17,30 @@ describe('oauth', function() {
       cy.mockInitialData();
       cy.mockAuthLogin('otp', `${authUrl}${url}`);
 
+      cy.wait('@routeAuthCheck');
+
       cy.get('[data-test=email-input]').type(email);
       cy.get('[data-test=submit-button-auth]').click();
 
+      cy.wait('@routeRegularPasswordCheck');
+
       cy.get('[data-test=password-input]').type(regularPassword);
       cy.get('[data-test=submit-button]').click();
-
+      cy.get('[data-test=code-input]').type(otpCode);
       cy.mockAuthCheck(200);
-      cy.get('[data-test=code-input]').type(otpCode);
       cy.get('[data-test=submit-button]').click();
 
-      cy.get('[data-test=code-input]').type(otpCode);
-      cy.get('[data-test=submit-button]').click();
+      cy.wait('@routeLoginAuthToken');
+      cy.wait('@routeAuthCheck');
 
+      cy.get('[data-test=code-input]').type(otpCode);
       cy.mockAuthCheck(200);
       cy.mockOauthConsent(consentUrl);
+      cy.get('[data-test=submit-button]').click();
+
+      cy.wait('@routeAuthCheck');
+      cy.wait('@routeMockOauthConsentGet');
+
       // cy.get('input[data-test=password-input]').type(v3password);
       // cy.get('[data-test=submit-button]').click();
 
@@ -39,11 +48,13 @@ describe('oauth', function() {
       cy.mockAuthCheck(401);
       cy.get('[data-test=submit-button]').click();
 
+      cy.wait('@routeAuthCheck');
+
       cy.get('[data-test=submit-button-auth]').should('exist');
     });
   });
 
-  describe.skip('oauth login and get data', () => {
+  describe('oauth login and get data', () => {
     beforeEach(() => {
       cy.visit(`${visitUrl}${visitBlockOauth}`, {
         onBeforeLoad(win) {

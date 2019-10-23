@@ -17,7 +17,7 @@ Cypress.Commands.add('mockAuthPermission', () => {
     method: 'POST',
     status: 200,
     response: responseSuccess,
-  }).as('routeSendAuthPermission');
+  }).as('routeAuthPermissionPost');
 });
 
 Cypress.Commands.add(
