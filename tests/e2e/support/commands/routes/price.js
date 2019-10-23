@@ -7,7 +7,7 @@ Cypress.Commands.add('mockEtherPrices', () => {
     method: 'GET',
     status: 200,
     response: etherPrices,
-  });
+  }).as('routeEtherPrices');
 });
 
 Cypress.Commands.add('mockGasPrices', () => {

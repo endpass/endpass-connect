@@ -115,9 +115,12 @@ describe('login', function() {
 
       cy.authFrameContinueRun();
 
+      cy.wait('@routeAuthCheck');
+
       cy.get('[data-test=endpass-app-loader]').should('exist');
 
       cy.wait('@routeAuthCheck');
+
       cy.getElementFromAuth('[data-test=modal-card-button-close]').click();
 
       cy.authFrameWrapperHidden().should('exist');

@@ -158,6 +158,8 @@ describe('oauth', function() {
         .its('open')
         .should('be.called');
 
+      cy.wait('@routeAuthCheck');
+
       cy.authFrameWrapperVisible().should('exist');
       cy.getElementFromAuth(dialogSelector)
         .should('contain.text', 'Upload document');
@@ -170,6 +172,9 @@ describe('oauth', function() {
       cy.getElementFromAuth(
         `${dialogSelector} [data-test=submit-button]`,
       ).click();
+
+      cy.wait('@routeDocumentUploadCheck');
+
       cy.getElementFromAuth(dialogSelector)
         .should('contain.text', 'Add back side');
       cy.getElementFromAuth(
