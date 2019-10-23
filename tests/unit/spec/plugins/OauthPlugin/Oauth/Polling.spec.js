@@ -21,7 +21,7 @@ describe('Polling', () => {
     };
     const poll = new Polling(frame);
 
-    const res = poll.result(url);
+    const res = poll.getResult(url);
     jest.advanceTimersByTime(1000);
 
     return res;

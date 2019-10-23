@@ -10,7 +10,7 @@ jest.mock('@/plugins/OauthPlugin/Oauth/Polling', () => {
   }
 
   PollingMock.prototype.open = jest.fn().mockResolvedValue();
-  PollingMock.prototype.result = jest.fn().mockResolvedValue({ state: 'pkce-random-string' });
+  PollingMock.prototype.getResult = jest.fn().mockResolvedValue({ state: 'pkce-random-string' });
   return PollingMock;
 });
 
@@ -61,11 +61,15 @@ describe('Oauth class', () => {
     oauth = createOauth();
   });
 
+  const createSpyResult = () => {
+    return jest.spyOn(Polling.prototype, 'getResult');
+  };
+
   describe('constructor', () => {
     it('should use existing token if not expired', async () => {
       expect.assertions(4);
 
-      const spy = jest.spyOn(Polling.prototype, 'result');
+      const spy = createSpyResult();
       // prepare old token
       const oldToken = 'oldToken';
       mockOauthTokenResult({
@@ -93,7 +97,7 @@ describe('Oauth class', () => {
     it('should get new token if old is expired', async () => {
       expect.assertions(3);
 
-      const spy = jest.spyOn(Polling.prototype, 'result');
+      const spy = createSpyResult();
       mockOauthTokenResult({
         expires_in: -3600,
         access_token: token,
@@ -217,7 +221,7 @@ describe('Oauth class', () => {
     it('should pass request with ask permissions', async () => {
       expect.assertions(2);
 
-      const spy = jest.spyOn(Polling.prototype, 'result');
+      const spy = createSpyResult();
       const { data } = await oauth.request({
         url,
       });
@@ -233,7 +237,7 @@ describe('Oauth class', () => {
     it('should pass request with changed scopes and ask permissions', async () => {
       expect.assertions(2);
 
-      const spy = jest.spyOn(Polling.prototype, 'result');
+      const spy = createSpyResult();
       const otherScopes = ['kek', 'chop'];
 
       await oauth.request({

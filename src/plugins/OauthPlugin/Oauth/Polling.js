@@ -20,7 +20,7 @@ export default class Polling {
    * @param {string} url
    * @return {Promise<object>}
    */
-  result(url) {
+  getResult(url) {
     return new Promise((resolve, reject) => {
       this.intervalId = window.setInterval(() => {
         const { target } = this.frame;

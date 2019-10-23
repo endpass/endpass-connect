@@ -84,7 +84,7 @@ export default class Oauth {
     const { url } = this.oauthStrategy;
 
     await this.frameStrategy.open(url);
-    const pollResult = await poll.result(url);
+    const pollResult = await poll.getResult(url);
 
     if (pollResult.state !== this.oauthStrategy.state) {
       throw ConnectError.create(ERRORS.OAUTH_AUTHORIZE_STATE);
