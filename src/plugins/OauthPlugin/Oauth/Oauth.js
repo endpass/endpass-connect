@@ -80,8 +80,7 @@ export default class Oauth {
     const poll = new Polling(this.frameStrategy);
 
     this.frameStrategy.prepare();
-
-    await this.oauthStrategy.init(this.oauthServer, params);
+    await this.oauthStrategy.prepare(this.oauthServer, params);
     const { url } = this.oauthStrategy;
 
     await this.frameStrategy.open(url);

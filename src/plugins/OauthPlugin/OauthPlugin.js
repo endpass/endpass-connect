@@ -81,7 +81,7 @@ export default class OauthPlugin extends PluginBase {
   }
 
   handleCloseFrame() {
-    this.frameStrategy.handleClose();
+    this.frameStrategy.close();
   }
 
   /**

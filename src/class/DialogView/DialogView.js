@@ -20,12 +20,10 @@ const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
 export default class DialogView {
   /**
    * @param {object} options
-   * @param {string} options.url URL which would be opened in inner iframe element
    * @param {string=} options.namespace Optional namespace for messengers bindings
    * @param {HTMLElement|string=} options.element Render place
    */
-  constructor({ url, element, namespace = '' }) {
-    this.url = url;
+  constructor({ element, namespace = '' }) {
     this.namespace = namespace;
     this.element = element;
     this.isReady = null;
@@ -158,8 +156,9 @@ export default class DialogView {
   /**
    * @private
    * @param {HTMLElement} frame
+   * @param {string} url
    */
-  initFrameCheck(frame) {
+  initFrameCheck(frame, url) {
     frame.addEventListener('load', () => {
       if (this.isConnected) {
         return;
@@ -172,7 +171,7 @@ export default class DialogView {
         this.releaseResolvers();
         // eslint-disable-next-line no-console
         console.error(
-          `Dialog View is not initialized, please check auth url ${this.url}`,
+          `Dialog View is not initialized, please check auth url ${url}`,
         );
       }, INITIAL_TIMEOUT);
     });
@@ -211,9 +210,10 @@ export default class DialogView {
   /**
    * Create default markup for DialogPlugin
    * @private
+   * @param {string} url
    * @return {HTMLDivElement}
    */
-  createMarkup() {
+  createMarkup(url) {
     const dialogMarkupNS = this.namespace
       ? `data-endpass-namespace="${this.namespace}"`
       : '';
@@ -231,7 +231,7 @@ export default class DialogView {
         >
           <iframe
             data-test="dialog-iframe"
-            data-endpass="frame" src="${this.url}"
+            data-endpass="frame" src="${url}"
             style="${this.frameStyles(propsIframeHide)}"
           />
         </div>
@@ -246,15 +246,16 @@ export default class DialogView {
 
   /**
    * Create markup and mount dialog view element to the page body
+   * @param {string} url
    */
-  mount() {
-    const markup = this.createMarkup();
+  mount(url) {
+    const markup = this.createMarkup(url);
 
     this.overlay = markup.querySelector('[data-endpass="overlay"]');
     this.wrapper = markup.querySelector('[data-endpass="wrapper"]');
     this.frame = markup.querySelector('[data-endpass="frame"]');
 
-    this.initFrameCheck(/** @type {HTMLIFrameElement} */ (this.frame));
+    this.initFrameCheck(/** @type {HTMLIFrameElement} */ (this.frame), url);
 
     if (this.element && this.wrapper) {
       this.overlay = this.rootElement;

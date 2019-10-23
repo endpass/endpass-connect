@@ -2,6 +2,7 @@
 import EventEmitter from '@endpass/class/EventEmitter';
 import IframeFrame from '@/plugins/OauthPlugin/FrameStrategy/IframeFrame';
 import PopupFrame from '@/plugins/OauthPlugin/FrameStrategy/PopupFrame';
+import BaseWindow from '@/plugins/OauthPlugin/FrameStrategy/BaseWindow';
 
 export default class FrameStrategy {
   static EVENT_UPDATE_TARGET = 'update-target';
@@ -12,10 +13,12 @@ export default class FrameStrategy {
    */
   constructor({ oauthPopup = false }) {
     this.emitter = new EventEmitter();
-    this.frame = oauthPopup ? new PopupFrame() : new IframeFrame();
+    this.oauthPopup = oauthPopup;
+    this.frame = new BaseWindow();
   }
 
   prepare() {
+    this.frame = this.oauthPopup ? new PopupFrame() : new IframeFrame();
     this.frame.prepare();
   }
 
@@ -25,8 +28,7 @@ export default class FrameStrategy {
    * @return {Promise<void>}
    */
   async open(url) {
-    this.frame.init(url);
-    this.frame.mount();
+    this.frame.mount(url);
     this.emitter.emit(FrameStrategy.EVENT_UPDATE_TARGET, this.frame.target);
     await this.frame.waitReady();
     this.frame.open();
@@ -50,7 +52,8 @@ export default class FrameStrategy {
   }
 
   close() {
-    this.frame.close();
+    this.frame.destroy();
+    this.frame = new BaseWindow();
   }
 
   /**
@@ -59,9 +62,5 @@ export default class FrameStrategy {
    */
   handleResize(payload) {
     this.frame.resize(payload);
-  }
-
-  handleClose() {
-    this.frame.close();
   }
 }

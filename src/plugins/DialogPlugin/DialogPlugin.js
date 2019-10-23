@@ -35,7 +35,6 @@ export default class DialogPlugin extends PluginBase {
     this.url = getFrameRouteUrl(authUrl, 'bridge');
 
     this.dialogView = new DialogView({
-      url: this.url,
       namespace: this.namespace,
       element,
     });
@@ -67,7 +66,7 @@ export default class DialogPlugin extends PluginBase {
    * @private
    */
   mount() {
-    this.dialogView.mount();
+    this.dialogView.mount(this.url);
     const { target } = this.dialogView;
     if (target) {
       this.messenger.setTarget(target);

@@ -19,10 +19,9 @@ export default class PopupFrame extends BaseWindow {
   }
 
   /**
-   *
    * @param {string} url
    */
-  init(url) {
+  mount(url) {
     this.url = url;
   }
 
@@ -43,7 +42,7 @@ export default class PopupFrame extends BaseWindow {
     this.window.focus();
   }
 
-  close() {
+  destroy() {
     if (!this.window) return;
     this.window.close();
     this.window = null;
