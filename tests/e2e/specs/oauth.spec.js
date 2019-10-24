@@ -41,9 +41,6 @@ describe('oauth', function() {
       cy.wait('@routeAuthCheck');
       cy.wait('@routeMockOauthConsentGet');
 
-      // cy.get('input[data-test=password-input]').type(v3password);
-      // cy.get('[data-test=submit-button]').click();
-
       cy.get('[data-test=scopes-tree]').should('exist');
       cy.mockAuthCheck(401);
       cy.get('[data-test=submit-button]').click();
