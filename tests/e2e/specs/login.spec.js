@@ -43,7 +43,7 @@ describe('login', function() {
 
       cy.wait('@routeAuthCheck');
       cy.wait('@routeAuthCheck');
-      cy.wait('@routeRegularPasswordCheck');
+      // cy.wait('@routeRegularPasswordCheck');
 
       cy.get('[data-test=endpass-app-loader]').should('exist');
       cy.getElementFromAuth('[data-test=sign-form]').should('exist');
