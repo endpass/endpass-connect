@@ -1,6 +1,6 @@
 import { email, v3password, mnemonic, regularPassword, otpCode } from '@fixtures/identity/accounts';
 
-describe('login', function() {
+describe.skip('login', function() {
   describe('connect login features', () => {
     beforeEach(() => {
       cy.waitPageLoad();
