@@ -10,9 +10,11 @@ import {
   stylesWrapperShow,
   stylesWrapperHide,
 } from './Styles';
+import ConnectError from '@endpass/class/ConnectError';
 
 const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
 
+const { ERRORS } = ConnectError;
 /**
  * @typedef {Array<{resolve: CallableFunction, reject: CallableFunction}>} Resolvers
  */
@@ -148,7 +150,7 @@ export default class DialogView {
     }
 
     this.readyResolvers.forEach(({ resolve, reject }) =>
-      this.isReady ? resolve() : reject(),
+      this.isReady ? resolve() : reject(ConnectError.create(ERRORS.INITIALIZE)),
     );
     this.readyResolvers = [];
   }
