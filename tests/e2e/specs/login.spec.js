@@ -42,6 +42,7 @@ describe('login', function() {
       cy.authFrameContinueRun();
 
       cy.wait('@routeAuthCheck');
+      cy.wait('@routeAuthCheck');
       cy.wait('@routeRegularPasswordCheck');
 
       cy.get('[data-test=endpass-app-loader]').should('exist');

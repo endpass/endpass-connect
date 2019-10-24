@@ -16,9 +16,8 @@ describe('accounts', function() {
 
     cy.get('[data-test=endpass-form-open-account]').click();
     cy.getElementFromAuth('[data-test=cancel-button]').click();
-    // Time for reopen is not fixed but 25 second enough in the most of cases
-    cy.wait(25000);
-    cy.get('[data-test=dialog-wrapper][data-visible=true]').should('not.exist');
+
+    cy.shouldLoggedIn();
   });
 
   it('should logout from accounts', () => {
