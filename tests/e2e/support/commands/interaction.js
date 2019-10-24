@@ -33,6 +33,7 @@ function getFixtureBlob(fileUrl, type) {
 Cypress.Commands.add('uploadFile', (selector, fileUrl, type = '') =>
   cy.getElementFromAuth(selector).then(subject =>
     getFixtureBlob(fileUrl, type).then(blob => {
+      const changeEvent = new Event('change');
       const el = subject[0];
       const doc = el.ownerDocument;
       const win = doc.defaultView || doc.parentWindow;
@@ -41,6 +42,9 @@ Cypress.Commands.add('uploadFile', (selector, fileUrl, type = '') =>
       const dataTransfer = new win.DataTransfer();
 
       dataTransfer.items.add(testFile);
+      el.files = dataTransfer.files;
+      el.dispatchEvent(changeEvent);
+      // sometimes event fired with empty files
       el.files = dataTransfer.files;
       return subject;
     }),

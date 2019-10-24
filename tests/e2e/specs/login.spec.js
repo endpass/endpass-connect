@@ -41,16 +41,19 @@ describe('login', function() {
 
       cy.authFrameContinueRun();
 
+      cy.wait('@routeAuthCheck');
+      cy.wait('@routeRegularPasswordCheck');
+
       cy.get('[data-test=endpass-app-loader]').should('exist');
       cy.getElementFromAuth('[data-test=sign-form]').should('exist');
-
-      cy.wait('@routeAuthCheck');
 
       cy.getElementFromAuth('input[data-test=password-input]').type(v3password);
       cy.mockAuthCheck(200);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
+      cy.wait('@routeAuthPermissionPost');
       cy.wait('@routeAuthCheck');
+
       cy.shouldLoggedIn();
     });
 
@@ -227,6 +230,7 @@ describe('login', function() {
       cy.authFrameContinueRun();
 
       cy.wait('@routeAuthCheck');
+      cy.wait('@routeAuthCheck');
 
       cy.getElementFromAuth('[data-test=auth-form]').should('exist');
 
@@ -246,6 +250,7 @@ describe('login', function() {
 
       cy.wait('@routeLoginAuthToken');
       cy.wait('@routeAuthCheck');
+      cy.wait('@routeRegularPasswordCheck');
 
       // permission submit
       cy.getElementFromAuth('input[data-test=password-input]').type(v3password);
