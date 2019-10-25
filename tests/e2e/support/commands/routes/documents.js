@@ -34,7 +34,7 @@ Cypress.Commands.add('mockDocumentUpload', () => {
     method: 'POST',
     response: {},
     status: 200,
-  }).as('documentUploadCheck');
+  }).as('routeDocumentUploadCheck');
 });
 
 Cypress.Commands.add('mockDocumentFrontUpload', () => {

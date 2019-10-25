@@ -15,7 +15,7 @@ Cypress.Commands.add('mockAccountsList', (list = accountList) => {
     url: `${identityAPIUrl}/accounts`,
     status: 200,
     response: list,
-  });
+  }).as('routeAccountsList');
 
   cy.route({
     method: 'GET',
@@ -31,7 +31,7 @@ Cypress.Commands.add('mockAccountUpdate', () => {
     method: 'POST',
     status: 200,
     response: { success: true, message: 'Account updated' },
-  });
+  }).as('routeAccountUpdate');
 });
 
 Cypress.Commands.add('mockAccountsV3', () => {

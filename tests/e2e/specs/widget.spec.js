@@ -92,6 +92,7 @@ describe('widget', function() {
       cy.getElementFromWidget('[data-test=balance-label]').contains(
         etherPrices.USD,
       );
+      cy.wait('@routeEtherPrices');
       cy.getElementFromWidget('[data-fiat-currency]').click();
       cy.getElementFromWidget('[data-test=balance-label]').should(
         'not.to.contain',

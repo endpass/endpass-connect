@@ -41,7 +41,7 @@ Cypress.Commands.add('mockOauthConsent', (redirect = 'consent', response) => {
       skip: false,
       requested_scope: ['wallet:accounts:read'],
     },
-  });
+  }).as('routeMockOauthConsentGet');
 
   cy.route({
     url: `${identityAPIUrl}/oauth/consent`,

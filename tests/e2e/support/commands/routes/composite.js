@@ -7,6 +7,11 @@ Cypress.Commands.add('mockInitialData', (netId = Network.NET_ID.MAIN) => {
   cy.mockOauthConsent();
 
   cy.mockAuthLogin('emailLink');
+  cy.mockAuthSendCode();
+
+  cy.mockRegularPasswordCheck();
+  cy.mockRegularPasswordReset();
+  cy.mockRegularPasswordResetConfirm();
 
   cy.mockDocumentsList();
   cy.mockDocumentUpload();
