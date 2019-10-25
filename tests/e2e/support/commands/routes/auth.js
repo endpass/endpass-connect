@@ -69,13 +69,13 @@ Cypress.Commands.add('mockAuthRecover', () => {
   });
 });
 
-Cypress.Commands.add('mockAuthCode', (status = 200) => {
+Cypress.Commands.add('mockAuthSendCode', (status = 200) => {
   cy.route({
     method: 'POST',
     url: `${identityAPIUrl}/auth/code`,
     status,
     response: {},
-  }).as('routeAuthCode');
+  }).as('routeAuthSendCode');
 });
 
 Cypress.Commands.add('mockAuthCheck', status => {

@@ -16,7 +16,7 @@ Cypress.Commands.add('mockRegularPasswordReset', (status = 200) => {
     url: `${identityAPIUrl}/regular-password/reset`,
     status,
     response: {},
-  });
+  }).as('routeRegularPasswordReset');
 });
 
 Cypress.Commands.add('mockRegularPasswordResetConfirm', (status = 200) => {
@@ -25,5 +25,5 @@ Cypress.Commands.add('mockRegularPasswordResetConfirm', (status = 200) => {
     url: `${identityAPIUrl}/regular-password/reset/confirm`,
     status,
     response: responseSuccess,
-  });
+  }).as('routeRegularPasswordResetConfirm');
 });
