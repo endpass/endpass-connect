@@ -1,6 +1,6 @@
 // @ts-check
-import ConnectError from '@endpass/class/ConnectError';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
+import ConnectError from '@/class/ConnectError';
 import { DIRECTION, PLUGIN_NAMES, PLUGIN_METHODS } from '@/constants';
 import StateOpen from './states/StateOpen';
 import StateClose from './states/StateClose';

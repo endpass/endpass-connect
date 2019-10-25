@@ -1,4 +1,4 @@
-import ConnectError from '@endpass/class/ConnectError';
+import ConnectError from '@/class/ConnectError';
 import { INPAGE_EVENTS, MESSENGER_METHODS } from '@/constants';
 import RequestProcess from '@/streams/inpageProvider/middleware/netRequest/RequestProcess';
 

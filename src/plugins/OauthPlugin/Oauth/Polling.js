@@ -1,6 +1,6 @@
 // @ts-check
-import ConnectError from '@endpass/class/ConnectError';
 import queryStringToMap from '@endpass/utils/queryStringToMap';
+import ConnectError from '@/class/ConnectError';
 
 const { ERRORS } = ConnectError;
 const replaceReg = /^#\/?/;

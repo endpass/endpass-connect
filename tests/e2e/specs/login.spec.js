@@ -46,7 +46,7 @@ describe('login', function() {
       cy.get('[data-test=endpass-app-loader]').should('exist');
       cy.getElementFromAuth('[data-test=sign-form]').should('exist');
 
-      cy.getElementFromAuth('input[data-test=password-input]').type(v3password);
+      cy.getElementFromAuth('input[data-test=password-input]').type(regularPassword);
       cy.mockAuthCheck(200);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
@@ -214,7 +214,7 @@ describe('login', function() {
       cy.wait('@routeAuthCheck');
       cy.wait('@routeRegularPasswordCheck');
 
-      cy.getElementFromAuth('input[data-test=password-input]').type(v3password);
+      cy.getElementFromAuth('input[data-test=password-input]').type(regularPassword);
       cy.mockAuthCheck(200);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
@@ -240,7 +240,7 @@ describe('login', function() {
 
       cy.wait('@routeRegularPasswordCheck');
 
-      cy.getElementFromAuth('input[data-test=password-input]').type(v3password);
+      cy.getElementFromAuth('input[data-test=password-input]').type(regularPassword);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
       cy.wait('@routeAuthSendCode');
@@ -253,7 +253,7 @@ describe('login', function() {
       cy.wait('@routeRegularPasswordCheck');
 
       // permission submit
-      cy.getElementFromAuth('input[data-test=password-input]').type(v3password);
+      cy.getElementFromAuth('input[data-test=password-input]').type(regularPassword);
       cy.mockAuthCheck(200);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 

@@ -1,4 +1,4 @@
-import ConnectError from '@endpass/class/ConnectError';
+import ConnectError from '@/class/ConnectError';
 import { PLUGIN_METHODS, MESSENGER_METHODS, PLUGIN_NAMES } from '@/constants';
 
 const { ERRORS } = ConnectError;

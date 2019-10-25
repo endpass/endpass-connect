@@ -1,4 +1,4 @@
-import ConnectError from '@endpass/class/ConnectError';
+import ConnectError from '@/class/ConnectError';
 import PluginBase from '../PluginBase';
 import { DialogPlugin } from '@/plugins/DialogPlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';

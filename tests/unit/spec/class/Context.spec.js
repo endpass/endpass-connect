@@ -1,4 +1,4 @@
-import ConnectError from '@endpass/class/ConnectError';
+import ConnectError from '@/class/ConnectError';
 import { CONTEXT, MESSENGER_METHODS, INPAGE_EVENTS, PLUGIN_NAMES } from '@/constants';
 import ProviderPlugin, { ProviderPlugin as ProviderPluginClass } from '@/plugins/ProviderPlugin';
 import ConnectPlugin from '@/plugins/ConnectPlugin';

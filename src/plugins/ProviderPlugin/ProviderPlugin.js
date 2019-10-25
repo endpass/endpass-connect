@@ -1,6 +1,6 @@
-import ConnectError from '@endpass/class/ConnectError';
 import EventEmitter from '@endpass/class/EventEmitter';
 import Network from '@endpass/class/Network';
+import ConnectError from '@/class/ConnectError';
 import InpageProvider from '@/plugins/ProviderPlugin/InpageProvider';
 import {
   INPAGE_EVENTS,

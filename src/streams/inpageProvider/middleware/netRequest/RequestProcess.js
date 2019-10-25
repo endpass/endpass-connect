@@ -1,4 +1,4 @@
-import ConnectError from '@endpass/class/ConnectError';
+import ConnectError from '@/class/ConnectError';
 import {
   MESSENGER_METHODS,
   INPAGE_EVENTS,

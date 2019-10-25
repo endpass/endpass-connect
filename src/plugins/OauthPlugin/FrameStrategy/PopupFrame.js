@@ -1,5 +1,5 @@
 // @ts-check
-import ConnectError from '@endpass/class/ConnectError';
+import ConnectError from '@/class/ConnectError';
 import BaseWindow from '@/plugins/OauthPlugin/FrameStrategy/BaseWindow';
 
 const { ERRORS } = ConnectError;

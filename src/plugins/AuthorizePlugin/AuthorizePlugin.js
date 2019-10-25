@@ -1,4 +1,4 @@
-import ConnectError from '@endpass/class/ConnectError';
+import ConnectError from '@/class/ConnectError';
 import { MESSENGER_METHODS, PLUGIN_NAMES } from '@/constants';
 import authHandlers from '@/plugins/AuthorizePlugin/authHandlers';
 import PluginBase from '@/plugins/PluginBase';

@@ -1,4 +1,4 @@
-import ConnectError from '@endpass/class/ConnectError';
+import ConnectError from '@/class/ConnectError';
 import ConnectPlugin from '@/plugins/ConnectPlugin';
 import ProviderPlugin from '@/plugins/ProviderPlugin';
 import OauthPlugin from '@/plugins/OauthPlugin';

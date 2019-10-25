@@ -2,7 +2,7 @@
 import axios from 'axios';
 import tokenProvider from 'axios-token-interceptor';
 import LocalStorage from '@endpass/class/LocalStorage';
-import ConnectError from '@endpass/class/ConnectError';
+import ConnectError from '@/class/ConnectError';
 import Polling from '@/plugins/OauthPlugin/Oauth/Polling';
 
 /** @typedef {string} Token */

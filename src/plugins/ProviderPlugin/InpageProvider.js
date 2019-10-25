@@ -1,7 +1,7 @@
 import get from 'lodash.get';
 import Network from '@endpass/class/Network';
-import ConnectError from '@endpass/class/ConnectError';
 import EventEmitter from '@endpass/class/EventEmitter';
+import ConnectError from '@/class/ConnectError';
 import { INPAGE_EVENTS, INPAGE_ID_PREFIX, WEB3_METHODS } from '@/constants';
 import processPayload from '@/util/processPayload';
 

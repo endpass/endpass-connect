@@ -2,6 +2,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 const pkg = require('./package.json');
+const outputList = require('./output.json');
 
 const createConfig = ({ entry, filename, library }) => {
   return {
@@ -53,7 +54,7 @@ module.exports = createList([
   }),
 
   // plugins
-  ...pkg.connectPlugins.reduce((list, plugin) => {
+  ...outputList.reduce((list, plugin) => {
     const newConfigs = createConfigs({
       entry: plugin.umd,
       filename: plugin.main,

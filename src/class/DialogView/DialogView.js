@@ -10,7 +10,7 @@ import {
   stylesWrapperShow,
   stylesWrapperHide,
 } from './Styles';
-import ConnectError from '@endpass/class/ConnectError';
+import ConnectError from '@/class/ConnectError';
 
 const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
 

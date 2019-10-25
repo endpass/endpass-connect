@@ -1,4 +1,4 @@
-import ConnectError from '@endpass/class/ConnectError';
+import ConnectError from '@/class/ConnectError';
 import { ProviderPlugin } from '@/plugins/ProviderPlugin';
 import ProviderFactory from '@/plugins/ProviderPlugin/ProviderFactory';
 import InpageProvider from '@/plugins/ProviderPlugin/InpageProvider';
