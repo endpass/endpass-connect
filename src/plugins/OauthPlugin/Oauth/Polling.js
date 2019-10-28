@@ -28,7 +28,7 @@ export default class Polling {
           if (!target || target.closed !== false) {
             this.close();
 
-            reject(ConnectError.create(ERRORS.POPUP_CLOSED));
+            reject(ConnectError.create(ERRORS.OAUTH_POPUP_CLOSED));
 
             return;
           }

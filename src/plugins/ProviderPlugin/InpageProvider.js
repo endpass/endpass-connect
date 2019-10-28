@@ -1,17 +1,14 @@
 import get from 'lodash.get';
 import Network from '@endpass/class/Network';
 import EventEmitter from '@endpass/class/EventEmitter';
-import ConnectError from '@/class/ConnectError';
 import { INPAGE_EVENTS, INPAGE_ID_PREFIX, WEB3_METHODS } from '@/constants';
 import processPayload from '@/util/processPayload';
-
-const { ERRORS } = ConnectError;
 
 export default class InpageProvider extends EventEmitter {
   constructor(eventEmitter) {
     super();
     if (!(eventEmitter instanceof EventEmitter)) {
-      throw ConnectError.create(ERRORS.EVENT_EMITTER_NOT_PROVIDED);
+      throw new Error('EventEmitter is not provided');
     }
 
     this.eventEmitter = eventEmitter;

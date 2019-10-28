@@ -55,7 +55,10 @@ export default class OauthPkceStrategy {
     );
 
     if (!status) {
-      throw ConnectError.create(error || ERRORS.OAUTH_AUTHORIZE);
+      throw ConnectError.create(
+        error || ERRORS.OAUTH_AUTHORIZE,
+        'Exchange code to token fail',
+      );
     }
     return payload;
   }

@@ -35,7 +35,7 @@ export default class PopupFrame extends BaseWindow {
       return;
     }
     if (this.window.closed) {
-      throw ConnectError.create(ERRORS.POPUP_CLOSED);
+      throw ConnectError.create(ERRORS.OAUTH_POPUP_CLOSED);
     }
     this.window.location.href = this.url;
     this.window.resizeTo(DEFAULT_WIDTH, DEFAULT_HEIGHT);

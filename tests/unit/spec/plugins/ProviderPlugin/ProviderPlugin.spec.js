@@ -127,15 +127,14 @@ describe('Provider plugin', () => {
 
       context.ask = jest.fn().mockResolvedValueOnce({
         status: false,
-        code: ERRORS.USER_NOT_AUTHORIZED,
       });
 
       try {
         await plugin.getProviderAccountData();
       } catch (e) {
-        const err = new Error('User not authorized!');
+        const err = ConnectError.create(ERRORS.PROVIDER);
         expect(e).toEqual(err);
-        expect(e.code).toBe(ERRORS.USER_NOT_AUTHORIZED);
+        expect(e.code).toBe(ERRORS.PROVIDER);
       }
     });
   });

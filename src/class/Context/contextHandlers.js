@@ -23,7 +23,7 @@ const changeSettings = context => async (payload, req) => {
     });
   } catch (error) {
     console.error(error);
-    const code = (error && error.code) || ERRORS.AUTH_LOGOUT;
+    const code = (error && error.code) || ERRORS.PROVIDER;
     throw ConnectError.create(code);
   }
 };

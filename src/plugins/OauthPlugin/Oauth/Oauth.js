@@ -87,12 +87,15 @@ export default class Oauth {
     const pollResult = await poll.getResult(url);
 
     if (pollResult.state !== this.oauthStrategy.state) {
-      throw ConnectError.create(ERRORS.OAUTH_AUTHORIZE_STATE);
+      throw ConnectError.create(
+        ERRORS.OAUTH_AUTHORIZE,
+        'State check unsuccessful',
+      );
     }
 
     if (pollResult.error) {
       throw ConnectError.create(
-        ERRORS.OAUTH_AUTHORIZE_STATE,
+        ERRORS.OAUTH_AUTHORIZE,
         `Authorization failed: ${pollResult.error}`,
       );
     }
