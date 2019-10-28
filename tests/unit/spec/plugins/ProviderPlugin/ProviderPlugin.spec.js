@@ -91,8 +91,10 @@ describe('Provider plugin', () => {
         activeAccount: '0x0',
         activeNet: 1,
       });
-      expect(context.executeMethod)
-        .toBeCalledWith(PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS, res);
+      expect(context.executeMethod).toBeCalledWith(
+        PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS,
+        res,
+      );
     });
 
     it('should request user settings through inner connect bridge', async () => {
@@ -118,8 +120,10 @@ describe('Provider plugin', () => {
         activeAccount: settings.lastActiveAccount,
         activeNet: settings.net,
       });
-      expect(context.executeMethod)
-        .toBeCalledWith(PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS, res);
+      expect(context.executeMethod).toBeCalledWith(
+        PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS,
+        res,
+      );
     });
 
     it('should throw error is request account status is falsy', async () => {

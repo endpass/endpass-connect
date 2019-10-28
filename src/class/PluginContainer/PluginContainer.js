@@ -6,16 +6,15 @@ export default function PluginContainer(options, context, ClassPlugin) {
     ClassPlugin,
   );
 
-  const pluginsName = pluginsClassesList.map(PluginClass => {
-    return PluginClass.pluginName;
-  });
+  const pluginsName = pluginsClassesList.map(
+    PluginClass => PluginClass.pluginName,
+  );
 
   const pluginsMap = pluginsClassesList.reduce(
-    (pluginInstanceMap, PluginClass) => {
-      return Object.assign(pluginInstanceMap, {
+    (pluginInstanceMap, PluginClass) =>
+      Object.assign(pluginInstanceMap, {
         [PluginClass.pluginName]: new PluginClass(options, context),
-      });
-    },
+      }),
     {},
   );
 

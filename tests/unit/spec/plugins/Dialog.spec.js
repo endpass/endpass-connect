@@ -5,7 +5,6 @@ import StateClose from '@/plugins/DialogPlugin/states/StateClose';
 import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
 import { DEFAULT_AUTH_URL } from '@/constants';
 
-
 describe('DialogPlugin class', () => {
   const authUrl = 'url';
   const context = {

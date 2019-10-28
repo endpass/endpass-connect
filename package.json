@@ -34,8 +34,9 @@
     "test:e2e:dev": "node ./scripts/e2e-dev.js",
     "test:e2e:setup": "node ./scripts/e2e-setup.js",
     "test:e2e:serve": "node ./scripts/e2e-serve.js",
-    "format": "prettier --write './src/**/*.{js,json}' && npm run format:eslint | exit 0",
-    "format:eslint": "eslint --ext .json,.js,.vue,.ts src/ --fix",
+    "format": "yarn format:prettier && yarn format:eslint",
+    "format:prettier": "prettier --write '**/*.{js,json}'",
+    "format:eslint": "eslint --ext .json,.js,.ts src/ --fix",
     "semantic-release": "semantic-release",
     "commit": "git-cz",
     "check-types": "tsc"

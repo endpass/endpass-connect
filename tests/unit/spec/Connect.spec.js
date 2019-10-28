@@ -44,7 +44,7 @@ describe('Connect class', () => {
         const err = new Error('Connect library requires OAuth client id!');
 
         expect(e).toEqual(err);
-        expect(e.code).toBe(ERRORS.OAUTH_REQUIRE_ID)
+        expect(e.code).toBe(ERRORS.OAUTH_REQUIRE_ID);
       }
     });
 

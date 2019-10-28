@@ -1,4 +1,10 @@
-import { address, email, otpCode, regularPassword, v3password } from '@fixtures/identity/accounts';
+import {
+  address,
+  email,
+  otpCode,
+  regularPassword,
+  v3password,
+} from '@fixtures/identity/accounts';
 import { document } from '@fixtures/identity/documents';
 import { authUrl, visitUrl, visitBlockOauth } from '@config';
 
@@ -64,7 +70,7 @@ describe('oauth', function() {
               location: {
                 hash: '',
                 search: '',
-              }
+              },
             };
             Object.defineProperty(res.location, 'search', {
               get() {
@@ -158,8 +164,10 @@ describe('oauth', function() {
       cy.wait('@routeAuthCheck');
 
       cy.authFrameWrapperVisible().should('exist');
-      cy.getElementFromAuth(dialogSelector)
-        .should('contain.text', 'Upload document');
+      cy.getElementFromAuth(dialogSelector).should(
+        'contain.text',
+        'Upload document',
+      );
 
       cy.uploadFile(
         '#v-file-drop-area-idx-1',
@@ -172,8 +180,10 @@ describe('oauth', function() {
 
       cy.wait('@routeDocumentUploadCheck');
 
-      cy.getElementFromAuth(dialogSelector)
-        .should('contain.text', 'Add back side');
+      cy.getElementFromAuth(dialogSelector).should(
+        'contain.text',
+        'Add back side',
+      );
       cy.getElementFromAuth(
         `${dialogSelector} [data-test=modal-card-button-close]`,
       ).click();

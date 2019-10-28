@@ -32,7 +32,7 @@ export default class OauthPlugin extends PluginBase {
     if (!this.oauthMessenger) {
       this.oauthMessenger = new CrossWindowMessenger({
         // showLogs: !ENV.isProduction,
-        name: `connect-oauth-iframe[]`,
+        name: 'connect-oauth-iframe[]',
         to: DIRECTION.AUTH,
         from: DIRECTION.CONNECT,
       });

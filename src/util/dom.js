@@ -11,8 +11,6 @@ export const inlineStylesState = styles => {
     };
     return inlineStyles(state);
   }
-  res.toString = () => {
-    return inlineStyles(state);
-  };
+  res.toString = () => inlineStyles(state);
   return res;
 };

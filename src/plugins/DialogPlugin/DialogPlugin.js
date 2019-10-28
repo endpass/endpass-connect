@@ -50,7 +50,7 @@ export default class DialogPlugin extends PluginBase {
     if (!this.dialogMessenger) {
       this.dialogMessenger = new CrossWindowMessenger({
         // showLogs: !ENV.isProduction,
-        name: `connect-dialog[]`,
+        name: 'connect-dialog[]',
         to: DIRECTION.AUTH,
         from: DIRECTION.CONNECT,
       });

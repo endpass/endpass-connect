@@ -6,9 +6,7 @@
     "module": "./ConnectError.js",
     "umd": "./ConnectError.umd.js",
     "browser": "./ConnectError.browser.js",
-    "withCopy": [
-      "./types/ConnectError.d.ts"
-    ]
+    "withCopy": ["./types/ConnectError.d.ts"]
   },
   {
     "library": "EndpassProviderPlugin",

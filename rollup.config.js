@@ -61,22 +61,23 @@ const commonConfig = config => {
       }),
       commonjs(),
       !withSourceMaps && terser(),
-      config.withCopy && copy({
-        targets: [
-          {
-            src: config.withCopy,
-            dest: './dist',
-          },
-        ]
-      }),
+      config.withCopy &&
+        copy({
+          targets: [
+            {
+              src: config.withCopy,
+              dest: './dist',
+            },
+          ],
+        }),
       postcss({
         plugins: [
           url({
             url: 'inline',
             encodeType: 'base64',
             optimizeSvgEncode: true,
-          })
-        ]
+          }),
+        ],
       }),
       visualizer(),
     ],

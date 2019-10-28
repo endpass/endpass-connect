@@ -1,6 +1,13 @@
 import ConnectError from '@/class/ConnectError';
-import { CONTEXT, MESSENGER_METHODS, INPAGE_EVENTS, PLUGIN_NAMES } from '@/constants';
-import ProviderPlugin, { ProviderPlugin as ProviderPluginClass } from '@/plugins/ProviderPlugin';
+import {
+  CONTEXT,
+  MESSENGER_METHODS,
+  INPAGE_EVENTS,
+  PLUGIN_NAMES,
+} from '@/constants';
+import ProviderPlugin, {
+  ProviderPlugin as ProviderPluginClass,
+} from '@/plugins/ProviderPlugin';
 import ConnectPlugin from '@/plugins/ConnectPlugin';
 import AuthorizePlugin from '@/plugins/AuthorizePlugin';
 import WidgetPlugin from '@/plugins/WidgetPlugin';
@@ -34,8 +41,9 @@ describe('Context class', () => {
 
   describe('initiate', () => {
     it('should create with default plugins', () => {
-      const pluginList = [...context.plugins]
-        .map(item => item.constructor.pluginName);
+      const pluginList = [...context.plugins].map(
+        item => item.constructor.pluginName,
+      );
 
       expect(pluginList).toEqual([
         PLUGIN_NAMES.DIALOG,
@@ -48,7 +56,9 @@ describe('Context class', () => {
     it('should create with provider plugin', () => {
       createContext({ plugins: [ProviderPlugin] });
 
-      expect(context.plugins[ProviderPluginClass.pluginName]).not.toBe(undefined);
+      expect(context.plugins[ProviderPluginClass.pluginName]).not.toBe(
+        undefined,
+      );
     });
 
     it('should pass initial payload', async () => {
@@ -101,9 +111,10 @@ describe('Context class', () => {
         INPAGE_EVENTS.SETTINGS,
         payload,
       );
-      expect(
-        context.plugins.messengerGroup.send,
-      ).toBeCalledWith(MESSENGER_METHODS.CHANGE_SETTINGS_RESPONSE, payload);
+      expect(context.plugins.messengerGroup.send).toBeCalledWith(
+        MESSENGER_METHODS.CHANGE_SETTINGS_RESPONSE,
+        payload,
+      );
     });
   });
 
@@ -141,8 +152,13 @@ describe('Context class', () => {
       const res = await connect.logout();
 
       expect(res).toBe(true);
-      expect(context.plugins.messengerGroup.send).toBeCalledWith(MESSENGER_METHODS.LOGOUT_RESPONSE);
-      expect(context.plugins.dialog.ask).toBeCalledWith(MESSENGER_METHODS.LOGOUT, undefined);
+      expect(context.plugins.messengerGroup.send).toBeCalledWith(
+        MESSENGER_METHODS.LOGOUT_RESPONSE,
+      );
+      expect(context.plugins.dialog.ask).toBeCalledWith(
+        MESSENGER_METHODS.LOGOUT,
+        undefined,
+      );
     });
   });
 

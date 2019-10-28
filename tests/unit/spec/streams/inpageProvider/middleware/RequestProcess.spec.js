@@ -24,7 +24,6 @@ describe('Request process middleware', () => {
     context = {
       ask: jest.fn(),
     };
-
   });
 
   beforeEach(() => {
@@ -144,10 +143,7 @@ describe('Request process middleware', () => {
 
       reqProcess.sendResponse(payload);
 
-      expect(emitter.emit).toBeCalledWith(
-        INPAGE_EVENTS.RESPONSE,
-        payload,
-      );
+      expect(emitter.emit).toBeCalledWith(INPAGE_EVENTS.RESPONSE, payload);
     });
   });
 
@@ -235,7 +231,6 @@ describe('Request process middleware', () => {
       context.ask = jest.fn().mockResolvedValueOnce({
         status: true,
       });
-
 
       reqProcess.settings = {
         activeAccount: '0x0',

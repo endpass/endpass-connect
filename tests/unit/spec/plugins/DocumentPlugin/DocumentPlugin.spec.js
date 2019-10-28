@@ -50,8 +50,7 @@ describe('Document plugin', () => {
         id: docId,
       });
 
-      expect(context.ask)
-        .toBeCalledWith(MESSENGER_METHODS.CREATE_DOCUMENT);
+      expect(context.ask).toBeCalledWith(MESSENGER_METHODS.CREATE_DOCUMENT);
     });
 
     it('should throw error for create document', async () => {
@@ -67,8 +66,7 @@ describe('Document plugin', () => {
         expect(e).toEqual(new Error('Document creation error'));
       }
 
-      expect(context.ask)
-        .toBeCalledWith(MESSENGER_METHODS.CREATE_DOCUMENT);
+      expect(context.ask).toBeCalledWith(MESSENGER_METHODS.CREATE_DOCUMENT);
     });
   });
 });

@@ -3,7 +3,7 @@ import OauthPlugin from '@/plugins/OauthPlugin';
 describe('OauthPlugin plugin', () => {
   const oauthClientId = 'xxxxxxxxxx';
 
-  const options = {widget: false};
+  const options = { widget: false };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -15,8 +15,6 @@ describe('OauthPlugin plugin', () => {
     expect(
       () => new OauthPlugin({ oauthClientId: undefined, ...options }),
     ).toThrow();
-    expect(
-      () => new OauthPlugin({ oauthClientId, ...options }),
-    ).not.toThrow();
+    expect(() => new OauthPlugin({ oauthClientId, ...options })).not.toThrow();
   });
 });

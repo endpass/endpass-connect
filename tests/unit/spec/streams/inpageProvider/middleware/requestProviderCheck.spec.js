@@ -27,7 +27,7 @@ describe('requestProviderCheck middleware', () => {
     });
     const cachedItem = { ...action };
 
-    requestProviderCheck({ action});
+    requestProviderCheck({ action });
 
     expect(action).toEqual(cachedItem);
   });

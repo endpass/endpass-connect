@@ -58,14 +58,16 @@ Cypress.Commands.add('preparePage', netId => {
   cy.mockInitialData(netId);
 });
 
-Cypress.Commands.add('waitPageLoad', (netId = Network.NET_ID.MAIN, visitBlock = visitBlockBasic) => {
-  cy.visit(`${visitUrl}${visitBlock}`, {
-    onBeforeLoad(win) {
-      // eslint-disable-next-line no-param-reassign
-      win.e2eLogout = function() {
-      };
-      cy.stub(win, 'e2eLogout').as('e2eLogout');
-    },
-  });
-  cy.preparePage(netId);
-});
+Cypress.Commands.add(
+  'waitPageLoad',
+  (netId = Network.NET_ID.MAIN, visitBlock = visitBlockBasic) => {
+    cy.visit(`${visitUrl}${visitBlock}`, {
+      onBeforeLoad(win) {
+        // eslint-disable-next-line no-param-reassign
+        win.e2eLogout = function() {};
+        cy.stub(win, 'e2eLogout').as('e2eLogout');
+      },
+    });
+    cy.preparePage(netId);
+  },
+);

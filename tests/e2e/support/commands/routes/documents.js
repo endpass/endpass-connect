@@ -1,5 +1,7 @@
 import {
-  documentsList, uploadedDocumentId, documentFrontUpload,
+  documentsList,
+  uploadedDocumentId,
+  documentFrontUpload,
 } from '@fixtures/identity/documents';
 import { identityAPIUrl, publicAPIUrl } from '@config';
 
