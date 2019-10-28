@@ -60,15 +60,19 @@ export default class ConnectError extends Error {
   }
 
   static createFromError(error, defaultCode = ERRORS.NOT_DEFINED) {
-    if (!(error instanceof Error)) {
-      return ConnectError.create(defaultCode);
+    if (error instanceof ConnectError) {
+      return error;
     }
 
-    if (!error.code) {
+    if (error instanceof Error) {
       const resError = new ConnectError(error.message);
       resError.code = defaultCode;
       resError.stack = error.stack;
       return resError;
+    }
+
+    if (!(error instanceof Error)) {
+      return ConnectError.create(defaultCode);
     }
 
     return error;
