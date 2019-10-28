@@ -31,6 +31,10 @@ export default class Oauth {
     this.setScopes(scopes);
   }
 
+  get storeId() {
+    return `endpass-oauth:${this.clientId}`;
+  }
+
   /**
    * Initiate token
    * @deprecated
@@ -63,7 +67,7 @@ export default class Oauth {
       tokenObject.scope !== this.scopesString ||
       now >= tokenObject.expires
     ) {
-      LocalStorage.remove(this.clientId);
+      LocalStorage.remove(this.storeId);
     }
   }
 
@@ -106,14 +110,14 @@ export default class Oauth {
     );
 
     if (tokenObject) {
-      LocalStorage.save(this.clientId, tokenObject);
+      LocalStorage.save(this.storeId, tokenObject);
     }
 
     return tokenObject;
   }
 
   logout() {
-    LocalStorage.remove(this.clientId);
+    LocalStorage.remove(this.storeId);
   }
 
   /**
@@ -122,7 +126,7 @@ export default class Oauth {
    * @return {TokenObject | null}
    */
   getTokenObjectFromStore() {
-    return LocalStorage.load(this.clientId);
+    return LocalStorage.load(this.storeId);
   }
 
   /**
