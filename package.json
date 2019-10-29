@@ -109,7 +109,7 @@
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-conventional": "^8.2.0",
     "@cypress/webpack-preprocessor": "^4.1.0",
-    "@endpass/eslint-plugin-endpass": "^0.2.7",
+    "@endpass/eslint-plugin-endpass": "^0.2.8",
     "@semantic-release/changelog": "^3.0.4",
     "@semantic-release/git": "^7.0.16",
     "@types/axios-token-interceptor": "^0.1.2",
