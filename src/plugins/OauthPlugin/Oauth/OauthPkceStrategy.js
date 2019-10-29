@@ -1,6 +1,6 @@
 // @ts-check
-import ConnectError from '@endpass/class/ConnectError';
 import mapToQueryString from '@endpass/utils/mapToQueryString';
+import ConnectError from '@/class/ConnectError';
 import pkce from '@/plugins/OauthPlugin/Oauth/pkce';
 import { MESSENGER_METHODS } from '@/constants';
 
@@ -55,7 +55,10 @@ export default class OauthPkceStrategy {
     );
 
     if (!status) {
-      throw ConnectError.create(error || ERRORS.OAUTH_AUTHORIZE);
+      throw ConnectError.create(
+        error || ERRORS.OAUTH_AUTHORIZE,
+        'Exchange code to token fail',
+      );
     }
     return payload;
   }

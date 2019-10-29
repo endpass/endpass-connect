@@ -1,5 +1,4 @@
-import ConnectError from '@endpass/class/ConnectError';
-
+import ConnectError from '@/class/ConnectError';
 import contextHandlers from './contextHandlers';
 import HandlersFactory from '@/class/HandlersFactory';
 import PluginContainer from '@/class/PluginContainer';

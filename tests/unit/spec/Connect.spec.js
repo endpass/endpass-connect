@@ -1,4 +1,4 @@
-import ConnectError from '@endpass/class/ConnectError';
+import ConnectError from '@/class/ConnectError';
 import ConnectPlugin from '@/plugins/ConnectPlugin';
 import ProviderPlugin from '@/plugins/ProviderPlugin';
 import OauthPlugin from '@/plugins/OauthPlugin';
@@ -44,7 +44,7 @@ describe('Connect class', () => {
         const err = new Error('Connect library requires OAuth client id!');
 
         expect(e).toEqual(err);
-        expect(e.code).toBe(ERRORS.OAUTH_REQUIRE_ID)
+        expect(e.code).toBe(ERRORS.OAUTH_REQUIRE_ID);
       }
     });
 

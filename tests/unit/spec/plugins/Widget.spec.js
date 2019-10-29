@@ -115,7 +115,10 @@ describe('WidgetPlugin class', () => {
 
       jest.advanceTimersByTime(300);
 
-      expect(widget.emitFrameEvent).toBeCalledWith(expect.any(Object), 'destroy');
+      expect(widget.emitFrameEvent).toBeCalledWith(
+        expect.any(Object),
+        'destroy',
+      );
       expect(widget.frame).toBeNull();
     });
 

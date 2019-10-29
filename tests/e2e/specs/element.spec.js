@@ -9,8 +9,7 @@ describe('accounts', function() {
   it('should open account in element', () => {
     cy.authFrameContinueRun();
 
-    cy
-      .get('[data-test=dialog-iframe]')
+    cy.get('[data-test=dialog-iframe]')
       .getIframeElement('.frame')
       .contains('Endpass Auth bridge');
 

@@ -6,5 +6,5 @@ const apiServer = 'https://api.endpass.com/v1';
 module.exports = {
   isProduction,
   oauthServer,
-  apiServer
+  apiServer,
 };

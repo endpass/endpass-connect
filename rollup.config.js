@@ -13,8 +13,10 @@ import ts from 'rollup-plugin-typescript';
 import postcss from 'rollup-plugin-postcss';
 import url from 'postcss-url';
 import babel from 'rollup-plugin-babel';
+import copy from 'rollup-plugin-copy';
 
 import pkg from './package.json';
+import outputList from './output.json';
 
 const { getEnv } = require('./env');
 
@@ -36,48 +38,60 @@ const outputConf = {
   sourcemap: withSourceMaps,
 };
 
-const commonConfig = {
-  external: [...Object.keys(pkg.dependencies)],
-  plugins: [
-    resolve({
-      preferBuiltins: false,
-    }),
-    alias({
-      '@': resolveDir('./src'),
-      resolve: ['.js', '/index.js'],
-    }),
-    json(),
-    replace({
-      ENV: JSON.stringify(ENV),
-    }),
-    ts(),
-    babel({
-      runtimeHelpers: true,
-      exclude: 'node_modules/**',
-      extensions: ['.js', '.ts'],
-    }),
-    commonjs(),
-    !withSourceMaps && terser(),
-    visualizer(),
-    postcss({
-      plugins: [
-        url({
-          url: 'inline',
-          encodeType: 'base64',
-          optimizeSvgEncode: true,
-        })
-      ]
-    }),
-  ],
-  watch: {
-    exclude: ['node_modules/**'],
-  },
+const commonConfig = config => {
+  return {
+    external: [...Object.keys(pkg.dependencies)],
+    plugins: [
+      resolve({
+        preferBuiltins: false,
+      }),
+      alias({
+        '@': resolveDir('./src'),
+        resolve: ['.js', '/index.js'],
+      }),
+      json(),
+      replace({
+        ENV: JSON.stringify(ENV),
+      }),
+      ts(),
+      babel({
+        runtimeHelpers: true,
+        exclude: 'node_modules/**',
+        extensions: ['.js', '.ts'],
+      }),
+      commonjs(),
+      !withSourceMaps && terser(),
+      config.withCopy &&
+        copy({
+          targets: [
+            {
+              src: config.withCopy,
+              dest: './dist',
+            },
+          ],
+        }),
+      postcss({
+        plugins: [
+          url({
+            url: 'inline',
+            encodeType: 'base64',
+            optimizeSvgEncode: true,
+          }),
+        ],
+      }),
+      visualizer(),
+    ],
+    watch: {
+      exclude: ['node_modules/**'],
+    },
+  };
 };
 
-const createConfig = ({ input, umd, module }) => {
+const createConfig = childConfig => {
+  const { input, umd, module } = childConfig;
   return {
     input: resolveFile(input),
-    ...commonConfig,
+    ...commonConfig(childConfig),
     output: [
       {
         ...outputConf,
@@ -100,11 +114,5 @@ export default [
     umd: pkg.umd,
     module: pkg.module,
   }),
-  ...pkg.connectPlugins.map(plugin => {
-    return createConfig({
-      input: plugin.input,
-      umd: plugin.umd,
-      module: plugin.module,
-    });
-  }),
+  ...outputList.map(createConfig),
 ];

@@ -127,7 +127,7 @@ describe('inpageProviderStream', () => {
           providerPlugin,
           action: expect.objectContaining({
             request: firstItem,
-          })
+          }),
         }),
       );
       expect(middleWareMock).toHaveBeenNthCalledWith(
@@ -136,7 +136,7 @@ describe('inpageProviderStream', () => {
           providerPlugin,
           action: expect.objectContaining({
             request: secondItem,
-          })
+          }),
         }),
       );
     });

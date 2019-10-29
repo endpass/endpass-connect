@@ -6,11 +6,12 @@ import Polling from '@/plugins/OauthPlugin/Oauth/Polling';
 jest.mock('@/plugins/OauthPlugin/FrameStrategy/IframeFrame');
 
 jest.mock('@/plugins/OauthPlugin/Oauth/Polling', () => {
-  class PollingMock {
-  }
+  class PollingMock {}
 
   PollingMock.prototype.open = jest.fn().mockResolvedValue();
-  PollingMock.prototype.getResult = jest.fn().mockResolvedValue({ state: 'pkce-random-string' });
+  PollingMock.prototype.getResult = jest
+    .fn()
+    .mockResolvedValue({ state: 'pkce-random-string' });
   return PollingMock;
 });
 
@@ -190,8 +191,7 @@ describe('Oauth class', () => {
       mockOauthTokenResult(null, false);
       try {
         await oauth.getToken();
-      } catch (e) {
-      }
+      } catch (e) {}
 
       expect(oauth.getTokenObjectFromStore()).toBe(null);
     });

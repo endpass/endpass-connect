@@ -45,8 +45,7 @@ describe('Wallet plugin', () => {
       const res = await plugin.generateWallet();
 
       expect(res).toEqual(payload);
-      expect(context.ask)
-        .toBeCalledWith(MESSENGER_METHODS.GENERATE_WALLET);
+      expect(context.ask).toBeCalledWith(MESSENGER_METHODS.GENERATE_WALLET);
     });
 
     it('should throw error for create wallet', async () => {
@@ -62,8 +61,7 @@ describe('Wallet plugin', () => {
         expect(e).toEqual(new Error('Wallet creation error'));
       }
 
-      expect(context.ask)
-        .toBeCalledWith(MESSENGER_METHODS.GENERATE_WALLET);
+      expect(context.ask).toBeCalledWith(MESSENGER_METHODS.GENERATE_WALLET);
     });
   });
 });

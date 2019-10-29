@@ -1,5 +1,4 @@
 // @ts-check
-import ConnectError from '@endpass/class/ConnectError';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import { DIRECTION, PLUGIN_NAMES, PLUGIN_METHODS } from '@/constants';
 import StateOpen from './states/StateOpen';
@@ -8,8 +7,6 @@ import dialogHandlers from '@/plugins/DialogPlugin/dialogHandlers';
 import PluginBase from '@/plugins/PluginBase';
 import { getFrameRouteUrl } from '@/util/url';
 import DialogView from '@/class/DialogView';
-
-const { ERRORS } = ConnectError;
 
 export default class DialogPlugin extends PluginBase {
   static get pluginName() {
@@ -53,7 +50,7 @@ export default class DialogPlugin extends PluginBase {
     if (!this.dialogMessenger) {
       this.dialogMessenger = new CrossWindowMessenger({
         // showLogs: !ENV.isProduction,
-        name: `connect-dialog[]`,
+        name: 'connect-dialog[]',
         to: DIRECTION.AUTH,
         from: DIRECTION.CONNECT,
       });
@@ -105,7 +102,7 @@ export default class DialogPlugin extends PluginBase {
    */
   async ask(method, payload) {
     if (!method) {
-      throw ConnectError.create(ERRORS.BRIDGE_PROVIDE_METHOD);
+      throw new Error('Bridge is not initiated');
     }
 
     await this.dialogView.waitReady();

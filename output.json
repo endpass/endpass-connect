@@ -1,0 +1,59 @@
+[
+  {
+    "library": "EndpassConnectError",
+    "input": "./src/class/ConnectError.js",
+    "main": "./ConnectError.min.js",
+    "module": "./ConnectError.js",
+    "umd": "./ConnectError.umd.js",
+    "browser": "./ConnectError.browser.js",
+    "withCopy": ["./types/ConnectError.d.ts"]
+  },
+  {
+    "library": "EndpassProviderPlugin",
+    "input": "./src/plugins/ProviderPlugin/index.js",
+    "main": "./provider.min.js",
+    "module": "./provider.js",
+    "umd": "./provider.umd.js",
+    "browser": "./provider.browser.js"
+  },
+  {
+    "library": "EndpassAuthPlugin",
+    "input": "./src/plugins/AuthorizePlugin/index.js",
+    "main": "./auth.min.js",
+    "module": "./auth.js",
+    "umd": "./auth.umd.js",
+    "browser": "./auth.browser.js"
+  },
+  {
+    "library": "EndpassOauthPlugin",
+    "input": "./src/plugins/OauthPlugin/index.js",
+    "main": "./oauth.min.js",
+    "module": "./oauth.js",
+    "umd": "./oauth.umd.js",
+    "browser": "./oauth.browser.js"
+  },
+  {
+    "library": "EndpassDocumentPlugin",
+    "input": "./src/plugins/DocumentPlugin/index.js",
+    "main": "./document.min.js",
+    "module": "./document.js",
+    "umd": "./document.umd.js",
+    "browser": "./document.browser.js"
+  },
+  {
+    "library": "EndpassLoginButtonPlugin",
+    "input": "./src/plugins/LoginButtonPlugin/index.js",
+    "main": "./loginButton.min.js",
+    "module": "./loginButton.js",
+    "umd": "./loginButton.umd.js",
+    "browser": "./loginButton.browser.js"
+  },
+  {
+    "library": "EndpassWalletPlugin",
+    "input": "./src/plugins/WalletPlugin/index.js",
+    "main": "./wallet.min.js",
+    "module": "./wallet.js",
+    "umd": "./wallet.umd.js",
+    "browser": "./wallet.browser.js"
+  }
+]

@@ -18,7 +18,9 @@ Cypress.Commands.add('authFramePrepare', () => {
 });
 
 Cypress.Commands.add('authFrameWrapperVisible', () => {
-  return cy.get('[data-test=dialog-wrapper][data-visible=true]').as('authFrameWrapperVisible');
+  return cy
+    .get('[data-test=dialog-wrapper][data-visible=true]')
+    .as('authFrameWrapperVisible');
 });
 
 Cypress.Commands.add('authFrameWrapperHidden', () => {
@@ -27,7 +29,10 @@ Cypress.Commands.add('authFrameWrapperHidden', () => {
 
 Cypress.Commands.add('getElementFromAuth', selector => {
   cy.authFrameWrapperVisible();
-  return cy.get('[data-test=dialog-iframe]').getIframeElement(selector).as('getElementFromAuth');
+  return cy
+    .get('[data-test=dialog-iframe]')
+    .getIframeElement(selector)
+    .as('getElementFromAuth');
 });
 
 Cypress.Commands.add('widgetFrameIframe', () => {

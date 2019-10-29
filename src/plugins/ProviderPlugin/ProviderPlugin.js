@@ -1,6 +1,6 @@
-import ConnectError from '@endpass/class/ConnectError';
 import EventEmitter from '@endpass/class/EventEmitter';
 import Network from '@endpass/class/Network';
+import ConnectError from '@/class/ConnectError';
 import InpageProvider from '@/plugins/ProviderPlugin/InpageProvider';
 import {
   INPAGE_EVENTS,
@@ -49,7 +49,7 @@ export default class ProviderPlugin extends PluginBase {
           error =
             e.code === ERRORS.AUTH_CANCELED_BY_USER
               ? e
-              : ConnectError.create(ERRORS.REQUEST_DATA);
+              : ConnectError.create(ERRORS.AUTH);
         }
       }
 
@@ -103,7 +103,7 @@ export default class ProviderPlugin extends PluginBase {
       );
 
       if (!status) {
-        throw ConnectError.create(code || ERRORS.AUTH);
+        throw ConnectError.create(code || ERRORS.PROVIDER);
       }
 
       const { settings = {} } = payload;
@@ -120,7 +120,7 @@ export default class ProviderPlugin extends PluginBase {
       return res;
     } catch (err) {
       console.error(err);
-      throw ConnectError.create(err.code || ERRORS.USER_NOT_AUTHORIZED);
+      throw ConnectError.create(err.code || ERRORS.PROVIDER);
     }
   }
 

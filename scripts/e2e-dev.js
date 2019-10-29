@@ -1,6 +1,5 @@
 const executor = require('./executor');
 
-
 executor('node ./scripts/dev-auth-build.js');
 executor.fork([
   'node ./scripts/dev-connect.js',

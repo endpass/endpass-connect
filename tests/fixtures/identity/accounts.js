@@ -10,7 +10,6 @@ export const email = 'user@example.com';
 export const regularPassword = 'regularPassword';
 export const otpCode = '123456';
 
-
 export const accountList = [address, addressXpub, addressHdChild];
 
 // mnemonic for hdv3

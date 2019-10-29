@@ -1,6 +1,6 @@
 // @ts-check
-import ConnectError from '@endpass/class/ConnectError';
 import queryStringToMap from '@endpass/utils/queryStringToMap';
+import ConnectError from '@/class/ConnectError';
 
 const { ERRORS } = ConnectError;
 const replaceReg = /^#\/?/;
@@ -28,7 +28,7 @@ export default class Polling {
           if (!target || target.closed !== false) {
             this.close();
 
-            reject(ConnectError.create(ERRORS.POPUP_CLOSED));
+            reject(ConnectError.create(ERRORS.OAUTH_POPUP_CLOSED));
 
             return;
           }

@@ -2,7 +2,7 @@
 import axios from 'axios';
 import tokenProvider from 'axios-token-interceptor';
 import LocalStorage from '@endpass/class/LocalStorage';
-import ConnectError from '@endpass/class/ConnectError';
+import ConnectError from '@/class/ConnectError';
 import Polling from '@/plugins/OauthPlugin/Oauth/Polling';
 
 /** @typedef {string} Token */
@@ -29,6 +29,10 @@ export default class Oauth {
     this.scopesString = '';
 
     this.setScopes(scopes);
+  }
+
+  get storeId() {
+    return `endpass-oauth:${this.clientId}`;
   }
 
   /**
@@ -63,7 +67,7 @@ export default class Oauth {
       tokenObject.scope !== this.scopesString ||
       now >= tokenObject.expires
     ) {
-      LocalStorage.remove(this.clientId);
+      LocalStorage.remove(this.storeId);
     }
   }
 
@@ -87,12 +91,15 @@ export default class Oauth {
     const pollResult = await poll.getResult(url);
 
     if (pollResult.state !== this.oauthStrategy.state) {
-      throw ConnectError.create(ERRORS.OAUTH_AUTHORIZE_STATE);
+      throw ConnectError.create(
+        ERRORS.OAUTH_AUTHORIZE,
+        'State check unsuccessful',
+      );
     }
 
     if (pollResult.error) {
       throw ConnectError.create(
-        ERRORS.OAUTH_AUTHORIZE_STATE,
+        ERRORS.OAUTH_AUTHORIZE,
         `Authorization failed: ${pollResult.error}`,
       );
     }
@@ -103,14 +110,14 @@ export default class Oauth {
     );
 
     if (tokenObject) {
-      LocalStorage.save(this.clientId, tokenObject);
+      LocalStorage.save(this.storeId, tokenObject);
     }
 
     return tokenObject;
   }
 
   logout() {
-    LocalStorage.remove(this.clientId);
+    LocalStorage.remove(this.storeId);
   }
 
   /**
@@ -119,7 +126,7 @@ export default class Oauth {
    * @return {TokenObject | null}
    */
   getTokenObjectFromStore() {
-    return LocalStorage.load(this.clientId);
+    return LocalStorage.load(this.storeId);
   }
 
   /**
