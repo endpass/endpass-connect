@@ -41,12 +41,6 @@ const { ERRORS } = ConnectError;
  * @typedef { { [key: string]: Function } } ContextHandlers
  */
 
-/**
- * @typedef {object} OriginReq
- * @property {string} method
- * @property {Function} answer
- */
-
 export default class Context {
   /**
    * @param {ContextOptions} options
