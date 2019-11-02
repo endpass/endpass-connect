@@ -8,7 +8,7 @@ const { ERRORS } = ConnectError;
  * @typedef {Function & {
  *  options: object,
  *  executeMethod: Function,
- *  plugins: any,
+ *  plugins: ContextPlugins,
  * }} ContextCarrier
  */
 
