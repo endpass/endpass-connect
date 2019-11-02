@@ -1,3 +1,5 @@
+// @ts-check
+
 import ConnectError from '@/class/ConnectError';
 import contextHandlers from './contextHandlers';
 import HandlersFactory from '@/class/HandlersFactory';

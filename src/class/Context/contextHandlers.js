@@ -1,3 +1,5 @@
+// @ts-check
+
 import ConnectError from '@/class/ConnectError';
 import { PLUGIN_METHODS, MESSENGER_METHODS, PLUGIN_NAMES } from '@/constants';
 
