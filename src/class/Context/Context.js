@@ -11,34 +11,66 @@ const { ERRORS } = ConnectError;
  * @typedef {import('@/plugins/PluginBase')} ConnectPlugin
  */
 
+/**
+ * @typedef {object} ContextOptions
+ * @property {string} oauthClientId OAuth client id
+ * @property {Array<ConnectPlugin>} [plugins] list of plugins
+ * @property {string} [authUrl] Url of hosted Endpass Connect Application
+ * @property {string} [namespace] namespace for see difference,
+ *  between two instances
+ * @property {boolean} [isIdentityMode] isIdentityMode for define auth
+ *  like identity
+ * @property {object} [widget] Widget configuration object.
+ *  If provided widget will be mounted automatically
+ * @property {object} [widget.position] Widget positions. By default equals to `bottom right`
+ */
+
+/**
+ * @typedef {object} ContextError
+ * @property {number} code
+ */
+
+/**
+ * @typedef {object} EventResult
+ * @property {boolean} status
+ * @property {NodeJS.ErrnoException} error
+ * @property {keyof import('ConnectError').ERRORS} code
+ */
+
+/**
+ * @typedef { { [key: string]: Function } } ContextHandlers
+ */
+
+/**
+ * @typedef {object} OriginReq
+ * @property {string} method
+ * @property {Function} answer
+ */
+
 export default class Context {
   /**
-   * @param {object} options
+   * @param {ContextOptions} options
    * @param {ConnectPlugin} ClassPlugin plugin for singleton mode
-   * @param {string} options.oauthClientId OAuth client id
-   * @param {Array<ConnectPlugin>]} [options.plugins] list of plugins
-   * @param {string} [options.authUrl] Url of hosted Endpass Connect Application
-   * @param {string} [options.namespace] namespace for see difference,
-   *  between two instances
-   * @param {boolean} [options.isIdentityMode] isIdentityMode for define auth
-   *  like identity
-   * @param {object} [options.widget] Widget configuration object.
-   *  If provided widget will be mounted automatically
-   * @param {object} [options.widget.position] Widget positions. By default
-   *  equals to `bottom right`
    */
-  constructor(options = {}, ClassPlugin) {
+  constructor(options, ClassPlugin) {
     this.options = options;
 
     if (!options.oauthClientId) {
       throw ConnectError.create(ERRORS.OAUTH_REQUIRE_ID);
     }
 
+    /**
+     * @type {ContextHandlers} ContextHandlers
+     */
     this.contextHandlers = HandlersFactory.createHandlers(
       this,
       contextHandlers,
     );
 
+    // @ts-ignore
+    // We should define interface for constructor function, or use a class instead
+    // Every of there ways require refactoring and change function signatures
+    // So just ignore it at this moment
     this.plugins = new PluginContainer(options, this, ClassPlugin);
     this.plugins.init();
   }
@@ -61,13 +93,18 @@ export default class Context {
   /**
    *
    * @param {*} payload
-   * @param {object} originReq
+   * @param {OriginReq} originReq
    * @return {Promise<void>}
    */
   async handleEvent(payload, originReq) {
     let isAnswered = false;
     const proxyReq = {
       ...originReq,
+
+      /**
+       * @param {EventResult} [result]
+       * @returns void
+       */
       answer: result => {
         if (isAnswered) {
           return;
@@ -105,8 +142,15 @@ export default class Context {
    * @return {Promise<*>}
    */
   executeMethod(method, payload) {
+    /**
+     * @param {Function} resolve 
+     * @param {Function} reject 
+     */
     const executor = async (resolve, reject) => {
-      const answer = (result = {}) => {
+      /**
+       * @param {EventResult} result 
+       */
+      const answer = result => {
         const { status, error, code } = result;
         if (status === false) {
           const err = ConnectError.createFromError(error, code);
