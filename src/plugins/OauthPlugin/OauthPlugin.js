@@ -1,3 +1,5 @@
+// @ts-check
+
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import OauthPkceStrategy from '@/plugins/OauthPlugin/Oauth/OauthPkceStrategy';
 import Oauth from '@/plugins/OauthPlugin/Oauth';

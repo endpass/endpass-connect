@@ -1,3 +1,5 @@
+// @ts-check
+
 import { MESSENGER_METHODS } from '@/constants';
 
 const resizeFrame = plugin => (payload, req) => {

@@ -1,3 +1,5 @@
+// @ts-check
+
 export default oauthPlugin => ({
   /**
    * Fetch user data via oauth
