@@ -7,40 +7,6 @@ import PluginContainer from '@/class/PluginContainer';
 
 const { ERRORS } = ConnectError;
 
-/**
- * @typedef {import('@/plugins/PluginBase')} ConnectPlugin
- */
-
-/**
- * @typedef {object} ContextOptions
- * @property {string} oauthClientId OAuth client id
- * @property {Array<ConnectPlugin>} [plugins] list of plugins
- * @property {string} [authUrl] Url of hosted Endpass Connect Application
- * @property {string} [namespace] namespace for see difference,
- *  between two instances
- * @property {boolean} [isIdentityMode] isIdentityMode for define auth
- *  like identity
- * @property {object} [widget] Widget configuration object.
- *  If provided widget will be mounted automatically
- * @property {object} [widget.position] Widget positions. By default equals to `bottom right`
- */
-
-/**
- * @typedef {object} ContextError
- * @property {number} code
- */
-
-/**
- * @typedef {object} EventResult
- * @property {boolean} status
- * @property {NodeJS.ErrnoException} error
- * @property {keyof import('ConnectError').ERRORS} code
- */
-
-/**
- * @typedef { { [key: string]: Function } } ContextHandlers
- */
-
 export default class Context {
   /**
    * @param {ContextOptions} options

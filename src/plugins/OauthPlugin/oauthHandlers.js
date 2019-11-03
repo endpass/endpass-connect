@@ -1,26 +1,31 @@
 // @ts-check
-
 import { MESSENGER_METHODS } from '@/constants';
 
-const resizeFrame = plugin => (payload, req) => {
-  if (!plugin.isSourceEqualTarget(req.source)) {
-    return;
-  }
-  plugin.resizeFrame(payload);
+const resizeFrame = plugin => {
+  return/** @type ContextHandler */ (payload, req) => {
+    if (!plugin.isSourceEqualTarget(req.source)) {
+      return;
+    }
+    plugin.resizeFrame(payload);
+  };
 };
 
-const readyFrame = plugin => (payload, req) => {
-  if (!plugin.isSourceEqualTarget(req.source)) {
-    return;
-  }
-  plugin.handleReadyFrame(payload, req);
+const readyFrame = plugin => {
+  return/** @type ContextHandler */ (payload, req) => {
+    if (!plugin.isSourceEqualTarget(req.source)) {
+      return;
+    }
+    plugin.handleReadyFrame(payload, req);
+  };
 };
 
-const closeFrame = plugin => (payload, req) => {
-  if (!plugin.isSourceEqualTarget(req.source)) {
-    return;
-  }
-  plugin.handleCloseFrame();
+const closeFrame = plugin => {
+  return/** @type ContextHandler */ (payload, req) => {
+    if (!plugin.isSourceEqualTarget(req.source)) {
+      return;
+    }
+    plugin.handleCloseFrame();
+  };
 };
 
 export default {

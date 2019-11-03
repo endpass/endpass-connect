@@ -4,22 +4,6 @@ import { PLUGIN_METHODS, MESSENGER_METHODS, PLUGIN_NAMES } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
-/**
- * @typedef {Function & {
- *  options: object,
- *  executeMethod: Function,
- *  plugins: ContextPlugins,
- * }} ContextCarrier
- */
-
-/**
- * @typedef { {[key: string]: any} } ContextPayload
- */
-
-/**
- * @typedef { {(payload: ContextPayload, req: OriginReq): void} } ContextHandler
- */
-
 /** 
  * @param {ContextCarrier} context 
  * 

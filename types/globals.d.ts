@@ -15,4 +15,44 @@ declare module '@endpass/class/LocalStorage' {
 declare type OriginReq = {
   method: string,
   answer: Function,
+  source?: string,
+}
+
+declare type ContextCarrier = Function & {
+  options: ContextOptions,
+  executeMethod: Function,
+  plugins: ContextPlugins,
+}
+
+declare type ContextPayload = {
+  [key: string]: any,
+}
+
+declare type ContextHandler = (payload: ContextPayload, req: OriginReq) => void;
+
+declare type ConnectPlugin = typeof import('@/plugins/PluginBase');
+
+declare type ContextOptions = {
+  oauthClientId: string,
+  plugins?: Array<ConnectPlugin>,
+  authUrl?: string,
+  namespace?: string,
+  isIdentityMode?: boolean,
+  widget: {
+    position: object,
+  },
+}
+
+declare type ContextError = {
+  code: number,
+}
+
+declare type EventResult = {
+  status: boolean,
+  error: NodeJS.ErrnoException | Error,
+  code: keyof import('ConnectError').ERRORS,
+}
+
+declare type ContextHandlers = {
+  [key: string]: Function,
 }
