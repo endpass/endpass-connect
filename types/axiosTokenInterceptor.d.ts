@@ -1,5 +1,5 @@
-declare module "axios-token-interceptor" {
-  import {AxiosRequestConfig} from 'axios';
+declare module 'axios-token-interceptor' {
+  import { AxiosRequestConfig } from 'axios';
 
   type InterceptorOptions = {
     header?: string,
@@ -14,5 +14,5 @@ declare module "axios-token-interceptor" {
   type InterceptRequestFunction = (value: AxiosRequestConfig) => AxiosRequestConfig | Promise<AxiosRequestConfig>;
 
   export default function tokenInterceptor(options: InterceptorOptions): InterceptRequestFunction;
-  export function tokenCache(getToken: GetTokenFunction, options: InterceptorOptions): any;
+  export function tokenCache(getToken: GetTokenFunction, options: InterceptorOptions): number | Function;
 }
