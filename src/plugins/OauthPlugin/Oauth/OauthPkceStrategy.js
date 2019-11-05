@@ -77,7 +77,7 @@ export default class OauthPkceStrategy {
     const codeChallenge = await pkce.challengeFromVerifier(codeVerifier);
 
     const server = oauthServer || ENV.oauthServer;
-    const url = mapToQueryString(`${server}/auth`, {
+    const url = mapToQueryString(`${server}/oauth/auth`, {
       ...params,
       state,
       response_type: 'code',
