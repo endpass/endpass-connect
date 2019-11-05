@@ -105,8 +105,9 @@ const initDialog = context => () => {
 };
 
 const loginWithOauth = context => async (payload, req) => {
+  const oauthServer = context.options.oauthServer || ENV.oauthServer;
   const { data } = await context.plugins.oauth.request({
-    url: `${ENV.apiServer}/user`,
+    url: `${oauthServer}/user`,
     scopes: ['user:email:read'],
   });
   req.answer(data);
