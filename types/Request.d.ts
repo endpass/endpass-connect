@@ -3,7 +3,7 @@
 declare type OriginReq = {
   method: string,
   answer: Function,
-  source?: string,
+  source?: ContextWindow,
 }
 
 declare type RequestEventPayload = {
@@ -15,12 +15,10 @@ declare type RequestEventHandlers = {
   [key: string]: RequestEventHandler,
 }
 
-declare type ConnectErrors = import('ConnectError').ERRORS;
-
 declare type EventResult = {
   status: boolean,
   error: Error,
-  code: ConnectErrors[keyof ConnectErrors]
+  code: import('ConnectError').ERROR_VALUES
 }
 
 declare type RequestMethods = PluginMethods & MessengerMethods & Web3Methods & InpageEvents;

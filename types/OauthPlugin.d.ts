@@ -1,10 +1,15 @@
 declare type OauthPlugin = import('@/plugins/OauthPlugin/OauthPlugin').default;
-declare type OauthOptions = {
-  scopes?: string[],
-  url?: string,
+
+declare type OauthPluginOptions = {
+  oauthClientId: string,
+  oauthServer: string,
+  oauthPopup?: boolean,
+  scopes: string[],
 }
 
-declare type OauthOptionsWithStrategy = OauthOptions & {
+declare type OauthOptionsWithStrategy = {
+  scopes?: string[],
+  url?: string,
   clientId: string,
   oauthServer: string,
   oauthStrategy: import('@/plugins/OauthPlugin/Oauth/OauthPkceStrategy').default,

@@ -59,7 +59,7 @@ export default class OauthPlugin extends PluginBase {
   }
 
   /**
-   * @param {ContextOptions} options
+   * @param {OauthPluginOptions} options
    * @param {Context} context
    */
   constructor(options, context) {
@@ -74,7 +74,7 @@ export default class OauthPlugin extends PluginBase {
 
     this.frameStrategy.on(
       FrameStrategy.EVENT_UPDATE_TARGET,
-      /** @param {string} target */ target => {
+      /** @param {ContextWindow} target */ target => {
         this.messenger.setTarget(target);
       },
     );
@@ -93,15 +93,10 @@ export default class OauthPlugin extends PluginBase {
   }
 
   /**
-   * @param {string} [source]
+   * @param {ContextWindow} [source]
    * @returns {boolean}
    */
   isSourceEqualTarget(source) {
-    // @ts-ignore
-    // Here we have excellent example of duck-overtyped logic.
-    // Seems to we compare string with WIndow object (or null),
-    // and if so, this predicate will return `true` only if source
-    // will be `null`. For now will better ignore it.
     return source === this.frameStrategy.target;
   }
 

@@ -5,3 +5,5 @@ declare type ContextPlugins = {
 }
 
 declare type ConnectPlugin = typeof import('@/plugins/PluginBase');
+
+declare type ContextWindow = Window | {};
