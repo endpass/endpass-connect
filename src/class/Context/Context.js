@@ -20,7 +20,7 @@ export default class Context {
     }
 
     /**
-     * @type {ContextHandlers} ContextHandlers
+     * @type {RequestEventHandlers} ContextHandlers
      */
     this.contextHandlers = HandlersFactory.createHandlers(
       this,
@@ -98,7 +98,7 @@ export default class Context {
   /**
    *
    * @param {string} method
-   * @param {*} payload
+   * @param {*} [payload]
    * @return {Promise<*>}
    */
   executeMethod(method, payload) {

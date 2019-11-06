@@ -5,12 +5,12 @@ import { PLUGIN_METHODS, MESSENGER_METHODS, PLUGIN_NAMES } from '@/constants';
 const { ERRORS } = ConnectError;
 
 /** 
- * @param {ContextCarrier} context 
+ * @param {Context} context 
  * 
- * @returns ContextHandler
+ * @returns {RequestEventHandler}
  */
 const initiate = context => {
-  return /** @type ContextHandler */ (payload, req) => {
+  return (payload, req) => {
     const { isIdentityMode } = context.options;
   
     req.answer({
@@ -20,12 +20,12 @@ const initiate = context => {
 }
 
 /** 
- * @param {ContextCarrier} context 
+ * @param {Context} context 
  * 
- * @returns ContextHandler
+ * @returns {RequestEventHandler}
  */
 const changeSettings = context => {
-  return /** @type ContextHandler */ async (payload, req) => {
+  return async (payload, req) => {
     try {
       await context.executeMethod(
         PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS,
@@ -44,36 +44,36 @@ const changeSettings = context => {
 }
 
 /** 
- * @param {ContextCarrier} context 
+ * @param {Context} context 
  * 
- * @returns ContextHandler
+ * @returns {RequestEventHandler}
  */
 const widgetGetSettings = context => {
-  return /** @type ContextHandler */ (payload, req) => {
+  return (payload, req) => {
     const settings = context.plugins.provider.getInpageProviderSettings();
     req.answer(settings);
   };
 }
 
 /** 
- * @param {ContextCarrier} context 
+ * @param {Context} context 
  * 
- * @returns ContextHandler
+ * @returns {RequestEventHandler}
  */
 const authorize = context => {
-  return /** @type ContextHandler */ async (payload, req) => {
+  return async (payload, req) => {
     const res = await context.plugins.authorize.authorizeMe(payload);
     req.answer(res);
   };
 }
 
 /** 
- * @param {ContextCarrier} context 
+ * @param {Context} context 
  * 
- * @returns ContextHandler
+ * @returns {RequestEventHandler}
  */
 const setProviderSettings = context => {
-  return /** @type ContextHandler */ payload => {
+  return payload => {
     context.plugins.provider.setInpageProviderSettings(payload);
 
     const settings = context.plugins.provider.getInpageProviderSettings();
@@ -86,23 +86,23 @@ const setProviderSettings = context => {
 }
 
 /** 
- * @param {ContextCarrier} context 
+ * @param {Context} context 
  * 
- * @returns ContextHandler
+ * @returns {RequestEventHandler}
  */
 const initWidget = context => {
-  return /** @type ContextHandler */ (payload, req) => {
+  return (payload, req) => {
     req.answer(context.plugins.widget.mountSettings);
   };
 }
 
 /** 
- * @param {ContextCarrier} context 
+ * @param {Context} context 
  * 
- * @returns ContextHandler
+ * @returns {RequestEventHandler}
  */
 const logout = context => {
-  return /** @type ContextHandler */ async (payload, req) => {
+  return async (payload, req) => {
     try {
       const { authorize: authPlugin, messengerGroup } = context.plugins;
       const res = await authPlugin.logout();
@@ -125,9 +125,9 @@ const logout = context => {
 }
 
 /** 
- * @param {ContextCarrier} context 
+ * @param {Context} context 
  * 
- * @returns ContextHandler
+ * @returns {RequestEventHandler}
  */
 const unmountWidget = context => async () => {
   await context.plugins.widget.unmount();
@@ -137,9 +137,9 @@ const unmountWidget = context => async () => {
 };
 
 /** 
- * @param {ContextCarrier} context 
+ * @param {Context} context 
  * 
- * @returns ContextHandler
+ * @returns {RequestEventHandler}
  */
 const mountWidget = context => async () => {
   await context.plugins.widget.mount();
@@ -147,9 +147,9 @@ const mountWidget = context => async () => {
 };
 
 /** 
- * @param {ContextCarrier} context 
+ * @param {Context} context 
  * 
- * @returns ContextHandler
+ * @returns {RequestEventHandler}
  */
 const initDialog = context => () => {
   const { dialog } = context.plugins;
@@ -170,9 +170,9 @@ const initDialog = context => () => {
 };
 
 /** 
- * @param {ContextCarrier} context 
+ * @param {Context} context 
  * 
- * @returns ContextHandler
+ * @returns {RequestEventHandler}
  */
 const loginWithOauth = context => async (payload, req) => {
   const oauthServer = context.options.oauthServer || ENV.oauthServer;
@@ -181,30 +181,44 @@ const loginWithOauth = context => async (payload, req) => {
     scopes: ['user:email:read'],
   });
   req.answer(data);
-};
+}
 
-const createDocument = context => async (payload, req) => {
-  const res = await context.plugins.document.createDocument(payload);
-  req.answer(res);
-};
+/** 
+ * @param {Context} context 
+ * 
+ * @returns {RequestEventHandler}
+ */
+const createDocument = context => {
+  return async (payload, req) => {
+    const res = await context.plugins.document.createDocument(payload);
+    req.answer(res);
+  };
+}
 
-const toggleWidget = context => async payload => {
-  if (!(PLUGIN_NAMES.WIDGET in context.plugins)) {
-    return;
-  }
+/** 
+ * @param {Context} context 
+ * 
+ * @returns {RequestEventHandler}
+ */
+const toggleWidget = context => {
+  return async payload => {
+    if (!(PLUGIN_NAMES.WIDGET in context.plugins)) {
+      return;
+    }
 
-  // eslint-disable-next-line no-prototype-builtins
-  const status = payload.hasOwnProperty('status') ? payload.status : payload;
+    // eslint-disable-next-line no-prototype-builtins
+    const status = payload.hasOwnProperty('status') ? payload.status : payload;
 
-  if (!status) {
-    await context.executeMethod(MESSENGER_METHODS.WIDGET_UNMOUNT);
-    return;
-  }
+    if (!status) {
+      await context.executeMethod(MESSENGER_METHODS.WIDGET_UNMOUNT);
+      return;
+    }
 
-  if (status && context.options.widget !== false) {
-    await context.executeMethod(PLUGIN_METHODS.CONTEXT_MOUNT_WIDGET);
-  }
-};
+    if (status && context.options.widget !== false) {
+      await context.executeMethod(PLUGIN_METHODS.CONTEXT_MOUNT_WIDGET);
+    }
+  };
+}
 
 export default {
   [MESSENGER_METHODS.AUTH_STATUS]: toggleWidget,
