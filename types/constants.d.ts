@@ -108,17 +108,6 @@ declare module '@/constants' {
   const DEFAULT_AUTH_URL: 'https://auth.endpass.com';
   const INPAGE_ID_PREFIX: 'ep_';
 
-  const DAPP_WHITELISTED_METHODS: Array<
-    'eth_sign' | 'personal_sign' | 'personal_ecRecover' | 'eth_personalSign' | 'eth_signTypedData' | 'eth_sendTransaction'
-  >;
-
-  type DAPP_BLACKLISTED_METHODS = [
-    'personal_listAccounts',
-    'personal_newAccount',
-    'personal_unlockAccount',
-    'personal_lockAccount',
-    'personal_signTransaction',
-    'eth_signTransaction',
-    'personal_sendTransaction',
-  ]
+  const DAPP_WHITELISTED_METHODS: Array<string>;
+  const DAPP_BLACKLISTED_METHODS: Array<string>;
 }
