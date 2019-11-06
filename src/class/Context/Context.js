@@ -102,13 +102,13 @@ export default class Context {
    */
   executeMethod(method, payload) {
     /**
-     * @param {Function} resolve 
-     * @param {Function} reject 
+     * @param {Function} resolve
+     * @param {Function} reject
      * @returns {Promise<void>}
      */
     const executor = async (resolve, reject) => {
       /**
-       * @param {EventResult} result 
+       * @param {EventResult} result
        */
       const answer = result => {
         const { status, error, code } = result;

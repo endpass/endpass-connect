@@ -5,42 +5,36 @@ import { MESSENGER_METHODS } from '@/constants';
  * @param {OauthPlugin} plugin
  * @returns {OauthResizeFrameEventHandler}
  */
-const resizeFrame = plugin => {
-  return (payload, req) => {
-    if (!plugin.isSourceEqualTarget(req.source)) {
-      return;
-    }
+const resizeFrame = plugin => (payload, req) => {
+  if (!plugin.isSourceEqualTarget(req.source)) {
+    return;
+  }
 
-    plugin.resizeFrame(payload);
-  };
+  plugin.resizeFrame(payload);
 };
 
 /**
  * @param {OauthPlugin} plugin
  * @returns {RequestEventHandler}
  */
-const readyFrame = plugin => {
-  return (payload, req) => {
-    if (!plugin.isSourceEqualTarget(req.source)) {
-      return;
-    }
+const readyFrame = plugin => (payload, req) => {
+  if (!plugin.isSourceEqualTarget(req.source)) {
+    return;
+  }
 
-    plugin.handleReadyFrame();
-  };
+  plugin.handleReadyFrame();
 };
 
 /**
  * @param {OauthPlugin} plugin
  * @returns {RequestEventHandler}
  */
-const closeFrame = plugin => {
-  return (payload, req) => {
-    if (!plugin.isSourceEqualTarget(req.source)) {
-      return;
-    }
+const closeFrame = plugin => (payload, req) => {
+  if (!plugin.isSourceEqualTarget(req.source)) {
+    return;
+  }
 
-    plugin.handleCloseFrame();
-  };
+  plugin.handleCloseFrame();
 };
 
 export default {

@@ -59,8 +59,8 @@ export default class OauthPlugin extends PluginBase {
   }
 
   /**
-   * @param {ContextOptions} options 
-   * @param {Context} context 
+   * @param {ContextOptions} options
+   * @param {Context} context
    */
   constructor(options, context) {
     super(options, context);
@@ -72,9 +72,12 @@ export default class OauthPlugin extends PluginBase {
       oauthPopup: options.oauthPopup,
     });
 
-    this.frameStrategy.on(FrameStrategy.EVENT_UPDATE_TARGET, /** @param {string} target */ target => {
-      this.messenger.setTarget(target);
-    });
+    this.frameStrategy.on(
+      FrameStrategy.EVENT_UPDATE_TARGET,
+      /** @param {string} target */ target => {
+        this.messenger.setTarget(target);
+      },
+    );
 
     const oauthStrategy = new OauthPkceStrategy({
       context,
@@ -110,7 +113,7 @@ export default class OauthPlugin extends PluginBase {
   }
 
   /**
-   * @param {OauthResizeFrameEventPayload} payload 
+   * @param {OauthResizeFrameEventPayload} payload
    * @returns {void}
    */
   resizeFrame(payload) {
@@ -150,7 +153,12 @@ export default class OauthPlugin extends PluginBase {
     let result = await this.oauthRequestProvider.request(options);
     const { data } = result || {};
 
-    if (data && !data.length && options.url && options.url.search(documentsCheckReg) !== -1) {
+    if (
+      data &&
+      !data.length &&
+      options.url &&
+      options.url.search(documentsCheckReg) !== -1
+    ) {
       try {
         await this.context.executeMethod(
           PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENT,
@@ -161,4 +169,4 @@ export default class OauthPlugin extends PluginBase {
 
     return result;
   }
-};
+}
