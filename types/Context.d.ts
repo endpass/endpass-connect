@@ -1,4 +1,4 @@
-declare type Context = typeof import('@/class/Context').default;
+declare type Context = import('@/class/Context').default;
 
 declare type ContextOptions = {
   oauthClientId: string,
