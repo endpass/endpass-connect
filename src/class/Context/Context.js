@@ -1,5 +1,4 @@
 // @ts-check
-
 import ConnectError from '@/class/ConnectError';
 import contextHandlers from './contextHandlers';
 import HandlersFactory from '@/class/HandlersFactory';
@@ -35,26 +34,27 @@ export default class Context {
     this.plugins.init();
   }
 
+  /**
+   * @returns {boolean}
+   */
   get isLogin() {
     // from widget and stream call
     return this.plugins.authorize.isLogin;
   }
 
   /**
-   *
    * @param {string} method
-   * @param {*} payload
-   * @return {Promise<*>}
+   * @param {any} payload
+   * @returns {Promise<any>}
    */
   ask(method, payload) {
     return this.plugins.dialog.ask(method, payload);
   }
 
   /**
-   *
-   * @param {*} payload
+   * @param {any} payload
    * @param {OriginReq} originReq
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async handleEvent(payload, originReq) {
     let isAnswered = false;
@@ -96,15 +96,15 @@ export default class Context {
   }
 
   /**
-   *
    * @param {string} method
-   * @param {*} [payload]
-   * @return {Promise<*>}
+   * @param {any} [payload]
+   * @returns {Promise<any>}
    */
   executeMethod(method, payload) {
     /**
      * @param {Function} resolve 
      * @param {Function} reject 
+     * @returns {Promise<void>}
      */
     const executor = async (resolve, reject) => {
       /**

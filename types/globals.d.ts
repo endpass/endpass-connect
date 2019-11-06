@@ -46,6 +46,8 @@ declare type RequestEventHandlers = {
 
 declare type OauthHandlers = typeof import('@/plugins/OauthPlugin/oauthHandlers.js').default;
 
+declare type Context = typeof import('@/class/Context').default;
+
 declare type RequestEventHandler = (payload: RequestEventPayload, req: OriginReq) => void;
 
 
