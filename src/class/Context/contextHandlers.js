@@ -6,7 +6,6 @@ const { ERRORS } = ConnectError;
 
 /** 
  * @param {Context} context 
- * 
  * @returns {RequestEventHandler}
  */
 const initiate = context => {
@@ -21,7 +20,6 @@ const initiate = context => {
 
 /** 
  * @param {Context} context 
- * 
  * @returns {RequestEventHandler}
  */
 const changeSettings = context => {
@@ -45,7 +43,6 @@ const changeSettings = context => {
 
 /** 
  * @param {Context} context 
- * 
  * @returns {RequestEventHandler}
  */
 const widgetGetSettings = context => {
@@ -57,7 +54,6 @@ const widgetGetSettings = context => {
 
 /** 
  * @param {Context} context 
- * 
  * @returns {RequestEventHandler}
  */
 const authorize = context => {
@@ -69,7 +65,6 @@ const authorize = context => {
 
 /** 
  * @param {Context} context 
- * 
  * @returns {RequestEventHandler}
  */
 const setProviderSettings = context => {
@@ -87,7 +82,6 @@ const setProviderSettings = context => {
 
 /** 
  * @param {Context} context 
- * 
  * @returns {RequestEventHandler}
  */
 const initWidget = context => {
@@ -98,7 +92,6 @@ const initWidget = context => {
 
 /** 
  * @param {Context} context 
- * 
  * @returns {RequestEventHandler}
  */
 const logout = context => {
@@ -126,7 +119,6 @@ const logout = context => {
 
 /** 
  * @param {Context} context 
- * 
  * @returns {RequestEventHandler}
  */
 const unmountWidget = context => async () => {
@@ -138,7 +130,6 @@ const unmountWidget = context => async () => {
 
 /** 
  * @param {Context} context 
- * 
  * @returns {RequestEventHandler}
  */
 const mountWidget = context => async () => {
@@ -148,7 +139,6 @@ const mountWidget = context => async () => {
 
 /** 
  * @param {Context} context 
- * 
  * @returns {RequestEventHandler}
  */
 const initDialog = context => () => {
@@ -171,7 +161,6 @@ const initDialog = context => () => {
 
 /** 
  * @param {Context} context 
- * 
  * @returns {RequestEventHandler}
  */
 const loginWithOauth = context => async (payload, req) => {
@@ -185,7 +174,6 @@ const loginWithOauth = context => async (payload, req) => {
 
 /** 
  * @param {Context} context 
- * 
  * @returns {RequestEventHandler}
  */
 const createDocument = context => {
@@ -197,7 +185,6 @@ const createDocument = context => {
 
 /** 
  * @param {Context} context 
- * 
  * @returns {RequestEventHandler}
  */
 const toggleWidget = context => {

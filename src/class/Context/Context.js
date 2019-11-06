@@ -43,7 +43,7 @@ export default class Context {
   }
 
   /**
-   * @param {string} method
+   * @param {RequestMethodsValues} method
    * @param {any} payload
    * @returns {Promise<any>}
    */
@@ -96,7 +96,7 @@ export default class Context {
   }
 
   /**
-   * @param {string} method
+   * @param {RequestMethodsValues} method
    * @param {any} [payload]
    * @returns {Promise<any>}
    */

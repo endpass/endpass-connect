@@ -1,13 +1,12 @@
 // @ts-check
 
-export default /** @param {OauthPlugin} oauthPlugin */ oauthPlugin => ({
+/** @param {OauthPlugin} oauthPlugin */
+export default oauthPlugin => ({
   /**
    * Fetch user data via oauth
    * @deprecated
-   * 
    * @param {object} params Parameters object
    * @param {string[]} params.scopes - Array of authorization scopes
-   * 
    * @returns {Promise<void>}
    */
   async loginWithOauth(params) {
@@ -16,9 +15,8 @@ export default /** @param {OauthPlugin} oauthPlugin */ oauthPlugin => ({
 
   /**
    * Clears instance scopes and token
-   * @throws {Error} If not authorized yet;
-   * 
    * @returns {Promise<void>}
+   * @throws {Error} If not authorized yet;
    */
   async logoutFromOauth() {
     oauthPlugin.logout();
@@ -26,11 +24,9 @@ export default /** @param {OauthPlugin} oauthPlugin */ oauthPlugin => ({
 
   /**
    * Fetch user data via oauth
-   * @throws {Error} If not authorized yet;
-   * 
-   * @param {ContextOptions} options Request parameters object
-   * 
+   * @param {OauthRequestOptions} options Request parameters object
    * @returns {Promise<any>} Request promise
+   * @throws {Error} If not authorized yet;
    */
   async request(options) {
     return oauthPlugin.request(options);

@@ -3,7 +3,6 @@ import { MESSENGER_METHODS } from '@/constants';
 
 /**
  * @param {OauthPlugin} plugin
- * 
  * @returns {OauthResizeFrameEventHandler}
  */
 const resizeFrame = plugin => {
@@ -18,7 +17,6 @@ const resizeFrame = plugin => {
 
 /**
  * @param {OauthPlugin} plugin
- * 
  * @returns {RequestEventHandler}
  */
 const readyFrame = plugin => {
@@ -33,7 +31,6 @@ const readyFrame = plugin => {
 
 /**
  * @param {OauthPlugin} plugin
- * 
  * @returns {RequestEventHandler}
  */
 const closeFrame = plugin => {

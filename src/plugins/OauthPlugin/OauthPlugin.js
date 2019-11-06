@@ -8,7 +8,7 @@ import { DialogPlugin } from '@/plugins/DialogPlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 import OauthApi from '@/plugins/OauthPlugin/OauthPublicApi';
 import { DIRECTION, PLUGIN_METHODS, PLUGIN_NAMES } from '@/constants';
-import oauthHandlers from './oauthHandlers';
+import oauthHandlers from '@/plugins/OauthPlugin/oauthHandlers';
 import FrameStrategy from '@/plugins/OauthPlugin/FrameStrategy';
 
 const documentsCheckReg = /\/documents$/gi;
@@ -91,7 +91,6 @@ export default class OauthPlugin extends PluginBase {
 
   /**
    * @param {string} [source]
-   * 
    * @returns {boolean}
    */
   isSourceEqualTarget(source) {
@@ -112,7 +111,6 @@ export default class OauthPlugin extends PluginBase {
 
   /**
    * @param {OauthResizeFrameEventPayload} payload 
-   * 
    * @returns {void}
    */
   resizeFrame(payload) {
@@ -129,13 +127,11 @@ export default class OauthPlugin extends PluginBase {
   /**
    * Fetch user data via oaurh
    * @deprecated
-   * 
    * @param {object} params Parameters object
-   * @param {string[]} params.scopes - Array of authorization scopes
-   * 
+   * @param {string[]} [params.scopes] - Array of authorization scopes
    * @returns {Promise<void>}
    */
-  async loginWithOauth(params) {
+  async loginWithOauth(params = {}) {
     await this.oauthRequestProvider.loginWithOauth(params);
   }
 
@@ -147,15 +143,14 @@ export default class OauthPlugin extends PluginBase {
   }
 
   /**
-   * @param {ContextOptions} options 
-   * 
+   * @param {OauthRequestOptions} options
    * @returns {Promise<any>}
    */
   async request(options) {
     let result = await this.oauthRequestProvider.request(options);
     const { data } = result || {};
 
-    if (data && !data.length && options.url.search(documentsCheckReg) !== -1) {
+    if (data && !data.length && options.url && options.url.search(documentsCheckReg) !== -1) {
       try {
         await this.context.executeMethod(
           PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENT,
