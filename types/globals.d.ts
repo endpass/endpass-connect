@@ -12,47 +12,57 @@ declare module '@endpass/class/LocalStorage' {
   function load(key: string): any;
 }
 
+declare type Token = string;
+
 declare type OriginReq = {
   method: string,
   answer: Function,
   source?: string,
 }
 
-declare type ContextCarrier = Function & {
-  options: ContextOptions,
-  executeMethod: Function,
-  plugins: ContextPlugins,
-}
-
-declare type ContextPayload = {
-  [key: string]: any,
-}
-
-declare type ContextHandler = (payload: ContextPayload, req: OriginReq) => void;
-
-declare type ConnectPlugin = typeof import('@/plugins/PluginBase');
-
 declare type ContextOptions = {
   oauthClientId: string,
+  oauthServer: string,
+  oauthPopup?: boolean,
   plugins?: Array<ConnectPlugin>,
   authUrl?: string,
   namespace?: string,
   isIdentityMode?: boolean,
-  widget: {
-    position: object,
+  widget?: {
+    position?: object,
   },
+  url: string,
+  scopes: string[],
 }
 
-declare type ContextError = {
-  code: number,
+declare type RequestEventPayload = {
+  [key: string]: any,
 }
+
+
+declare type RequestEventHandlers = {
+  [key: string]: RequestEventHandler,
+}
+
+declare type OauthHandlers = typeof import('@/plugins/OauthPlugin/oauthHandlers.js').default;
+
+declare type RequestEventHandler = (payload: RequestEventPayload, req: OriginReq) => void;
+
+
+declare type OauthResizeFrameEventPayload = {
+  offsetHeight: number,
+} & RequestEventPayload;
+
+declare type OauthResizeFrameEventHandler = (payload: OauthResizeFrameEventPayload, req: OriginReq) => void;
+
+
+
+declare type ConnectErrors = import('ConnectError').ERRORS;
 
 declare type EventResult = {
   status: boolean,
-  error: NodeJS.ErrnoException | Error,
-  code: keyof import('ConnectError').ERRORS,
+  error: Error, // & { code?: number }
+  code: ConnectErrors[keyof ConnectErrors]
 }
 
-declare type ContextHandlers = {
-  [key: string]: Function,
-}
+

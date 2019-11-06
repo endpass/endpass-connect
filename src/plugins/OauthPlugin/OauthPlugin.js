@@ -14,22 +14,37 @@ import FrameStrategy from '@/plugins/OauthPlugin/FrameStrategy';
 const documentsCheckReg = /\/documents$/gi;
 
 export default class OauthPlugin extends PluginBase {
+  /**
+   * @returns {string}
+   */
   static get pluginName() {
     return PLUGIN_NAMES.OAUTH;
   }
 
+  /**
+   * @returns {OauthHandlers}
+   */
   static get handlers() {
     return oauthHandlers;
   }
 
+  /**
+   * @returns {[typeof DialogPlugin, typeof MessengerGroupPlugin]}
+   */
   static get dependencyPlugins() {
     return [DialogPlugin, MessengerGroupPlugin];
   }
 
+  /**
+   * @returns {typeof OauthApi}
+   */
   static get publicApi() {
     return OauthApi;
   }
 
+  /**
+   * @returns {CrossWindowMessenger}
+   */
   get messenger() {
     if (!this.oauthMessenger) {
       this.oauthMessenger = new CrossWindowMessenger({
@@ -39,9 +54,14 @@ export default class OauthPlugin extends PluginBase {
         from: DIRECTION.CONNECT,
       });
     }
+
     return this.oauthMessenger;
   }
 
+  /**
+   * @param {ContextOptions} options 
+   * @param {Context} context 
+   */
   constructor(options, context) {
     super(options, context);
 
@@ -52,7 +72,7 @@ export default class OauthPlugin extends PluginBase {
       oauthPopup: options.oauthPopup,
     });
 
-    this.frameStrategy.on(FrameStrategy.EVENT_UPDATE_TARGET, target => {
+    this.frameStrategy.on(FrameStrategy.EVENT_UPDATE_TARGET, /** @param {string} target */ target => {
       this.messenger.setTarget(target);
     });
 
@@ -63,25 +83,45 @@ export default class OauthPlugin extends PluginBase {
     this.oauthRequestProvider = new Oauth({
       clientId: this.oauthClientId,
       scopes: options.scopes,
-      oauthPopup: options.oauthPopup,
       oauthServer: this.oauthServer,
       oauthStrategy,
       frameStrategy: this.frameStrategy,
     });
   }
 
+  /**
+   * @param {string} [source]
+   * 
+   * @returns {boolean}
+   */
   isSourceEqualTarget(source) {
+    // @ts-ignore
+    // Here we have excellent example of duck-overtyped logic.
+    // Seems to we compare string with WIndow object (or null),
+    // and if so, this predicate will return `true` only if source
+    // will be `null`. For now will better ignore it.
     return source === this.frameStrategy.target;
   }
 
+  /**
+   * @returns {void}
+   */
   handleReadyFrame() {
     this.frameStrategy.handleReady();
   }
 
+  /**
+   * @param {OauthResizeFrameEventPayload} payload 
+   * 
+   * @returns {void}
+   */
   resizeFrame(payload) {
     this.frameStrategy.handleResize(payload);
   }
 
+  /**
+   * @returns {void}
+   */
   handleCloseFrame() {
     this.frameStrategy.close();
   }
@@ -89,17 +129,28 @@ export default class OauthPlugin extends PluginBase {
   /**
    * Fetch user data via oaurh
    * @deprecated
-   * @param {object=} params Parameters object
+   * 
+   * @param {object} params Parameters object
    * @param {string[]} params.scopes - Array of authorization scopes
+   * 
+   * @returns {Promise<void>}
    */
-  async loginWithOauth(params = {}) {
+  async loginWithOauth(params) {
     await this.oauthRequestProvider.loginWithOauth(params);
   }
 
+  /**
+   * @returns {void}
+   */
   logout() {
     this.oauthRequestProvider.logout();
   }
 
+  /**
+   * @param {ContextOptions} options 
+   * 
+   * @returns {Promise<any>}
+   */
   async request(options) {
     let result = await this.oauthRequestProvider.request(options);
     const { data } = result || {};
@@ -115,4 +166,4 @@ export default class OauthPlugin extends PluginBase {
 
     return result;
   }
-}
+};

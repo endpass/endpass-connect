@@ -5,19 +5,11 @@ import LocalStorage from '@endpass/class/LocalStorage';
 import ConnectError from '@/class/ConnectError';
 import Polling from '@/plugins/OauthPlugin/Oauth/Polling';
 
-/** @typedef {string} Token */
-
 const { ERRORS } = ConnectError;
 
 export default class Oauth {
   /**
-   *
-   * @param {object} params Params for constructor
-   * @param {string} params.clientId Client id for oauth server
-   * @param {string[]=} params.scopes Scopes list
-   * @param {string=} params.oauthServer Url for oauth server
-   * @param {import('@/plugins/OauthPlugin/Oauth/OauthPkceStrategy').default} params.oauthStrategy Oauth Strategy for get TokenObject
-   * @param {import('@/plugins/OauthPlugin/FrameStrategy').default} params.frameStrategy Frame Strategy for show frame
+   * @param {OauthOptions} params Params for constructor
    */
   constructor({ clientId, scopes, oauthServer, frameStrategy, oauthStrategy }) {
     this.clientId = clientId;

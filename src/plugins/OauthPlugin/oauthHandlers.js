@@ -1,29 +1,47 @@
 // @ts-check
 import { MESSENGER_METHODS } from '@/constants';
 
+/**
+ * @param {OauthPlugin} plugin
+ * 
+ * @returns {OauthResizeFrameEventHandler}
+ */
 const resizeFrame = plugin => {
-  return/** @type ContextHandler */ (payload, req) => {
+  return (payload, req) => {
     if (!plugin.isSourceEqualTarget(req.source)) {
       return;
     }
+
     plugin.resizeFrame(payload);
   };
 };
 
+/**
+ * @param {OauthPlugin} plugin
+ * 
+ * @returns {RequestEventHandler}
+ */
 const readyFrame = plugin => {
-  return/** @type ContextHandler */ (payload, req) => {
+  return (payload, req) => {
     if (!plugin.isSourceEqualTarget(req.source)) {
       return;
     }
-    plugin.handleReadyFrame(payload, req);
+
+    plugin.handleReadyFrame();
   };
 };
 
+/**
+ * @param {OauthPlugin} plugin
+ * 
+ * @returns {RequestEventHandler}
+ */
 const closeFrame = plugin => {
-  return/** @type ContextHandler */ (payload, req) => {
+  return (payload, req) => {
     if (!plugin.isSourceEqualTarget(req.source)) {
       return;
     }
+
     plugin.handleCloseFrame();
   };
 };
