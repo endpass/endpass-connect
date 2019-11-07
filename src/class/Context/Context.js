@@ -27,7 +27,7 @@ export default class Context {
     );
 
     // @ts-ignore
-    // We should define interface for constructor function, or use a class instead
+    // We should define interface for constructor function, or use class instead
     // Every of there ways require refactoring and change function signatures
     // So just ignore it at this moment
     this.plugins = new PluginContainer(options, this, ClassPlugin);
@@ -108,12 +108,12 @@ export default class Context {
      */
     const executor = async (resolve, reject) => {
       /**
-       * @param {EventResult} result
+       * @param {EventResult} [result]
        */
       const answer = result => {
-        const { status, error, code } = result;
+        const { status, error, code } = result || {};
         if (status === false) {
-          const err = ConnectError.createFromError(error, code);
+          const err = ConnectError.createFromError(error || {}, code);
           reject(err);
         } else {
           resolve(result);
