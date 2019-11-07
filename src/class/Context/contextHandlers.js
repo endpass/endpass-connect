@@ -1,8 +1,13 @@
+// @ts-check
 import ConnectError from '@/class/ConnectError';
 import { PLUGIN_METHODS, MESSENGER_METHODS, PLUGIN_NAMES } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
+/**
+ * @param {Context} context
+ * @returns {RequestEventHandler}
+ */
 const initiate = context => (payload, req) => {
   const { isIdentityMode } = context.options;
 
@@ -11,6 +16,10 @@ const initiate = context => (payload, req) => {
   });
 };
 
+/**
+ * @param {Context} context
+ * @returns {RequestEventHandler}
+ */
 const changeSettings = context => async (payload, req) => {
   try {
     await context.executeMethod(
@@ -28,16 +37,28 @@ const changeSettings = context => async (payload, req) => {
   }
 };
 
+/**
+ * @param {Context} context
+ * @returns {RequestEventHandler}
+ */
 const widgetGetSettings = context => (payload, req) => {
   const settings = context.plugins.provider.getInpageProviderSettings();
   req.answer(settings);
 };
 
+/**
+ * @param {Context} context
+ * @returns {RequestEventHandler}
+ */
 const authorize = context => async (payload, req) => {
   const res = await context.plugins.authorize.authorizeMe(payload);
   req.answer(res);
 };
 
+/**
+ * @param {Context} context
+ * @returns {RequestEventHandler}
+ */
 const setProviderSettings = context => payload => {
   context.plugins.provider.setInpageProviderSettings(payload);
 
@@ -49,10 +70,18 @@ const setProviderSettings = context => payload => {
   );
 };
 
+/**
+ * @param {Context} context
+ * @returns {RequestEventHandler}
+ */
 const initWidget = context => (payload, req) => {
   req.answer(context.plugins.widget.mountSettings);
 };
 
+/**
+ * @param {Context} context
+ * @returns {RequestEventHandler}
+ */
 const logout = context => async (payload, req) => {
   try {
     const { authorize: authPlugin, messengerGroup } = context.plugins;
@@ -74,6 +103,10 @@ const logout = context => async (payload, req) => {
   }
 };
 
+/**
+ * @param {Context} context
+ * @returns {RequestEventHandler}
+ */
 const unmountWidget = context => async () => {
   await context.plugins.widget.unmount();
   context.plugins.messengerGroup.removeMessenger(
@@ -81,11 +114,19 @@ const unmountWidget = context => async () => {
   );
 };
 
+/**
+ * @param {Context} context
+ * @returns {RequestEventHandler}
+ */
 const mountWidget = context => async () => {
   await context.plugins.widget.mount();
   context.plugins.messengerGroup.addMessenger(context.plugins.widget.messenger);
 };
 
+/**
+ * @param {Context} context
+ * @returns {RequestEventHandler}
+ */
 const initDialog = context => () => {
   const { dialog } = context.plugins;
   const handler = () => {
@@ -104,6 +145,10 @@ const initDialog = context => () => {
   }
 };
 
+/**
+ * @param {Context} context
+ * @returns {RequestEventHandler}
+ */
 const loginWithOauth = context => async (payload, req) => {
   const oauthServer = context.options.oauthServer || ENV.oauthServer;
   const { data } = await context.plugins.oauth.request({
@@ -113,11 +158,19 @@ const loginWithOauth = context => async (payload, req) => {
   req.answer(data);
 };
 
+/**
+ * @param {Context} context
+ * @returns {RequestEventHandler}
+ */
 const createDocument = context => async (payload, req) => {
   const res = await context.plugins.document.createDocument(payload);
   req.answer(res);
 };
 
+/**
+ * @param {Context} context
+ * @returns {RequestEventHandler}
+ */
 const toggleWidget = context => async payload => {
   if (!(PLUGIN_NAMES.WIDGET in context.plugins)) {
     return;

@@ -5,19 +5,11 @@ import LocalStorage from '@endpass/class/LocalStorage';
 import ConnectError from '@/class/ConnectError';
 import Polling from '@/plugins/OauthPlugin/Oauth/Polling';
 
-/** @typedef {string} Token */
-
 const { ERRORS } = ConnectError;
 
 export default class Oauth {
   /**
-   *
-   * @param {object} params Params for constructor
-   * @param {string} params.clientId Client id for oauth server
-   * @param {string[]=} params.scopes Scopes list
-   * @param {string=} params.oauthServer Url for oauth server
-   * @param {import('@/plugins/OauthPlugin/Oauth/OauthPkceStrategy').default} params.oauthStrategy Oauth Strategy for get TokenObject
-   * @param {import('@/plugins/OauthPlugin/FrameStrategy').default} params.frameStrategy Frame Strategy for show frame
+   * @param {OauthOptionsWithStrategy} params Params for constructor
    */
   constructor({ clientId, scopes, oauthServer, frameStrategy, oauthStrategy }) {
     this.clientId = clientId;
@@ -31,6 +23,9 @@ export default class Oauth {
     this.setScopes(scopes);
   }
 
+  /**
+   * @returns {string}
+   */
   get storeId() {
     return `endpass-oauth:${this.clientId}`;
   }
@@ -39,7 +34,8 @@ export default class Oauth {
    * Initiate token
    * @deprecated
    * @param {object} params Parameters object
-   * @param {string[]} params.scopes - Array of authorization scopes
+   * @param {string[]} [params.scopes] - Array of authorization scopes
+   * @returns {Promise<void>}
    */
   async loginWithOauth(params) {
     this.setScopes(params.scopes);
@@ -47,8 +43,8 @@ export default class Oauth {
   }
 
   /**
-   *
    * @param {string[]=} scopes
+   * @returns {void}
    */
   setScopes(scopes) {
     if (!scopes) {
@@ -58,6 +54,9 @@ export default class Oauth {
     this.checkScopes();
   }
 
+  /**
+   * @returns {void}
+   */
   checkScopes() {
     const tokenObject = this.getTokenObjectFromStore();
     const now = new Date().getTime();
@@ -116,6 +115,9 @@ export default class Oauth {
     return tokenObject;
   }
 
+  /**
+   * @returns {void}
+   */
   logout() {
     LocalStorage.remove(this.storeId);
   }
@@ -162,8 +164,8 @@ export default class Oauth {
 
   /**
    * Makes api request with authorization token
-   * @template {import('axios').AxiosRequestConfig} T
-   * @param {{scopes?: string[]} & T} params
+   * @param {OauthRequestOptions} params
+   * @returns {import('axios').AxiosPromise<any>}
    */
   request({ scopes, ...options }) {
     this.setScopes(scopes);

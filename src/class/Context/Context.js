@@ -1,3 +1,4 @@
+// @ts-check
 import ConnectError from '@/class/ConnectError';
 import contextHandlers from './contextHandlers';
 import HandlersFactory from '@/class/HandlersFactory';
@@ -5,67 +6,65 @@ import PluginContainer from '@/class/PluginContainer';
 
 const { ERRORS } = ConnectError;
 
-/**
- * @typedef {import('@/plugins/PluginBase')} ConnectPlugin
- */
-
 export default class Context {
   /**
-   * @param {object} options
+   * @param {ContextOptions} options
    * @param {ConnectPlugin} ClassPlugin plugin for singleton mode
-   * @param {string} options.oauthClientId OAuth client id
-   * @param {Array<ConnectPlugin>]} [options.plugins] list of plugins
-   * @param {string} [options.authUrl] Url of hosted Endpass Connect Application
-   * @param {string} [options.namespace] namespace for see difference,
-   *  between two instances
-   * @param {boolean} [options.isIdentityMode] isIdentityMode for define auth
-   *  like identity
-   * @param {object} [options.widget] Widget configuration object.
-   *  If provided widget will be mounted automatically
-   * @param {object} [options.widget.position] Widget positions. By default
-   *  equals to `bottom right`
    */
-  constructor(options = {}, ClassPlugin) {
+  constructor(options, ClassPlugin) {
     this.options = options;
 
     if (!options.oauthClientId) {
       throw ConnectError.create(ERRORS.OAUTH_REQUIRE_ID);
     }
 
+    /**
+     * @type {RequestEventHandlers} ContextHandlers
+     */
     this.contextHandlers = HandlersFactory.createHandlers(
       this,
       contextHandlers,
     );
 
+    // @ts-ignore
+    // We should define interface for constructor function, or use class instead
+    // Every of there ways require refactoring and change function signatures
+    // So just ignore it at this moment
     this.plugins = new PluginContainer(options, this, ClassPlugin);
     this.plugins.init();
   }
 
+  /**
+   * @returns {boolean}
+   */
   get isLogin() {
     // from widget and stream call
     return this.plugins.authorize.isLogin;
   }
 
   /**
-   *
-   * @param {string} method
-   * @param {*} payload
-   * @return {Promise<*>}
+   * @param {RequestMethodsValues} method
+   * @param {any} payload
+   * @returns {Promise<any>}
    */
   ask(method, payload) {
     return this.plugins.dialog.ask(method, payload);
   }
 
   /**
-   *
-   * @param {*} payload
-   * @param {object} originReq
-   * @return {Promise<void>}
+   * @param {any} payload
+   * @param {OriginReq} originReq
+   * @returns {Promise<void>}
    */
   async handleEvent(payload, originReq) {
     let isAnswered = false;
     const proxyReq = {
       ...originReq,
+
+      /**
+       * @param {EventResult} [result]
+       * @returns void
+       */
       answer: result => {
         if (isAnswered) {
           return;
@@ -97,17 +96,24 @@ export default class Context {
   }
 
   /**
-   *
-   * @param {string} method
-   * @param {*} payload
-   * @return {Promise<*>}
+   * @param {RequestMethodsValues} method
+   * @param {any} [payload]
+   * @returns {Promise<any>}
    */
   executeMethod(method, payload) {
+    /**
+     * @param {Function} resolve
+     * @param {Function} reject
+     * @returns {Promise<void>}
+     */
     const executor = async (resolve, reject) => {
-      const answer = (result = {}) => {
-        const { status, error, code } = result;
+      /**
+       * @param {EventResult} [result]
+       */
+      const answer = result => {
+        const { status, error, code } = result || {};
         if (status === false) {
-          const err = ConnectError.createFromError(error, code);
+          const err = ConnectError.createFromError(error || {}, code);
           reject(err);
         } else {
           resolve(result);

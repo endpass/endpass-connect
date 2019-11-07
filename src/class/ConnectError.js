@@ -68,10 +68,9 @@ export default class ConnectError extends Error {
   }
 
   /**
-   *
    * @param {Error|ConnectError|{}} error
    * @param {ERROR_VALUES} defaultCode
-   * @return {Error}
+   * @return {ConnectError}
    */
   static createFromError(error, defaultCode = ERRORS.NOT_DEFINED) {
     if (error instanceof ConnectError) {
