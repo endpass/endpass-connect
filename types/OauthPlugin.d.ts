@@ -9,7 +9,6 @@ declare type OauthPluginOptions = {
 
 declare type OauthOptionsWithStrategy = {
   scopes?: string[],
-  url?: string,
   clientId: string,
   oauthServer: string,
   oauthStrategy: import('@/plugins/OauthPlugin/Oauth/OauthPkceStrategy').default,
