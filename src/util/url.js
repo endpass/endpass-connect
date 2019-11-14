@@ -1,8 +1,16 @@
 import pkg from '../../package.json';
 import { DEFAULT_AUTH_URL } from '@/constants';
 
+const authUrlRegexp = new RegExp('://auth(\\.|-)', 'ig');
+
 export const getAuthUrl = (url = DEFAULT_AUTH_URL) => {
-  const authUrl = url + pkg.authVersion;
+  if (!authUrlRegexp.test(url) || !pkg.authVersion) {
+    return url;
+  }
+
+  const routeVersion = pkg.authVersion.split('.').join('-');
+
+  const authUrl = url.replace('://auth', `://auth${routeVersion}-`);
   return authUrl;
 };
 

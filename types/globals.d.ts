@@ -3,6 +3,6 @@ declare namespace ENV {
   const isProduction: boolean;
 }
 
-declare type Listener = (...args: any) => void
+declare type Listener = (...args: any) => void;
 
 declare type Token = string;
