@@ -1,9 +1,9 @@
-import { MESSENGER_METHODS } from '@/constants';
+import { MESSENGER_METHODS, DEFAULT_AUTH_URL } from '@/constants';
 import { DialogPlugin } from '@/plugins/DialogPlugin';
 import StateOpen from '@/plugins/DialogPlugin/states/StateOpen';
 import StateClose from '@/plugins/DialogPlugin/states/StateClose';
 import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
-import { DEFAULT_AUTH_URL } from '@/constants';
+import pkg from '@/../package.json';
 
 describe('DialogPlugin class', () => {
   const authUrl = 'url';
@@ -45,8 +45,12 @@ describe('DialogPlugin class', () => {
 
     it('should return default authUrl', () => {
       const plugin = new DialogPlugin({}, context);
-
-      expect(plugin.url).toBe(`${DEFAULT_AUTH_URL}/bridge`);
+      const version = pkg.authVersion.split('.').join('-');
+      const checkUrl = DEFAULT_AUTH_URL.replace(
+        'auth.endpass',
+        `auth${version}.endpass`,
+      );
+      expect(plugin.url).toBe(`${checkUrl}/bridge`);
     });
   });
 });
