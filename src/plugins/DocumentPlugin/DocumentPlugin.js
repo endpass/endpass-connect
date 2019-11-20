@@ -21,12 +21,13 @@ export default class DocumentPlugin extends PluginBase {
   }
 
   /**
-   *
+   * @param {object?} params
    * @return {Promise<object>}
    */
-  async createDocument() {
+  async createDocument(params) {
     const { status, code, payload = {} } = await this.context.ask(
       MESSENGER_METHODS.CREATE_DOCUMENT,
+      params,
     );
 
     if (!status) {
