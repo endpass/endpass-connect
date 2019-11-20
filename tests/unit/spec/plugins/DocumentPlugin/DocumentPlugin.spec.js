@@ -53,6 +53,32 @@ describe('Document plugin', () => {
       expect(context.ask).toBeCalledWith(MESSENGER_METHODS.CREATE_DOCUMENT);
     });
 
+    it('should pass params for create document and return id', async () => {
+      expect.assertions(2);
+
+      context.ask = jest.fn().mockResolvedValueOnce({
+        status: true,
+        payload: {
+          id: docId,
+        },
+      });
+
+      const params = {
+        defaultDocumentType: 'Passport',
+      };
+
+      const res = await plugin.createDocument(params);
+
+      expect(res).toEqual({
+        id: docId,
+      });
+
+      expect(context.ask).toBeCalledWith(
+        MESSENGER_METHODS.CREATE_DOCUMENT,
+        params,
+      );
+    });
+
     it('should throw error for create document', async () => {
       expect.assertions(2);
 
