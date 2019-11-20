@@ -50,7 +50,7 @@ describe('Document plugin', () => {
         id: docId,
       });
 
-      expect(context.ask).toBeCalledWith(MESSENGER_METHODS.CREATE_DOCUMENT);
+      expect(context.ask).toBeCalledWith(MESSENGER_METHODS.CREATE_DOCUMENT, undefined);
     });
 
     it('should pass params for create document and return id', async () => {
@@ -92,7 +92,7 @@ describe('Document plugin', () => {
         expect(e).toEqual(new Error('Document creation error'));
       }
 
-      expect(context.ask).toBeCalledWith(MESSENGER_METHODS.CREATE_DOCUMENT);
+      expect(context.ask).toBeCalledWith(MESSENGER_METHODS.CREATE_DOCUMENT, undefined);
     });
   });
 });
