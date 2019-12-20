@@ -70,6 +70,8 @@ describe('provider', function() {
       cy.authFrameContinueRun();
       cy.shouldLoggedIn();
 
+      cy.get('[data-test=endpass-provider-transactions-tab]').click();
+
       cy.get('[data-test=endpass-form-send-transaction-address]').type(address);
       cy.get('[data-test=endpass-form-send-transaction-value]')
         .clear()
