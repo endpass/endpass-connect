@@ -5,6 +5,13 @@ import { PLUGIN_METHODS, MESSENGER_METHODS, PLUGIN_NAMES } from '@/constants';
 const { ERRORS } = ConnectError;
 
 /**
+ * @returns {RequestEventHandler}
+ */
+const getVersion = () => (payload, req) => {
+  req.answer(ENV.authVersion);
+};
+
+/**
  * @param {Context} context
  * @returns {RequestEventHandler}
  */
@@ -190,6 +197,7 @@ const toggleWidget = context => async payload => {
 };
 
 export default {
+  [MESSENGER_METHODS.GET_VERSION]: getVersion,
   [MESSENGER_METHODS.AUTH_STATUS]: toggleWidget,
   [PLUGIN_METHODS.CONTEXT_AUTHORIZE]: authorize,
   [MESSENGER_METHODS.LOGOUT_REQUEST]: logout,

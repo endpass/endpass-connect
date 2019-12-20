@@ -38,6 +38,8 @@ const outputConf = {
   sourcemap: withSourceMaps,
 };
 
+console.log('ENV', ENV);
+
 const commonConfig = config => {
   return {
     external: [...Object.keys(pkg.dependencies)],

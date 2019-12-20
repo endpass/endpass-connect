@@ -3,7 +3,6 @@ import { DialogPlugin } from '@/plugins/DialogPlugin';
 import StateOpen from '@/plugins/DialogPlugin/states/StateOpen';
 import StateClose from '@/plugins/DialogPlugin/states/StateClose';
 import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
-import pkg from '@/../package.json';
 
 describe('DialogPlugin class', () => {
   const authUrl = 'url';
@@ -35,22 +34,24 @@ describe('DialogPlugin class', () => {
   });
 
   describe('auth url correct creation', () => {
-    it('should return url to auth on connect application', () => {
+    it('should correct generate open url', () => {
       const url = getAuthUrl(authUrl);
-      expect(getFrameRouteUrl(url, 'foo')).toBe(`${authUrl}/foo`);
 
+      expect(getFrameRouteUrl(url, 'foo')).toBe(
+        `${authUrl}/prepare?redirect=/foo`,
+      );
+    });
+
+    it('should return url to auth on connect application', () => {
       const plugin = new DialogPlugin({ authUrl }, context);
-      expect(plugin.url).toBe(`${authUrl}/bridge`);
+
+      expect(plugin.url).toBe(`${authUrl}/prepare?redirect=/bridge`);
     });
 
     it('should return default authUrl', () => {
       const plugin = new DialogPlugin({}, context);
-      const version = pkg.authVersion.split('.').join('-');
-      const checkUrl = DEFAULT_AUTH_URL.replace(
-        'auth.endpass',
-        `auth${version}.endpass`,
-      );
-      expect(plugin.url).toBe(`${checkUrl}/bridge`);
+
+      expect(plugin.url).toBe(`${DEFAULT_AUTH_URL}/prepare?redirect=/bridge`);
     });
   });
 });
