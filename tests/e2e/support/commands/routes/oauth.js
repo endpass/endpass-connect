@@ -4,7 +4,7 @@ import { identityAPIUrl } from '@config';
 
 Cypress.Commands.add(
   'mockOauthLogin',
-  (redirect = 'consent?consent_challenge=consent_challenge') => {
+  (redirect = '/prepare.html?redirect=/public/consent?consent_challenge=consent_challenge') => {
     cy.route({
       url: `${identityAPIUrl}/oauth/login**`,
       method: 'GET',

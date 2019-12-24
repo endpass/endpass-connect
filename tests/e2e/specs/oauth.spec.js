@@ -3,12 +3,11 @@ import {
   email,
   otpCode,
   regularPassword,
-  v3password,
 } from '@fixtures/identity/accounts';
 import { document } from '@fixtures/identity/documents';
 import { authUrl, visitUrl, visitBlockOauth } from '@config';
 
-describe('oauth', function() {
+describe('oauth', () => {
   describe('oauth popup window', () => {
     beforeEach(() => {
       cy.server();
@@ -16,12 +15,16 @@ describe('oauth', function() {
     });
 
     it('should login by oauth flow', () => {
-      const consentUrl = 'login?login_challenge=login_challenge';
-      const url = `public/${consentUrl}`;
-
-      cy.visit(`${authUrl}${url}`);
       cy.mockInitialData();
-      cy.mockAuthLogin('otp', `${authUrl}${url}`);
+      cy.mockAuthCheck(401);
+      const consentUrl = '/public/login?login_challenge=login_challenge';
+      // const url = `${consentUrl}`;
+      const url = `prepare.html?redirect=${consentUrl}`;
+      const fullPath = `${authUrl}${url}`;
+
+      cy.visit(fullPath);
+
+      cy.mockAuthLogin('otp', fullPath);
 
       cy.wait('@routeAuthCheck');
 
@@ -41,7 +44,7 @@ describe('oauth', function() {
 
       cy.get('[data-test=code-input]').type(otpCode);
       cy.mockAuthCheck(200);
-      cy.mockOauthConsent(consentUrl);
+      cy.mockOauthConsent(fullPath);
       cy.get('[data-test=submit-button]').click();
 
       cy.wait('@routeAuthCheck');
@@ -59,49 +62,15 @@ describe('oauth', function() {
 
   describe('oauth login and get data', () => {
     beforeEach(() => {
-      cy.visit(`${visitUrl}${visitBlockOauth}`, {
-        onBeforeLoad(win) {
-          cy.stub(win, 'open', args => {
-            let search = '';
-            const res = {
-              closed: false,
-              resizeTo() {},
-              focus() {},
-              location: {
-                hash: '',
-                search: '',
-              },
-            };
-            Object.defineProperty(res.location, 'search', {
-              get() {
-                return search;
-              },
-            });
-            Object.defineProperty(res.location, 'href', {
-              set(newValue) {
-                const state = newValue
-                  .split('&')
-                  .find(el => el.search('state=') === 0)
-                  .split('=')[1];
-                search = `state=${state}&code=code`;
-              },
-            });
-
-            return res;
-          });
-        },
-      });
+      cy.visit(`${visitUrl}${visitBlockOauth}`);
       cy.preparePage();
     });
 
     it('should show accounts list', () => {
       cy.authFrameContinueRun();
+      cy.mockOnceOauthState();
 
-      cy.get('[data-test=endpass-oauth-get-accounts-button]').click();
-
-      cy.window()
-        .its('open')
-        .should('be.called');
+      cy.get('[data-test=endpass-oauth-get-accounts-button] button').click();
 
       cy.get('[data-test=endpass-app-loader]').should('not.exist');
       cy.authFrameWrapperHidden().should('exist');
@@ -112,12 +81,9 @@ describe('oauth', function() {
 
     it('should show account email', () => {
       cy.authFrameContinueRun();
+      cy.mockOnceOauthState();
 
-      cy.get('[data-test=endpass-oauth-get-email-button]').click();
-
-      cy.window()
-        .its('open')
-        .should('be.called');
+      cy.get('[data-test=endpass-oauth-get-email-button] button').click();
 
       cy.get('[data-test=endpass-app-loader]').should('not.exist');
       cy.authFrameWrapperHidden().should('exist');
@@ -129,14 +95,11 @@ describe('oauth', function() {
 
     it('should get list of documents', () => {
       cy.authFrameContinueRun();
+      cy.mockOnceOauthState();
 
-      const buttonSelector = '[data-test=endpass-oauth-check-documents]';
+      const buttonSelector = '[data-test=endpass-oauth-get-documents] button';
 
       cy.get(buttonSelector).click();
-
-      cy.window()
-        .its('open')
-        .should('be.called');
 
       cy.get('[data-test=endpass-app-loader]').should('not.exist');
       cy.authFrameWrapperHidden().should('exist');
@@ -148,18 +111,15 @@ describe('oauth', function() {
       cy.get(buttonSelector).should('exist');
     });
 
-    it('should upload document with empty document list', () => {
+    it.skip('should upload document with empty document list', () => {
       cy.mockDocumentsList([]);
       cy.authFrameContinueRun();
+      cy.mockOnceOauthState();
 
-      const buttonSelector = '[data-test=endpass-oauth-check-documents]';
+      const buttonSelector = '[data-test=endpass-oauth-get-documents] button';
       const dialogSelector = '[data-test=document-create-modal]';
 
       cy.get(buttonSelector).click();
-
-      cy.window()
-        .its('open')
-        .should('be.called');
 
       cy.wait('@routeAuthCheck');
 
@@ -194,12 +154,9 @@ describe('oauth', function() {
 
     it('should clean token', () => {
       cy.authFrameContinueRun();
+      cy.mockOnceOauthState();
 
-      cy.get('[data-test=endpass-oauth-get-email-button]').click();
-
-      cy.window()
-        .its('open')
-        .should('be.called');
+      cy.get('[data-test=endpass-oauth-get-email-button] button').click();
 
       cy.get('[data-test=endpass-app-loader]').should('not.exist');
       cy.authFrameWrapperHidden().should('exist');

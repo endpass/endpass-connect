@@ -13,5 +13,5 @@ export const getAuthUrl = (url = DEFAULT_AUTH_URL) => {
  */
 export const getFrameRouteUrl = (url, method) => {
   const authUrl = getAuthUrl(url);
-  return !method ? authUrl : `${authUrl}/prepare?redirect=/${method}`;
+  return !method ? authUrl : `${authUrl}/prepare.html?redirect=/${method}`;
 };

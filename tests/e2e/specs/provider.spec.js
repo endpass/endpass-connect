@@ -58,7 +58,7 @@ describe('provider', function() {
       });
     });
 
-    it('web3.eth.sendTransaction', () => {
+    it.only('web3.eth.sendTransaction', () => {
       cy.setupWeb3ProviderMocks([
         getBlockByNumber,
         getCodeSuccess,

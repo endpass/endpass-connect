@@ -38,20 +38,20 @@ describe('DialogPlugin class', () => {
       const url = getAuthUrl(authUrl);
 
       expect(getFrameRouteUrl(url, 'foo')).toBe(
-        `${authUrl}/prepare?redirect=/foo`,
+        `${authUrl}/prepare.html?redirect=/foo`,
       );
     });
 
     it('should return url to auth on connect application', () => {
       const plugin = new DialogPlugin({ authUrl }, context);
 
-      expect(plugin.url).toBe(`${authUrl}/prepare?redirect=/bridge`);
+      expect(plugin.url).toBe(`${authUrl}/prepare.html?redirect=/bridge`);
     });
 
     it('should return default authUrl', () => {
       const plugin = new DialogPlugin({}, context);
 
-      expect(plugin.url).toBe(`${DEFAULT_AUTH_URL}/prepare?redirect=/bridge`);
+      expect(plugin.url).toBe(`${DEFAULT_AUTH_URL}/prepare.html?redirect=/bridge`);
     });
   });
 });
