@@ -1,3 +1,3 @@
 const executor = require('./executor');
 
-executor('npx serve ./e2e-apps/auth -l 8888 -s');
+executor('node ./scripts/serv.js d=./e2e-apps/auth p=8888');
