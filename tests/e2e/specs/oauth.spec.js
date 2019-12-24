@@ -18,7 +18,6 @@ describe('oauth', () => {
       cy.mockInitialData();
       cy.mockAuthCheck(401);
       const consentUrl = '/public/login?login_challenge=login_challenge';
-      // const url = `${consentUrl}`;
       const url = `prepare.html?redirect=${consentUrl}`;
       const fullPath = `${authUrl}${url}`;
 
@@ -111,7 +110,7 @@ describe('oauth', () => {
       cy.get(buttonSelector).should('exist');
     });
 
-    it.skip('should upload document with empty document list', () => {
+    it('should upload document with empty document list', () => {
       cy.mockDocumentsList([]);
       cy.authFrameContinueRun();
       cy.mockOnceOauthState();
@@ -134,19 +133,17 @@ describe('oauth', () => {
         'identity/documents/driver-license.jpg',
         'image/jpg',
       );
+
+      cy.mockDocumentsList();
+      cy.mockOnceOauthState();
+
       cy.getElementFromAuth(
         `${dialogSelector} [data-test=submit-button]`,
       ).click();
 
       cy.wait('@routeDocumentUploadCheck');
 
-      cy.getElementFromAuth(dialogSelector).should(
-        'contain.text',
-        'Add back side',
-      );
-      cy.getElementFromAuth(
-        `${dialogSelector} [data-test=modal-card-button-close]`,
-      ).click();
+      cy.get('[data-test=endpass-oauth-documents-list]').should('exist');
 
       cy.get('[data-test=endpass-oauth-clear-token-button]').click();
       cy.get(buttonSelector).should('exist');
