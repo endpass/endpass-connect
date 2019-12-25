@@ -42,6 +42,8 @@ const ERRORS_TITLE = {
  * @typedef {import('ConnectError').ERROR_VALUES} ERROR_VALUES
  */
 
+const CONNECT_ERROR_TYPE = 'ConnectError';
+
 export default class ConnectError extends Error {
   /**
    * @param {string=} message
@@ -51,6 +53,7 @@ export default class ConnectError extends Error {
     super(message);
     this.stack = new Error().stack;
     this.code = code;
+    this.type = CONNECT_ERROR_TYPE;
   }
 
   /**
@@ -80,8 +83,7 @@ export default class ConnectError extends Error {
       return error;
     }
 
-    if (error.constructor.name === ConnectError.name) {
-      // @ts-ignore
+    if (error.type === CONNECT_ERROR_TYPE) {
       return new ConnectError(error.message, error.code);
     }
 
