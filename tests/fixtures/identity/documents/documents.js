@@ -1,4 +1,4 @@
-const documentsFixturesFactory = (id, status = 'New') => ({
+const documentsFixturesFactory = (id, status = 'Draft') => ({
   id,
   status,
   createdAt: 1566550179,
@@ -27,11 +27,11 @@ const documentsFixturesFactory = (id, status = 'New') => ({
 export const uploadedDocumentId = '1fc7b927-ba24-4549-a528-6db707dcd1c6';
 
 export const documentsList = [
-  ['67e5acc5-02f2-4661-9f95-cb231a29beeb', 'Pending'],
-  ['1d7c3798-3a05-4ff2-a646-2f7231fb5d26', 'Pending'],
-  ['b85cde82-90bf-4a9a-8016-6dcc4d3fb851', 'Pending'],
-  ['9ba9b26b-45df-4bc5-94fb-a7c5cfa3065a', 'Pending'],
-  ['76c90eb4-3bcc-4095-ba91-771cc889fbb5', 'Pending'],
+  ['67e5acc5-02f2-4661-9f95-cb231a29beeb', 'Recognition'],
+  ['1d7c3798-3a05-4ff2-a646-2f7231fb5d26', 'Recognition'],
+  ['b85cde82-90bf-4a9a-8016-6dcc4d3fb851', 'Recognition'],
+  ['9ba9b26b-45df-4bc5-94fb-a7c5cfa3065a', 'Recognition'],
+  ['76c90eb4-3bcc-4095-ba91-771cc889fbb5', 'Recognition'],
   ['9853b4b2-bc12-4c5a-9e64-aadff774c7ee', 'Verified'],
   ['14ca4c6f-3ed0-49d5-bc7e-441d79363010', 'Verified'],
   ['b6ff6e5f-fc54-4ce6-baf7-4ed5c91f50a2', 'Verified'],
@@ -42,11 +42,11 @@ export const documentsList = [
   ['62eefdcd-0462-445e-83a2-5a522ec8ebb3', 'NotVerified'],
   ['b05060ef-06f1-460d-8668-75b938e29568', 'NotVerified'],
   ['a0b314ff-8f15-4822-8f63-dc807d3942ba', 'NotVerified'],
-  ['4692a700-7de7-4290-a03a-f2006343b135', 'New'],
-  ['c4a2cd5e-e4bd-4a50-be87-a7ed99b18b2c', 'New'],
-  ['9eb624dc-cca4-48e5-8390-45de81b60b4e', 'New'],
-  ['cc038a09-cf14-4497-8781-a10dc0c58421', 'New'],
-  ['d6a2ebab-657e-4c94-b983-84c67b845c3c', 'New'],
+  ['4692a700-7de7-4290-a03a-f2006343b135', 'Draft'],
+  ['c4a2cd5e-e4bd-4a50-be87-a7ed99b18b2c', 'Draft'],
+  ['9eb624dc-cca4-48e5-8390-45de81b60b4e', 'Draft'],
+  ['cc038a09-cf14-4497-8781-a10dc0c58421', 'Draft'],
+  ['d6a2ebab-657e-4c94-b983-84c67b845c3c', 'Draft'],
   ['069aad5c-e396-43e6-8b84-253bbe9e9a87', 'NotReadable'],
   ['05d46d89-8d9b-4982-ae85-e676b60b6f8b', 'NotReadable'],
   ['d68881e1-5920-496e-9ebd-95f9985e7409', 'NotReadable'],
