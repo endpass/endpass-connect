@@ -86,7 +86,7 @@ export default class Context {
       proxyReq.answer();
     } catch (error) {
       console.error('context.handleEvent', error);
-      const err = ConnectError.createFromError(error, ERRORS.NOT_DEFINED);
+      const err = ConnectError.createFromError(error);
       proxyReq.answer({
         status: false,
         error: err,
@@ -113,7 +113,7 @@ export default class Context {
       const answer = result => {
         const { status, error, code } = result || {};
         if (status === false) {
-          const err = ConnectError.createFromError(error || {}, code);
+          const err = ConnectError.createFromError(error, code);
           reject(err);
         } else {
           resolve(result);

@@ -44,7 +44,6 @@ const ERRORS_TITLE = {
 
 export default class ConnectError extends Error {
   /**
-   *
    * @param {string=} message
    * @param {ERROR_VALUES=} code
    */
@@ -68,13 +67,22 @@ export default class ConnectError extends Error {
   }
 
   /**
-   * @param {Error|ConnectError|{}} error
+   * @param {Error|ConnectError|{ message: string, code?: string } | ?} error
    * @param {ERROR_VALUES} defaultCode
    * @return {ConnectError}
    */
   static createFromError(error, defaultCode = ERRORS.NOT_DEFINED) {
+    if (!error) {
+      return ConnectError.create(defaultCode);
+    }
+
     if (error instanceof ConnectError) {
       return error;
+    }
+
+    if (error.constructor.name === 'ConnectError') {
+      // @ts-ignore
+      return new ConnectError(error.message, error.code);
     }
 
     if (error instanceof Error) {
