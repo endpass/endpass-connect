@@ -86,12 +86,13 @@ describe('ConnectError', () => {
       code,
       message,
       constructor: {
-        name: 'ConnectError',
+        name: ConnectError.name,
       },
     };
     const err = ConnectError.createFromError(obj);
 
     expect(err).toBeInstanceOf(ConnectError);
+    expect(ConnectError.name).toBe('ConnectError');
     expect(err.code).toBe(code);
     expect(err.message).toBe(message);
   });

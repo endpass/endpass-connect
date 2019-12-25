@@ -80,7 +80,7 @@ export default class ConnectError extends Error {
       return error;
     }
 
-    if (error.constructor.name === 'ConnectError') {
+    if (error.constructor.name === ConnectError.name) {
       // @ts-ignore
       return new ConnectError(error.message, error.code);
     }
