@@ -85,9 +85,7 @@ describe('ConnectError', () => {
     const obj = {
       code,
       message,
-      constructor: {
-        name: 'ConnectError',
-      },
+      type: 'ConnectError',
     };
     const err = ConnectError.createFromError(obj);
 
