@@ -143,11 +143,18 @@ export default class DialogView {
   /**
    * @private
    */
-  releaseResolvers() {
+  clearTimeout() {
     if (this.initialTimer) {
       window.clearTimeout(this.initialTimer);
       this.initialTimer = null;
     }
+  }
+
+  /**
+   * @private
+   */
+  releaseResolvers() {
+    this.clearTimeout();
 
     this.readyResolvers.forEach(({ resolve, reject }) =>
       this.isReady ? resolve() : reject(ConnectError.create(ERRORS.INITIALIZE)),
@@ -161,10 +168,26 @@ export default class DialogView {
    * @param {string} url
    */
   initFrameCheck(frame, url) {
+    const messageHandler =
+      /**
+       *
+       * @param {MessageEvent} e
+       */
+      e => {
+        const { data = {} } = e;
+        // TODO: need get messageType from core/class
+        if (data.messageType === 'endpass-cw-msgr') {
+          this.clearTimeout();
+          window.removeEventListener('message', messageHandler);
+        }
+      };
+    window.addEventListener('message', messageHandler, false);
+
     frame.addEventListener('load', () => {
       if (this.isConnected) {
         return;
       }
+      this.clearTimeout();
       this.initialTimer = window.setTimeout(() => {
         if (this.isConnected) {
           return;
