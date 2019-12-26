@@ -94,6 +94,9 @@ const createConfig = childConfig => {
   return {
     input: resolveFile(input),
     ...commonConfig(childConfig),
+    watch: {
+      clearScreen: false,
+    },
     output: [
       {
         ...outputConf,
