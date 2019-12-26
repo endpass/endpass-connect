@@ -1,9 +1,8 @@
-import { MESSENGER_METHODS } from '@/constants';
+import { MESSENGER_METHODS, DEFAULT_AUTH_URL } from '@/constants';
 import { DialogPlugin } from '@/plugins/DialogPlugin';
 import StateOpen from '@/plugins/DialogPlugin/states/StateOpen';
 import StateClose from '@/plugins/DialogPlugin/states/StateClose';
 import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
-import { DEFAULT_AUTH_URL } from '@/constants';
 
 describe('DialogPlugin class', () => {
   const authUrl = 'url';
@@ -35,18 +34,24 @@ describe('DialogPlugin class', () => {
   });
 
   describe('auth url correct creation', () => {
-    it('should return url to auth on connect application', () => {
+    it('should correct generate open url', () => {
       const url = getAuthUrl(authUrl);
-      expect(getFrameRouteUrl(url, 'foo')).toBe(`${authUrl}/foo`);
 
+      expect(getFrameRouteUrl(url, 'foo')).toBe(
+        `${authUrl}/prepare.html?redirect=/foo`,
+      );
+    });
+
+    it('should return url to auth on connect application', () => {
       const plugin = new DialogPlugin({ authUrl }, context);
-      expect(plugin.url).toBe(`${authUrl}/bridge`);
+
+      expect(plugin.url).toBe(`${authUrl}/prepare.html?redirect=/bridge`);
     });
 
     it('should return default authUrl', () => {
       const plugin = new DialogPlugin({}, context);
 
-      expect(plugin.url).toBe(`${DEFAULT_AUTH_URL}/bridge`);
+      expect(plugin.url).toBe(`${DEFAULT_AUTH_URL}/prepare.html?redirect=/bridge`);
     });
   });
 });

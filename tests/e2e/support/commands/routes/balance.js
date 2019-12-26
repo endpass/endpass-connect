@@ -8,6 +8,7 @@ Cypress.Commands.add(
     tokens = [],
     netId = Network.NET_ID.MAIN,
   }) => {
+
     cy.route({
       url: `${cryptodataAPIUrl}/${netId}/balance/**`,
       method: 'GET',

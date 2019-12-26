@@ -38,6 +38,8 @@ const outputConf = {
   sourcemap: withSourceMaps,
 };
 
+console.log('ENV', ENV);
+
 const commonConfig = config => {
   return {
     external: [...Object.keys(pkg.dependencies)],
@@ -92,6 +94,9 @@ const createConfig = childConfig => {
   return {
     input: resolveFile(input),
     ...commonConfig(childConfig),
+    watch: {
+      clearScreen: false,
+    },
     output: [
       {
         ...outputConf,

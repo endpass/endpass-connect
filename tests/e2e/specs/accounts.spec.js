@@ -1,7 +1,7 @@
 import Network from '@endpass/class/Network';
 import { address, addressHdChild } from '@fixtures/identity/accounts';
 
-describe('accounts', function() {
+describe('accounts', () => {
   beforeEach(() => {
     cy.waitPageLoad();
   });
@@ -53,6 +53,12 @@ describe('accounts', function() {
     cy.getElementFromAuth('[data-test=faucet-button]').should('exist');
 
     cy.getElementFromAuth('[data-test=submit-button]').click();
+
+    cy.mockBalance({
+      balance: '345000000000000000000',
+      tokens: [],
+      netId: Network.NET_ID.ROPSTEN,
+    });
 
     cy.get('[data-test=endpass-form-network-name]').should(
       'contain.text',

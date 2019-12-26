@@ -1,13 +1,15 @@
+const pkg = require('../package.json');
 const prod = require('./prod');
 const dev = require('./dev');
 const test = require('./test');
 
 let local;
 try {
+  // eslint-disable-next-line
   local = require('./local');
 } catch (e) {}
 
-const getEnv = env => {
+const getEnvObject = env => {
   switch ((env || '').toLowerCase()) {
     case 'production':
       return prod;
@@ -18,6 +20,16 @@ const getEnv = env => {
     default:
       return local || dev;
   }
+};
+
+const getEnv = env => {
+  const res = getEnvObject(env);
+
+  return {
+    authVersion: pkg.authVersion,
+    version: pkg.version,
+    ...res,
+  };
 };
 
 module.exports = {

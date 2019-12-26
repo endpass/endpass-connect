@@ -2,6 +2,7 @@ import {
   documentsList,
   uploadedDocumentId,
   documentFrontUpload,
+  uploadedDocument,
 } from '@fixtures/identity/documents';
 import { identityAPIUrl, publicAPIUrl } from '@config';
 
@@ -31,15 +32,27 @@ Cypress.Commands.add('mockDocumentUpload', () => {
     },
     status: 200,
   }).as('documentUpload');
+
   cy.route({
     url: `${identityAPIUrl}/documents/file/check`,
     method: 'POST',
-    response: {},
+    response: {
+      success: true,
+    },
     status: 200,
   }).as('routeDocumentUploadCheck');
 });
 
 Cypress.Commands.add('mockDocumentFrontUpload', () => {
+  cy.route({
+    url: `${identityAPIUrl}/documents/${uploadedDocumentId}/confirm`,
+    method: 'POST',
+    response: {
+      success: true,
+    },
+    status: 200,
+  });
+
   cy.route({
     url: `${identityAPIUrl}/documents/${uploadedDocumentId}/front`,
     method: 'POST',
@@ -48,10 +61,18 @@ Cypress.Commands.add('mockDocumentFrontUpload', () => {
     },
     status: 200,
   });
+
   cy.route({
     url: `${identityAPIUrl}/documents/${uploadedDocumentId}/status/upload`,
     method: 'GET',
     response: documentFrontUpload,
+    status: 200,
+  });
+
+  cy.route({
+    url: `${identityAPIUrl}/documents/${uploadedDocumentId}`,
+    method: 'GET',
+    response: uploadedDocument,
     status: 200,
   });
 });

@@ -7,7 +7,7 @@ exports[`WidgetPlugin class mount should mount iframe for widget with initial st
         data-test=\\"widget-frame\\" 
         data-endpass=\\"widget-frame\\" 
         style=\\"position: fixed;z-index: 6000000;height: 80px;border: none;border-radius: 4px;transition: opacity 300ms ease-in;opacity: 0;\\" 
-        src=\\"https://auth.foo.bar/public/widget\\"
+        src=\\"https://auth.foo.bar/prepare.html?redirect=/public/widget\\"
         ></iframe>
     "
 `;
@@ -19,7 +19,7 @@ exports[`WidgetPlugin class mount should mount iframe for widget with initial st
         data-test=\\"widget-frame\\" 
         data-endpass=\\"widget-frame\\" 
         style=\\"position: fixed;z-index: 6000000;height: 80px;border: none;border-radius: 4px;transition: opacity 300ms ease-in;opacity: 0;\\" 
-        src=\\"https://auth.foo.bar/public/widget\\"
+        src=\\"https://auth.foo.bar/prepare.html?redirect=/public/widget\\"
         ></iframe>
     "
 `;

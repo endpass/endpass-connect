@@ -1,6 +1,5 @@
 import Context from '@/class/Context';
 import { CONTEXT as context } from '@/constants';
-import pkg from '../../package.json';
 
 // OLD CONNECT
 export default class PluginApiTrait {
@@ -8,7 +7,7 @@ export default class PluginApiTrait {
     if (ENV.isProduction) {
       /* eslint-disable-next-line */
       console.info(
-        `%cEndpass connect:${ClassPlugin.pluginName} version ${pkg.version} created 🔌`,
+        `%cEndpass connect:${ClassPlugin.pluginName} version ${ENV.version} created 🔌`,
         'color: #fff; background: #4B0873',
       );
     }

@@ -1,6 +1,6 @@
 import Network from '@endpass/class/Network';
 import path from 'path';
-import { visitUrl, visitBlockBasic } from '@config';
+import { visitUrl, visitBlockBasic, authUrl } from '@config';
 
 /**
  * Converts fixture to Blob. All file types are converted to base64 then
@@ -71,3 +71,16 @@ Cypress.Commands.add(
     cy.preparePage(netId);
   },
 );
+
+Cypress.Commands.add('mockOnceOauthState', () => {
+  cy.mockOnceIframeSrc(
+    'https://api-dev.endpass.com/v1/oauth/auth?client_id=',
+    src => {
+      const state = src
+        .split('&')
+        .find(el => el.search('state=') === 0)
+        .split('=')[1];
+      return `${authUrl}?state=${state}&code=code`;
+    },
+  );
+});

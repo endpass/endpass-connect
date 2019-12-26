@@ -61,6 +61,12 @@ export const documentVerified = {
   status: 'Verified',
 };
 
+export const uploadedDocument = {
+  ...document,
+  id: uploadedDocumentId,
+  status: 'NotReadable',
+};
+
 export const documentFrontUpload = {
   front: {
     status: 'Uploaded',
