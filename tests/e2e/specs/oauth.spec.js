@@ -14,16 +14,15 @@ describe('oauth', () => {
       cy.mockAuthCheck(401);
     });
 
-    it('should login by oauth flow', () => {
+    it.only('should login by oauth flow', () => {
       cy.mockInitialData();
       cy.mockAuthCheck(401);
-      const consentUrl = '/public/login?login_challenge=login_challenge';
-      const url = `prepare.html?redirect=${consentUrl}`;
-      const fullPath = `${authUrl}${url}`;
+      const loginUrl = `${authUrl}prepare.html?redirect=/public/login&login_challenge=login_challenge`;
+      const consentUrl = `${authUrl}prepare.html?redirect=/public/consent&consent_challenge=consent_challenge`;
 
-      cy.visit(fullPath);
+      cy.visit(loginUrl);
 
-      cy.mockAuthLogin('otp', fullPath);
+      cy.mockAuthLogin('otp', loginUrl);
 
       cy.wait('@routeAuthCheck');
 
@@ -43,7 +42,7 @@ describe('oauth', () => {
 
       cy.get('[data-test=code-input]').type(otpCode);
       cy.mockAuthCheck(200);
-      cy.mockOauthConsent(fullPath);
+      cy.mockOauthConsent(consentUrl);
       cy.get('[data-test=submit-button]').click();
 
       cy.wait('@routeAuthCheck');
