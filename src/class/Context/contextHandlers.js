@@ -179,13 +179,10 @@ const createDocument = context => async (payload, req) => {
  * @param {Context} context
  * @returns {RequestEventHandler}
  */
-const toggleWidget = context => async payload => {
+const toggleWidget = context => async ({ status }) => {
   if (!(PLUGIN_NAMES.WIDGET in context.plugins)) {
     return;
   }
-
-  // eslint-disable-next-line no-prototype-builtins
-  const status = payload.hasOwnProperty('status') ? payload.status : payload;
 
   if (!status) {
     await context.executeMethod(MESSENGER_METHODS.WIDGET_UNMOUNT);

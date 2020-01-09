@@ -123,6 +123,15 @@ export default class OauthPlugin extends PluginBase {
   }
 
   /**
+   * @param {object} params
+   * @param {number} params.code
+   * @param {string} params.hash
+   */
+  changeAuthStatus({ code, hash }) {
+    this.oauthRequestProvider.changeAuthStatus({ code, hash });
+  }
+
+  /**
    * Fetch user data via oaurh
    * @deprecated
    * @param {object} params Parameters object
@@ -137,7 +146,7 @@ export default class OauthPlugin extends PluginBase {
    * @returns {void}
    */
   logout() {
-    this.oauthRequestProvider.logout();
+    this.oauthRequestProvider.dropToken();
   }
 
   /**
