@@ -11,5 +11,6 @@
   "viewportHeight": 1000,
   "defaultCommandTimeout": 100000,
   "pageLoadTimeout": 100000,
+  "numTestsKeptInMemory": 0,
   "chromeWebSecurity": false
 }
