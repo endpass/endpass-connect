@@ -120,7 +120,7 @@ export default class Oauth {
    * @param {number} params.code
    * @param {string} params.hash
    */
-  changeAuthStatus({ code, hash }) {
+  changeAuthStatus({ code, hash = '' }) {
     const storedKey = `endpass-oauth-hash:${this.clientId}`;
     const storedId = LocalStorage.load(storedKey);
     LocalStorage.save(storedKey, hash);
