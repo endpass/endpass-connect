@@ -20,6 +20,7 @@ const initiate = context => (payload, req) => {
 
   req.answer({
     isIdentityMode: isIdentityMode || false,
+    originLocation: window.location.origin,
   });
 };
 
