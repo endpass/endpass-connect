@@ -28,6 +28,7 @@ describe('widget', function() {
 
   describe('desktop mode', () => {
     beforeEach(() => {
+      cy.viewport(1200, 1200);
       cy.waitPageLoad();
     });
 

@@ -8,7 +8,7 @@
   "video": false,
   "videosFolder": "tests/e2e/videos",
   "viewportWidth": 1200,
-  "viewportHeight": 1000,
+  "viewportHeight": 1200,
   "defaultCommandTimeout": 100000,
   "pageLoadTimeout": 100000,
   "numTestsKeptInMemory": 0,

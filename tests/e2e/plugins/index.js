@@ -1,6 +1,5 @@
-const webpack = require('@cypress/webpack-preprocessor');
-const path = require('path');
-const logOutput = require('cypress-log-to-output');
+const consoleLogs = require('./consoleLogs');
+const webpackPreprocess = require('./webpackPreprocess');
 
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
@@ -15,23 +14,10 @@ const logOutput = require('cypress-log-to-output');
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
-module.exports = on => {
+module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
 
-  logOutput.install(on);
-
-  const options = {
-    webpackOptions: {
-      resolve: {
-        alias: {
-          '@fixtures': path.resolve(__dirname, '../../fixtures'),
-          '@config': path.resolve(__dirname, '../support/config'),
-          '@': path.resolve(__dirname, '../../../src'),
-        },
-      },
-    },
-    watchOptions: {},
-  };
-  on('file:preprocessor', webpack(options));
+  webpackPreprocess(on, config);
+  consoleLogs(on, config);
 };
