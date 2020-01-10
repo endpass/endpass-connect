@@ -1,5 +1,4 @@
 // @ts-check
-import LocalStorage from '@endpass/class/LocalStorage';
 import { MESSENGER_METHODS } from '@/constants';
 
 /**

@@ -14,7 +14,7 @@ describe('oauth', () => {
       cy.mockAuthCheck(401);
     });
 
-    it.only('should login by oauth flow', () => {
+    it('should login by oauth flow', () => {
       cy.mockInitialData();
       cy.mockAuthCheck(401);
       const loginUrl = `${authUrl}prepare.html?redirect=/public/login&login_challenge=login_challenge`;
