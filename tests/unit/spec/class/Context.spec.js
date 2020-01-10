@@ -16,6 +16,7 @@ const { ERRORS } = ConnectError;
 
 describe('Context class', () => {
   const authUrl = 'http://test.auth';
+  const originLocation = 'http://localhost';
   const oauthClientId = 'xxxxxxxxxx';
   const options = {
     authUrl,
@@ -77,6 +78,7 @@ describe('Context class', () => {
 
       expect(req.answer).toBeCalledWith({
         isIdentityMode: false,
+        originLocation,
       });
     });
   });
