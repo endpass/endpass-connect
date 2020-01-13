@@ -1,5 +1,6 @@
 const consoleLogs = require('./consoleLogs');
 const webpackPreprocess = require('./webpackPreprocess');
+const browserSize = require('./browserSize');
 
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
@@ -18,6 +19,7 @@ module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
 
+  browserSize(on, config);
   webpackPreprocess(on, config);
   consoleLogs(on, config);
 };

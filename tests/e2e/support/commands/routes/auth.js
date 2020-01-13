@@ -79,11 +79,14 @@ Cypress.Commands.add('mockAuthSendCode', (status = 200) => {
 });
 
 Cypress.Commands.add('mockAuthCheck', status => {
+  const hash = status === 200 ? 'hash' : '';
   cy.route({
     method: 'GET',
     url: `${identityAPIUrl}/auth/check`,
     status,
-    response: {},
+    response: {
+      hash,
+    },
   }).as('routeAuthCheck');
 });
 
