@@ -65,11 +65,10 @@ export default class OauthPlugin extends PluginBase {
   constructor(options, context) {
     super(options, context);
 
-    this.oauthClientId = options.oauthClientId;
-    this.oauthServer = options.oauthServer;
+    const { clientId, oauthServer, scopes, isPopup } = options;
 
     this.frameStrategy = new FrameStrategy({
-      oauthPopup: options.oauthPopup,
+      isPopup,
     });
 
     this.frameStrategy.on(
@@ -84,9 +83,9 @@ export default class OauthPlugin extends PluginBase {
     });
 
     this.oauthRequestProvider = new Oauth({
-      clientId: this.oauthClientId,
-      scopes: options.scopes,
-      oauthServer: this.oauthServer,
+      clientId,
+      oauthServer,
+      scopes,
       oauthStrategy,
       frameStrategy: this.frameStrategy,
     });
@@ -129,17 +128,6 @@ export default class OauthPlugin extends PluginBase {
    */
   changeAuthStatus({ code, hash }) {
     this.oauthRequestProvider.changeAuthStatus({ code, hash });
-  }
-
-  /**
-   * Fetch user data via oaurh
-   * @deprecated
-   * @param {object} params Parameters object
-   * @param {string[]} [params.scopes] - Array of authorization scopes
-   * @returns {Promise<void>}
-   */
-  async loginWithOauth(params = {}) {
-    await this.oauthRequestProvider.loginWithOauth(params);
   }
 
   /**

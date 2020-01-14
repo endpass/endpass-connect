@@ -44,7 +44,7 @@ describe('Oauth class', () => {
     };
 
     const oauthStrategy = new OauthPkceStrategy({ context });
-    const frameStrategy = new FrameStrategy({ oauthPopup: false });
+    const frameStrategy = new FrameStrategy({ isPopup: false });
 
     const res = new Oauth({
       clientId,

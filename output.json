@@ -9,6 +9,14 @@
     "withCopy": ["./types/ConnectError.d.ts"]
   },
   {
+    "library": "EndpassComposePlugin",
+    "input": "./src/plugins/ComposePlugin.js",
+    "main": "./compose.min.js",
+    "module": "./compose.js",
+    "umd": "./compose.umd.js",
+    "browser": "./compose.browser.js"
+  },
+  {
     "library": "EndpassProviderPlugin",
     "input": "./src/plugins/ProviderPlugin/index.js",
     "main": "./provider.min.js",

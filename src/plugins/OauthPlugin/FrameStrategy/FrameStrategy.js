@@ -9,16 +9,16 @@ export default class FrameStrategy {
 
   /**
    * @param {object} params
-   * @param {boolean=} params.oauthPopup
+   * @param {boolean=} params.isPopup
    */
-  constructor({ oauthPopup = false }) {
+  constructor({ isPopup = false }) {
     this.emitter = new EventEmitter();
-    this.oauthPopup = oauthPopup;
+    this.isPopup = isPopup;
     this.frame = new BaseWindow();
   }
 
   prepare() {
-    this.frame = this.oauthPopup ? new PopupFrame() : new IframeFrame();
+    this.frame = this.isPopup ? new PopupFrame() : new IframeFrame();
     this.frame.prepare();
   }
 

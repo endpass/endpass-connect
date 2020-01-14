@@ -14,7 +14,7 @@ export default class Context {
   constructor(options, ClassPlugin) {
     this.options = options;
 
-    if (!options.oauthClientId) {
+    if (!options.clientId) {
       throw ConnectError.create(ERRORS.OAUTH_REQUIRE_ID);
     }
 

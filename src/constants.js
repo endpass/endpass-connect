@@ -118,7 +118,7 @@ export const PLUGIN_NAMES = {
   PROVIDER: 'provider',
   WIDGET: 'widget',
   LOGIN_BUTTON: 'loginButton',
-  CONNECT: 'connect',
+  COMPOSE: 'compose',
 };
 
 export const CONTEXT = Symbol('context');

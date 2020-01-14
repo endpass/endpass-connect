@@ -1,7 +1,7 @@
 import OauthPlugin from '@/plugins/OauthPlugin';
 
 describe('OauthPlugin plugin', () => {
-  const oauthClientId = 'xxxxxxxxxx';
+  const clientId = 'xxxxxxxxxx';
 
   const options = { widget: false };
 
@@ -13,8 +13,8 @@ describe('OauthPlugin plugin', () => {
     expect(() => new OauthPlugin()).toThrow();
     expect(() => new OauthPlugin(options)).toThrow();
     expect(
-      () => new OauthPlugin({ oauthClientId: undefined, ...options }),
+      () => new OauthPlugin({ clientId: undefined, ...options }),
     ).toThrow();
-    expect(() => new OauthPlugin({ oauthClientId, ...options })).not.toThrow();
+    expect(() => new OauthPlugin({ clientId, ...options })).not.toThrow();
   });
 });
