@@ -2,7 +2,7 @@ import { v3password, address } from '@fixtures/identity/accounts';
 import { etherPrices } from '@fixtures/cryptodata/price';
 import { MOBILE_BREAKPOINT } from '@/plugins/WidgetPlugin/WidgetStyles';
 
-describe('widget', function() {
+describe('widget', () => {
   describe('mobile mode', () => {
     beforeEach(() => {
       cy.viewport(MOBILE_BREAKPOINT - 10, MOBILE_BREAKPOINT - 10);

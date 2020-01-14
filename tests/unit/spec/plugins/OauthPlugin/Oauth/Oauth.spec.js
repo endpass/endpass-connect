@@ -269,47 +269,77 @@ describe('Oauth class', () => {
       expect(oauth.getTokenObjectFromStore().token).toBe(token);
     });
 
-    it('should drop token if auth status received 401 code', async () => {
-      expect.assertions(2);
+    describe('changeAuthStatus', () => {
+      it('should define token and not drop if code 200', async () => {
+        expect.assertions(2);
 
-      await oauth.request({
-        url,
-      });
-      expect(oauth.getTokenObjectFromStore().token).toBe(token);
+        expect(oauth.getTokenObjectFromStore()).toBe(null);
 
-      oauth.changeAuthStatus({ code: 401 });
+        oauth.changeAuthStatus({ code: 200 });
+        await oauth.request({
+          url,
+        });
 
-      expect(oauth.getTokenObjectFromStore()).toBe(null);
-    });
-
-    it('should not drop token if auth status received 200 code', async () => {
-      expect.assertions(2);
-
-      oauth.changeAuthStatus({ code: 200, hash });
-      await oauth.request({
-        url,
+        expect(oauth.getTokenObjectFromStore().token).toBe(token);
       });
 
-      expect(oauth.getTokenObjectFromStore().token).toBe(token);
+      it('should drop token if auth status received 401 code', async () => {
+        expect.assertions(2);
 
-      oauth.changeAuthStatus({ code: 200, hash });
+        oauth.changeAuthStatus({ code: 200, hash });
+        await oauth.request({
+          url,
+        });
+        expect(oauth.getTokenObjectFromStore().token).toBe(token);
 
-      expect(oauth.getTokenObjectFromStore().token).toBe(token);
-    });
+        oauth.changeAuthStatus({ code: 401 });
 
-    it('should drop token if auth status received 200 code but hash is changed', async () => {
-      expect.assertions(2);
-
-      oauth.changeAuthStatus({ code: 200, hash });
-      await oauth.request({
-        url,
+        expect(oauth.getTokenObjectFromStore()).toBe(null);
       });
 
-      expect(oauth.getTokenObjectFromStore().token).toBe(token);
+      it('should not drop token if auth status received 403 code', async () => {
+        expect.assertions(2);
 
-      oauth.changeAuthStatus({ code: 200, hash: 'other hash' });
+        oauth.changeAuthStatus({ code: 200, hash });
+        await oauth.request({
+          url,
+        });
+        expect(oauth.getTokenObjectFromStore().token).toBe(token);
 
-      expect(oauth.getTokenObjectFromStore()).toBe(null);
+        oauth.changeAuthStatus({ code: 403, hash });
+
+        expect(oauth.getTokenObjectFromStore().token).toBe(token);
+      });
+
+      it('should not drop token if auth status received 200 code', async () => {
+        expect.assertions(2);
+
+        oauth.changeAuthStatus({ code: 200, hash });
+        await oauth.request({
+          url,
+        });
+
+        expect(oauth.getTokenObjectFromStore().token).toBe(token);
+
+        oauth.changeAuthStatus({ code: 200, hash });
+
+        expect(oauth.getTokenObjectFromStore().token).toBe(token);
+      });
+
+      it('should drop token if auth status received 200 code but hash is changed', async () => {
+        expect.assertions(2);
+
+        oauth.changeAuthStatus({ code: 200, hash });
+        await oauth.request({
+          url,
+        });
+
+        expect(oauth.getTokenObjectFromStore().token).toBe(token);
+
+        oauth.changeAuthStatus({ code: 200, hash: 'other hash' });
+
+        expect(oauth.getTokenObjectFromStore()).toBe(null);
+      });
     });
   });
 });
