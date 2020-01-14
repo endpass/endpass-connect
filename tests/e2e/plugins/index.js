@@ -1,4 +1,4 @@
-const consoleLogs = require('./consoleLogs');
+// const consoleLogs = require('./consoleLogs');
 const webpackPreprocess = require('./webpackPreprocess');
 const browserSize = require('./browserSize');
 
