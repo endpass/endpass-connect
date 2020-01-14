@@ -28,11 +28,13 @@ describe('widget', function() {
 
   describe('desktop mode', () => {
     beforeEach(() => {
-      cy.viewport(1200, 1200);
+      cy.viewport('macbook-15');
       cy.waitPageLoad();
+      cy.viewport('macbook-15');
     });
 
     it('should toggle widget more than one times', () => {
+      cy.viewport('macbook-15');
       cy.authFrameContinueRun();
       cy.shouldLoggedIn();
 
