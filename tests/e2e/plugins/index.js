@@ -21,5 +21,5 @@ module.exports = (on, config) => {
 
   browserSize(on, config);
   webpackPreprocess(on, config);
-  consoleLogs(on, config);
+  // consoleLogs(on, config);
 };
