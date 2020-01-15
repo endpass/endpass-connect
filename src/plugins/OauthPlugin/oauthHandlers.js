@@ -37,7 +37,17 @@ const closeFrame = plugin => (payload, req) => {
   plugin.handleCloseFrame();
 };
 
+/**
+ * @param {OauthPlugin} plugin
+ * @returns {RequestEventHandler}
+ */
+const authStatus = plugin => payload => {
+  const { code, hash } = payload;
+  plugin.changeAuthStatus({ code, hash });
+};
+
 export default {
+  [MESSENGER_METHODS.AUTH_STATUS]: authStatus,
   [MESSENGER_METHODS.READY_STATE_BRIDGE]: readyFrame,
   [MESSENGER_METHODS.DIALOG_RESIZE]: resizeFrame,
   [MESSENGER_METHODS.DIALOG_CLOSE]: closeFrame,

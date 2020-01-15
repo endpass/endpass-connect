@@ -62,9 +62,7 @@ describe('Oauth class', () => {
     oauth = createOauth();
   });
 
-  const createSpyResult = () => {
-    return jest.spyOn(Polling.prototype, 'getResult');
-  };
+  const createSpyResult = () => jest.spyOn(Polling.prototype, 'getResult');
 
   describe('constructor', () => {
     it('should use existing token if not expired', async () => {
@@ -136,7 +134,7 @@ describe('Oauth class', () => {
         new Date().getTime(),
       );
 
-      oauth.logout();
+      oauth.dropToken();
 
       expect(oauth.getTokenObjectFromStore()).toBe(null);
     });
@@ -200,6 +198,7 @@ describe('Oauth class', () => {
   describe('request', () => {
     const url = 'url';
     const secondUrl = 'secondUrl';
+    const hash = 'hash';
 
     const requestData = {
       data: 'data',
@@ -215,7 +214,7 @@ describe('Oauth class', () => {
     });
 
     afterEach(() => {
-      oauth.logout();
+      oauth.dropToken();
     });
 
     it('should pass request with ask permissions', async () => {
@@ -256,6 +255,91 @@ describe('Oauth class', () => {
 
       expect(data).toEqual(requestData);
       expect(spy).toBeCalledTimes(2);
+    });
+
+    it('should set token when request makes', async () => {
+      expect.assertions(2);
+
+      expect(oauth.getTokenObjectFromStore()).toBe(null);
+
+      await oauth.request({
+        url,
+      });
+
+      expect(oauth.getTokenObjectFromStore().token).toBe(token);
+    });
+
+    describe('changeAuthStatus', () => {
+      it('should define token and not drop if code 200', async () => {
+        expect.assertions(2);
+
+        expect(oauth.getTokenObjectFromStore()).toBe(null);
+
+        oauth.changeAuthStatus({ code: 200 });
+        await oauth.request({
+          url,
+        });
+
+        expect(oauth.getTokenObjectFromStore().token).toBe(token);
+      });
+
+      it('should drop token if auth status received 401 code', async () => {
+        expect.assertions(2);
+
+        oauth.changeAuthStatus({ code: 200, hash });
+        await oauth.request({
+          url,
+        });
+        expect(oauth.getTokenObjectFromStore().token).toBe(token);
+
+        oauth.changeAuthStatus({ code: 401 });
+
+        expect(oauth.getTokenObjectFromStore()).toBe(null);
+      });
+
+      it('should not drop token if auth status received 403 code', async () => {
+        expect.assertions(2);
+
+        oauth.changeAuthStatus({ code: 200, hash });
+        await oauth.request({
+          url,
+        });
+        expect(oauth.getTokenObjectFromStore().token).toBe(token);
+
+        oauth.changeAuthStatus({ code: 403, hash });
+
+        expect(oauth.getTokenObjectFromStore().token).toBe(token);
+      });
+
+      it('should not drop token if auth status received 200 code', async () => {
+        expect.assertions(2);
+
+        oauth.changeAuthStatus({ code: 200, hash });
+        await oauth.request({
+          url,
+        });
+
+        expect(oauth.getTokenObjectFromStore().token).toBe(token);
+
+        oauth.changeAuthStatus({ code: 200, hash });
+
+        expect(oauth.getTokenObjectFromStore().token).toBe(token);
+      });
+
+      it('should drop token if auth status received 200 code but hash is changed', async () => {
+        expect.assertions(2);
+
+        oauth.changeAuthStatus({ code: 200, hash });
+        await oauth.request({
+          url,
+        });
+
+        expect(oauth.getTokenObjectFromStore().token).toBe(token);
+
+        oauth.changeAuthStatus({ code: 200, hash: 'other hash' });
+
+        expect(oauth.getTokenObjectFromStore()).toBe(null);
+      });
     });
   });
 });

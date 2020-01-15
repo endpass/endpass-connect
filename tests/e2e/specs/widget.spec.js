@@ -2,7 +2,7 @@ import { v3password, address } from '@fixtures/identity/accounts';
 import { etherPrices } from '@fixtures/cryptodata/price';
 import { MOBILE_BREAKPOINT } from '@/plugins/WidgetPlugin/WidgetStyles';
 
-describe('widget', function() {
+describe('widget', () => {
   describe('mobile mode', () => {
     beforeEach(() => {
       cy.viewport(MOBILE_BREAKPOINT - 10, MOBILE_BREAKPOINT - 10);
@@ -28,10 +28,13 @@ describe('widget', function() {
 
   describe('desktop mode', () => {
     beforeEach(() => {
+      cy.viewport('macbook-15');
       cy.waitPageLoad();
+      cy.viewport('macbook-15');
     });
 
     it('should toggle widget more than one times', () => {
+      cy.viewport('macbook-15');
       cy.authFrameContinueRun();
       cy.shouldLoggedIn();
 

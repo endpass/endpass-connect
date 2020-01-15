@@ -6,7 +6,7 @@ import {
   otpCode,
 } from '@fixtures/identity/accounts';
 
-describe('login', function() {
+describe('login', () => {
   describe('connect login features', () => {
     beforeEach(() => {
       cy.waitPageLoad();
@@ -78,9 +78,10 @@ describe('login', function() {
 
       cy.wait('@routeRegularPasswordCheck');
       cy.getElementFromAuth('[data-test=password-input]').type(regularPassword);
-      cy.getElementFromAuth('[data-test=repeat-password-input]').type(
-        regularPassword,
-      );
+
+      cy.getElementFromAuth(
+        '[data-test=repeat-password-input]',
+      ).type(regularPassword, { force: true });
       cy.getElementFromAuth('[data-test=code-input]').type(otpCode);
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
@@ -108,6 +109,7 @@ describe('login', function() {
       cy.getElementFromAuth('[data-test=password-input]').type(regularPassword);
       cy.getElementFromAuth('[data-test=repeat-password-input]').type(
         regularPassword,
+        { force: true },
       );
       cy.getElementFromAuth('[data-test=code-input]').type(otpCode);
       cy.mockRegularPasswordCheck(200);
@@ -188,7 +190,7 @@ describe('login', function() {
       cy.wait('@routeAuthCheck');
 
       cy.getElementFromAuth('[data-test=password-main]').type(v3password);
-      cy.getElementFromAuth('[data-test=password-confirm]').type(v3password);
+      cy.getElementFromAuth('[data-test=password-confirm]').type(v3password, { force: true });
       cy.getElementFromAuth('[data-test=submit-button-wallet-create]').click();
 
       cy.wait('@routeAccountUpdate');

@@ -116,9 +116,26 @@ export default class Oauth {
   }
 
   /**
+   * @param {object} params
+   * @param {number} params.code
+   * @param {string} params.hash
+   */
+  changeAuthStatus({ code, hash = '' }) {
+    const storedKey = `endpass-oauth-hash:${this.clientId}`;
+    const storedId = LocalStorage.load(storedKey);
+    LocalStorage.save(storedKey, hash);
+
+    const isEqual = hash === storedId;
+
+    if (code === 401 || !isEqual) {
+      this.dropToken();
+    }
+  }
+
+  /**
    * @returns {void}
    */
-  logout() {
+  dropToken() {
     LocalStorage.remove(this.storeId);
   }
 
