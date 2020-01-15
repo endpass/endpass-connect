@@ -3,6 +3,7 @@ node_modules
 dist
 endpass-connect*.tgz
 report.*
+reports
 
 # local env files
 env/local.*
