@@ -31,11 +31,11 @@ function resolveFile(...args) {
 
 const ENV = getEnv(process.env.NODE_ENV);
 
-const withSourceMaps = process.env.NODE_ENV !== 'production';
+const isDevelopmentMode = process.env.NODE_ENV !== 'production';
 
 const outputConf = {
   exports: 'named',
-  sourcemap: withSourceMaps,
+  sourcemap: isDevelopmentMode,
 };
 
 // eslint-disable-next-line no-console
@@ -62,7 +62,7 @@ const commonConfig = config => ({
       extensions: ['.js', '.ts'],
     }),
     commonjs(),
-    !withSourceMaps && terser(),
+    !isDevelopmentMode && terser(),
     config.withCopy &&
       copy({
         targets: [
