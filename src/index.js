@@ -1,3 +1,1 @@
-import Plugin from '@/plugins/ComposePlugin';
-
-export default Plugin;
+export { default } from '@/plugins/ComposePlugin';

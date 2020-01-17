@@ -87,17 +87,15 @@ const commonConfig = config => ({
   ],
   watch: {
     exclude: ['node_modules/**'],
+    clearScreen: false,
   },
 });
 
 const createConfig = childConfig => {
   const { input, umd, module } = childConfig;
   return {
-    input: resolveFile(input),
     ...commonConfig(childConfig),
-    watch: {
-      clearScreen: false,
-    },
+    input: resolveFile(input),
     output: [
       {
         ...outputConf,
