@@ -9,7 +9,7 @@ export default class FrameStrategy {
 
   /**
    * @param {object} params
-   * @param {boolean=} params.isPopup
+   * @param {boolean=} [params.isPopup]
    */
   constructor({ isPopup = false }) {
     this.emitter = new EventEmitter();
