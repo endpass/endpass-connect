@@ -17,7 +17,7 @@
     "browser": "./endpass-connect.browser.js"
   },
   {
-    "library": "EndpassComposePlugin",
+    "library": "EndpassCompose",
     "input": "./src/plugins/ComposePlugin.js",
     "main": "./compose.min.js",
     "module": "./compose.js",
@@ -25,7 +25,7 @@
     "browser": "./compose.browser.js"
   },
   {
-    "library": "EndpassProviderPlugin",
+    "library": "EndpassProvider",
     "input": "./src/plugins/ProviderPlugin/index.js",
     "main": "./provider.min.js",
     "module": "./provider.js",
@@ -33,7 +33,7 @@
     "browser": "./provider.browser.js"
   },
   {
-    "library": "EndpassAuthPlugin",
+    "library": "EndpassAuth",
     "input": "./src/plugins/AuthorizePlugin/index.js",
     "main": "./auth.min.js",
     "module": "./auth.js",
@@ -41,7 +41,7 @@
     "browser": "./auth.browser.js"
   },
   {
-    "library": "EndpassOauthPlugin",
+    "library": "EndpassOauth",
     "input": "./src/plugins/OauthPlugin/index.js",
     "main": "./oauth.min.js",
     "module": "./oauth.js",
@@ -49,7 +49,7 @@
     "browser": "./oauth.browser.js"
   },
   {
-    "library": "EndpassDocumentPlugin",
+    "library": "EndpassDocument",
     "input": "./src/plugins/DocumentPlugin/index.js",
     "main": "./document.min.js",
     "module": "./document.js",
@@ -57,7 +57,7 @@
     "browser": "./document.browser.js"
   },
   {
-    "library": "EndpassLoginButtonPlugin",
+    "library": "EndpassLoginButton",
     "input": "./src/plugins/LoginButtonPlugin/index.js",
     "main": "./loginButton.min.js",
     "module": "./loginButton.js",
@@ -65,7 +65,7 @@
     "browser": "./loginButton.browser.js"
   },
   {
-    "library": "EndpassWalletPlugin",
+    "library": "EndpassWallet",
     "input": "./src/plugins/WalletPlugin/index.js",
     "main": "./wallet.min.js",
     "module": "./wallet.js",
