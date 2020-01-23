@@ -65,12 +65,10 @@ const commonConfig = config => ({
     !isDevelopmentMode && terser(),
     config.withCopy &&
       copy({
-        targets: [
-          {
-            src: config.withCopy,
-            dest: './dist',
-          },
-        ],
+        targets: config.withCopy.map(target => ({
+          ...target,
+          dest: './dist',
+        })),
       }),
     postcss({
       plugins: [
