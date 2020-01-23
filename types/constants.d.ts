@@ -94,6 +94,7 @@ interface PluginNames {
   WIDGET: 'widget';
   LOGIN_BUTTON: 'loginButton';
   CONNECT: 'connect';
+  COMPOSE: 'compose';
 }
 
 declare module '@/constants' {

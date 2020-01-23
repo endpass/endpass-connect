@@ -4,9 +4,9 @@ import { DialogPlugin } from '@/plugins/DialogPlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 import { PLUGIN_NAMES } from '@/constants';
 
-export class ConnectPlugin extends PluginBase {
+export class ComposePlugin extends PluginBase {
   static get pluginName() {
-    return PLUGIN_NAMES.CONNECT;
+    return PLUGIN_NAMES.COMPOSE;
   }
 
   static get dependencyPlugins() {
@@ -14,4 +14,4 @@ export class ConnectPlugin extends PluginBase {
   }
 }
 
-export default PluginFactory.create(ConnectPlugin);
+export default PluginFactory.create(ComposePlugin);

@@ -8,7 +8,7 @@ import {
 import ProviderPlugin, {
   ProviderPlugin as ProviderPluginClass,
 } from '@/plugins/ProviderPlugin';
-import ConnectPlugin from '@/plugins/ConnectPlugin';
+import ComposePlugin from '@/plugins/ComposePlugin';
 import AuthorizePlugin from '@/plugins/AuthorizePlugin';
 import WidgetPlugin from '@/plugins/WidgetPlugin';
 
@@ -17,16 +17,16 @@ const { ERRORS } = ConnectError;
 describe('Context class', () => {
   const authUrl = 'http://test.auth';
   const originLocation = 'http://localhost';
-  const oauthClientId = 'xxxxxxxxxx';
+  const clientId = 'xxxxxxxxxx';
   const options = {
     authUrl,
-    oauthClientId,
+    clientId,
   };
   let context;
   let connect;
 
   const createContext = opt => {
-    connect = new ConnectPlugin({ ...options, ...opt });
+    connect = new ComposePlugin({ ...options, ...opt });
     context = connect[CONTEXT];
   };
 
@@ -48,7 +48,7 @@ describe('Context class', () => {
 
       expect(pluginList).toEqual([
         PLUGIN_NAMES.DIALOG,
-        PLUGIN_NAMES.CONNECT,
+        PLUGIN_NAMES.COMPOSE,
         PLUGIN_NAMES.MESSENGER_GROUP,
       ]);
       expect(pluginList).toHaveLength(3);

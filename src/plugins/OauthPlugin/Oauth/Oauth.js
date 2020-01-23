@@ -31,18 +31,6 @@ export default class Oauth {
   }
 
   /**
-   * Initiate token
-   * @deprecated
-   * @param {object} params Parameters object
-   * @param {string[]} [params.scopes] - Array of authorization scopes
-   * @returns {Promise<void>}
-   */
-  async loginWithOauth(params) {
-    this.setScopes(params.scopes);
-    await this.getToken();
-  }
-
-  /**
    * @param {string[]=} scopes
    * @returns {void}
    */

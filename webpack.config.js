@@ -1,8 +1,7 @@
 const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
-const pkg = require('./package.json');
-const outputList = require('./output.json');
+const outputList = require('./plugins.json');
 
 const createConfig = ({ entry, filename, library }) => {
   return {
@@ -46,13 +45,6 @@ const createList = configs => {
 };
 
 module.exports = createList([
-  ...createConfigs({
-    entry: pkg.umd,
-    filename: pkg.main,
-    legacyFilename: 'endpass-connect.browser.js',
-    library: 'EndpassConnect',
-  }),
-
   // plugins
   ...outputList.reduce((list, plugin) => {
     const newConfigs = createConfigs({
