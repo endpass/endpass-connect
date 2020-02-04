@@ -51,7 +51,12 @@ export default class ConnectError extends Error {
    */
   constructor(message, code = ERRORS.NOT_DEFINED) {
     super(message);
-    this.stack = new Error().stack;
+    this.name = 'ConnectError';
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
+    } else {
+      this.stack = new Error().stack;
+    }
     this.code = code;
     this.type = CONNECT_ERROR_TYPE;
   }
