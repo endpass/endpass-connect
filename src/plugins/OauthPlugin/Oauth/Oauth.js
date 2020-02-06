@@ -47,14 +47,13 @@ export default class Oauth {
    */
   checkScopes() {
     const tokenObject = this.getTokenObjectFromStore();
-    const now = new Date().getTime();
 
     if (
       !tokenObject ||
       tokenObject.scope !== this.scopesString ||
-      now >= tokenObject.expires
+      Date.now() >= tokenObject.expires
     ) {
-      LocalStorage.remove(this.storeId);
+      this.dropToken();
     }
   }
 
@@ -174,6 +173,9 @@ export default class Oauth {
    */
   request({ scopes, ...options }) {
     this.setScopes(scopes);
+    if (!this.scopesString) {
+      throw ConnectError.create(ERRORS.OAUTH_SCOPES_NOT_DEFINED);
+    }
     return this.axiosInstance(options);
   }
 }
