@@ -25,6 +25,14 @@ export default class IframeFrame extends BaseWindow {
     this.dialogView.handleReady();
   }
 
+  connectionOpen() {
+    this.dialogView.connectionOpen();
+  }
+
+  connectionError() {
+    this.dialogView.connectionError();
+  }
+
   open() {
     this.dialogView.open();
   }

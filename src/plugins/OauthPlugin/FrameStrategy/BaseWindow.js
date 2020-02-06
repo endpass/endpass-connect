@@ -26,4 +26,8 @@ export default class BaseWindow {
   resize(payload) {}
 
   handleReady() {}
+
+  connectionOpen() {}
+
+  connectionError() {}
 }
