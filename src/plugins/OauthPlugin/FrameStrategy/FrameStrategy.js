@@ -51,6 +51,14 @@ export default class FrameStrategy {
     this.frame.handleReady();
   }
 
+  connectionOpen() {
+    this.frame.connectionOpen();
+  }
+
+  connectionError() {
+    this.frame.connectionError();
+  }
+
   close() {
     this.frame.destroy();
     this.frame = new BaseWindow();

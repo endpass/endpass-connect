@@ -108,6 +108,20 @@ export default class OauthPlugin extends PluginBase {
   }
 
   /**
+   * @returns {void}
+   */
+  connectionOpen() {
+    this.frameStrategy.connectionOpen();
+  }
+
+  /**
+   * @returns {void}
+   */
+  connectionError() {
+    this.frameStrategy.connectionError();
+  }
+
+  /**
    * @param {OauthResizeFrameEventPayload} payload
    * @returns {void}
    */

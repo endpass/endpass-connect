@@ -15,6 +15,7 @@ import ConnectError from '@/class/ConnectError';
 const INITIAL_TIMEOUT = 5 * 1000; // 5 seconds
 
 const { ERRORS } = ConnectError;
+
 /**
  * @typedef {Array<{resolve: CallableFunction, reject: CallableFunction}>} Resolvers
  */
@@ -28,7 +29,10 @@ export default class DialogView {
   constructor({ element, namespace = '' }) {
     this.namespace = namespace;
     this.element = element;
-    this.isReady = null;
+
+    this.isConnectionLoaded = false;
+    this.isConnectionInited = false;
+    this.isConnectionOpen = false;
     /** @type {Resolvers} */
     this.readyResolvers = [];
 
@@ -64,10 +68,6 @@ export default class DialogView {
     return /** @type {HTMLElement} */ (el);
   }
 
-  get isConnected() {
-    return this.isReady !== null;
-  }
-
   /**
    *
    * @type {Window|null}
@@ -97,8 +97,7 @@ export default class DialogView {
     if (!this.overlay) {
       return;
     }
-    this.setReadyState(false);
-    this.releaseResolvers();
+    this.handleConnectionReady(false);
 
     this.close();
 
@@ -126,18 +125,17 @@ export default class DialogView {
   }
 
   handleReady() {
-    this.setReadyState(true);
-    this.releaseResolvers();
+    this.handleConnectionReady(true);
   }
 
-  /**
-   *
-   * @private
-   * @param {boolean} state
-   */
-  setReadyState(state) {
-    if (this.isConnected) return;
-    this.isReady = state;
+  connectionOpen() {
+    this.isConnectionOpen = true;
+    this.clearTimeout();
+  }
+
+  connectionError() {
+    this.handleConnectionReady(false);
+    this.destroy();
   }
 
   /**
@@ -152,54 +150,62 @@ export default class DialogView {
 
   /**
    * @private
+   * @param {boolean} isConnectionInited
    */
-  releaseResolvers() {
+  handleConnectionReady(isConnectionInited) {
     this.clearTimeout();
+    if (this.isConnectionLoaded) {
+      return;
+    }
 
+    this.isConnectionLoaded = true;
+    this.isConnectionInited = isConnectionInited;
+
+    this.callResolvers();
+  }
+
+  /**
+   * @private
+   */
+  callResolvers() {
     this.readyResolvers.forEach(({ resolve, reject }) =>
-      this.isReady ? resolve() : reject(ConnectError.create(ERRORS.INITIALIZE)),
+      this.isConnectionInited
+        ? resolve()
+        : reject(ConnectError.create(ERRORS.INITIALIZE)),
     );
     this.readyResolvers = [];
   }
 
   /**
    * @private
-   * @param {HTMLElement} frame
+   * @param {HTMLIFrameElement} frame
    * @param {string} url
    */
   initFrameCheck(frame, url) {
-    const messageHandler =
-      /**
-       *
-       * @param {MessageEvent} e
-       */
-      e => {
-        const { data = {} } = e;
-        // TODO: need get messageType from core/class
-        if (data.messageType === 'endpass-cw-msgr') {
-          this.clearTimeout();
-          window.removeEventListener('message', messageHandler);
-        }
-      };
-    window.addEventListener('message', messageHandler, false);
-
     frame.addEventListener('load', () => {
-      if (this.isConnected) {
+      if (this.isConnectionLoaded || this.isConnectionOpen) {
         return;
       }
-      this.clearTimeout();
-      this.initialTimer = window.setTimeout(() => {
-        if (this.isConnected) {
-          return;
-        }
-        this.setReadyState(false);
-        this.releaseResolvers();
-        // eslint-disable-next-line no-console
-        console.error(
-          `Dialog View is not initialized, please check auth url ${url}`,
-        );
-      }, INITIAL_TIMEOUT);
+      this.initTimeoutCheck(url);
     });
+  }
+
+  /**
+   * @private
+   * @param {string} url
+   */
+  initTimeoutCheck(url) {
+    this.clearTimeout();
+    this.initialTimer = window.setTimeout(() => {
+      if (this.isConnectionLoaded || this.isConnectionOpen) {
+        return;
+      }
+      this.handleConnectionReady(false);
+      // eslint-disable-next-line no-console
+      console.error(
+        `Dialog View is not initialized, please check auth url ${url}`,
+      );
+    }, INITIAL_TIMEOUT);
   }
 
   /**
@@ -212,8 +218,8 @@ export default class DialogView {
   waitReady() {
     return new Promise((resolve, reject) => {
       this.readyResolvers.push({ resolve, reject });
-      if (this.isConnected) {
-        this.releaseResolvers();
+      if (this.isConnectionLoaded) {
+        this.callResolvers();
       }
     });
   }

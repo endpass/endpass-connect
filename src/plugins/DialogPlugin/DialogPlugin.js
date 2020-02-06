@@ -92,6 +92,14 @@ export default class DialogPlugin extends PluginBase {
     this.state = new StateOpen(this.dialogView);
   }
 
+  connectionOpen() {
+    this.dialogView.connectionOpen();
+  }
+
+  connectionError() {
+    this.dialogView.connectionError();
+  }
+
   /**
    * Wrapper on sendMessage and awaitMessage methods
    * Send message with given payload and awaits answer on it

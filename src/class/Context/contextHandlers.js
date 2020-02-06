@@ -194,7 +194,19 @@ const toggleWidget = context => async ({ status }) => {
   }
 };
 
+/**
+ * @param {Context} context
+ * @returns {RequestEventHandler}
+ */
+const connectionError = context => async () => {
+  if (!(PLUGIN_NAMES.WIDGET in context.plugins)) {
+    return;
+  }
+  await context.executeMethod(MESSENGER_METHODS.WIDGET_UNMOUNT);
+};
+
 export default {
+  [MESSENGER_METHODS.BRIDGE_CONNECTION_ERROR]: connectionError,
   [MESSENGER_METHODS.GET_VERSION]: getVersion,
   [MESSENGER_METHODS.AUTH_STATUS]: toggleWidget,
   [PLUGIN_METHODS.CONTEXT_AUTHORIZE]: authorize,
