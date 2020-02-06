@@ -2,13 +2,13 @@
   {
     "library": "EndpassConnectError",
     "input": "./src/class/ConnectError.js",
-    "main": "./connect-error.min.js",
-    "module": "./connect-error.js",
-    "umd": "./connect-error.umd.js",
-    "browser": "./connect-error.browser.js",
+    "main": "./error.min.js",
+    "module": "./error.js",
+    "umd": "./error.umd.js",
+    "browser": "./error.browser.js",
     "withCopy": [{
       "src": "./types/ConnectError.d.ts",
-      "rename": "connect-error.d.ts"
+      "rename": "error.d.ts"
     }]
   },
   {
@@ -62,10 +62,10 @@
   {
     "library": "EndpassLoginButton",
     "input": "./src/plugins/LoginButtonPlugin/index.js",
-    "main": "./login-button.min.js",
-    "module": "./login-button.js",
-    "umd": "./login-button.umd.js",
-    "browser": "./login-button.browser.js"
+    "main": "./loginButton.min.js",
+    "module": "./loginButton.js",
+    "umd": "./loginButton.umd.js",
+    "browser": "./loginButton.browser.js"
   },
   {
     "library": "EndpassWallet",
