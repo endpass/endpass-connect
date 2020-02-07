@@ -15,11 +15,15 @@ const browserSize = require('./browserSize');
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
+const plugins = [
+  //
+  browserSize,
+  webpackPreprocess,
+  // consoleLogs
+];
+
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
-
-  browserSize(on, config);
-  webpackPreprocess(on, config);
-  // consoleLogs(on, config);
+  plugins.forEach(cb => cb(on, config));
 };
