@@ -9,10 +9,6 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        test_suite: [unit, e2e]
-
     runs-on: ubuntu-16.04
 
     steps:
@@ -38,7 +34,7 @@ jobs:
       if: always()
       with:
         type: ${{ job.status }}
-        job_name: 'connect ${{matrix.test_suite}} tests'
+        job_name: 'connect e2e tests'
         username: 'GitHub Actions'
         icon_emoji: ':github:'
         url: ${{ secrets.SLACK_WEBHOOK }}
