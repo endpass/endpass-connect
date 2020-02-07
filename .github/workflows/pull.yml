@@ -27,14 +27,11 @@ jobs:
     - name: Install packages
       run: yarn install --frozen-lockfile
 
-    - name: ${{matrix.test_suite}} tests
-      if: matrix.test_suite == 'e2e'
+    - name: e2e tests
       run: |
         npm run build
         npm run test:e2e:setup
         npm run test:e2e
-        if: matrix.test_suite == 'unit'
-          run: npm run test:unit
 
     - name: Slack Notification
       uses: homoluctus/slatify@master
