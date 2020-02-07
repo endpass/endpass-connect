@@ -1,4 +1,4 @@
-// const consoleLogs = require('./consoleLogs');
+const consoleLogs = require('./consoleLogs');
 const webpackPreprocess = require('./webpackPreprocess');
 const browserSize = require('./browserSize');
 
@@ -15,11 +15,7 @@ const browserSize = require('./browserSize');
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
-const plugins = [
-  browserSize,
-  webpackPreprocess,
-  // consoleLogs,
-];
+const plugins = [browserSize, webpackPreprocess, consoleLogs];
 
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
