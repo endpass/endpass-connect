@@ -28,12 +28,12 @@ jobs:
       run: yarn install --frozen-lockfile
 
     - name: ${{matrix.test_suite}} tests
-      if: ${{matrix.test_suite}} == 'e2e'
+      if: matrix.test_suite == 'e2e'
       run: |
         npm run build
         npm run test:e2e:setup
         npm run test:e2e
-      if: ${{matrix.test_suite}} == 'unit'
+      if: matrix.test_suite == 'unit'
       run: npm run test:unit
 
     - name: Slack Notification
