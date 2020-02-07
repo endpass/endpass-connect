@@ -1,7 +1,6 @@
 // const consoleLogs = require('./consoleLogs');
 const webpackPreprocess = require('./webpackPreprocess');
 const browserSize = require('./browserSize');
-const disableShm = require('./disableShm');
 
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
@@ -17,7 +16,6 @@ const disableShm = require('./disableShm');
 // the project's config changing)
 
 const plugins = [
-  disableShm,
   browserSize,
   webpackPreprocess,
   // consoleLogs,
