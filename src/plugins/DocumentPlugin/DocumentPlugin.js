@@ -36,4 +36,17 @@ export default class DocumentPlugin extends PluginBase {
 
     return payload;
   }
+
+  async createDocumentsRequired(params) {
+    const { status, code, payload = {} } = await this.context.ask(
+      MESSENGER_METHODS.CREATE_DOCUMENTS_REQUIRED,
+      params,
+    );
+
+    if (!status) {
+      throw ConnectError.create(code || ERRORS.CREATE_DOCUMENT);
+    }
+
+    return payload;
+  }
 }

@@ -1,6 +1,6 @@
 declare namespace ENV {
   const oauthServer: string;
-  const isProduction: boolean;
+  const isShowConnectVersion: boolean;
   const authVersion: string;
   const version: string;
 }

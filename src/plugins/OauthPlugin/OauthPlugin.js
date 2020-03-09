@@ -8,7 +8,12 @@ import { DialogPlugin } from '@/plugins/DialogPlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 import { DocumentPlugin } from '@/plugins/DocumentPlugin';
 import OauthApi from '@/plugins/OauthPlugin/OauthPublicApi';
-import { DIRECTION, PLUGIN_METHODS, PLUGIN_NAMES } from '@/constants';
+import {
+  DIRECTION,
+  MESSENGER_METHODS,
+  PLUGIN_METHODS,
+  PLUGIN_NAMES,
+} from '@/constants';
 import oauthHandlers from '@/plugins/OauthPlugin/oauthHandlers';
 import FrameStrategy from '@/plugins/OauthPlugin/FrameStrategy';
 
@@ -68,6 +73,7 @@ export default class OauthPlugin extends PluginBase {
 
     const { clientId, oauthServer, scopes, isPopup } = options;
 
+    this.clientId = clientId;
     this.frameStrategy = new FrameStrategy({
       isPopup,
     });
@@ -158,22 +164,46 @@ export default class OauthPlugin extends PluginBase {
    */
   async request(options) {
     let result = await this.oauthRequestProvider.request(options);
-    const { data } = result || {};
 
-    if (
-      data &&
-      !data.length &&
-      options.url &&
-      options.url.search(documentsCheckReg) !== -1
-    ) {
-      try {
-        await this.context.executeMethod(
-          PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENT,
-        );
-        result = await this.oauthRequestProvider.request(options);
-      } catch (e) {}
+    console.log('request!!');
+    // TODO: add hooks ?
+    // await hook('request', result);
+
+    if (!(options.url && options.url.search(documentsCheckReg) !== -1)) {
+      return result;
     }
 
-    return result;
+    try {
+      console.log('request document', result);
+      const askData = await this.context.ask(
+        MESSENGER_METHODS.CHECK_DOCUMENTS_REQUIRED,
+        {
+          documentsList: result.data,
+          clientId: this.clientId,
+        },
+      );
+
+      console.log('payload', askData);
+      const { payload, error } = askData;
+
+      // isNeedUploadDocument = true when required-docs-list is empty
+      if (payload.isNeedUploadDocument === false) {
+        return result;
+      }
+
+      if (error) {
+        throw new Error(error);
+      }
+
+      await this.context.executeMethod(
+        PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENTS_REQUIRED, // change to UPLOAD_REQUIRED ?
+      );
+      result = await this.oauthRequestProvider.request(options);
+      return result;
+    } catch (e) {
+      // TODO: add processing steps in try...catch because we have axiosError and ConnectError
+      // need create AxiosError
+      throw new Error(e);
+    }
   }
 }
