@@ -1,1 +1,6 @@
-module.exports = require('./dev');
+const devConfig = require('./dev');
+
+module.exports = {
+  ...devConfig,
+  isShowConnectVersion: false,
+}
