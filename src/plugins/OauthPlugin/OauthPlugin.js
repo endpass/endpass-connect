@@ -160,33 +160,18 @@ export default class OauthPlugin extends PluginBase {
 
   /**
    * @param {OauthRequestOptions} options
+   * @param {any} result
    * @returns {Promise<any>}
    */
-  async request(options) {
-    let result = await this.oauthRequestProvider.request(options);
-
-    console.log('request!!');
-    // TODO: add hooks ?
-    // await hook('request', result);
-
-    if (!(options.url && options.url.search(documentsCheckReg) !== -1)) {
-      return result;
-    }
-
+  async handleDocumentRequired(result, options) {
     try {
-      console.log('request document', result);
-      const askData = await this.context.ask(
+      const { payload, error } = await this.context.ask(
         MESSENGER_METHODS.CHECK_DOCUMENTS_REQUIRED,
         {
-          documentsList: result.data,
           clientId: this.clientId,
         },
       );
 
-      console.log('payload', askData);
-      const { payload, error } = askData;
-
-      // isNeedUploadDocument = true when required-docs-list is empty
       if (payload.isNeedUploadDocument === false) {
         return result;
       }
@@ -198,12 +183,33 @@ export default class OauthPlugin extends PluginBase {
       await this.context.executeMethod(
         PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENTS_REQUIRED, // change to UPLOAD_REQUIRED ?
       );
-      result = await this.oauthRequestProvider.request(options);
-      return result;
+
+      const res = await this.oauthRequestProvider.request(options);
+      return res;
     } catch (e) {
       // TODO: add processing steps in try...catch because we have axiosError and ConnectError
       // need create AxiosError
       throw new Error(e);
     }
+  }
+
+  /**
+   * @param {OauthRequestOptions} options
+   * @returns {Promise<any>}
+   */
+  async request(options) {
+    const result = await this.oauthRequestProvider.request(options);
+
+    // TODO: add hooks ?
+    // await hook('request', result);
+
+    const isDocumentRequest =
+      options.url && options.url.search(documentsCheckReg) !== -1;
+
+    if (!isDocumentRequest) {
+      return result;
+    }
+
+    return this.handleDocumentRequired(result, options);
   }
 }
