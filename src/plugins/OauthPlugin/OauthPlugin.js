@@ -177,7 +177,7 @@ export default class OauthPlugin extends PluginBase {
 
       if (!status) {
         throw ConnectError.create(
-          error || ERRORS.CREATE_REQUIRED_DOCUMENTS,
+          error || ERRORS.CREATE_DOCUMENTS_REQUIRED,
           'Documents required creation error',
         );
       }
@@ -191,7 +191,7 @@ export default class OauthPlugin extends PluginBase {
       );
     } catch (e) {
       // TODO: should create axios error or not?
-      throw ConnectError.create(e.code || ERRORS.CREATE_REQUIRED_DOCUMENTS);
+      throw ConnectError.create(e.code || ERRORS.CREATE_DOCUMENTS_REQUIRED);
     }
 
     const res = await this.oauthRequestProvider.request(options);

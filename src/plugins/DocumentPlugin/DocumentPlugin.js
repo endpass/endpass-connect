@@ -44,7 +44,7 @@ export default class DocumentPlugin extends PluginBase {
     );
 
     if (!status) {
-      throw ConnectError.create(code || ERRORS.CREATE_DOCUMENT);
+      throw ConnectError.create(code || ERRORS.CREATE_DOCUMENTS_REQUIRED);
     }
 
     return payload;
