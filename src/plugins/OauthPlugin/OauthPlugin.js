@@ -16,6 +16,9 @@ import {
 } from '@/constants';
 import oauthHandlers from '@/plugins/OauthPlugin/oauthHandlers';
 import FrameStrategy from '@/plugins/OauthPlugin/FrameStrategy';
+import ConnectError from '@/class/ConnectError';
+
+const { ERRORS } = ConnectError;
 
 const documentsCheckReg = /\/documents$/gi;
 
@@ -165,32 +168,34 @@ export default class OauthPlugin extends PluginBase {
    */
   async handleDocumentRequired(result, options) {
     try {
-      const { payload, error } = await this.context.ask(
+      const { payload, status, error } = await this.context.ask(
         MESSENGER_METHODS.CHECK_DOCUMENTS_REQUIRED,
         {
           clientId: this.clientId,
         },
       );
 
+      if (!status) {
+        throw ConnectError.create(
+          error || ERRORS.CREATE_REQUIRED_DOCUMENTS,
+          'Documents required creation error',
+        );
+      }
+
       if (payload.isNeedUploadDocument === false) {
         return result;
       }
 
-      if (error) {
-        throw new Error(error);
-      }
-
       await this.context.executeMethod(
-        PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENTS_REQUIRED, // change to UPLOAD_REQUIRED ?
+        PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENTS_REQUIRED,
       );
-
-      const res = await this.oauthRequestProvider.request(options);
-      return res;
     } catch (e) {
-      // TODO: add processing steps in try...catch because we have axiosError and ConnectError
-      // need create AxiosError
-      throw new Error(e);
+      // TODO: should create axios error or not?
+      throw ConnectError.create(e.code || ERRORS.CREATE_REQUIRED_DOCUMENTS);
     }
+
+    const res = await this.oauthRequestProvider.request(options);
+    return res;
   }
 
   /**

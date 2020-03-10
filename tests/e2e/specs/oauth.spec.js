@@ -91,7 +91,7 @@ describe('oauth', () => {
       );
     });
 
-    it('should get list of documents', () => {
+    it.skip('should get list of documents', () => {
       cy.authFrameContinueRun();
       cy.mockOnceOauthState();
 
@@ -109,7 +109,7 @@ describe('oauth', () => {
       cy.get(buttonSelector).should('exist');
     });
 
-    it('should upload document with empty document list', () => {
+    it.skip('should upload document with empty document list', () => {
       cy.mockDocumentsList([]);
       cy.authFrameContinueRun();
       cy.mockOnceOauthState();
