@@ -1,6 +1,6 @@
 import { v3, email } from '@fixtures/identity/accounts';
 import { responseSuccess } from '@fixtures/response';
-import { identityAPIUrl } from '@config';
+import { identityAPIUrl, publicAPIUrl } from '@config';
 
 Cypress.Commands.add(
   'mockOauthLogin',
@@ -26,7 +26,7 @@ Cypress.Commands.add(
     });
 
     cy.route({
-      url: `${identityAPIUrl}/oauth/token`,
+      url: `${publicAPIUrl}/oauth/token`,
       method: 'POST',
       status: 200,
       response: responseSuccess,
