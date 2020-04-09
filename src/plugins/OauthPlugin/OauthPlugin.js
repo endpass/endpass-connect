@@ -74,7 +74,7 @@ export default class OauthPlugin extends PluginBase {
   constructor(options, context) {
     super(options, context);
 
-    const { clientId, oauthServer, scopes, isPopup } = options;
+    const { clientId, oauthServer, isPopup } = options;
 
     this.clientId = clientId;
     this.frameStrategy = new FrameStrategy({
@@ -95,7 +95,6 @@ export default class OauthPlugin extends PluginBase {
     this.oauthRequestProvider = new Oauth({
       clientId,
       oauthServer,
-      scopes,
       oauthStrategy,
       frameStrategy: this.frameStrategy,
     });

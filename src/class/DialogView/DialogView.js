@@ -1,4 +1,5 @@
 // @ts-check
+import queryStringToMap from '@endpass/utils/queryStringToMap';
 import { inlineStylesState } from '@/util/dom';
 import { DIALOG_EVENTS } from '@/constants';
 import {
@@ -200,11 +201,26 @@ export default class DialogView {
       if (this.isConnectionLoaded || this.isConnectionOpen) {
         return;
       }
-      this.handleConnectionReady(false);
+      let params = {};
+      try {
+        if (!this.frame || !this.frame.contentWindow) {
+          throw new Error();
+        }
+        const replaceReg = /^#\/?/;
+        const { location } = this.frame.contentWindow;
+
+        const targetHash = location.hash.replace(replaceReg, '');
+        const targetSearch = location.search.replace(replaceReg, '');
+
+        params = queryStringToMap(targetHash || targetSearch);
+      } catch (e) {}
       // eslint-disable-next-line no-console
       console.error(
         `Dialog View is not initialized, please check auth url ${url}`,
+        params,
       );
+
+      this.handleConnectionReady(false);
     }, INITIAL_TIMEOUT);
   }
 

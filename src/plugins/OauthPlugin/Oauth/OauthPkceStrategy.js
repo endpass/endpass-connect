@@ -3,7 +3,7 @@ import axios from 'axios';
 import mapToQueryString from '@endpass/utils/mapToQueryString';
 import pkce from '@/plugins/OauthPlugin/Oauth/pkce';
 
-/** @typedef {{ client_id: string, scope: string }} StrategyParams */
+/** @typedef {{ client_id: string }} StrategyParams */
 
 export default class OauthPkceStrategy {
   /**
@@ -70,7 +70,7 @@ export default class OauthPkceStrategy {
    * @param {string} oauthServer
    * @param {string} code
    * @param {StrategyParams} params
-   * @return {Promise<{expires: number, scope: string, token: string}>}
+   * @return {Promise<{expires: number, token: string}>}
    */
   async getTokenObject(oauthServer, code, params) {
     const tokenResult = await this.exchangeCodeToToken(oauthServer, {
@@ -83,7 +83,6 @@ export default class OauthPkceStrategy {
     return {
       token: tokenResult.access_token,
       expires: new Date().getTime() + tokenResult.expires_in * 1000,
-      scope: params.scope,
     };
   }
 }
