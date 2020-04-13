@@ -1,3 +1,4 @@
+import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import Oauth, { OauthPkceStrategy } from '@/plugins/OauthPlugin/Oauth';
 import FrameStrategy from '@/plugins/OauthPlugin/FrameStrategy';
@@ -25,17 +26,15 @@ jest.mock('@/plugins/OauthPlugin/Oauth/pkce', () => ({
 describe('Oauth class', () => {
   let context;
   let oauth;
-  let mockAdapter;
+  let axiosOauthMock;
+  const axiosGlobalMock = new MockAdapter(axios);
   const scopes = ['chpok'];
   const clientId = 'kek';
   const token = 'bam';
-  const oauthServer = 'http://oauthServer/oauth';
+  const oauthServer = 'http://oauthServer';
 
-  function mockOauthTokenResult(result = {}, status = true) {
-    context.ask.mockResolvedValue({
-      payload: result,
-      status,
-    });
+  function mockOauthTokenResult(result = {}) {
+    axiosGlobalMock.onPost(`${oauthServer}/oauth/token`).reply(200, result);
   }
 
   const createOauth = () => {
@@ -53,7 +52,7 @@ describe('Oauth class', () => {
       oauthStrategy,
       frameStrategy,
     });
-    mockAdapter = new MockAdapter(res.axiosInstance);
+    axiosOauthMock = new MockAdapter(res.axiosInstance);
     return res;
   };
 
@@ -209,8 +208,8 @@ describe('Oauth class', () => {
         expires_in: 3600,
         access_token: token,
       });
-      mockAdapter.onGet(url).reply(200, requestData);
-      mockAdapter.onGet(secondUrl).reply(200, requestData);
+      axiosOauthMock.onGet(url).reply(200, requestData);
+      axiosOauthMock.onGet(secondUrl).reply(200, requestData);
     });
 
     afterEach(() => {
