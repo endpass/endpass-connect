@@ -45,17 +45,8 @@ export default class Oauth {
     this.frameStrategy.prepare();
     await this.oauthStrategy.prepare(this.oauthServer, params);
     const { url } = this.oauthStrategy;
-    console.log('before open');
     await this.frameStrategy.open(url);
-    console.log('before poll');
-    let pollResult;
-    try {
-      pollResult = await poll.getResult(url);
-      console.log('pollResult', pollResult);
-    } catch (e) {
-      console.log(e);
-      throw e;
-    }
+    const pollResult = await poll.getResult(url);
 
     if (pollResult.state !== this.oauthStrategy.state) {
       throw ConnectError.create(
@@ -65,7 +56,6 @@ export default class Oauth {
     }
 
     if (pollResult.error) {
-      console.log('pollResult', pollResult);
       throw ConnectError.create(
         ERRORS.OAUTH_AUTHORIZE,
         `Authorization failed: ${pollResult.error}`,
