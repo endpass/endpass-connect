@@ -35,8 +35,6 @@ export default class Oauth {
    * @return {Promise<TokenObject>}
    */
   async createTokenObject() {
-    this.dropToken();
-
     const params = {
       client_id: this.clientId,
     };
@@ -74,8 +72,6 @@ export default class Oauth {
       pollResult.code,
       params,
     );
-
-    LocalStorage.save(this.storeKey, tokenObject);
 
     return tokenObject;
   }
@@ -122,7 +118,9 @@ export default class Oauth {
     let tokenObject = this.getTokenObjectFromStore();
 
     if (!tokenObject || Date.now() >= tokenObject.expires) {
+      this.dropToken();
       tokenObject = await this.createTokenObject();
+      LocalStorage.save(this.storeKey, tokenObject);
     }
 
     return tokenObject.token;

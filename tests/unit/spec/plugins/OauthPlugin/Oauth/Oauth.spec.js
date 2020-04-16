@@ -12,7 +12,7 @@ jest.mock('@/plugins/OauthPlugin/Oauth/Polling', () => {
   PollingMock.prototype.open = jest.fn().mockResolvedValue();
   PollingMock.prototype.getResult = jest
     .fn()
-    .mockResolvedValue({ state: 'pkce-random-string' });
+    .mockResolvedValue({ state: 'pkce-random-string', code: 'code' });
   return PollingMock;
 });
 
@@ -58,6 +58,7 @@ describe('Oauth class', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    localStorage.clear();
     oauth = createOauth();
   });
 
@@ -75,7 +76,7 @@ describe('Oauth class', () => {
         access_token: oldToken,
       });
 
-      await oauth.updateTokenObject();
+      await oauth.getToken();
 
       expect(oauth.getTokenObjectFromStore().token).toBe(oldToken);
 
@@ -101,7 +102,7 @@ describe('Oauth class', () => {
         access_token: token,
       });
 
-      await oauth.updateTokenObject();
+      await oauth.getToken();
 
       expect(oauth.getTokenObjectFromStore().token).toBe(token);
 
@@ -118,16 +119,15 @@ describe('Oauth class', () => {
   });
 
   describe('logout', () => {
-    it('should clear scope, token, expires in instance and local storage', async () => {
-      expect.assertions(4);
+    it('should clear token, expires in instance and local storage', async () => {
+      expect.assertions(3);
 
       mockOauthTokenResult({
         access_token: token,
         expires_in: 3600,
       });
-      await oauth.updateTokenObject();
+      await oauth.getToken();
 
-      expect(oauth.getTokenObjectFromStore().scope).toBe('chpok');
       expect(oauth.getTokenObjectFromStore().token).toBe(token);
       expect(oauth.getTokenObjectFromStore().expires).toBeGreaterThanOrEqual(
         new Date().getTime(),
@@ -141,7 +141,7 @@ describe('Oauth class', () => {
 
   describe('getToken', () => {
     beforeEach(() => {
-      oauth.updateTokenObject = jest.fn().mockResolvedValue(token);
+      oauth.createTokenObject = jest.fn().mockResolvedValue(token);
     });
 
     it('should try to update tokenObject if token is not present', async () => {
@@ -149,11 +149,11 @@ describe('Oauth class', () => {
 
       await oauth.getToken();
 
-      expect(oauth.updateTokenObject).toHaveBeenCalled();
+      expect(oauth.createTokenObject).toHaveBeenCalled();
     });
   });
 
-  describe('updateTokenObject', () => {
+  describe('createTokenObject', () => {
     it('should set token, and expire time and save it to local storage', async () => {
       expect.assertions(4);
 
@@ -161,7 +161,7 @@ describe('Oauth class', () => {
         expires_in: 3600,
         access_token: token,
       });
-      await oauth.updateTokenObject();
+      await oauth.getToken();
 
       const expiresValue = oauth.getTokenObjectFromStore().expires;
 
@@ -180,7 +180,7 @@ describe('Oauth class', () => {
         expires_in: -3600,
         access_token: token,
       });
-      await oauth.updateTokenObject();
+      await oauth.getToken();
 
       expect(oauth.getTokenObjectFromStore()).not.toBe(null);
       expect(oauth.getTokenObjectFromStore().token).toBe(token);
@@ -230,30 +230,6 @@ describe('Oauth class', () => {
 
       expect(data).toEqual(requestData);
       expect(spy).toBeCalledTimes(1);
-    });
-
-    it('should pass request with changed scopes and ask permissions', async () => {
-      expect.assertions(2);
-
-      const spy = createSpyResult();
-      const otherScopes = ['kek', 'chop'];
-
-      await oauth.request({
-        url,
-      });
-
-      const { data } = await oauth.request({
-        scopes: otherScopes,
-        url: secondUrl,
-      });
-
-      await oauth.request({
-        scopes: otherScopes,
-        url,
-      });
-
-      expect(data).toEqual(requestData);
-      expect(spy).toBeCalledTimes(2);
     });
 
     it('should set token when request makes', async () => {

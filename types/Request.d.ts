@@ -1,4 +1,4 @@
-// / <reference path="constants.d.ts" />
+/// <reference path="constants.d.ts" />
 
 declare type OriginReq = {
   method: string;
