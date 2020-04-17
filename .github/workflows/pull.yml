@@ -1,16 +1,16 @@
-name: pull
+name: tests
 on:
   pull_request:
     branches:
       - master
       - release
-    paths-ignore:
-      - '**.md'
 
 jobs:
-  build:
+  tests:
+    strategy:
+      matrix:
+        test_suite: [unit, e2e]
     runs-on: ubuntu-18.04
-
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
@@ -23,7 +23,15 @@ jobs:
     - name: Install packages
       run: yarn install --frozen-lockfile
 
-    - name: e2e tests
-      run: |
-        npm run test:e2e
+    - name: ${{matrix.test_suite}} tests
+      run: npm run test:${{matrix.test_suite}}
 
+    - name: Slack Notification
+      uses: homoluctus/slatify@master
+      if: always()
+      with:
+        type: ${{ job.status }}
+        job_name: 'connect ${{matrix.test_suite}} tests'
+        username: 'GitHub Actions'
+        icon_emoji: ':github:'
+        url: ${{ secrets.SLACK_WEBHOOK_URL }}
