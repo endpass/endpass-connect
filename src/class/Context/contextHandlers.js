@@ -179,6 +179,15 @@ const createDocument = context => async (payload, req) => {
  * @param {Context} context
  * @returns {RequestEventHandler}
  */
+const createDocumentsRequired = context => async (payload, req) => {
+  const res = await context.plugins.document.createDocumentsRequired(payload);
+  req.answer(res);
+};
+
+/**
+ * @param {Context} context
+ * @returns {RequestEventHandler}
+ */
 const toggleWidget = context => async ({ status }) => {
   if (!(PLUGIN_NAMES.WIDGET in context.plugins)) {
     return;
@@ -223,5 +232,6 @@ export default {
   [MESSENGER_METHODS.WIDGET_GET_SETTING]: widgetGetSettings,
   [PLUGIN_METHODS.CONTEXT_SET_PROVIDER_SETTINGS]: setProviderSettings,
   [PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENT]: createDocument,
+  [PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENTS_REQUIRED]: createDocumentsRequired,
   [PLUGIN_METHODS.CONTEXT_OAUTH_AUTHORIZE]: loginWithOauth,
 };

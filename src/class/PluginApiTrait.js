@@ -4,11 +4,11 @@ import { CONTEXT as context } from '@/constants';
 // OLD CONNECT
 export default class PluginApiTrait {
   constructor(options, ClassPlugin) {
-    if (ENV.isProduction) {
+    if (ENV.isShowConnectVersion) {
       /* eslint-disable-next-line */
       console.info(
         `%cEndpass connect:${ClassPlugin.pluginName} version ${ENV.version} created 🔌`,
-        'color: #fff; background: #4B0873',
+        'font-size: 14px; font-weight: bold',
       );
     }
 

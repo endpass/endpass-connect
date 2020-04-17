@@ -1,10 +1,7 @@
 // @ts-check
+import axios from 'axios';
 import mapToQueryString from '@endpass/utils/mapToQueryString';
-import ConnectError from '@/class/ConnectError';
 import pkce from '@/plugins/OauthPlugin/Oauth/pkce';
-import { MESSENGER_METHODS } from '@/constants';
-
-const { ERRORS } = ConnectError;
 
 /** @typedef {{ client_id: string, scope: string }} StrategyParams */
 
@@ -22,45 +19,24 @@ export default class OauthPkceStrategy {
     this.codeVerifier = '';
   }
 
-  // TODO: after implement public api use this method and drop dialog
-  // /**
-  //  *
-  //  * @private
-  //  * @param {string} oauthServer
-  //  * @param {object} fields
-  //  * @return {Promise<object>}
-  //  */
-  // static async exchangeCodeToToken(oauthServer, fields) {
-  //   const formData = Object.keys(fields).reduce((form, key) => {
-  //     form.append(key, fields[key]);
-  //     return form;
-  //   }, new FormData());
-  //
-  //   const url = `${oauthServer}/token`;
-  //
-  //   const { data } = await axios.post(url, formData);
-  //   return data;
-  // }
-
   /**
    *
    * @private
+   * @param {string} oauthServer
    * @param {object} fields
    * @return {Promise<object>}
    */
-  async exchangeCodeToToken(fields) {
-    const { payload, status, error } = await this.context.ask(
-      MESSENGER_METHODS.EXCHANGE_TOKEN_REQUEST,
-      fields,
-    );
+  async exchangeCodeToToken(oauthServer, fields) {
+    const formData = Object.keys(fields).reduce((form, key) => {
+      form.append(key, fields[key]);
+      return form;
+    }, new FormData());
 
-    if (!status) {
-      throw ConnectError.create(
-        error || ERRORS.OAUTH_AUTHORIZE,
-        'Exchange code to token fail',
-      );
-    }
-    return payload;
+    // old flow used iframe for make token exchange
+    const url = `${oauthServer}/oauth/token`;
+
+    const { data } = await axios.post(url, formData);
+    return data;
   }
 
   /**
@@ -91,13 +67,13 @@ export default class OauthPkceStrategy {
   }
 
   /**
-   *
+   * @param {string} oauthServer
    * @param {string} code
    * @param {StrategyParams} params
    * @return {Promise<{expires: number, scope: string, token: string}>}
    */
-  async getTokenObject(code, params) {
-    const tokenResult = await this.exchangeCodeToToken({
+  async getTokenObject(oauthServer, code, params) {
+    const tokenResult = await this.exchangeCodeToToken(oauthServer, {
       grant_type: 'authorization_code',
       code,
       client_id: params.client_id,

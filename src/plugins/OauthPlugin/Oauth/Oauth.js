@@ -91,6 +91,7 @@ export default class Oauth {
     }
 
     const tokenObject = await this.oauthStrategy.getTokenObject(
+      this.oauthServer,
       pollResult.code,
       params,
     );
