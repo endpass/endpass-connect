@@ -70,7 +70,7 @@ export default class OauthPkceStrategy {
    * @param {string} oauthServer
    * @param {string} code
    * @param {StrategyParams} params
-   * @return {Promise<{expires: number, token: string}>}
+   * @return {Promise<TokenObject>}
    */
   async getTokenObject(oauthServer, code, params) {
     const tokenResult = await this.exchangeCodeToToken(oauthServer, {
