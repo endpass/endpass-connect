@@ -6,11 +6,11 @@ import { UserSettings } from '@/types/UserSettings';
 type ActionState = $Values<typeof actionState>;
 
 declare type QueueAction = {
-  request: RpcRequest,
-  state: ActionState,
-  payload?: RpcResponse,
-  settings: UserSettings,
-  end: () => void,
-  setState(param: ActionState): void,
-  setPayload(payload: any): void,
+  request: RpcRequest;
+  state: ActionState;
+  payload?: RpcResponse;
+  settings: UserSettings;
+  end: () => void;
+  setState(param: ActionState): void;
+  setPayload(payload: any): void;
 };

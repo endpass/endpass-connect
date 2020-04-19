@@ -7,54 +7,26 @@ import Polling from '@/plugins/OauthPlugin/Oauth/Polling';
 
 const { ERRORS } = ConnectError;
 
+const AUTH_STATUS_KEY = 'endpass-oauth-hash';
+
 export default class Oauth {
   /**
    * @param {OauthOptionsWithStrategy} params Params for constructor
    */
-  constructor({ clientId, scopes, oauthServer, frameStrategy, oauthStrategy }) {
+  constructor({ clientId, oauthServer, frameStrategy, oauthStrategy }) {
     this.clientId = clientId;
     this.oauthServer = oauthServer || ENV.oauthServer;
     this.axiosInstance = this.createAxiosInstance();
 
     this.frameStrategy = frameStrategy;
     this.oauthStrategy = oauthStrategy;
-    this.scopesString = '';
-
-    this.setScopes(scopes);
   }
 
   /**
    * @returns {string}
    */
-  get storeId() {
+  get storeKey() {
     return `endpass-oauth:${this.clientId}`;
-  }
-
-  /**
-   * @param {string[]=} scopes
-   * @returns {void}
-   */
-  setScopes(scopes) {
-    if (!scopes) {
-      return;
-    }
-    this.scopesString = scopes.sort().join(' ');
-    this.checkScopes();
-  }
-
-  /**
-   * @returns {void}
-   */
-  checkScopes() {
-    const tokenObject = this.getTokenObjectFromStore();
-
-    if (
-      !tokenObject ||
-      tokenObject.scope !== this.scopesString ||
-      Date.now() >= tokenObject.expires
-    ) {
-      this.dropToken();
-    }
   }
 
   /**
@@ -62,17 +34,15 @@ export default class Oauth {
    * @private
    * @return {Promise<TokenObject>}
    */
-  async updateTokenObject() {
+  async createTokenObject() {
     const params = {
       client_id: this.clientId,
-      scope: this.scopesString,
     };
     const poll = new Polling(this.frameStrategy);
 
     this.frameStrategy.prepare();
     await this.oauthStrategy.prepare(this.oauthServer, params);
     const { url } = this.oauthStrategy;
-
     await this.frameStrategy.open(url);
     const pollResult = await poll.getResult(url);
 
@@ -90,15 +60,18 @@ export default class Oauth {
       );
     }
 
+    if (!pollResult.code) {
+      throw ConnectError.create(
+        ERRORS.OAUTH_AUTHORIZE,
+        'Authorization failed: code is not passed!',
+      );
+    }
+
     const tokenObject = await this.oauthStrategy.getTokenObject(
       this.oauthServer,
       pollResult.code,
       params,
     );
-
-    if (tokenObject) {
-      LocalStorage.save(this.storeId, tokenObject);
-    }
 
     return tokenObject;
   }
@@ -109,7 +82,7 @@ export default class Oauth {
    * @param {string} params.hash
    */
   changeAuthStatus({ code, hash = '' }) {
-    const storedKey = `endpass-oauth-hash:${this.clientId}`;
+    const storedKey = `${AUTH_STATUS_KEY}:${this.clientId}`;
     const storedId = LocalStorage.load(storedKey);
     LocalStorage.save(storedKey, hash);
 
@@ -124,7 +97,7 @@ export default class Oauth {
    * @returns {void}
    */
   dropToken() {
-    LocalStorage.remove(this.storeId);
+    LocalStorage.remove(this.storeKey);
   }
 
   /**
@@ -133,7 +106,7 @@ export default class Oauth {
    * @return {TokenObject | null}
    */
   getTokenObjectFromStore() {
-    return LocalStorage.load(this.storeId);
+    return LocalStorage.load(this.storeKey);
   }
 
   /**
@@ -142,11 +115,12 @@ export default class Oauth {
    * @return {Promise<Token>} authVersion token
    */
   async getToken() {
-    this.checkScopes();
     let tokenObject = this.getTokenObjectFromStore();
 
-    if (!tokenObject) {
-      tokenObject = await this.updateTokenObject();
+    if (!tokenObject || Date.now() >= tokenObject.expires) {
+      this.dropToken();
+      tokenObject = await this.createTokenObject();
+      LocalStorage.save(this.storeKey, tokenObject);
     }
 
     return tokenObject.token;
@@ -173,10 +147,6 @@ export default class Oauth {
    * @returns {import('axios').AxiosPromise<any>}
    */
   request({ scopes, ...options }) {
-    this.setScopes(scopes);
-    if (!this.scopesString) {
-      throw ConnectError.create(ERRORS.OAUTH_SCOPES_NOT_DEFINED);
-    }
     return this.axiosInstance(options);
   }
 }

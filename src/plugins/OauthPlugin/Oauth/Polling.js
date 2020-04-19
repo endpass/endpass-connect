@@ -18,7 +18,7 @@ export default class Polling {
   /**
    *
    * @param {string} url
-   * @return {Promise<object>}
+   * @return {Promise<{state?: string, error?: string, code?: string}>}
    */
   getResult(url) {
     return new Promise((resolve, reject) => {
