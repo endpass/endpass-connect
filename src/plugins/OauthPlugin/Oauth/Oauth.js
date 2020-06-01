@@ -8,6 +8,7 @@ import Polling from '@/plugins/OauthPlugin/Oauth/Polling';
 const { ERRORS } = ConnectError;
 
 const AUTH_STATUS_KEY = 'endpass-oauth-hash';
+const SIGNED_KEY = 'signed';
 
 export default class Oauth {
   /**
@@ -107,6 +108,19 @@ export default class Oauth {
    */
   getTokenObjectFromStore() {
     return LocalStorage.load(this.storeKey);
+  }
+
+  getSignedString() {
+    const storedKey = `${this.storeKey}:${SIGNED_KEY}`;
+    return LocalStorage.load(storedKey);
+  }
+
+  /**
+   * @param {string} str
+   */
+  setSignedString(str) {
+    const storedKey = `${this.storeKey}:${SIGNED_KEY}`;
+    LocalStorage.save(storedKey, str);
   }
 
   /**

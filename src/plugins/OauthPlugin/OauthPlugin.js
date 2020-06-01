@@ -68,6 +68,16 @@ export default class OauthPlugin extends PluginBase {
   }
 
   /**
+   * @param {object} params
+   * @param {object[]} params.documentsList
+   * @param {string[]} params.filteredIdsList
+   * @returns {*}
+   */
+  getFilteredDocumentsList({ documentsList, filteredIdsList }) {
+    return documentsList.filter(({ id }) => filteredIdsList.includes(id));
+  }
+
+  /**
    * @param {OauthPluginOptions} options
    * @param {Context} context
    */
@@ -150,7 +160,10 @@ export default class OauthPlugin extends PluginBase {
    * @param {string} params.hash
    */
   changeAuthStatus({ code, hash }) {
-    this.oauthRequestProvider.changeAuthStatus({ code, hash });
+    this.oauthRequestProvider.changeAuthStatus({
+      code,
+      hash,
+    });
   }
 
   /**
@@ -161,16 +174,19 @@ export default class OauthPlugin extends PluginBase {
   }
 
   /**
-   * @param {OauthRequestOptions} options
-   * @param {any} result
-   * @returns {Promise<any>}
+   * @param {object} params
+   * @param {object[]} params.documentsList
+   * @param {string} params.signedString
+   * @returns {Promise<*>}
    */
-  async handleDocumentRequired(result, options) {
+  async checkDocumentRequired({ documentsList, signedString }) {
     try {
       const { payload, status, error } = await this.context.ask(
         MESSENGER_METHODS.CHECK_DOCUMENTS_REQUIRED,
         {
           clientId: this.clientId,
+          documentsList,
+          signedString,
         },
       );
 
@@ -181,20 +197,59 @@ export default class OauthPlugin extends PluginBase {
         );
       }
 
-      if (payload.isNeedUploadDocument === false) {
-        return result;
-      }
+      return payload;
+    } catch (e) {
+      throw ConnectError.create(e.code || ERRORS.CREATE_DOCUMENTS_REQUIRED);
+    }
+  }
 
-      await this.context.executeMethod(
+  /**
+   * @returns {Promise<{filteredIdsList: string[], signedString: string}>}
+   */
+  async createDocumentsRequired() {
+    try {
+      const data = await this.context.executeMethod(
         PLUGIN_METHODS.CONTEXT_CREATE_DOCUMENTS_REQUIRED,
       );
+
+      return data;
     } catch (e) {
       // TODO: should create axios error or not?
       throw ConnectError.create(e.code || ERRORS.CREATE_DOCUMENTS_REQUIRED);
     }
+  }
 
-    const res = await this.oauthRequestProvider.request(options);
-    return res;
+  /**
+   * @param {any} result
+   * @returns {Promise<any>}
+   */
+  async handleDocument(result) {
+    const signedString = this.oauthRequestProvider.getSignedString();
+    const checkPayload = await this.checkDocumentRequired({
+      documentsList: result.data,
+      signedString,
+    });
+
+    if (!checkPayload.isNeedUploadDocument) {
+      return {
+        ...result,
+        data: this.getFilteredDocumentsList({
+          documentsList: result.data,
+          filteredIdsList: checkPayload.filteredIdsList,
+        }),
+      };
+    }
+
+    const requiredPayload = await this.createDocumentsRequired();
+
+    this.oauthRequestProvider.setSignedString(requiredPayload.signedString);
+    return {
+      ...result,
+      data: this.getFilteredDocumentsList({
+        documentsList: result.data,
+        filteredIdsList: requiredPayload.filteredIdsList,
+      }),
+    };
   }
 
   /**
@@ -214,6 +269,6 @@ export default class OauthPlugin extends PluginBase {
       return result;
     }
 
-    return this.handleDocumentRequired(result, options);
+    return this.handleDocument(result);
   }
 }
