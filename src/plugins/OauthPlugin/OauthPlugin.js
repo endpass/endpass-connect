@@ -69,12 +69,22 @@ export default class OauthPlugin extends PluginBase {
 
   /**
    * @param {object} params
-   * @param {object[]} params.documentsList
+   * @param {import('axios').AxiosRequestConfig} params.result
    * @param {string[]} params.filteredIdsList
    * @returns {*}
    */
-  getFilteredDocumentsList({ documentsList, filteredIdsList }) {
-    return documentsList.filter(({ id }) => filteredIdsList.includes(id));
+  createDocumentsResult({ result, filteredIdsList }) {
+    const data = result.data.filter(
+      /**
+       * @param {UserDocument} document
+       * @returns {boolean}
+       */
+      document => filteredIdsList.includes(document.id),
+    );
+    return {
+      ...result,
+      data,
+    };
   }
 
   /**
@@ -220,36 +230,51 @@ export default class OauthPlugin extends PluginBase {
   }
 
   /**
-   * @param {any} result
+   * @param {import('axios').AxiosRequestConfig} result
+   * @param {OauthRequestOptions} options
    * @returns {Promise<any>}
    */
-  async handleDocument(result) {
+  async handleDocument(result, options) {
     const signedString = this.oauthRequestProvider.getSignedString();
-    const checkPayload = await this.checkDocumentRequired({
+    const payload = await this.checkDocumentRequired({
       documentsList: result.data,
       signedString,
     });
 
-    if (!checkPayload.isNeedUploadDocument) {
-      return {
-        ...result,
-        data: this.getFilteredDocumentsList({
-          documentsList: result.data,
-          filteredIdsList: checkPayload.filteredIdsList,
-        }),
-      };
+    if (!payload.isNeedUploadDocument) {
+      return this.createDocumentsResult({
+        result,
+        filteredIdsList: payload.filteredIdsList,
+      });
     }
 
     const requiredPayload = await this.createDocumentsRequired();
-
     this.oauthRequestProvider.setSignedString(requiredPayload.signedString);
-    return {
-      ...result,
-      data: this.getFilteredDocumentsList({
-        documentsList: result.data,
+
+    const isDocumentsExists = requiredPayload.filteredIdsList.every(
+      documentId =>
+        result.data.find(
+          /**
+           * @param {UserDocument} document
+           * @returns {boolean}
+           */
+          document => document.id === documentId,
+        ),
+    );
+
+    if (isDocumentsExists) {
+      return this.createDocumentsResult({
+        result,
         filteredIdsList: requiredPayload.filteredIdsList,
-      }),
-    };
+      });
+    }
+
+    const resultDocuments = await this.oauthRequestProvider.request(options);
+
+    return this.createDocumentsResult({
+      result: resultDocuments,
+      filteredIdsList: requiredPayload.filteredIdsList,
+    });
   }
 
   /**
@@ -269,6 +294,6 @@ export default class OauthPlugin extends PluginBase {
       return result;
     }
 
-    return this.handleDocument(result);
+    return this.handleDocument(result, options);
   }
 }

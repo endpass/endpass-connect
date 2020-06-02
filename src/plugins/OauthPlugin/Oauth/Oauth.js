@@ -7,8 +7,9 @@ import Polling from '@/plugins/OauthPlugin/Oauth/Polling';
 
 const { ERRORS } = ConnectError;
 
-const AUTH_STATUS_KEY = 'endpass-oauth-hash';
-const SIGNED_KEY = 'signed';
+const DEFAULT_KEY = 'endpass-oauth';
+const AUTH_STATUS_KEY = `${DEFAULT_KEY}-hash`;
+const SIGNED_KEY = `${DEFAULT_KEY}-signed`;
 
 export default class Oauth {
   /**
@@ -26,8 +27,8 @@ export default class Oauth {
   /**
    * @returns {string}
    */
-  get storeKey() {
-    return `endpass-oauth:${this.clientId}`;
+  getStoreKey(key = DEFAULT_KEY) {
+    return `${key}:${this.clientId}`;
   }
 
   /**
@@ -83,13 +84,13 @@ export default class Oauth {
    * @param {string} params.hash
    */
   changeAuthStatus({ code, hash = '' }) {
-    const storedKey = `${AUTH_STATUS_KEY}:${this.clientId}`;
+    const storedKey = this.getStoreKey(AUTH_STATUS_KEY);
     const storedId = LocalStorage.load(storedKey);
     LocalStorage.save(storedKey, hash);
 
     const isEqual = hash === storedId;
 
-    if (code === 401 || !isEqual) {
+    if (code === 401 || (storedId && !isEqual)) {
       this.dropToken();
     }
   }
@@ -98,7 +99,9 @@ export default class Oauth {
    * @returns {void}
    */
   dropToken() {
-    LocalStorage.remove(this.storeKey);
+    LocalStorage.remove(this.getStoreKey());
+    LocalStorage.remove(this.getStoreKey(SIGNED_KEY));
+    LocalStorage.remove(this.getStoreKey(AUTH_STATUS_KEY));
   }
 
   /**
@@ -107,20 +110,18 @@ export default class Oauth {
    * @return {TokenObject | null}
    */
   getTokenObjectFromStore() {
-    return LocalStorage.load(this.storeKey);
+    return LocalStorage.load(this.getStoreKey());
   }
 
   getSignedString() {
-    const storedKey = `${this.storeKey}:${SIGNED_KEY}`;
-    return LocalStorage.load(storedKey);
+    return LocalStorage.load(this.getStoreKey(SIGNED_KEY));
   }
 
   /**
    * @param {string} str
    */
   setSignedString(str) {
-    const storedKey = `${this.storeKey}:${SIGNED_KEY}`;
-    LocalStorage.save(storedKey, str);
+    LocalStorage.save(this.getStoreKey(SIGNED_KEY), str);
   }
 
   /**
@@ -134,7 +135,7 @@ export default class Oauth {
     if (!tokenObject || Date.now() >= tokenObject.expires) {
       this.dropToken();
       tokenObject = await this.createTokenObject();
-      LocalStorage.save(this.storeKey, tokenObject);
+      LocalStorage.save(this.getStoreKey(), tokenObject);
     }
 
     return tokenObject.token;
