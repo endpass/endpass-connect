@@ -71,7 +71,7 @@ export default class OauthPlugin extends PluginBase {
    * @param {object} params
    * @param {import('axios').AxiosRequestConfig} params.result
    * @param {string[]} params.filteredIdsList
-   * @returns {*}
+   * @returns {import('axios').AxiosRequestConfig}
    */
   createDocumentsResult({ result, filteredIdsList }) {
     const data = result.data.filter(
