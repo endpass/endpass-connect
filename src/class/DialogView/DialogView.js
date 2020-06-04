@@ -6,10 +6,12 @@ import {
   propsIframe,
   propsIframeShow,
   propsIframeHide,
+  propsIframeFullScreen,
   stylesOverlayShow,
   stylesOverlayHide,
   stylesWrapperShow,
   stylesWrapperHide,
+  stylesWrapperFullScreen,
 } from './Styles';
 import ConnectError from '@/class/ConnectError';
 
@@ -111,16 +113,46 @@ export default class DialogView {
   }
 
   /**
-   *
-   * @param {object} params
-   * @param {number} params.offsetHeight
+   * @param {ResizePayload} params
    */
-  resize({ offsetHeight }) {
+  resize({ offsetHeight, isFullScreen }) {
+    if (offsetHeight) {
+      this.setMinHeight(offsetHeight);
+    }
+
+    if (isFullScreen !== undefined) {
+      this.switchFullScreen(isFullScreen);
+    }
+  }
+
+  /**
+   * @param {boolean} isFullScreen
+   */
+  switchFullScreen(isFullScreen) {
+    if (!this.wrapper || !this.frame) return;
+
+    const newStylesWrapper = isFullScreen
+      ? stylesWrapperFullScreen
+      : stylesWrapperShow;
+
+    const newPropsIframe = isFullScreen
+      ? propsIframeFullScreen
+      : propsIframeShow;
+
+    this.frame.setAttribute('style', this.frameStyles(newPropsIframe));
+    this.wrapper.setAttribute('style', newStylesWrapper);
+  }
+
+  /**
+   * @param {number} minHeight
+   */
+  setMinHeight(minHeight) {
     if (!this.frame) return;
+
     this.frame.setAttribute(
       'style',
       this.frameStyles({
-        'min-height': `${offsetHeight || 0}px`,
+        'min-height': `${minHeight || 0}px`,
       }),
     );
   }

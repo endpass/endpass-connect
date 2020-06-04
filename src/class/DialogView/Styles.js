@@ -5,6 +5,12 @@ export const propsWrapper = {
   'max-width': '442px',
   margin: '50px auto',
 };
+
+export const stylesWrapperFullScreen = inlineStyles({
+  width: '100%',
+  height: '100%',
+});
+
 export const stylesWrapperShow = inlineStyles({
   ...propsWrapper,
   transition: 'opacity 0.35s ease-in-out',
@@ -50,4 +56,9 @@ export const propsIframeHide = {
 
 export const propsIframeShow = {
   opacity: 1,
+};
+
+export const propsIframeFullScreen = {
+  width: '100%',
+  height: '100%',
 };
