@@ -309,6 +309,8 @@ describe('Oauth class', () => {
           url,
         });
 
+        await global.flushPromises();
+
         expect(oauth.getTokenObjectFromStore().token).toBe(token);
 
         oauth.changeAuthStatus({ code: 200, hash: 'other hash' });

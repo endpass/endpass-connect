@@ -85,23 +85,28 @@ export default class Oauth {
    */
   changeAuthStatus({ code, hash = '' }) {
     const storedKey = this.getStoreKey(AUTH_STATUS_KEY);
-    const storedId = LocalStorage.load(storedKey);
+    const lastStoredValue = LocalStorage.load(storedKey);
     LocalStorage.save(storedKey, hash);
 
-    const isEqual = hash === storedId;
+    const isEqual = hash === lastStoredValue;
+    const isHashChanged = lastStoredValue && !isEqual;
 
-    if (code === 401 || (storedId && !isEqual)) {
+    if (code === 401 || isHashChanged) {
+      this.dropAuthStatus();
       this.dropToken();
     }
+  }
+
+  dropAuthStatus() {
+    LocalStorage.remove(this.getStoreKey(AUTH_STATUS_KEY));
   }
 
   /**
    * @returns {void}
    */
   dropToken() {
-    LocalStorage.remove(this.getStoreKey());
     LocalStorage.remove(this.getStoreKey(SIGNED_KEY));
-    LocalStorage.remove(this.getStoreKey(AUTH_STATUS_KEY));
+    LocalStorage.remove(this.getStoreKey());
   }
 
   /**
