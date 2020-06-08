@@ -7,9 +7,9 @@ import Polling from '@/plugins/OauthPlugin/Oauth/Polling';
 
 const { ERRORS } = ConnectError;
 
-const DEFAULT_KEY = 'endpass-oauth';
-const AUTH_STATUS_KEY = `${DEFAULT_KEY}-hash`;
-const SIGNED_KEY = `${DEFAULT_KEY}-signed`;
+const LOCAL_STORAGE_DEFAULT_KEY = 'endpass-oauth';
+const LOCAL_STORAGE_AUTH_STATUS_KEY = `${LOCAL_STORAGE_DEFAULT_KEY}-hash`;
+const LOCAL_STORAGE_SIGNED_KEY = `${LOCAL_STORAGE_DEFAULT_KEY}-signed`;
 
 export default class Oauth {
   /**
@@ -27,7 +27,7 @@ export default class Oauth {
   /**
    * @returns {string}
    */
-  getStoreKey(key = DEFAULT_KEY) {
+  getStoreKey(key = LOCAL_STORAGE_DEFAULT_KEY) {
     return `${key}:${this.clientId}`;
   }
 
@@ -84,7 +84,7 @@ export default class Oauth {
    * @param {string} params.hash
    */
   changeAuthStatus({ code, hash = '' }) {
-    const storedKey = this.getStoreKey(AUTH_STATUS_KEY);
+    const storedKey = this.getStoreKey(LOCAL_STORAGE_AUTH_STATUS_KEY);
     const lastStoredValue = LocalStorage.load(storedKey);
     LocalStorage.save(storedKey, hash);
 
@@ -98,14 +98,14 @@ export default class Oauth {
   }
 
   dropAuthStatus() {
-    LocalStorage.remove(this.getStoreKey(AUTH_STATUS_KEY));
+    LocalStorage.remove(this.getStoreKey(LOCAL_STORAGE_AUTH_STATUS_KEY));
   }
 
   /**
    * @returns {void}
    */
   dropToken() {
-    LocalStorage.remove(this.getStoreKey(SIGNED_KEY));
+    LocalStorage.remove(this.getStoreKey(LOCAL_STORAGE_SIGNED_KEY));
     LocalStorage.remove(this.getStoreKey());
   }
 
@@ -122,14 +122,14 @@ export default class Oauth {
    * @return {string}
    */
   getSignedString() {
-    return LocalStorage.load(this.getStoreKey(SIGNED_KEY));
+    return LocalStorage.load(this.getStoreKey(LOCAL_STORAGE_SIGNED_KEY));
   }
 
   /**
    * @param {string} str
    */
   setSignedString(str) {
-    LocalStorage.save(this.getStoreKey(SIGNED_KEY), str);
+    LocalStorage.save(this.getStoreKey(LOCAL_STORAGE_SIGNED_KEY), str);
   }
 
   /**
