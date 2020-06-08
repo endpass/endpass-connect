@@ -118,6 +118,9 @@ export default class Oauth {
     return LocalStorage.load(this.getStoreKey());
   }
 
+  /**
+   * @return {string}
+   */
   getSignedString() {
     return LocalStorage.load(this.getStoreKey(SIGNED_KEY));
   }

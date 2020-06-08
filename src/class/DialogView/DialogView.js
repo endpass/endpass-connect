@@ -146,13 +146,13 @@ export default class DialogView {
   /**
    * @param {number} minHeight
    */
-  setMinHeight(minHeight) {
+  setMinHeight(minHeight = 0) {
     if (!this.frame) return;
 
     this.frame.setAttribute(
       'style',
       this.frameStyles({
-        'min-height': `${minHeight || 0}px`,
+        'min-height': `${minHeight}px`,
       }),
     );
   }

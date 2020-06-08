@@ -22,6 +22,13 @@ const { ERRORS } = ConnectError;
 
 const documentsCheckReg = /\/documents$/gi;
 
+/**
+ * @typedef {{
+ * isNeedUploadDocument: boolean,
+ * signedString: string,
+ * filteredIdsList: string[]}} AnswerResult
+ */
+
 export default class OauthPlugin extends PluginBase {
   /**
    * @returns {string}
@@ -187,7 +194,8 @@ export default class OauthPlugin extends PluginBase {
    * @param {object} params
    * @param {object[]} params.documentsList
    * @param {string} params.signedString
-   * @returns {Promise<*>}
+   * @throws {ConnectError} If required failed
+   * @returns {Promise<AnswerResult>}
    */
   async checkDocumentRequired({ documentsList, signedString }) {
     try {
@@ -214,7 +222,8 @@ export default class OauthPlugin extends PluginBase {
   }
 
   /**
-   * @returns {Promise<{filteredIdsList: string[], signedString: string}>}
+   * @returns {Promise<AnswerResult>}
+   * @throws {ConnectError} If required failed
    */
   async createDocumentsRequired() {
     try {
