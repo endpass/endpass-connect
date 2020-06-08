@@ -62,6 +62,7 @@ export default class FrameStrategy {
   close() {
     this.frame.destroy();
     this.frame = new BaseWindow();
+    this.emitter.emit(FrameStrategy.EVENT_UPDATE_TARGET, this.frame.target);
   }
 
   /**

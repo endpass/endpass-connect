@@ -78,7 +78,7 @@ export default class WidgetPlugin extends PluginBase {
         to: DIRECTION.AUTH,
         from: DIRECTION.CONNECT,
       });
-      this.widgetMessenger.setTarget({});
+      this.widgetMessenger.setTarget(null);
     }
     return this.widgetMessenger;
   }
@@ -150,11 +150,11 @@ export default class WidgetPlugin extends PluginBase {
 
     const styles = this.getWidgetFrameInlineStyles();
     const markup = `
-      <iframe 
-        id="endpass-widget" 
-        data-test="widget-frame" 
-        data-endpass="widget-frame" 
-        style="${styles}" 
+      <iframe
+        id="endpass-widget"
+        data-test="widget-frame"
+        data-endpass="widget-frame"
+        style="${styles}"
         src="${this.url}"
         ></iframe>
     `;
@@ -178,7 +178,7 @@ export default class WidgetPlugin extends PluginBase {
 
     this.isMounted = false;
 
-    this.widgetMessenger.setTarget({});
+    this.widgetMessenger.setTarget(null);
 
     this.frame.style.opacity = 0;
     this.isLoaded = false;

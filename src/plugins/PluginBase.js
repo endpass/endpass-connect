@@ -44,6 +44,7 @@ export default class PluginBase {
 
     if (this.messenger) {
       this.messenger.subscribe((payload, req) => {
+        if (!this.messenger.target) return;
         context.handleEvent(payload, req);
       });
     }
