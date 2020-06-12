@@ -58,13 +58,14 @@ export const document = documentsList[0];
 
 export const documentVerified = {
   ...document,
+  id: '9853b4b2-bc12-4c5a-9e64-aadff774c7ee',
   status: 'Verified',
 };
 
 export const uploadedDocument = {
   ...document,
   id: uploadedDocumentId,
-  status: 'NotReadable',
+  status: 'PendingReview',
 };
 
 export const documentFrontUpload = {

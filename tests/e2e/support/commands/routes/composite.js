@@ -16,20 +16,13 @@ Cypress.Commands.add('mockInitialData', (netId = Network.NET_ID.MAIN) => {
   cy.mockDocumentsList();
   cy.mockDocumentUpload();
   cy.mockDocumentFrontUpload();
+  cy.mockRequiredDocuments();
 
   cy.mockAuthLogout();
   cy.mockAuthRecover();
 
-  cy.mockAccountsV3();
-  cy.mockAccountsList();
-  cy.mockAccountUpdate();
-
   cy.mockSettings(netId);
-  cy.mockRopstenFaucet();
 
-  cy.mockGasPrices();
-  cy.mockEtherPrices();
-  cy.mockBalance({
-    netId,
-  });
+  cy.mockUserMetric();
+  cy.mockUserAddress();
 });

@@ -54,7 +54,6 @@ Cypress.Commands.add('uploadFile', (selector, fileUrl, type = '') =>
 Cypress.Commands.add('preparePage', netId => {
   cy.server();
   cy.authFramePrepare();
-  cy.setupWeb3Provider(netId);
   cy.mockInitialData(netId);
 });
 
@@ -72,7 +71,7 @@ Cypress.Commands.add(
   },
 );
 
-Cypress.Commands.add('mockOnceOauthState', () => {
+Cypress.Commands.add('mockOnceOauthState', (url = `${authUrl}?state=${state}&code=code`) => {
   cy.mockOnceIframeSrc(
     'https://api-dev.endpass.com/v1/oauth/auth?client_id=',
     src => {
@@ -80,7 +79,11 @@ Cypress.Commands.add('mockOnceOauthState', () => {
         .split('&')
         .find(el => el.search('state=') === 0)
         .split('=')[1];
-      return `${authUrl}?state=${state}&code=code`;
+      return url;
     },
   );
+});
+
+Cypress.Commands.add('mockOnceOauthStateForSignIn', () => {
+  cy.mockOnceOauthState(`${authUrl}/prepare.html?login_challenge=8eb1975e248d45378ccfb21f0ba9adf4&redirect=%2Fpublic%2Flogin`);
 });

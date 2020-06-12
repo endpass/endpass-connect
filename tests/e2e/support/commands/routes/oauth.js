@@ -1,5 +1,5 @@
-import { v3, email } from '@fixtures/identity/accounts';
-import { responseSuccess } from '@fixtures/response';
+import { email } from '@fixtures/identity/user';
+import { responseSuccess, oauthTokenResponse } from '@fixtures/response';
 import { identityAPIUrl, publicAPIUrl } from '@config';
 
 Cypress.Commands.add(
@@ -13,7 +13,6 @@ Cypress.Commands.add(
       status: 200,
       response: {
         email,
-        keystore: v3,
       },
     });
     cy.route({
@@ -29,7 +28,7 @@ Cypress.Commands.add(
       url: `${publicAPIUrl}/oauth/token`,
       method: 'POST',
       status: 200,
-      response: responseSuccess,
+      response: oauthTokenResponse,
     });
   },
 );

@@ -1,4 +1,3 @@
-import { v3 } from '@fixtures/identity/accounts';
 import { responseSuccess } from '@fixtures/response';
 import { identityAPIUrl, visitUrl, visitBlockBasic } from '@config';
 
@@ -8,9 +7,9 @@ Cypress.Commands.add('mockAuthPermission', () => {
     method: 'GET',
     status: 200,
     response: {
-      keystore: v3,
+      keystore: responseSuccess,
     },
-  });
+  }).as('routeAuthPermissionGet');
 
   cy.route({
     url: `${identityAPIUrl}/auth/permission`,

@@ -1,15 +1,11 @@
 import './dom';
 import './frames';
 import './should';
-import './routes/price';
-import './routes/balance';
 import './routes/auth';
 import './routes/regularPassword';
 import './routes/oauth';
 import './routes/documents';
-import './routes/accounts';
 import './routes/settings';
+import './routes/user';
 import './routes/composite';
 import './interaction';
-import './web3';
-import './widget';

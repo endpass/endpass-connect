@@ -12,14 +12,14 @@ Cypress.Commands.add('mockDocumentsList', (list = documentsList) => {
     url: `${identityAPIUrl}/documents`,
     status: 200,
     response: list,
-  });
+  }).as('routeInternalDocuments');
 
   cy.route({
     method: 'GET',
     url: `${publicAPIUrl}/documents`,
     status: 200,
     response: list,
-  });
+  }).as('routeExternalDocuments');
 });
 
 Cypress.Commands.add('mockDocumentUpload', () => {
@@ -38,6 +38,7 @@ Cypress.Commands.add('mockDocumentUpload', () => {
     method: 'POST',
     response: {
       success: true,
+      message: 'document checked',
     },
     status: 200,
   }).as('routeDocumentUploadCheck');
@@ -58,6 +59,7 @@ Cypress.Commands.add('mockDocumentFrontUpload', () => {
     method: 'POST',
     response: {
       success: true,
+      message: 'upload requested',
     },
     status: 200,
   });
@@ -75,4 +77,13 @@ Cypress.Commands.add('mockDocumentFrontUpload', () => {
     response: uploadedDocument,
     status: 200,
   });
+});
+
+Cypress.Commands.add('mockRequiredDocuments', () => {
+  cy.route({
+    url: `${identityAPIUrl}/apps/*/documents/required`,
+    method: 'GET',
+    response: ["Passport"],
+    status: 200,
+  }).as('routeCheckDocumentsRequired');
 });
