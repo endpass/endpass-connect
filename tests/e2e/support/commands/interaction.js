@@ -71,7 +71,7 @@ Cypress.Commands.add(
   },
 );
 
-Cypress.Commands.add('mockOnceOauthState', (url = `${authUrl}?state=${state}&code=code`) => {
+Cypress.Commands.add('mockOnceOauthState', (url = null) => {
   cy.mockOnceIframeSrc(
     'https://api-dev.endpass.com/v1/oauth/auth?client_id=',
     src => {
@@ -79,7 +79,7 @@ Cypress.Commands.add('mockOnceOauthState', (url = `${authUrl}?state=${state}&cod
         .split('&')
         .find(el => el.search('state=') === 0)
         .split('=')[1];
-      return url;
+      return url || `${authUrl}?state=${state}&code=code`;
     },
   );
 });
