@@ -24,22 +24,33 @@ Cypress.Commands.add(
   (
     challengeType = 'emailLink',
     redirectUri = `${visitUrl}${visitBlockBasic}`,
+    response = null
   ) => {
-    const response = { success: true, challenge: { challengeType } };
+    if (!response) {
+      response = {
+        success: true,
+        challenge: {
+          challengeType,
+        },
+        remembered: false,
+        hasPhone: false,
+        hasPassword: false,
+      };
+    }
 
     cy.route({
       url: `${identityAPIUrl}/auth?redirect_uri=${redirectUri}`,
       method: 'POST',
       status: 200,
       response,
-    });
+    }).as('routeLoginAuthRedirect')
 
     cy.route({
       url: `${identityAPIUrl}/auth`,
       method: 'POST',
       status: 200,
       response,
-    });
+    }).as('routeLoginAuthPost');
 
     cy.route({
       url: `${identityAPIUrl}/auth/token`,
@@ -49,6 +60,18 @@ Cypress.Commands.add(
     }).as('routeLoginAuthToken');
   },
 );
+
+Cypress.Commands.add('mockAuthLoginForExistingUser', () => {
+  cy.mockAuthLogin('emailLink', visitUrl, {
+    success: true,
+    challenge: {
+      challengeType: 'emailLink',
+    },
+    remembered: false,
+    hasPhone: true,
+    hasPassword: true,
+  });
+});
 
 Cypress.Commands.add('mockAuthRecover', () => {
   cy.route({
@@ -73,8 +96,32 @@ Cypress.Commands.add('mockAuthSendCode', (status = 200) => {
     method: 'POST',
     url: `${identityAPIUrl}/auth/code`,
     status,
-    response: {},
+    response: { code: '123456' },
   }).as('routeAuthSendCode');
+});
+
+Cypress.Commands.add('mockAuthSignup', status => {
+  let response = {
+    code: status,
+    message: 'Error',
+    id: 'ip-10-10-11-191.ec2.internal/ZAT9VU6zDS-004256',
+    error: 'error',
+  };
+
+  if (status === 200) {
+    response = {
+      csrfToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTQ4MzM5MTMsImlzcyI6ImVuZHBhc3MiLCJzdWIiOiJlMzg0NjJiNC03NzhiLTQ2YTYtOThmNS04ZWYzNjJhNTZmNmEiLCJvdHAiOmZhbHNlLCJzbXNDb2RlIjpmYWxzZSwiYXBwSW52aXRlIjpmYWxzZSwieHNyZlRva2VuIjoiNzVlYzQ3OWEtYjY4OS00Y2Q4LWJhYjctYTU5ZjhmMzNjODI4In0.SRscFKKtU6PBXSWDqM8ssadQgZyRJvVWufDDQUgOzB4',
+      expiresIn: 360000,
+      success: true,
+    };
+  }
+
+  cy.route({
+    method: 'POST',
+    url: `${identityAPIUrl}/auth/signup`,
+    status,
+    response,
+  }).as('routeAuthSignup');
 });
 
 Cypress.Commands.add('mockAuthCheck', status => {

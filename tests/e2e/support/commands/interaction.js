@@ -79,6 +79,9 @@ Cypress.Commands.add('mockOnceOauthState', (url = null) => {
         .split('&')
         .find(el => el.search('state=') === 0)
         .split('=')[1];
+
+      Cypress.env('current_state', state);
+
       return url || `${authUrl}?state=${state}&code=code`;
     },
   );
