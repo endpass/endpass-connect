@@ -309,6 +309,8 @@ export default class DialogView {
           style="${stylesWrapperHide}"
         >
           <iframe
+            allowusermedia
+            allow="camera *;microphone *"
             data-test="dialog-iframe"
             data-endpass="frame" src="${url}"
             style="${this.frameStyles(propsIframeHide)}"
