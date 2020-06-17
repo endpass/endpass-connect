@@ -57,7 +57,7 @@ Cypress.Commands.add('mockOauthConsent', (redirect = '/public/consent?content_ch
 Cypress.Commands.add('mockOauthConsentRedirectToConfirmation', () => {
   const state = Cypress.env('current_state') || 'state';
 
-  cy.mockOauthConsent(`${authUrl}?state=${state}&code=code`);
+  cy.mockOauthConsent(`${authUrl}?state=${state}&code=code&skip_sop_emulation`);
 });
 
 Cypress.Commands.add('mockOauthConsentForSkip', () => {
@@ -66,6 +66,6 @@ Cypress.Commands.add('mockOauthConsentForSkip', () => {
   cy.mockOauthConsent(null, {
     requested_scope: ['user:email:read'],
     skip: true,
-    redirect_url: `${authUrl}?state=${state}&code=code`,
+    redirect_url: `${authUrl}?state=${state}&code=code&skip_sop_emulation`,
   });
 });
