@@ -39,7 +39,7 @@ export default class Polling {
           if (
             target.location.search.indexOf('skip_sop_emulation') === -1 &&
             (target.location.port !== urlObject.port ||
-              target.location.hostname !== urlObject.hostname)
+              target.location.origin !== urlObject.origin)
           ) {
             return;
           }

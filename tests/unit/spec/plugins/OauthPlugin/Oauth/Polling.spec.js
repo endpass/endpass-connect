@@ -33,7 +33,7 @@ describe('Polling', () => {
       location: {
         href: '',
         pathname: '',
-        hostname: 'foo.bar',
+        origin: 'http://foo.bar',
         port: '',
         hash: '',
         search: '',
