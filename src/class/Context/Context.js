@@ -3,7 +3,6 @@ import ConnectError from '@/class/ConnectError';
 import contextHandlers from './contextHandlers';
 import HandlersFactory from '@/class/HandlersFactory';
 import PluginContainer from '@/class/PluginContainer';
-import { PLUGIN_NAMES } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
