@@ -92,7 +92,7 @@ interface DialogEvents {
 
 interface PluginNames {
   BRIDGE: 'bridge';
-  MESSENGER_GROUP: 'messengerGroup';
+  BROADCAST: 'broadcast';
   WALLET: 'wallet';
   AUTHORIZE: 'authorize';
   DOCUMENT: 'document';

@@ -5,7 +5,7 @@ import OauthPkceStrategy from '@/plugins/OauthPlugin/Oauth/OauthPkceStrategy';
 import Oauth from '@/plugins/OauthPlugin/Oauth';
 import PluginBase from '../PluginBase';
 import { BridgePlugin } from '@/plugins/BridgePlugin';
-import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
+import { BroadcastPlugin } from '@/plugins/BroadcastPlugin';
 import { DocumentPlugin } from '@/plugins/DocumentPlugin';
 import OauthApi from '@/plugins/OauthPlugin/OauthPublicApi';
 import {
@@ -45,10 +45,10 @@ export default class OauthPlugin extends PluginBase {
   }
 
   /**
-   * @returns {[typeof BridgePlugin, typeof MessengerGroupPlugin, typeof DocumentPlugin]}
+   * @returns {[typeof BridgePlugin, typeof BroadcastPlugin, typeof DocumentPlugin]}
    */
   static get dependencyPlugins() {
-    return [BridgePlugin, MessengerGroupPlugin, DocumentPlugin];
+    return [BridgePlugin, BroadcastPlugin, DocumentPlugin];
   }
 
   /**

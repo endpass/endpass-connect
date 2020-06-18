@@ -117,7 +117,7 @@ export const DIALOG_EVENTS = {
 
 export const PLUGIN_NAMES = {
   BRIDGE: 'bridge',
-  MESSENGER_GROUP: 'messengerGroup',
+  BROADCAST: 'broadcast',
   WALLET: 'wallet',
   AUTHORIZE: 'authorize',
   DOCUMENT: 'document',

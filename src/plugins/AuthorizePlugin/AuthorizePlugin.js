@@ -3,7 +3,7 @@ import { MESSENGER_METHODS, PLUGIN_NAMES } from '@/constants';
 import authHandlers from '@/plugins/AuthorizePlugin/authHandlers';
 import PluginBase from '@/plugins/PluginBase';
 import { BridgePlugin } from '@/plugins/BridgePlugin';
-import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
+import { BroadcastPlugin } from '@/plugins/BroadcastPlugin';
 import AuthApi from '@/plugins/AuthorizePlugin/AuthPublicApi';
 
 const { ERRORS } = ConnectError;
@@ -18,7 +18,7 @@ export default class AuthorizePlugin extends PluginBase {
   }
 
   static get dependencyPlugins() {
-    return [BridgePlugin, MessengerGroupPlugin];
+    return [BridgePlugin, BroadcastPlugin];
   }
 
   static get publicApi() {

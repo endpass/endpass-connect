@@ -14,9 +14,9 @@ import { PLUGIN_NAMES } from '@/constants';
  * @typedef {import('@endpass/class/CrossWindowMessenger').default} CrossWindowMessenger
  */
 
-export default class MessengerGroupPlugin extends PluginBase {
+export default class BroadcastPlugin extends PluginBase {
   static get pluginName() {
-    return PLUGIN_NAMES.MESSENGER_GROUP;
+    return PLUGIN_NAMES.BROADCAST;
   }
 
   /**

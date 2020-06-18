@@ -2,7 +2,7 @@
 import PluginFactory from '@/class/PluginFactory';
 import PluginBase from '@/plugins/PluginBase';
 import { BridgePlugin } from '@/plugins/BridgePlugin';
-import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
+import { BroadcastPlugin } from '@/plugins/BroadcastPlugin';
 import PluginApiTrait from '@/class/PluginApiTrait';
 import { CONTEXT } from '@/constants';
 
@@ -15,7 +15,7 @@ describe('plugin manager', () => {
     }
 
     static get dependencyPlugins() {
-      return [BridgePlugin, MessengerGroupPlugin];
+      return [BridgePlugin, BroadcastPlugin];
     }
 
     constructor(props, context) {
@@ -26,7 +26,7 @@ describe('plugin manager', () => {
 
   class TestPluginNoName extends PluginBase {
     static get dependencyPlugins() {
-      return [BridgePlugin, MessengerGroupPlugin];
+      return [BridgePlugin, BroadcastPlugin];
     }
   }
 

@@ -1,7 +1,7 @@
 import PluginBase from '@/plugins/PluginBase';
 import PluginFactory from '@/class/PluginFactory';
 import { BridgePlugin } from '@/plugins/BridgePlugin';
-import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
+import { BroadcastPlugin } from '@/plugins/BroadcastPlugin';
 import { PLUGIN_NAMES } from '@/constants';
 
 export class ComposePlugin extends PluginBase {
@@ -10,7 +10,7 @@ export class ComposePlugin extends PluginBase {
   }
 
   static get dependencyPlugins() {
-    return [BridgePlugin, MessengerGroupPlugin];
+    return [BridgePlugin, BroadcastPlugin];
   }
 }
 
