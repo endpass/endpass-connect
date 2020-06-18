@@ -3,18 +3,18 @@ import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import { DIRECTION, PLUGIN_NAMES, PLUGIN_METHODS } from '@/constants';
 import StateOpen from './states/StateOpen';
 import StateClose from './states/StateClose';
-import dialogHandlers from '@/plugins/DialogPlugin/dialogHandlers';
+import bridgeHandlers from './bridgeHandlers';
 import PluginBase from '@/plugins/PluginBase';
 import { getFrameRouteUrl } from '@/util/url';
 import DialogView from '@/class/DialogView';
 
-export default class DialogPlugin extends PluginBase {
+export default class BridgePlugin extends PluginBase {
   static get pluginName() {
-    return PLUGIN_NAMES.DIALOG;
+    return PLUGIN_NAMES.BRIDGE;
   }
 
   static get handlers() {
-    return dialogHandlers;
+    return bridgeHandlers;
   }
 
   /**

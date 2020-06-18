@@ -3,6 +3,7 @@ import ConnectError from '@/class/ConnectError';
 import contextHandlers from './contextHandlers';
 import HandlersFactory from '@/class/HandlersFactory';
 import PluginContainer from '@/class/PluginContainer';
+import { PLUGIN_NAMES } from '@/constants';
 
 const { ERRORS } = ConnectError;
 
@@ -48,7 +49,7 @@ export default class Context {
    * @returns {Promise<any>}
    */
   ask(method, payload) {
-    return this.plugins.dialog.ask(method, payload);
+    return this.plugins.bridge.ask(method, payload);
   }
 
   /**

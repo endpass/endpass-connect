@@ -136,10 +136,10 @@ const mountWidget = context => async () => {
  * @returns {RequestEventHandler}
  */
 const initDialog = context => () => {
-  const { dialog } = context.plugins;
+  const { bridge } = context.plugins;
   const handler = () => {
-    dialog.mount();
-    context.plugins.messengerGroup.addMessenger(dialog.messenger);
+    bridge.mount();
+    context.plugins.messengerGroup.addMessenger(bridge.messenger);
   };
 
   if (document.readyState !== 'complete') {

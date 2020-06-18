@@ -1,6 +1,6 @@
 import PluginFactory from '@/class/PluginFactory';
-import ExportPlugin from './DialogPlugin';
+import ExportPlugin from './BridgePlugin';
 
-export const DialogPlugin = ExportPlugin;
+export const BridgePlugin = ExportPlugin;
 
 export default PluginFactory.create(ExportPlugin);

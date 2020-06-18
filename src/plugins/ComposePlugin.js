@@ -1,6 +1,6 @@
 import PluginBase from '@/plugins/PluginBase';
 import PluginFactory from '@/class/PluginFactory';
-import { DialogPlugin } from '@/plugins/DialogPlugin';
+import { BridgePlugin } from '@/plugins/BridgePlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 import { PLUGIN_NAMES } from '@/constants';
 
@@ -10,7 +10,7 @@ export class ComposePlugin extends PluginBase {
   }
 
   static get dependencyPlugins() {
-    return [DialogPlugin, MessengerGroupPlugin];
+    return [BridgePlugin, MessengerGroupPlugin];
   }
 }
 

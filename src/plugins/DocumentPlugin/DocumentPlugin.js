@@ -1,6 +1,6 @@
 import ConnectError from '@/class/ConnectError';
 import PluginBase from '../PluginBase';
-import { DialogPlugin } from '@/plugins/DialogPlugin';
+import { BridgePlugin } from '@/plugins/BridgePlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 import DocumentPublicApi from './DocumentPublicApi';
 import { MESSENGER_METHODS, PLUGIN_NAMES } from '@/constants';
@@ -13,7 +13,7 @@ export default class DocumentPlugin extends PluginBase {
   }
 
   static get dependencyPlugins() {
-    return [DialogPlugin, MessengerGroupPlugin];
+    return [BridgePlugin, MessengerGroupPlugin];
   }
 
   static get publicApi() {

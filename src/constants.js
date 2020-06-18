@@ -60,7 +60,7 @@ export const MESSENGER_METHODS = Object.freeze({
   CREATE_DOCUMENTS_REQUIRED: 'CREATE_DOCUMENTS_REQUIRED',
   GENERATE_WALLET: 'GENERATE_WALLET',
 
-  // DialogPlugin-level messages
+  // BridgePlugin-level messages
   DIALOG_RESIZE: 'DIALOG_RESIZE',
   DIALOG_OPEN: 'DIALOG_OPEN',
   DIALOG_CLOSE: 'DIALOG_CLOSE',
@@ -116,7 +116,7 @@ export const DIALOG_EVENTS = {
 };
 
 export const PLUGIN_NAMES = {
-  DIALOG: 'dialog',
+  BRIDGE: 'bridge',
   MESSENGER_GROUP: 'messengerGroup',
   WALLET: 'wallet',
   AUTHORIZE: 'authorize',

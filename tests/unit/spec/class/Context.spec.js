@@ -47,7 +47,7 @@ describe('Context class', () => {
       );
 
       expect(pluginList).toEqual([
-        PLUGIN_NAMES.DIALOG,
+        PLUGIN_NAMES.BRIDGE,
         PLUGIN_NAMES.COMPOSE,
         PLUGIN_NAMES.MESSENGER_GROUP,
       ]);
@@ -125,7 +125,7 @@ describe('Context class', () => {
       expect.assertions(2);
 
       createContext({ plugins: [ProviderPlugin] });
-      context.plugins.dialog.ask = jest.fn().mockResolvedValueOnce({
+      context.plugins.bridge.ask = jest.fn().mockResolvedValueOnce({
         status: false,
         code: ERRORS.AUTH_CANCELED_BY_USER,
       });
@@ -146,7 +146,7 @@ describe('Context class', () => {
 
       createContext({ plugins: [AuthorizePlugin] });
 
-      context.plugins.dialog.ask = jest.fn().mockResolvedValueOnce({
+      context.plugins.bridge.ask = jest.fn().mockResolvedValueOnce({
         status: true,
       });
       context.plugins.messengerGroup.send = jest.fn();
@@ -157,7 +157,7 @@ describe('Context class', () => {
       expect(context.plugins.messengerGroup.send).toBeCalledWith(
         MESSENGER_METHODS.LOGOUT_RESPONSE,
       );
-      expect(context.plugins.dialog.ask).toBeCalledWith(
+      expect(context.plugins.bridge.ask).toBeCalledWith(
         MESSENGER_METHODS.LOGOUT,
         undefined,
       );

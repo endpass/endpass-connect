@@ -13,7 +13,7 @@ import createInpageProviderStream from '@/streams/inpageProvider/inpageProviderS
 import PluginBase from '../PluginBase';
 import { WidgetPlugin } from '../WidgetPlugin';
 import { AuthorizePlugin } from '../AuthorizePlugin';
-import { DialogPlugin } from '@/plugins/DialogPlugin';
+import { BridgePlugin } from '@/plugins/BridgePlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 import ProviderApi from '@/plugins/ProviderPlugin/ProviderPublicApi';
 
@@ -21,7 +21,7 @@ const { ERRORS } = ConnectError;
 
 export default class ProviderPlugin extends PluginBase {
   static get dependencyPlugins() {
-    return [DialogPlugin, AuthorizePlugin, WidgetPlugin, MessengerGroupPlugin];
+    return [BridgePlugin, AuthorizePlugin, WidgetPlugin, MessengerGroupPlugin];
   }
 
   static get pluginName() {

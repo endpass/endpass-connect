@@ -2,7 +2,7 @@ import ConnectError from '@/class/ConnectError';
 import { MESSENGER_METHODS, PLUGIN_NAMES } from '@/constants';
 import authHandlers from '@/plugins/AuthorizePlugin/authHandlers';
 import PluginBase from '@/plugins/PluginBase';
-import { DialogPlugin } from '@/plugins/DialogPlugin';
+import { BridgePlugin } from '@/plugins/BridgePlugin';
 import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
 import AuthApi from '@/plugins/AuthorizePlugin/AuthPublicApi';
 
@@ -18,7 +18,7 @@ export default class AuthorizePlugin extends PluginBase {
   }
 
   static get dependencyPlugins() {
-    return [DialogPlugin, MessengerGroupPlugin];
+    return [BridgePlugin, MessengerGroupPlugin];
   }
 
   static get publicApi() {

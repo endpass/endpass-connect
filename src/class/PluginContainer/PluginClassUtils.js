@@ -4,7 +4,7 @@ function getClassByName(classesList, pluginName) {
   return classesList.find(PluginClass => PluginClass.pluginName === pluginName);
 }
 
-const PLUGIN_DIALOG = PLUGIN_NAMES.DIALOG;
+const PLUGIN_BRIDGE = PLUGIN_NAMES.BRIDGE;
 const PLUGIN_MESSENGER_GROUP = PLUGIN_NAMES.MESSENGER_GROUP;
 
 export default class PluginClassUtils {
@@ -24,7 +24,7 @@ export default class PluginClassUtils {
   }
 
   static getClassesWithOrder(pluginsClassesList) {
-    const dialogClass = getClassByName(pluginsClassesList, PLUGIN_DIALOG);
+    const dialogClass = getClassByName(pluginsClassesList, PLUGIN_BRIDGE);
 
     const messengerGroupClass = getClassByName(
       pluginsClassesList,
@@ -32,7 +32,7 @@ export default class PluginClassUtils {
     );
 
     if (!dialogClass) {
-      throw new Error('Not defined DialogPlugin in dependencies!');
+      throw new Error('Not defined BridgePlugin in dependencies!');
     }
 
     if (!messengerGroupClass) {

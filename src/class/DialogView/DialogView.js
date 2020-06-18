@@ -287,7 +287,7 @@ export default class DialogView {
   }
 
   /**
-   * Create default markup for DialogPlugin
+   * Create default markup
    * @private
    * @param {string} url
    * @return {HTMLDivElement}
