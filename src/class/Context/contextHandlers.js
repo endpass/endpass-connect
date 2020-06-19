@@ -72,7 +72,7 @@ const setProviderSettings = context => payload => {
 
   const settings = context.plugins.provider.getInpageProviderSettings();
 
-  context.plugins.messengerGroup.send(
+  context.plugins.broadcast.send(
     MESSENGER_METHODS.CHANGE_SETTINGS_RESPONSE,
     settings,
   );
@@ -92,12 +92,12 @@ const initWidget = context => (payload, req) => {
  */
 const logout = context => async (payload, req) => {
   try {
-    const { authorize: authPlugin, messengerGroup } = context.plugins;
+    const { authorize: authPlugin, broadcast } = context.plugins;
     const res = await authPlugin.logout();
 
     await context.executeMethod(MESSENGER_METHODS.WIDGET_LOGOUT);
 
-    messengerGroup.send(MESSENGER_METHODS.LOGOUT_RESPONSE);
+    broadcast.send(MESSENGER_METHODS.LOGOUT_RESPONSE);
     if (PLUGIN_NAMES.WIDGET in context.plugins) {
       await context.executeMethod(MESSENGER_METHODS.WIDGET_UNMOUNT);
     }
@@ -117,9 +117,7 @@ const logout = context => async (payload, req) => {
  */
 const unmountWidget = context => async () => {
   await context.plugins.widget.unmount();
-  context.plugins.messengerGroup.removeMessenger(
-    context.plugins.widget.messenger,
-  );
+  context.plugins.broadcast.removeMessenger(context.plugins.widget.messenger);
 };
 
 /**
@@ -128,7 +126,7 @@ const unmountWidget = context => async () => {
  */
 const mountWidget = context => async () => {
   await context.plugins.widget.mount();
-  context.plugins.messengerGroup.addMessenger(context.plugins.widget.messenger);
+  context.plugins.broadcast.addMessenger(context.plugins.widget.messenger);
 };
 
 /**
@@ -136,10 +134,10 @@ const mountWidget = context => async () => {
  * @returns {RequestEventHandler}
  */
 const initDialog = context => () => {
-  const { dialog } = context.plugins;
+  const { bridge } = context.plugins;
   const handler = () => {
-    dialog.mount();
-    context.plugins.messengerGroup.addMessenger(dialog.messenger);
+    bridge.mount();
+    context.plugins.broadcast.addMessenger(bridge.messenger);
   };
 
   if (document.readyState !== 'complete') {

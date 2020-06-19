@@ -1,10 +1,10 @@
 import { MESSENGER_METHODS, DEFAULT_AUTH_URL } from '@/constants';
-import { DialogPlugin } from '@/plugins/DialogPlugin';
-import StateOpen from '@/plugins/DialogPlugin/states/StateOpen';
-import StateClose from '@/plugins/DialogPlugin/states/StateClose';
+import { BridgePlugin } from '@/plugins/BridgePlugin';
+import StateOpen from '@/plugins/BridgePlugin/states/StateOpen';
+import StateClose from '@/plugins/BridgePlugin/states/StateClose';
 import { getAuthUrl, getFrameRouteUrl } from '@/util/url';
 
-describe('DialogPlugin class', () => {
+describe('BridgePlugin class', () => {
   const authUrl = 'url';
   const context = {
     handleEvent: jest.fn(),
@@ -15,7 +15,7 @@ describe('DialogPlugin class', () => {
   });
 
   it('should open/close dialog', () => {
-    const inst = new DialogPlugin({ authUrl }, context);
+    const inst = new BridgePlugin({ authUrl }, context);
     inst.mount();
 
     expect(inst.state).toBeInstanceOf(StateClose);
@@ -43,13 +43,13 @@ describe('DialogPlugin class', () => {
     });
 
     it('should return url to auth on connect application', () => {
-      const plugin = new DialogPlugin({ authUrl }, context);
+      const plugin = new BridgePlugin({ authUrl }, context);
 
       expect(plugin.url).toBe(`${authUrl}/prepare.html?redirect=/bridge`);
     });
 
     it('should return default authUrl', () => {
-      const plugin = new DialogPlugin({}, context);
+      const plugin = new BridgePlugin({}, context);
 
       expect(plugin.url).toBe(`${DEFAULT_AUTH_URL}/prepare.html?redirect=/bridge`);
     });

@@ -48,7 +48,7 @@ export default class Context {
    * @returns {Promise<any>}
    */
   ask(method, payload) {
-    return this.plugins.dialog.ask(method, payload);
+    return this.plugins.bridge.ask(method, payload);
   }
 
   /**

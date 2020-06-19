@@ -1,6 +1,6 @@
 import PluginFactory from '@/class/PluginFactory';
-import ExportPlugin from './MessengerGroupPlugin';
+import ExportPlugin from './BridgePlugin';
 
-export const MessengerGroupPlugin = ExportPlugin;
+export const BridgePlugin = ExportPlugin;
 
 export default PluginFactory.create(ExportPlugin);

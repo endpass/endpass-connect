@@ -4,8 +4,8 @@ function getClassByName(classesList, pluginName) {
   return classesList.find(PluginClass => PluginClass.pluginName === pluginName);
 }
 
-const PLUGIN_DIALOG = PLUGIN_NAMES.DIALOG;
-const PLUGIN_MESSENGER_GROUP = PLUGIN_NAMES.MESSENGER_GROUP;
+const PLUGIN_BRIDGE = PLUGIN_NAMES.BRIDGE;
+const PLUGIN_BROADCAST = PLUGIN_NAMES.BROADCAST;
 
 export default class PluginClassUtils {
   static createPluginClassesList(options, ClassPlugin) {
@@ -24,31 +24,25 @@ export default class PluginClassUtils {
   }
 
   static getClassesWithOrder(pluginsClassesList) {
-    const dialogClass = getClassByName(pluginsClassesList, PLUGIN_DIALOG);
+    const BridgeClass = getClassByName(pluginsClassesList, PLUGIN_BRIDGE);
 
-    const messengerGroupClass = getClassByName(
-      pluginsClassesList,
-      PLUGIN_MESSENGER_GROUP,
-    );
+    const BroadcastClass = getClassByName(pluginsClassesList, PLUGIN_BROADCAST);
 
-    if (!dialogClass) {
-      throw new Error('Not defined DialogPlugin in dependencies!');
+    if (!BridgeClass) {
+      throw new Error('Not defined BridgePlugin in dependencies!');
     }
 
-    if (!messengerGroupClass) {
-      throw new Error('Not defined MessengerGroupPlugin in dependencies!');
+    if (!BroadcastClass) {
+      throw new Error('Not defined BroadcastPlugin in dependencies!');
     }
 
-    const excludePlugins = [
-      dialogClass.pluginName,
-      messengerGroupClass.pluginName,
-    ];
+    const excludePlugins = [BridgeClass.pluginName, BroadcastClass.pluginName];
 
     const mainPlugins = pluginsClassesList.filter(
       pluginClass => !excludePlugins.includes(pluginClass.pluginName),
     );
 
-    return [dialogClass, ...mainPlugins, messengerGroupClass];
+    return [BridgeClass, ...mainPlugins, BroadcastClass];
   }
 
   static createUniques(pluginsClasses, classesListResult = []) {

@@ -1,7 +1,7 @@
 import ConnectError from '@/class/ConnectError';
 import PluginBase from '../PluginBase';
-import { DialogPlugin } from '@/plugins/DialogPlugin';
-import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
+import { BridgePlugin } from '@/plugins/BridgePlugin';
+import { BroadcastPlugin } from '@/plugins/BroadcastPlugin';
 import WalletPublicApi from './WalletPublicApi';
 import { MESSENGER_METHODS, PLUGIN_NAMES } from '@/constants';
 
@@ -13,7 +13,7 @@ export default class WalletPlugin extends PluginBase {
   }
 
   static get dependencyPlugins() {
-    return [DialogPlugin, MessengerGroupPlugin];
+    return [BridgePlugin, BroadcastPlugin];
   }
 
   static get publicApi() {

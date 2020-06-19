@@ -1,8 +1,8 @@
 /* eslint-disable max-classes-per-file */
 import PluginFactory from '@/class/PluginFactory';
 import PluginBase from '@/plugins/PluginBase';
-import { DialogPlugin } from '@/plugins/DialogPlugin';
-import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
+import { BridgePlugin } from '@/plugins/BridgePlugin';
+import { BroadcastPlugin } from '@/plugins/BroadcastPlugin';
 import PluginApiTrait from '@/class/PluginApiTrait';
 import { CONTEXT } from '@/constants';
 
@@ -15,7 +15,7 @@ describe('plugin manager', () => {
     }
 
     static get dependencyPlugins() {
-      return [DialogPlugin, MessengerGroupPlugin];
+      return [BridgePlugin, BroadcastPlugin];
     }
 
     constructor(props, context) {
@@ -26,7 +26,7 @@ describe('plugin manager', () => {
 
   class TestPluginNoName extends PluginBase {
     static get dependencyPlugins() {
-      return [DialogPlugin, MessengerGroupPlugin];
+      return [BridgePlugin, BroadcastPlugin];
     }
   }
 

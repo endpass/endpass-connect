@@ -47,9 +47,9 @@ describe('Context class', () => {
       );
 
       expect(pluginList).toEqual([
-        PLUGIN_NAMES.DIALOG,
+        PLUGIN_NAMES.BRIDGE,
         PLUGIN_NAMES.COMPOSE,
-        PLUGIN_NAMES.MESSENGER_GROUP,
+        PLUGIN_NAMES.BROADCAST,
       ]);
       expect(pluginList).toHaveLength(3);
     });
@@ -92,7 +92,7 @@ describe('Context class', () => {
       createContext({ plugins: [ProviderPlugin] });
 
       context.plugins.provider.emitter = emitter;
-      context.plugins.messengerGroup.send = jest.fn();
+      context.plugins.broadcast.send = jest.fn();
     });
 
     it('should emit settings by inner connect emitter', async () => {
@@ -113,7 +113,7 @@ describe('Context class', () => {
         INPAGE_EVENTS.SETTINGS,
         payload,
       );
-      expect(context.plugins.messengerGroup.send).toBeCalledWith(
+      expect(context.plugins.broadcast.send).toBeCalledWith(
         MESSENGER_METHODS.CHANGE_SETTINGS_RESPONSE,
         payload,
       );
@@ -125,7 +125,7 @@ describe('Context class', () => {
       expect.assertions(2);
 
       createContext({ plugins: [ProviderPlugin] });
-      context.plugins.dialog.ask = jest.fn().mockResolvedValueOnce({
+      context.plugins.bridge.ask = jest.fn().mockResolvedValueOnce({
         status: false,
         code: ERRORS.AUTH_CANCELED_BY_USER,
       });
@@ -146,18 +146,18 @@ describe('Context class', () => {
 
       createContext({ plugins: [AuthorizePlugin] });
 
-      context.plugins.dialog.ask = jest.fn().mockResolvedValueOnce({
+      context.plugins.bridge.ask = jest.fn().mockResolvedValueOnce({
         status: true,
       });
-      context.plugins.messengerGroup.send = jest.fn();
+      context.plugins.broadcast.send = jest.fn();
 
       const res = await connect.logout();
 
       expect(res).toBe(true);
-      expect(context.plugins.messengerGroup.send).toBeCalledWith(
+      expect(context.plugins.broadcast.send).toBeCalledWith(
         MESSENGER_METHODS.LOGOUT_RESPONSE,
       );
-      expect(context.plugins.dialog.ask).toBeCalledWith(
+      expect(context.plugins.bridge.ask).toBeCalledWith(
         MESSENGER_METHODS.LOGOUT,
         undefined,
       );

@@ -4,8 +4,8 @@ import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import OauthPkceStrategy from '@/plugins/OauthPlugin/Oauth/OauthPkceStrategy';
 import Oauth from '@/plugins/OauthPlugin/Oauth';
 import PluginBase from '../PluginBase';
-import { DialogPlugin } from '@/plugins/DialogPlugin';
-import { MessengerGroupPlugin } from '@/plugins/MessengerGroupPlugin';
+import { BridgePlugin } from '@/plugins/BridgePlugin';
+import { BroadcastPlugin } from '@/plugins/BroadcastPlugin';
 import { DocumentPlugin } from '@/plugins/DocumentPlugin';
 import OauthApi from '@/plugins/OauthPlugin/OauthPublicApi';
 import {
@@ -45,10 +45,10 @@ export default class OauthPlugin extends PluginBase {
   }
 
   /**
-   * @returns {[typeof DialogPlugin, typeof MessengerGroupPlugin, typeof DocumentPlugin]}
+   * @returns {[typeof BridgePlugin, typeof BroadcastPlugin, typeof DocumentPlugin]}
    */
   static get dependencyPlugins() {
-    return [DialogPlugin, MessengerGroupPlugin, DocumentPlugin];
+    return [BridgePlugin, BroadcastPlugin, DocumentPlugin];
   }
 
   /**
