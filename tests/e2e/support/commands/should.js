@@ -6,10 +6,10 @@ Cypress.Commands.add('shouldLoggedIn', () => {
 });
 
 Cypress.Commands.add('shouldLogout', (callback) => {
-  cy.window().then(w => w.beforeReload = true);
+  cy.window().then(w => w.isBeforeReload = true);
 
-  cy.window().should('have.prop', 'beforeReload', true);
+  cy.window().should('have.prop', 'isBeforeReload', true);
   callback();
   cy.wait('@routeAuthLogout');
-  cy.window().should('not.have.prop', 'beforeReload');
+  cy.window().should('not.have.prop', 'isBeforeReload');
 });

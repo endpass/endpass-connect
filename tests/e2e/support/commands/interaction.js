@@ -1,6 +1,7 @@
 import Network from '@endpass/class/Network';
 import path from 'path';
 import { visitUrl, visitBlockBasic, authUrl } from '@config';
+import { currentStateKey, sopEmulationFlag } from '@fixtures/system';
 
 /**
  * Converts fixture to Blob. All file types are converted to base64 then
@@ -80,9 +81,9 @@ Cypress.Commands.add('mockOnceOauthState', (url = null) => {
         .find(el => el.search('state=') === 0)
         .split('=')[1];
 
-      Cypress.env('current_state', state);
+      Cypress.env(currentStateKey, state);
 
-      return url || `${authUrl}?state=${state}&code=code&skip_sop_emulation`;
+      return url || `${authUrl}?state=${state}&code=code&${sopEmulationFlag}`;
     },
   );
 });

@@ -1,4 +1,5 @@
 import {
+  document,
   documentsList,
   uploadedDocumentId,
   documentFrontUpload,
@@ -83,7 +84,7 @@ Cypress.Commands.add('mockRequiredDocuments', () => {
   cy.route({
     url: `${identityAPIUrl}/apps/*/documents/required`,
     method: 'GET',
-    response: ["Passport"],
+    response: [document.documentType],
     status: 200,
   }).as('routeCheckDocumentsRequired');
 });

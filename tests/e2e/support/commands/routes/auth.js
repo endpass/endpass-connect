@@ -1,4 +1,5 @@
 import { responseSuccess } from '@fixtures/response';
+import { otpCode } from '@fixtures/identity/user';
 import { identityAPIUrl, visitUrl, visitBlockBasic } from '@config';
 
 Cypress.Commands.add('mockAuthPermission', () => {
@@ -96,7 +97,7 @@ Cypress.Commands.add('mockAuthSendCode', (status = 200) => {
     method: 'POST',
     url: `${identityAPIUrl}/auth/code`,
     status,
-    response: { code: '123456' },
+    response: { code: otpCode },
   }).as('routeAuthSendCode');
 });
 

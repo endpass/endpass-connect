@@ -35,7 +35,7 @@ export default class Polling {
             return;
           }
 
-          // SOP emulation
+          // SOP emulation for E2E tests
           if (
             target.location.search.indexOf('skip_sop_emulation') === -1 &&
             (target.location.port !== urlObject.port ||

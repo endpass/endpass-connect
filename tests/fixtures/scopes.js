@@ -1,4 +1,4 @@
-export const scopes = [
+export const scopesList = [
   'offline_access',
   'documents:proof_address:status:read',
   'user:email:read',
@@ -16,3 +16,5 @@ export const scopes = [
   'documents:passport:data:read',
   'documents:passport:status:read',
 ];
+
+export const userEmailReadScope = scopesList[2];
