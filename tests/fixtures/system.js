@@ -1,2 +1,2 @@
-export const currentStateKey = 'current_state';
-export const sopEmulationFlag = 'skip_sop_emulation';
+export const CURRENT_STATE_KEY = 'current_state';
+export const SOP_EMULATION_FLAG = 'skip_sop_emulation';

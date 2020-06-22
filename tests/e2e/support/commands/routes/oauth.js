@@ -1,7 +1,7 @@
 import { email } from '@fixtures/identity/user';
 import { responseSuccess, oauthTokenResponse } from '@fixtures/response';
 import { userEmailReadScope } from '@fixtures/scopes';
-import { currentStateKey, sopEmulationFlag } from '@fixtures/system';
+import { CURRENT_STATE_KEY, SOP_EMULATION_FLAG } from '@fixtures/system';
 import { identityAPIUrl, publicAPIUrl, authUrl } from '@config';
 
 Cypress.Commands.add(
@@ -57,17 +57,17 @@ Cypress.Commands.add('mockOauthConsent', (redirect = '/public/consent?content_ch
 });
 
 Cypress.Commands.add('mockOauthConsentRedirectToConfirmation', () => {
-  const state = Cypress.env(currentStateKey) || 'state';
+  const state = Cypress.env(CURRENT_STATE_KEY) || 'state';
 
-  cy.mockOauthConsent(`${authUrl}?state=${state}&code=code&${sopEmulationFlag}`);
+  cy.mockOauthConsent(`${authUrl}?state=${state}&code=code&${SOP_EMULATION_FLAG}`);
 });
 
 Cypress.Commands.add('mockOauthConsentForSkip', () => {
-  const state = Cypress.env(currentStateKey) || 'state';
+  const state = Cypress.env(CURRENT_STATE_KEY) || 'state';
 
   cy.mockOauthConsent(null, {
     requested_scope: [userEmailReadScope],
     skip: true,
-    redirect_url: `${authUrl}?state=${state}&code=code&${sopEmulationFlag}`,
+    redirect_url: `${authUrl}?state=${state}&code=code&${SOP_EMULATION_FLAG}`,
   });
 });
