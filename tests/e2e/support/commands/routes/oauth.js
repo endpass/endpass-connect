@@ -1,6 +1,8 @@
-import { v3, email } from '@fixtures/identity/accounts';
-import { responseSuccess } from '@fixtures/response';
-import { identityAPIUrl, publicAPIUrl } from '@config';
+import { email } from '@fixtures/identity/user';
+import { responseSuccess, oauthTokenResponse } from '@fixtures/response';
+import { userEmailReadScope } from '@fixtures/scopes';
+import { CURRENT_STATE_KEY, SOP_EMULATION_FLAG } from '@fixtures/system';
+import { identityAPIUrl, publicAPIUrl, authUrl } from '@config';
 
 Cypress.Commands.add(
   'mockOauthLogin',
@@ -13,7 +15,6 @@ Cypress.Commands.add(
       status: 200,
       response: {
         email,
-        keystore: v3,
       },
     });
     cy.route({
@@ -29,19 +30,19 @@ Cypress.Commands.add(
       url: `${publicAPIUrl}/oauth/token`,
       method: 'POST',
       status: 200,
-      response: responseSuccess,
+      response: oauthTokenResponse,
     });
   },
 );
 
-Cypress.Commands.add('mockOauthConsent', (redirect = 'consent', response) => {
+Cypress.Commands.add('mockOauthConsent', (redirect = '/public/consent?content_challenge=consent_challenge', response) => {
   cy.route({
     url: `${identityAPIUrl}/oauth/consent/**`,
     method: 'GET',
     status: 200,
     response: response || {
       skip: false,
-      requested_scope: ['wallet:accounts:read'],
+      requested_scope: [userEmailReadScope],
     },
   }).as('routeMockOauthConsentGet');
 
@@ -52,5 +53,21 @@ Cypress.Commands.add('mockOauthConsent', (redirect = 'consent', response) => {
     response: {
       redirect,
     },
+  });
+});
+
+Cypress.Commands.add('mockOauthConsentRedirectToConfirmation', () => {
+  const state = Cypress.env(CURRENT_STATE_KEY) || 'state';
+
+  cy.mockOauthConsent(`${authUrl}?state=${state}&code=code&${SOP_EMULATION_FLAG}`);
+});
+
+Cypress.Commands.add('mockOauthConsentForSkip', () => {
+  const state = Cypress.env(CURRENT_STATE_KEY) || 'state';
+
+  cy.mockOauthConsent(null, {
+    requested_scope: [userEmailReadScope],
+    skip: true,
+    redirect_url: `${authUrl}?state=${state}&code=code&${SOP_EMULATION_FLAG}`,
   });
 });

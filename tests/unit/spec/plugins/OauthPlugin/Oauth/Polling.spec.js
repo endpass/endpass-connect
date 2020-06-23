@@ -2,7 +2,7 @@ import Polling from '@/plugins/OauthPlugin/Oauth/Polling';
 
 describe('Polling', () => {
   let target = {};
-  const url = 'url';
+  const url = 'http://foo.bar';
   const frame = {
     open: jest.fn().mockResolvedValue(),
     close: jest.fn(),
@@ -33,6 +33,8 @@ describe('Polling', () => {
       location: {
         href: '',
         pathname: '',
+        origin: 'http://foo.bar',
+        port: '',
         hash: '',
         search: '',
       },

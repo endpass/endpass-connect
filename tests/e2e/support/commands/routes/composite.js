@@ -5,31 +5,23 @@ Cypress.Commands.add('mockInitialData', (netId = Network.NET_ID.MAIN) => {
   cy.mockAuthPermission();
   cy.mockOauthLogin();
   cy.mockOauthConsent();
+  cy.mockAuthSignup(200);
 
   cy.mockAuthLogin('emailLink');
   cy.mockAuthSendCode();
 
-  cy.mockRegularPasswordCheck();
-  cy.mockRegularPasswordReset();
   cy.mockRegularPasswordResetConfirm();
 
   cy.mockDocumentsList();
   cy.mockDocumentUpload();
   cy.mockDocumentFrontUpload();
+  cy.mockRequiredDocuments();
 
   cy.mockAuthLogout();
   cy.mockAuthRecover();
 
-  cy.mockAccountsV3();
-  cy.mockAccountsList();
-  cy.mockAccountUpdate();
-
   cy.mockSettings(netId);
-  cy.mockRopstenFaucet();
 
-  cy.mockGasPrices();
-  cy.mockEtherPrices();
-  cy.mockBalance({
-    netId,
-  });
+  cy.mockUserMetric();
+  cy.mockUserAddress();
 });

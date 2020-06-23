@@ -1,7 +1,7 @@
 import Network from '@endpass/class/Network';
 import { responseSuccess } from '@fixtures/response';
 import settings from '@fixtures/identity/settings';
-import { email } from '@fixtures/identity/accounts';
+import { email } from '@fixtures/identity/user';
 import { identityAPIUrl, publicAPIUrl } from '@config';
 
 Cypress.Commands.add('mockSettings', (netId = Network.NET_ID.MAIN) => {

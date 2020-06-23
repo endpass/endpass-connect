@@ -5,7 +5,7 @@ import path from 'path';
 import json from 'rollup-plugin-json';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-import alias from 'rollup-plugin-alias';
+import alias from '@rollup/plugin-alias';
 import { terser } from 'rollup-plugin-terser';
 import replace from 'rollup-plugin-replace';
 import visualizer from 'rollup-plugin-visualizer';

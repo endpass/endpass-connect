@@ -1,18 +1,15 @@
-import { address } from '@fixtures/identity/accounts';
-
 Cypress.Commands.add('shouldLoggedIn', () => {
-  cy.wait('@balance', {
-    timeout: 20000,
-  });
   cy.get('[data-test=endpass-app-loader]', {
     timeout: 200000,
   }).should('not.exist');
   cy.authFrameWrapperHidden().should('exist');
-  cy.getElementFromWidget('[data-test=widget-header]').should('exist');
-  cy.get('[data-test=endpass-form-basic-active-account]').contains(address);
 });
 
-Cypress.Commands.add('shouldLogout', () => {
+Cypress.Commands.add('shouldLogout', (callback) => {
+  cy.window().then(w => w.isBeforeReload = true);
+
+  cy.window().should('have.prop', 'isBeforeReload', true);
+  callback();
   cy.wait('@routeAuthLogout');
-  cy.get('@e2eLogout').should('be.called');
+  cy.window().should('not.have.prop', 'isBeforeReload');
 });

@@ -1,6 +1,7 @@
 import Network from '@endpass/class/Network';
 import path from 'path';
 import { visitUrl, visitBlockBasic, authUrl } from '@config';
+import { CURRENT_STATE_KEY, SOP_EMULATION_FLAG } from '@fixtures/system';
 
 /**
  * Converts fixture to Blob. All file types are converted to base64 then
@@ -54,7 +55,6 @@ Cypress.Commands.add('uploadFile', (selector, fileUrl, type = '') =>
 Cypress.Commands.add('preparePage', netId => {
   cy.server();
   cy.authFramePrepare();
-  cy.setupWeb3Provider(netId);
   cy.mockInitialData(netId);
 });
 
@@ -72,7 +72,7 @@ Cypress.Commands.add(
   },
 );
 
-Cypress.Commands.add('mockOnceOauthState', () => {
+Cypress.Commands.add('mockOnceOauthState', (url = null) => {
   cy.mockOnceIframeSrc(
     'https://api-dev.endpass.com/v1/oauth/auth?client_id=',
     src => {
@@ -80,7 +80,14 @@ Cypress.Commands.add('mockOnceOauthState', () => {
         .split('&')
         .find(el => el.search('state=') === 0)
         .split('=')[1];
-      return `${authUrl}?state=${state}&code=code`;
+
+      Cypress.env(CURRENT_STATE_KEY, state);
+
+      return url || `${authUrl}?state=${state}&code=code&${SOP_EMULATION_FLAG}`;
     },
   );
+});
+
+Cypress.Commands.add('mockOnceOauthStateForSignIn', () => {
+  cy.mockOnceOauthState(`${authUrl}/prepare.html?login_challenge=8eb1975e248d45378ccfb21f0ba9adf4&redirect=%2Fpublic%2Flogin`);
 });
