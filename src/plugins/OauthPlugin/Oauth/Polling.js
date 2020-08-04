@@ -5,9 +5,10 @@ import ConnectError from '@/class/ConnectError';
 const { ERRORS } = ConnectError;
 const replaceReg = /^#\/?/;
 const CHECK_TIMEOUT = 500;
-const ALLOWED_FIELDS = ['state', 'error', 'code'];
 
 export default class Polling {
+  static ALLOWED_FIELDS = ['state', 'error', 'code'];
+
   /**
    * @param {import('@/plugins/OauthPlugin/FrameStrategy').default} frame Frame Strategy for show frame
    */
@@ -47,7 +48,7 @@ export default class Polling {
           const params = queryStringToMap(targetHash || targetSearch);
 
           const filteredParams = Object.keys(params)
-            .filter(key => ALLOWED_FIELDS.includes(key))
+            .filter(key => Polling.ALLOWED_FIELDS.includes(key))
             .reduce(
               (obj, key) => ({
                 [key]: params[key],
