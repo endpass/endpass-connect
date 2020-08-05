@@ -25,7 +25,6 @@ const documentsCheckReg = /\/documents$/gi;
 /**
  * @typedef {{
  * isNeedUploadDocument: boolean,
- * signedString: string,
  * filteredIdsList: string[]}} AnswerResult
  */
 
@@ -191,20 +190,15 @@ export default class OauthPlugin extends PluginBase {
   }
 
   /**
-   * @param {object} params
-   * @param {object[]} params.documentsList
-   * @param {string} params.signedString
    * @throws {ConnectError} If required failed
    * @returns {Promise<AnswerResult>}
    */
-  async checkDocumentRequired({ documentsList, signedString }) {
+  async checkDocumentRequired() {
     try {
       const { payload, status, error } = await this.context.ask(
         MESSENGER_METHODS.CHECK_DOCUMENTS_REQUIRED,
         {
           clientId: this.clientId,
-          documentsList,
-          signedString,
         },
       );
 
@@ -244,11 +238,7 @@ export default class OauthPlugin extends PluginBase {
    * @returns {Promise<any>}
    */
   async handleDocument(result, options) {
-    const signedString = this.oauthRequestProvider.getSignedString();
-    const payload = await this.checkDocumentRequired({
-      documentsList: result.data,
-      signedString,
-    });
+    const payload = await this.checkDocumentRequired();
 
     if (!payload.isNeedUploadDocument) {
       return this.createDocumentsResult({
@@ -258,25 +248,6 @@ export default class OauthPlugin extends PluginBase {
     }
 
     const requiredPayload = await this.createDocumentsRequired();
-    this.oauthRequestProvider.setSignedString(requiredPayload.signedString);
-
-    const isDocumentsExists = requiredPayload.filteredIdsList.every(
-      documentId =>
-        result.data.find(
-          /**
-           * @param {UserDocument} document
-           * @returns {boolean}
-           */
-          document => document.id === documentId,
-        ),
-    );
-
-    if (isDocumentsExists) {
-      return this.createDocumentsResult({
-        result,
-        filteredIdsList: requiredPayload.filteredIdsList,
-      });
-    }
 
     const resultDocuments = await this.oauthRequestProvider.request(options);
 
