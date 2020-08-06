@@ -16,6 +16,9 @@ Cypress.Commands.add('mockInitialData', (netId = Network.NET_ID.MAIN) => {
   cy.mockDocumentUpload();
   cy.mockDocumentFrontUpload();
   cy.mockRequiredDocuments();
+  cy.mockSelectedDocuments();
+  cy.mockVerifiedDocumentsList();
+  cy.mockEvents();
 
   cy.mockAuthLogout();
   cy.mockAuthRecover();

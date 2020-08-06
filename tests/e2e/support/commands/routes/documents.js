@@ -5,6 +5,7 @@ import {
   documentFrontUpload,
   uploadedDocument,
 } from '@fixtures/identity/documents';
+import { DOC_STATUSES } from '@fixtures/identity/documents/statuses';
 import { identityAPIUrl, publicAPIUrl } from '@config';
 
 Cypress.Commands.add('mockDocumentsList', (list = documentsList) => {
@@ -88,3 +89,40 @@ Cypress.Commands.add('mockRequiredDocuments', () => {
     status: 200,
   }).as('routeCheckDocumentsRequired');
 });
+
+Cypress.Commands.add('mockVerifiedDocumentsList', (list = documentsList) => {
+  cy.route({
+    method: 'GET',
+    url: `${identityAPIUrl}/documents?status=${DOC_STATUSES.VERIFIED}`,
+    status: 200,
+    response: { items: list },
+  }).as('routeVerifiedDocuments');
+});
+
+Cypress.Commands.add('mockEvents', () => {
+  cy.route({
+    method: 'GET',
+    url: `${identityAPIUrl}/events`,
+    status: 200,
+    response: {},
+  }).as('routeEvents');
+});
+
+Cypress.Commands.add(
+  'mockSelectedDocuments',
+  (selectedDocumentsTypesMap = {}) => {
+    cy.route({
+      url: `${identityAPIUrl}/apps/*/documents/selected`,
+      method: 'GET',
+      response: selectedDocumentsTypesMap,
+      status: 200,
+    }).as('routeSelectedDocuments');
+
+    cy.route({
+      url: `${identityAPIUrl}/apps/*/documents/selected`,
+      method: 'POST',
+      response: {},
+      status: 200,
+    }).as('routeSaveSelectedDocuments');
+  },
+);

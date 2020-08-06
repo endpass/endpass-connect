@@ -1,6 +1,10 @@
 import { address } from '@fixtures/identity/addresses';
 import { email } from '@fixtures/identity/user';
-import { document, uploadedDocument, uploadedDocumentId, documentVerified } from '@fixtures/identity/documents';
+import {
+  uploadedDocument,
+  uploadedDocumentId,
+  documentVerified,
+} from '@fixtures/identity/documents';
 import { authUrl } from '@config';
 
 describe('requests', () => {
@@ -13,11 +17,13 @@ describe('requests', () => {
     cy.mockOnceOauthState();
   });
 
-  describe('user email', () => {
-    it('should show user\'s email', () => {
+  describe.skip('user email', () => {
+    it("should show user's email", () => {
       cy.get('[data-test=endpass-oauth-back-button]').should('not.exist');
 
-      cy.get('[data-test=endpass-oauth-get-user-details-button] button').click();
+      cy.get(
+        '[data-test=endpass-oauth-get-user-details-button] button',
+      ).click();
       cy.wait('@routeAuthCheck');
 
       cy.authFrameWrapperHidden().should('exist');
@@ -29,7 +35,7 @@ describe('requests', () => {
     });
   });
 
-  describe('user addresses', () => {
+  describe.skip('user addresses', () => {
     it('should show list of addresses', () => {
       cy.get('[data-test=endpass-oauth-back-button]').should('not.exist');
 
@@ -41,8 +47,8 @@ describe('requests', () => {
       cy.get('[data-test=endpass-oauth-back-button]').should('exist');
 
       cy.get('[data-test=endpass-oauth-user-address]')
-          .eq(0)
-          .should('contain.text', address.id);
+        .eq(0)
+        .should('contain.text', address.id);
     });
   });
 
@@ -51,21 +57,24 @@ describe('requests', () => {
 
     const requiredDocumentsSelector = '.required-document-types-list';
     const passportSelector = `${requiredDocumentsSelector} .document-types-item:first`;
-    const availableDocumentSelector = '.selected-document-types-list .document-types-item:first';
+    const availableDocumentSelector =
+      '.selected-document-types-list .document-types-item:first';
 
     it('should upload document', () => {
-      cy.mockDocumentsList([]);
+      cy.mockVerifiedDocumentsList([]);
       cy.mockAuthCheck(403);
       cy.mockOauthConsent(consentUrl);
 
-      cy.get('[data-test=endpass-oauth-get-documents-button] button').click();
+      cy.get('[data-test=login-button]')
+        .eq(0)
+        .click();
 
       cy.authFrameWrapperVisible().should('exist');
       cy.getElementFromAuth(requiredDocumentsSelector).should('exist');
 
       cy.getElementFromAuth(passportSelector).should(
         'contain.text',
-        'Not added yet',
+        'Please add',
       );
 
       cy.getElementFromAuth(passportSelector).click();
@@ -84,7 +93,7 @@ describe('requests', () => {
         'Confirm',
       );
       cy.getElementFromAuth('[data-test=submit-button]').click();
-      
+
       cy.wait('@routeDocumentUploadCheck');
       cy.wait('@documentUpload');
 
@@ -109,18 +118,20 @@ describe('requests', () => {
     });
 
     it('should select document from already uploaded and show list', () => {
-      cy.mockDocumentsList([documentVerified]);
+      cy.mockVerifiedDocumentsList([documentVerified]);
       cy.mockAuthCheck(403);
       cy.mockOauthConsent(consentUrl);
 
-      cy.get('[data-test=endpass-oauth-get-documents-button] button').click();
+      cy.get('[data-test=login-button]')
+        .eq(0)
+        .click();
 
       cy.authFrameWrapperVisible().should('exist');
       cy.getElementFromAuth(requiredDocumentsSelector).should('exist');
 
       cy.getElementFromAuth(passportSelector).should(
         'contain.text',
-        'Not added yet',
+        'please select',
       );
       cy.getElementFromAuth(passportSelector).click();
 
@@ -147,18 +158,20 @@ describe('requests', () => {
     });
 
     it('should show upload form when user do not want to select already uploaded', () => {
-      cy.mockDocumentsList([documentVerified]);
+      cy.mockVerifiedDocumentsList([documentVerified]);
       cy.mockAuthCheck(403);
       cy.mockOauthConsent(consentUrl);
 
-      cy.get('[data-test=endpass-oauth-get-documents-button] button').click();
+      cy.get('[data-test=login-button]')
+        .eq(0)
+        .click();
 
       cy.authFrameWrapperVisible().should('exist');
       cy.getElementFromAuth(requiredDocumentsSelector).should('exist');
 
       cy.getElementFromAuth(passportSelector).should(
         'contain.text',
-        'Not added yet',
+        'please select',
       );
       cy.getElementFromAuth(passportSelector).click();
 
@@ -172,18 +185,24 @@ describe('requests', () => {
     });
   });
 
-  describe('controls', () => {
+  describe.only('controls', () => {
     beforeEach(() => {
+      cy.mockSelectedDocuments({
+        [documentVerified.documentType]: documentVerified.id,
+      });
+
       cy.get('[data-test=endpass-oauth-back-button]').should('not.exist');
 
-      cy.get('[data-test=endpass-oauth-get-user-details-button] button').click();
+      cy.get('[data-test=login-button]')
+        .eq(0)
+        .click();
       cy.wait('@routeAuthCheck');
 
       cy.authFrameWrapperHidden().should('exist');
-      cy.get('[data-test=endpass-oauth-back-button]').should('exist');
+      cy.get('[data-test=endpass-oauth-clear-token-button]').should('exist');
     });
 
-    it('should going back', () => {
+    it.skip('should going back', () => {
       // We should force to avoid opened dialog upon (e2e bug)
       cy.get('[data-test=endpass-oauth-back-button]').click({
         force: true,
@@ -198,7 +217,7 @@ describe('requests', () => {
         force: true,
       });
 
-      cy.get('[data-test=endpass-oauth-back-button]').should('not.exist');
+      cy.get('[data-test=endpass-oauth-clear-token-button]').should('not.exist');
     });
   });
 });
