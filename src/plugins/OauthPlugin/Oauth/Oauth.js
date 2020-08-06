@@ -9,7 +9,6 @@ const { ERRORS } = ConnectError;
 
 const LOCAL_STORAGE_DEFAULT_KEY = 'endpass-oauth';
 const LOCAL_STORAGE_AUTH_STATUS_KEY = `${LOCAL_STORAGE_DEFAULT_KEY}-hash`;
-const LOCAL_STORAGE_SIGNED_KEY = `${LOCAL_STORAGE_DEFAULT_KEY}-signed`;
 
 export default class Oauth {
   /**
@@ -105,7 +104,6 @@ export default class Oauth {
    * @returns {void}
    */
   dropToken() {
-    LocalStorage.remove(this.getStoreKey(LOCAL_STORAGE_SIGNED_KEY));
     LocalStorage.remove(this.getStoreKey());
   }
 
@@ -123,20 +121,6 @@ export default class Oauth {
    */
   isTokenExists() {
     return !!this.getTokenObjectFromStore();
-  }
-
-  /**
-   * @return {string}
-   */
-  getSignedString() {
-    return LocalStorage.load(this.getStoreKey(LOCAL_STORAGE_SIGNED_KEY));
-  }
-
-  /**
-   * @param {string} str
-   */
-  setSignedString(str) {
-    LocalStorage.save(this.getStoreKey(LOCAL_STORAGE_SIGNED_KEY), str);
   }
 
   /**
