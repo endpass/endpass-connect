@@ -13,7 +13,9 @@ describe('login', () => {
 
       cy.mockOnceOauthState();
 
-      cy.get('[data-test=login-element] button').first().click();
+      cy.get('[data-test=login-element] button')
+        .first()
+        .click();
 
       cy.shouldLoggedIn();
     });
@@ -25,7 +27,9 @@ describe('login', () => {
 
       cy.wait('@routeAuthCheck');
 
-      cy.get('[data-test=login-element] button').first().click();
+      cy.get('[data-test=login-element] button')
+        .first()
+        .click();
 
       cy.getElementFromAuth('[data-test=email-input]').type(email);
       cy.getElementFromAuth('[data-test=submit-button-auth]').click();
@@ -34,7 +38,10 @@ describe('login', () => {
 
       cy.wait(1000);
 
-      cy.getElementFromAuth('[data-test=submit-button-auth]').should('contain.text', 'Sign up');
+      cy.getElementFromAuth('[data-test=submit-button-auth]').should(
+        'contain.text',
+        'Sign up',
+      );
     });
 
     it('should recover password', () => {
@@ -45,7 +52,9 @@ describe('login', () => {
 
       cy.wait('@routeAuthCheck');
 
-      cy.get('[data-test=login-element] button').first().click();
+      cy.get('[data-test=login-element] button')
+        .first()
+        .click();
 
       cy.getElementFromAuth('[data-test=email-input]').type(email);
       cy.getElementFromAuth('[data-test=submit-button-auth]').click();
@@ -54,12 +63,17 @@ describe('login', () => {
 
       cy.wait(1000);
 
-      cy.getElementFromAuth('[data-test=password-input]').focus().type(password);
-      cy.getElementFromAuth(
-        '[data-test=repeat-password-input]',
-      ).type(password, { force: true });
+      cy.getElementFromAuth('[data-test=password-input]')
+        .focus()
+        .type(password);
+      cy.getElementFromAuth('[data-test=repeat-password-input]').type(
+        password,
+        { force: true },
+      );
 
-      cy.getElementFromAuth('[data-test=code-input]').type(otpCode, { force: true });
+      cy.getElementFromAuth('[data-test=code-input]').type(otpCode, {
+        force: true,
+      });
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
       cy.wait('@routeAuthSendCode');
@@ -67,12 +81,16 @@ describe('login', () => {
       cy.mockAuthCheck(200);
       cy.mockOauthConsentForSkip();
 
-      cy.getElementFromAuth('[data-test=code-input]').type(otpCode, { force: true });
+      cy.getElementFromAuth('[data-test=code-input]').type(otpCode, {
+        force: true,
+      });
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
       cy.wait('@routeAuthSendCode');
 
-      cy.getElementFromAuth('[data-test=code-input]').type(otpCode, { force: true });
+      cy.getElementFromAuth('[data-test=code-input]').type(otpCode, {
+        force: true,
+      });
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
       cy.wait('@routeAuthCheck');
@@ -87,7 +105,9 @@ describe('login', () => {
 
       cy.wait('@routeAuthCheck');
 
-      cy.get('[data-test=login-element] button').first().click();
+      cy.get('[data-test=login-element] button')
+        .first()
+        .click();
 
       cy.wait('@routeAuthCheck');
 
@@ -96,10 +116,13 @@ describe('login', () => {
       cy.wait(1000);
 
       cy.getElementFromAuth('[data-test=email-input]').type(email);
-      cy.getElementFromAuth('[data-test=password-input]').type(password, { force: true });
-      cy.getElementFromAuth(
-        '[data-test=confirm-password-input]',
-      ).type(password, { force: true });
+      cy.getElementFromAuth('[data-test=password-input]').type(password, {
+        force: true,
+      });
+      cy.getElementFromAuth('[data-test=confirm-password-input]').type(
+        password,
+        { force: true },
+      );
 
       cy.getElementFromAuth('[data-test=submit-button-auth]').click();
 
@@ -109,10 +132,14 @@ describe('login', () => {
 
       cy.mockOauthConsentRedirectToConfirmation();
 
-      cy.getElementFromAuth('[data-test=code-input]').type(otpCode, { force: true });
+      cy.getElementFromAuth('[data-test=code-input]').type(otpCode, {
+        force: true,
+      });
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
-      cy.getElementFromAuth('[data-test=code-input]').type(otpCode, { force: true });
+      cy.getElementFromAuth('[data-test=code-input]').type(otpCode, {
+        force: true,
+      });
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
       cy.wait(1000);
@@ -132,7 +159,9 @@ describe('login', () => {
 
       cy.wait('@routeAuthCheck');
 
-      cy.get('[data-test=login-element] button').first().click();
+      cy.get('[data-test=login-element] button')
+        .first()
+        .click();
 
       cy.getElementFromAuth('[data-test=email-input]').type(email);
       cy.getElementFromAuth('[data-test=submit-button-auth]').click();
@@ -147,10 +176,14 @@ describe('login', () => {
 
       cy.mockOauthConsentForSkip();
 
-      cy.getElementFromAuth('[data-test=code-input]').type(otpCode, { force: true });
+      cy.getElementFromAuth('[data-test=code-input]').type(otpCode, {
+        force: true,
+      });
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
-      cy.getElementFromAuth('[data-test=code-input]').type(otpCode, { force: true });
+      cy.getElementFromAuth('[data-test=code-input]').type(otpCode, {
+        force: true,
+      });
       cy.getElementFromAuth('[data-test=submit-button]').click();
 
       cy.wait('@routeAuthCheck');
@@ -166,9 +199,7 @@ describe('login', () => {
 
       cy.wait('@routeAuthCheck');
 
-      cy.shouldLogout(
-        () => cy.get('.header-controls-logout').click()
-      );
+      cy.shouldLogout(() => cy.get('.header-controls-logout').click());
     });
   });
 });

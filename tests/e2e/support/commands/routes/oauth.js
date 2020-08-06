@@ -1,7 +1,7 @@
 import { email } from '@fixtures/identity/user';
-import { responseSuccess, oauthTokenResponse } from '@fixtures/response';
+import { oauthTokenResponse } from '@fixtures/response';
 import { userEmailReadScope } from '@fixtures/scopes';
-import { CURRENT_STATE_KEY, SOP_EMULATION_FLAG } from '@fixtures/system';
+import { CURRENT_STATE_KEY } from '@fixtures/system';
 import { identityAPIUrl, publicAPIUrl, authUrl } from '@config';
 
 Cypress.Commands.add(
@@ -35,31 +35,39 @@ Cypress.Commands.add(
   },
 );
 
-Cypress.Commands.add('mockOauthConsent', (redirect = '/public/consent?content_challenge=consent_challenge', response) => {
-  cy.route({
-    url: `${identityAPIUrl}/oauth/consent/**`,
-    method: 'GET',
-    status: 200,
-    response: response || {
-      skip: false,
-      requested_scope: [userEmailReadScope],
-    },
-  }).as('routeMockOauthConsentGet');
+Cypress.Commands.add(
+  'mockOauthConsent',
+  (
+    redirect = '/public/consent?content_challenge=consent_challenge',
+    response,
+  ) => {
+    cy.route({
+      url: `${identityAPIUrl}/oauth/consent/**`,
+      method: 'GET',
+      status: 200,
+      response: response || {
+        skip: false,
+        requested_scope: [userEmailReadScope],
+      },
+    }).as('routeMockOauthConsentGet');
 
-  cy.route({
-    url: `${identityAPIUrl}/oauth/consent`,
-    method: 'POST',
-    status: 200,
-    response: {
-      redirect,
-    },
-  });
-});
+    cy.route({
+      url: `${identityAPIUrl}/oauth/consent`,
+      method: 'POST',
+      status: 200,
+      response: {
+        redirect,
+      },
+    });
+  },
+);
 
 Cypress.Commands.add('mockOauthConsentRedirectToConfirmation', () => {
   const state = Cypress.env(CURRENT_STATE_KEY) || 'state';
 
-  cy.mockOauthConsent(`${authUrl}?state=${state}&code=code&${SOP_EMULATION_FLAG}`);
+  cy.mockOauthConsent(
+    `${authUrl}?state=${state}&code=code`,
+  );
 });
 
 Cypress.Commands.add('mockOauthConsentForSkip', () => {
@@ -68,6 +76,6 @@ Cypress.Commands.add('mockOauthConsentForSkip', () => {
   cy.mockOauthConsent(null, {
     requested_scope: [userEmailReadScope],
     skip: true,
-    redirect_url: `${authUrl}?state=${state}&code=code&${SOP_EMULATION_FLAG}`,
+    redirect_url: `${authUrl}?state=${state}&code=code`,
   });
 });

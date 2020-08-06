@@ -7,6 +7,8 @@ const replaceReg = /^#\/?/;
 const CHECK_TIMEOUT = 500;
 
 export default class Polling {
+  static ALLOWED_FIELDS = ['state', 'error', 'code'];
+
   /**
    * @param {import('@/plugins/OauthPlugin/FrameStrategy').default} frame Frame Strategy for show frame
    */
@@ -24,23 +26,12 @@ export default class Polling {
     return new Promise((resolve, reject) => {
       this.intervalId = window.setInterval(() => {
         const { target } = this.frame;
-        const urlObject = new URL(url);
 
         try {
           if (!target || target.closed !== false) {
             this.close();
 
             reject(ConnectError.create(ERRORS.OAUTH_POPUP_CLOSED));
-
-            return;
-          }
-
-          // SOP emulation for E2E tests
-          if (
-            target.location.search.indexOf('skip_sop_emulation') === -1 &&
-            (target.location.port !== urlObject.port ||
-              target.location.origin !== urlObject.origin)
-          ) {
             return;
           }
 
@@ -56,11 +47,21 @@ export default class Polling {
 
           const params = queryStringToMap(targetHash || targetSearch);
 
-          if (Object.keys(params).length === 0) {
+          const filteredParams = Object.keys(params)
+            .filter(key => Polling.ALLOWED_FIELDS.includes(key))
+            .reduce(
+              (obj, key) => ({
+                [key]: params[key],
+                ...obj,
+              }),
+              {},
+            );
+
+          if (Object.keys(filteredParams).length === 0) {
             return;
           }
 
-          resolve(params);
+          resolve(filteredParams);
           this.close();
         } catch (error) {}
       }, CHECK_TIMEOUT);

@@ -119,6 +119,13 @@ export default class Oauth {
   }
 
   /**
+   * @return {boolean}
+   */
+  isTokenExists() {
+    return !!this.getTokenObjectFromStore();
+  }
+
+  /**
    * @return {string}
    */
   getSignedString() {
