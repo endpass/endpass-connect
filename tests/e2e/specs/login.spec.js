@@ -1,10 +1,13 @@
 import { email, password, otpCode } from '@fixtures/identity/user';
-import { authUrl } from '@config';
+import { documentVerified } from '@fixtures/identity/documents';
 
 describe('login', () => {
   describe('connect login features', () => {
     beforeEach(() => {
       cy.waitPageLoad();
+      cy.mockSelectedDocuments({
+        [documentVerified.documentType]: documentVerified.id,
+      });
     });
 
     it('should pass through login form, when already logged in', () => {
@@ -199,7 +202,7 @@ describe('login', () => {
 
       cy.wait('@routeAuthCheck');
 
-      cy.shouldLogout(() => cy.get('.header-controls-logout').click());
+      cy.shouldLogout(() => cy.get('.logout-button').click());
     });
   });
 });
