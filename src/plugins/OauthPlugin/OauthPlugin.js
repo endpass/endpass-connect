@@ -1,5 +1,6 @@
 // @ts-check
 
+import get from 'lodash.get';
 import CrossWindowMessenger from '@endpass/class/CrossWindowMessenger';
 import OauthPkceStrategy from '@/plugins/OauthPlugin/Oauth/OauthPkceStrategy';
 import Oauth from '@/plugins/OauthPlugin/Oauth';
@@ -261,7 +262,7 @@ export default class OauthPlugin extends PluginBase {
    * @param {OauthRequestOptions} options
    * @returns {Promise<any>}
    */
-  async request(options) {
+  async makeRequest(options) {
     const result = await this.oauthRequestProvider.request(options);
 
     // TODO: add hooks ?
@@ -275,5 +276,25 @@ export default class OauthPlugin extends PluginBase {
     }
 
     return this.handleDocument(result, options);
+  }
+
+  /**
+   * @param {OauthRequestOptions} options
+   * @returns {Promise<any>}
+   */
+  async request(options) {
+    try {
+      const result = await this.makeRequest(options);
+      return result;
+    } catch (e) {
+      const status = get(e, 'response.status');
+      const isTokenExists = !!this.oauthRequestProvider.isTokenExists();
+      if (status === 401 && isTokenExists) {
+        this.oauthRequestProvider.dropToken();
+        const result = await this.makeRequest(options);
+        return result;
+      }
+      throw e;
+    }
   }
 }

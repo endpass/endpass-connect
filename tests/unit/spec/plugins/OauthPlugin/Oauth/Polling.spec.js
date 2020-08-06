@@ -51,11 +51,11 @@ describe('Polling', () => {
       expect.assertions(1);
 
       const res = await prepareLocation({
-        hash: '#/q=10',
+        hash: '#/code=10',
       });
 
       expect(res).toEqual({
-        q: '10',
+        code: '10',
       });
     });
 
@@ -63,11 +63,11 @@ describe('Polling', () => {
       expect.assertions(1);
 
       const res = await prepareLocation({
-        search: '?q=20',
+        search: '?code=20',
       });
 
       expect(res).toEqual({
-        q: '20',
+        code: '20',
       });
     });
 
@@ -76,11 +76,11 @@ describe('Polling', () => {
 
       const res = await prepareLocation({
         hash: '#/',
-        search: '?q=30',
+        search: '?code=30',
       });
 
       expect(res).toEqual({
-        q: '30',
+        code: '30',
       });
     });
 
@@ -88,13 +88,60 @@ describe('Polling', () => {
       expect.assertions(1);
 
       const res = await prepareLocation({
-        hash: '#/q=40',
+        hash: '#/code=40',
         search: '?',
       });
 
       expect(res).toEqual({
-        q: '40',
+        code: '40',
       });
+    });
+
+    it('should return poll result only for code', async () => {
+      expect.assertions(1);
+
+      const res = await prepareLocation({
+        hash: '#/q=100&code=40',
+        search: '?',
+      });
+
+      expect(res).toEqual({
+        code: '40',
+      });
+    });
+
+    it('should return poll result', async () => {
+      expect.assertions(1);
+
+      const handler = jest.fn();
+
+      const res = prepareLocation({
+        hash: '#/code=100',
+        search: '?',
+      });
+
+      res.then(handler);
+
+      await global.flushPromises();
+
+      expect(handler).toBeCalled();
+    });
+
+    it('should not return poll result', async () => {
+      expect.assertions(1);
+
+      const handler = jest.fn();
+
+      const res = prepareLocation({
+        hash: '#/q=100',
+        search: '?',
+      });
+
+      res.then(handler);
+
+      await global.flushPromises();
+
+      expect(handler).not.toBeCalled();
     });
   });
 });

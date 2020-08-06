@@ -117,6 +117,13 @@ export default class Oauth {
   }
 
   /**
+   * @return {boolean}
+   */
+  isTokenExists() {
+    return !!this.getTokenObjectFromStore();
+  }
+
+  /**
    * Returns saved authorization token or calls for fresh authorization
    * @private
    * @return {Promise<Token>} authVersion token
